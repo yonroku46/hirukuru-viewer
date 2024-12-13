@@ -1,0 +1,4 @@
+{
+  "typescript.inlayHints.functionLikeReturnTypes.enabled": true,
+  "editor.tabSize": 2
+}

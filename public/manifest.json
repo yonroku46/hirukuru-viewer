@@ -1,0 +1,16 @@
+{
+  "name": "Univus",
+  "short_name": "Univus",
+  "description": "Univus Inc.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "/assets/icon/apple-touch-icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}

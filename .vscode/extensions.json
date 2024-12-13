@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "foxundermoon.next-js",
+    "ms-vscode.vscode-typescript-next",
+    "MariusAlchimavicius.json-to-ts",
+    "formulahendry.auto-rename-tag",
+    "esbenp.prettier-vscode",
+    "aaron-bond.better-comments",
+  ]
+}
