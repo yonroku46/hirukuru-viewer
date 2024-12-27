@@ -13,21 +13,12 @@ import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 import Skeleton from '@mui/material/Skeleton';
 
-interface Food {
-  id: number;
-  name: string;
-  price: number;
-  rating?: number;
-  image: string;
-}
-
 interface FoodCardBoxProps {
   title: string;
-  description?: string;
   data: Food[];
 }
 
-export default function FoodCardBox({ title, description, data }: FoodCardBoxProps) {
+export default function FoodCardBox({ title, data }: FoodCardBoxProps) {
   const router = useRouter();
 
   const sliderRef = useRef<Slider>(null);
@@ -92,11 +83,6 @@ export default function FoodCardBox({ title, description, data }: FoodCardBoxPro
           <h2 className="title">
             {title}
           </h2>
-          {description &&
-            <div className='description'>
-              {description}
-            </div>
-          }
         </div>
         <div className='btn-wrapper'>
           <button className='all-btn'>
@@ -137,7 +123,7 @@ export default function FoodCardBox({ title, description, data }: FoodCardBoxPro
                 className="image"
                 src={item.image}
                 alt={item.name}
-                width={240}
+                width={280}
                 height={160}
               />
               <IconButton
@@ -146,6 +132,11 @@ export default function FoodCardBox({ title, description, data }: FoodCardBoxPro
               >
                 <FavoriteIcon />
               </IconButton>
+              {item.discountPrice && item.discountPrice < item.price &&
+                <div className="sale-tag">
+                  {`${Math.round((1 - item.discountPrice / item.price) * 100)}% OFF`}
+                </div>
+              }
             </div>
             <div className="info-wrapper">
               <div className="info">
@@ -156,10 +147,25 @@ export default function FoodCardBox({ title, description, data }: FoodCardBoxPro
                   {item.rating || "-"}
                 </div>
               </div>
-              <p className="price">
-                {currency(item.price)}
-                <span className="unit">円</span>
-              </p>
+              {item.discountPrice && item.discountPrice < item.price ?
+                <div className="price">
+                  <p className="current-price on-sale">
+                    {currency(item.discountPrice)}
+                    <span className="unit">円</span>
+                  </p>
+                  <p className="origin-price">
+                    {currency(item.price)}
+                    <span className="unit">円</span>
+                  </p>
+                </div>
+                :
+                <div className="price">
+                  <p className="current-price">
+                    {currency(item.price)}
+                    <span className="unit">円</span>
+                  </p>
+                </div>
+              }
             </div>
           </div>
         ))}

@@ -27,6 +27,14 @@ declare global {
     groupHref: string;
     groupItems: MenuItem[];
   }
+  interface Food {
+    id: number;
+    name: string;
+    price: number;
+    discountPrice?: number;
+    rating?: number;
+    image: string;
+  }
 }
 
 export {};

@@ -3,10 +3,10 @@ import { generatePageMetadata } from "@/common/lib/Metadata";
 import Loading from '@/app/loading';
 
 export async function generateMetadata() {
-  return generatePageMetadata('login');
+  return generatePageMetadata('bento');
 }
 
-export default function Bentoayout({
+export default function BentoLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

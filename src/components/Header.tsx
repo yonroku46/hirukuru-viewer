@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import { config } from "@/config";
-import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { config } from "@/config";
 
 import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined';
 import IconButton from "@mui/material/IconButton";
@@ -17,7 +17,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Button } from "@mui/material";
+import Button from "@mui/material/Button";
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import HistoryIcon from '@mui/icons-material/History';
@@ -26,7 +26,6 @@ import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import Loading from "@/app/loading";
 
 const menuItems: GroupMenuItem[] = [
   { groupName: "カスタム", groupHref: "/my", groupItems: [
@@ -46,7 +45,9 @@ const menuItems: GroupMenuItem[] = [
 ];
 
 export default function Header() {
+  const currentPath: string = usePathname();
   const [open, setOpen] = useState<boolean>(false);
+  const [isTop, setIsTop] = useState<boolean>(false);
   const [address, setAddress] = useState<string | null>(null);
 
   const router = useRouter();
@@ -55,9 +56,23 @@ export default function Header() {
     setOpen(newOpen);
   };
 
+  const loginHandle = () => () => {
+    setOpen(false);
+    router.push('/login');
+  };
+
+  const handleScroll = () => {
+    if (window.scrollY < 5) {
+      setIsTop(true);
+    } else {
+      setIsTop(false);
+    }
+  };
+
   const fetchAddress = async () => {
     if (!navigator.geolocation) {
-      console.log('GPSをサポートしていないブラウザです。');
+      setAddress('取得失敗');
+      console.error('GPSをサポートしていないブラウザです。');
       return;
     }
 
@@ -84,6 +99,7 @@ export default function Header() {
         }
       },
       (err) => {
+        setAddress('取得失敗');
         console.error('GPS情報の取得に失敗しました。');
       }
     );
@@ -93,32 +109,49 @@ export default function Header() {
     fetchAddress();
   }, []);
 
+  useEffect(() => {
+    // スクロールイベント
+    window.addEventListener('scroll', handleScroll);
+    // リダイレクトパス保存
+    if (!currentPath.startsWith('/login')) {
+      sessionStorage.setItem('redirect', currentPath);
+    }
+    // 移動時メニューバーを閉じる
+    setOpen(false);
+    // スクロールイベントクリーンアップ
+    return () => {
+      if (currentPath === '') {
+        window.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, [currentPath, window]);
+
   return (
-    <header>
+    <header className={isTop ? "top" : ""}>
       <div className="main-header container">
         <Drawer anchor="right" PaperProps={{ sx: { borderRadius: "4px 0 0 4px" } }} open={open} onClose={toggleDrawer(false)}>
-          <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
+          <Box sx={{ width: 250 }} role="presentation">
             <List sx={{ p: 0 }}>
-              <Box sx={{ p: "1rem 0.5rem"}}>
+              <Box sx={{ p: "1rem"}}>
                 <Button
                   fullWidth
                   variant="contained"
-                  onClick={() => router.push("/login")}
+                  onClick={loginHandle()}
                 >
                   <ListItemText primary="ログイン" />
                 </Button>
               </Box>
               <Divider />
-              {menuItems.map((group, index) => (
+              {menuItems.map((group) => (
                 <div key={group.groupName}>
                   <ListItem disablePadding>
                     <ListItemButton disabled sx={{ opacity: "0.75 !important" }}>
                       <ListItemText primary={group.groupName} />
                     </ListItemButton>
                   </ListItem>
-                  {group.groupItems.map((item, subIndex) => (
+                  {group.groupItems.map((item) => (
                     <ListItem sx={{ pl: 1, pr: 1 }} key={item.name} disablePadding>
-                      <ListItemButton href={item.href}>
+                      <ListItemButton href={item.href} onClick={toggleDrawer(false)}>
                         <ListItemIcon>
                           {item.icon}
                         </ListItemIcon>
