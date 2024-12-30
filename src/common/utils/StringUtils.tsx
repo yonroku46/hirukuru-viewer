@@ -10,6 +10,37 @@ export function createState(len: number) {
   return result;
 }
 
+export function formatDaysAgo(dateString: string): string | undefined {
+  const inputDate = new Date(dateString);
+  const currentDate = new Date();
+  inputDate.setHours(0, 0, 0, 0);
+  currentDate.setHours(0, 0, 0, 0);
+
+  if (isNaN(inputDate.getTime())) {
+    return undefined;
+  }
+
+  const timeDifference = currentDate.getTime() - inputDate.getTime();
+  const daysDifference = Math.floor(timeDifference / (1000 * 3600 * 24));
+  const weeksDifference = Math.floor(daysDifference / 7);
+  const monthsDifference = currentDate.getMonth() - inputDate.getMonth() + (currentDate.getFullYear() - inputDate.getFullYear()) * 12;
+  const yearsDifference = currentDate.getFullYear() - inputDate.getFullYear();
+
+  if (daysDifference === 0) {
+    return '今日';
+  } else if (daysDifference > 0 && daysDifference <= 7) {
+    return `${daysDifference}日前`;
+  } else if (weeksDifference > 0 && weeksDifference < 5) {
+    return `${weeksDifference}週前`;
+  } else if (monthsDifference > 0 && monthsDifference < 12) {
+    return `${monthsDifference}ヶ月前`;
+  } else if (yearsDifference > 0) {
+    return `${yearsDifference}年前`;
+  } else {
+    return undefined;
+  }
+}
+
 export function currency(num: number, unit?: string): string {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + (unit || '');
 }

@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import SearchInput from "@/components/SearchInput";
+import CartDrawer from "@/components/CartDrawer";
 import { config } from "@/config";
 
 import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined';
@@ -26,6 +28,7 @@ import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import KeyboardArrowLeftRoundedIcon from '@mui/icons-material/KeyboardArrowLeftRounded';
 
 const menuItems: GroupMenuItem[] = [
   { groupName: "カスタム", groupHref: "/my", groupItems: [
@@ -46,18 +49,20 @@ const menuItems: GroupMenuItem[] = [
 
 export default function Header() {
   const currentPath: string = usePathname();
-  const [open, setOpen] = useState<boolean>(false);
+  const [menuOpen, setMenuOpen] = useState<boolean>(false);
+  const [cartOpen, setCartOpen] = useState<boolean>(false);
   const [isTop, setIsTop] = useState<boolean>(false);
   const [address, setAddress] = useState<string | null>(null);
+  const [searchValue, setSearchValue] = useState<string>("");
 
   const router = useRouter();
 
   const toggleDrawer = (newOpen: boolean) => () => {
-    setOpen(newOpen);
+    setMenuOpen(newOpen);
   };
 
   const loginHandle = () => () => {
-    setOpen(false);
+    setMenuOpen(false);
     router.push('/login');
   };
 
@@ -110,6 +115,7 @@ export default function Header() {
   }, []);
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
     // スクロールイベント
     window.addEventListener('scroll', handleScroll);
     // リダイレクトパス保存
@@ -117,19 +123,19 @@ export default function Header() {
       sessionStorage.setItem('redirect', currentPath);
     }
     // 移動時メニューバーを閉じる
-    setOpen(false);
+    setMenuOpen(false);
     // スクロールイベントクリーンアップ
     return () => {
       if (currentPath === '') {
         window.removeEventListener('scroll', handleScroll);
       }
     };
-  }, [currentPath, window]);
+  }, [currentPath]);
 
   return (
     <header className={isTop ? "top" : ""}>
       <div className="main-header container">
-        <Drawer anchor="right" PaperProps={{ sx: { borderRadius: "4px 0 0 4px" } }} open={open} onClose={toggleDrawer(false)}>
+        <Drawer anchor="right" PaperProps={{ sx: { borderRadius: "4px 0 0 4px" } }} open={menuOpen} onClose={toggleDrawer(false)}>
           <Box sx={{ width: 250 }} role="presentation">
             <List sx={{ p: 0 }}>
               <Box sx={{ p: "1rem"}}>
@@ -162,26 +168,41 @@ export default function Header() {
                 </div>
               ))}
             </List>
+            <div className={`user-location ${address ? "active" : ""}`}>
+              <FmdGoodOutlinedIcon className="icon" />
+              {address || "取得中..."}
+            </div>
           </Box>
         </Drawer>
         <div className="left-container">
-          <Link href="/" className="logo">
-            {config.service.name}
-          </Link>
+          {currentPath === "/search" ? (
+            <button onClick={() => router.back()}>
+              <KeyboardArrowLeftRoundedIcon />
+            </button>
+          ) : (
+            <Link href="/" className="logo">
+              {config.service.name}
+            </Link>
+          )}
         </div>
         <div className="right-container">
-          <div className={`location ${address ? "active" : ""}`}>
-            <FmdGoodOutlinedIcon className="icon" />
-            {address || "取得中..."}
-          </div>
+          {currentPath !== "/search" &&
+            <CartDrawer open={cartOpen} setOpen={setCartOpen} />
+          }
+          <SearchInput
+            searchMode={currentPath === "/search"}
+            autoFocus={currentPath === "/search"}
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+          />
           <IconButton
             edge="start"
             color="inherit"
             aria-label="menu"
-            className="menu-icon"
+            className="menu-btn"
             onClick={toggleDrawer(true)}
           >
-            <MenuIcon />
+            <MenuIcon className="menu-icon" />
             <Image
               className="user-icon"
               src="/assets/img/no-user.jpg"

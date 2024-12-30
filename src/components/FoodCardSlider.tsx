@@ -1,30 +1,28 @@
 "use client";
 
-import { DOMAttributes, useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Slider, { Settings } from 'react-slick';
 import { useMediaQuery } from 'react-responsive';
 import { useRouter } from 'next/navigation';
-import Image from "@/components/Image";
-import { currency } from '@/common/utils/StringUtils';
+import FoodCard from '@/components/FoodCard';
 
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import { Box, IconButton } from '@mui/material';
+import { Box } from '@mui/material';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 import Skeleton from '@mui/material/Skeleton';
 
-interface FoodCardBoxProps {
+interface FoodCardSliderProps {
   title: string;
   data: Food[];
 }
 
-export default function FoodCardBox({ title, data }: FoodCardBoxProps) {
+export default function FoodCardSlider({ title, data }: FoodCardSliderProps) {
   const router = useRouter();
 
   const sliderRef = useRef<Slider>(null);
   const isSp = useMediaQuery({ query: '(max-width: 1179px)' });
 
-  const [favoriteItems, setFavoriteItems] = useState<number[]>([]);
+  const [favoriteItems, setFavoriteItems] = useState<string[]>([]);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [itemsPerPage, setItemsPerPage] = useState<number>(1);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
@@ -47,7 +45,7 @@ export default function FoodCardBox({ title, data }: FoodCardBoxProps) {
     setItemsPerPage(isSp ? 2 : 4);
   }, [isSp]);
 
-  const handleFavorite = (e: React.MouseEvent<HTMLButtonElement>, id: number) => {
+  const handleFavorite = (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
     e.stopPropagation();
     if (favoriteItems.includes(id)) {
       setFavoriteItems(favoriteItems.filter((item) => item !== id));
@@ -77,8 +75,8 @@ export default function FoodCardBox({ title, data }: FoodCardBoxProps) {
   };
 
   return (
-    <div className="food-card-box">
-      <div className='food-card-box-header'>
+    <div className="food-card-slider">
+      <div className='food-card-slider-header'>
         <div className='title-wrapper'>
           <h2 className="title">
             {title}
@@ -105,7 +103,7 @@ export default function FoodCardBox({ title, data }: FoodCardBoxProps) {
         </div>
       </div>
       {isSliderRendering &&
-        <Box className="food-card-box-content-item">
+        <Box>
           <Skeleton variant="rectangular" height={148} />
           <Skeleton />
           <Skeleton width="60%" />
@@ -113,61 +111,13 @@ export default function FoodCardBox({ title, data }: FoodCardBoxProps) {
       }
       <Slider ref={sliderRef} {...settings}>
         {data.map((item) => (
-          <div
+          <FoodCard
             key={item.id}
-            className="food-card-box-content-item"
-            onClick={() => router.push(`/bento/${item.id}`)}
-          >
-            <div className="image-wrapper">
-              <Image
-                className="image"
-                src={item.image}
-                alt={item.name}
-                width={280}
-                height={160}
-              />
-              <IconButton
-                className={`favorite-icon ${favoriteItems.includes(item.id) ? "active" : ""}`}
-                onClick={(e) => handleFavorite(e, item.id)}
-              >
-                <FavoriteIcon />
-              </IconButton>
-              {item.discountPrice && item.discountPrice < item.price &&
-                <div className="sale-tag">
-                  {`${Math.round((1 - item.discountPrice / item.price) * 100)}% OFF`}
-                </div>
-              }
-            </div>
-            <div className="info-wrapper">
-              <div className="info">
-                <div className="name">
-                  {item.name}
-                </div>
-                <div className="rating">
-                  {item.rating || "-"}
-                </div>
-              </div>
-              {item.discountPrice && item.discountPrice < item.price ?
-                <div className="price">
-                  <p className="current-price on-sale">
-                    {currency(item.discountPrice)}
-                    <span className="unit">円</span>
-                  </p>
-                  <p className="origin-price">
-                    {currency(item.price)}
-                    <span className="unit">円</span>
-                  </p>
-                </div>
-                :
-                <div className="price">
-                  <p className="current-price">
-                    {currency(item.price)}
-                    <span className="unit">円</span>
-                  </p>
-                </div>
-              }
-            </div>
-          </div>
+            data={item}
+            isFavorite={favoriteItems.includes(item.id)}
+            handleFavorite={handleFavorite}
+            onClick={() => router.push(`/shop/${item.shopId}?q=${item.name}`)}
+          />
         ))}
       </Slider>
     </div>

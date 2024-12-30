@@ -33,8 +33,8 @@ export default function SearchBox() {
     setValue(newValue as number);
   };
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value === '' ? 0 : Number(event.target.value));
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value === '' ? 0 : Number(e.target.value));
   };
 
   return (

@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { config } from "@/config";
 import { signOgImageUrl } from "@/common/lib/OgImage";
 
-type MetadataType = "home" | "login" | "bento" | "shop" | "contact";
+type MetadataType = "home" | "login" | "shop" | "contact" | "search";
 
 export async function generatePageMetadata(type: MetadataType, name?: string): Promise<Metadata> {
   const baseMetadata: Metadata = {
@@ -87,9 +87,9 @@ export async function generatePageMetadata(type: MetadataType, name?: string): P
       ...baseMetadata,
       title: `ログイン | ${config.service.name}`,
     },
-    bento: {
+    search: {
       ...baseMetadata,
-      title: `${name || 'お弁当'} | ${config.service.name}`,
+      title: `検索 | ${config.service.name}`,
     },
     shop: {
       ...baseMetadata,

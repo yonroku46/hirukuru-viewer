@@ -28,12 +28,18 @@ declare global {
     groupItems: MenuItem[];
   }
   interface Food {
-    id: number;
+    id: string;
+    shopId: string;
     name: string;
     price: number;
     discountPrice?: number;
     rating?: number;
     image: string;
+    quantity?: number;
+  }
+  interface Tab {
+    label: string;
+    panel: React.ReactNode
   }
 }
 
