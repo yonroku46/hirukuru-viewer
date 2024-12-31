@@ -1,10 +1,8 @@
 "use client";
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 
 import Slider from '@mui/material/Slider';
-import Input from '@mui/material/Input';
 
 const marks = [
   {
@@ -27,7 +25,6 @@ const marks = [
 
 export default function SearchBox() {
   const [value, setValue] = useState<number>(500);
-  const router = useRouter();
 
   const handleSliderChange = (event: Event, newValue: number | number[]) => {
     setValue(newValue as number);

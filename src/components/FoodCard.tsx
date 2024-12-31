@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from 'react';
 import { currency } from '@/common/utils/StringUtils';
 import Image from "@/components/Image";
 
@@ -46,7 +45,7 @@ export default function FoodCard({ data, onClick, isFavorite, handleFavorite, ha
         {handleDeleteItem &&
           <IconButton
             className="delete-icon"
-            onClick={(e) => handleDeleteItem(data.id)}
+            onClick={() => handleDeleteItem(data.id)}
           >
             <DeleteIcon />
           </IconButton>

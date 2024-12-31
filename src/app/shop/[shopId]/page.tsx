@@ -42,6 +42,7 @@ export default function ShopInfoPage(
   }, [q]);
 
   useEffect(() => {
+    console.log(shopId);
     const dummyItems = [
       { id: '1', shopId: 'fuk001', category: 'bento', name: '唐揚げ弁当', price: 1000, discountPrice: 950, rating: 4.3, image: 'https://i.pinimg.com/736x/f2/67/df/f267dfdd2b0cb8eac4b5e9674aa49e97.jpg' },
       { id: '2', shopId: 'fuk001', category: 'bento', name: '特製のり弁', price: 500, discountPrice: 450, rating: 4.5, image: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg' },
@@ -54,7 +55,7 @@ export default function ShopInfoPage(
       { id: '9', shopId: 'fuk001', category: 'bento', name: '9番弁当', price: 1000, rating: 4.3, image: 'https://i.pinimg.com/236x/95/a0/44/95a0447698ce226edc3eab2d4bc8d23e.jpg' },
     ]
     setItems(dummyItems);
-  }, []);
+  }, [shopId]);
 
   useEffect(() => {
     if (searchValue) {
@@ -70,7 +71,7 @@ export default function ShopInfoPage(
     } else {
       setFilteredItems(items);
     }
-  }, [searchValue]);
+  }, [searchValue, items]);
 
   const handleFavorite = (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
     e.stopPropagation();
@@ -197,10 +198,6 @@ export default function ShopInfoPage(
     }
   ];
 
-  const handleOrder = () => {
-    console.log(`注文`);
-  };
-
   const handleMore = (e: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(e.currentTarget);
   };
@@ -237,7 +234,7 @@ export default function ShopInfoPage(
       }
       return 0;
     });
-  }, [reviewFilter]);
+  }, [reviewFilter, reviewList]);
 
   return (
     <article className="shop">
