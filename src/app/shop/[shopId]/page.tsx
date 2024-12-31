@@ -92,16 +92,6 @@ export default function ShopInfoPage(
       "5": 55
     }
   };
-  const bentoInfo = {
-    id: 1,
-    name: '唐揚げ弁当',
-    description: 'さくさく天ぷらを載せた世界一美味しい弁当です',
-    price: 1000,
-    discountPrice: 950,
-    rating: 4.5,
-    reviewcount: 124,
-    thumbnail: 'https://i.pinimg.com/736x/f2/67/df/f267dfdd2b0cb8eac4b5e9674aa49e97.jpg',
-  };
   const tabs = [
     {
       label: "おすすめ・特価",
