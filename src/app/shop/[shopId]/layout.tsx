@@ -1,7 +1,6 @@
 import { Suspense } from 'react';
 import { generatePageMetadata } from "@/common/lib/Metadata";
 import Loading from '@/app/loading';
-import { config } from '@/config';
 
 export async function generateMetadata() {
   // const shopInfo = await getShopInfo(params.shopId);

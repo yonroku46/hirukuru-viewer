@@ -105,7 +105,7 @@ export default function Header() {
       },
       (err) => {
         setAddress('取得失敗');
-        console.error('GPS情報の取得に失敗しました。');
+        console.error(err.message);
       }
     );
   };

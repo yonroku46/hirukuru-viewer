@@ -22,11 +22,11 @@ const drawerBleeding = 46;
 const userId = '001';
 const cartKey = `cart_${userId}`;
 
-const DrawerBox = styled('div')(({ theme }) => ({
+const DrawerBox = styled('div')(() => ({
   backgroundColor: '#fff'
 }));
 
-const Puller = styled('div')(({ theme }) => ({
+const Puller = styled('div')(() => ({
   width: 50,
   height: 6,
   backgroundColor: grey[500],

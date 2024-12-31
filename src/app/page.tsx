@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import SearchBox from "@/components/SearchBox";
 import FoodCardSlider from "@/components/FoodCardSlider";
 

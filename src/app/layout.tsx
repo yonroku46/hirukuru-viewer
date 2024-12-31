@@ -13,7 +13,7 @@ const notoSansJP = Noto_Sans_JP({
   weight: ["300", "400", "700", "900"]
 });
 
-const ReduxProvider = dynamic(() => import('@/store/reduxProvider'), {
+const ReduxProvider = dynamic(() => import('@/store/ReduxProvider'), {
   ssr: false
 });
 

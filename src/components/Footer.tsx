@@ -33,7 +33,7 @@ export default function Footer() {
         </div>
         <div className="right-container">
           <nav>
-            {menuItems.map((item, index) => (
+            {menuItems.map((item) => (
               item.groupItems.map((subItem, index) => (
                 <Link key={index} href={subItem.href}>{subItem.name}</Link>
               ))
