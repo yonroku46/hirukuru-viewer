@@ -1,9 +1,11 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { currency } from '@/common/utils/StringUtils';
 import { Global } from '@emotion/react';
 import FoodCard from '@/components/FoodCard';
+import { AppDispatch, useAppDispatch, useAppSelector } from '@/store';
+import { setCartState } from '@/store/slice/cartSlice';
 
 import { styled } from '@mui/material/styles';
 import { grey } from '@mui/material/colors';
@@ -17,12 +19,8 @@ import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArro
 import DeleteSweepOutlinedIcon from '@mui/icons-material/DeleteSweepOutlined';
 
 const drawerBleeding = 46;
-
-interface CartDrawerProps {
-  open: boolean;
-  setOpen: (open: boolean) => void;
-  window?: () => Window;
-}
+const userId = '001';
+const cartKey = `cart_${userId}`;
 
 const DrawerBox = styled('div')(({ theme }) => ({
   backgroundColor: '#fff'
@@ -38,37 +36,63 @@ const Puller = styled('div')(({ theme }) => ({
   left: 'calc(50% - 25px)'
 }));
 
-export default function CartDrawer(props: CartDrawerProps) {
-  const { open, setOpen, window } = props;
+export const addToCart = (dispatch: AppDispatch, item: Food) => {
+  const existingCartItems = JSON.parse(localStorage.getItem(cartKey) || '[]');
+  // 新しいアイテムは追加、既存のアイテムは数量を増やす
+  const itemIndex = existingCartItems.findIndex((existingItem: Food) => existingItem.id === item.id);
+  let newCartItems;
+  if (itemIndex === -1) {
+    newCartItems = [...existingCartItems, { ...item, quantity: 1 }];
+  } else {
+    existingCartItems[itemIndex].quantity += 1;
+    newCartItems = [...existingCartItems];
+  }
+  // ローカルストレージとストアに反映
+  localStorage.setItem(cartKey, JSON.stringify(newCartItems));
+  dispatch(setCartState({ cartItems: newCartItems }));
+  return newCartItems;
+}
 
-  const [cartItems, setCartItems] = useState<Food[]>([
-    { id: '1', shopId: 'fuk001', name: '唐揚げ弁当', price: 1000, discountPrice: 950, rating: 4.3, quantity: 1, image: 'https://i.pinimg.com/736x/f2/67/df/f267dfdd2b0cb8eac4b5e9674aa49e97.jpg' },
-    { id: '2', shopId: 'fuk001', name: '特製のり弁', price: 500, discountPrice: 450, rating: 4.5, quantity: 1, image: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg' },
-    { id: '8', shopId: 'fuk001', name: '8番弁当', price: 1000, rating: 4.3, quantity: 1, image: 'https://i.pinimg.com/236x/fa/bb/37/fabb376e55255930c8f6cc3e4680d239.jpg' },
-    { id: '9', shopId: 'fuk001', name: '9番弁当', price: 1000, rating: 4.3, quantity: 1, image: 'https://i.pinimg.com/236x/95/a0/44/95a0447698ce226edc3eab2d4bc8d23e.jpg' },
-  ]);
+interface CartDrawerProps {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}
+
+export default function CartDrawer({ open, setOpen }: CartDrawerProps) {
+  const dispatch = useAppDispatch();
+  const cartState = useAppSelector((state) => state.cart);
+  const [cartItems, setCartItems] = useState<Food[]>([]);
+
+  useEffect(() => {
+    setCartItems(cartState.cartItems || []);
+  }, [cartState]);
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
   };
 
   const handleDeleteItem = (id: string) => {
-    setCartItems(cartItems.filter((item) => item.id !== id));
+    const updatedCartItems = cartItems.filter((item) => item.id !== id);
+    localStorage.setItem(cartKey, JSON.stringify(updatedCartItems));
+    dispatch(setCartState({ cartItems: updatedCartItems }));
   };
 
   const handleDeleteAll = () => {
-    setCartItems([]);
+    localStorage.setItem(cartKey, JSON.stringify([]));
+    dispatch(setCartState({ cartItems: [] }));
   };
 
   const handleQuantity = (e: React.MouseEvent<HTMLButtonElement>, id: string, quantity: number) => {
     if (quantity === 0) {
-      setCartItems(cartItems.filter(item => item.id !== id));
+      const updatedCartItems = cartItems.filter(item => item.id !== id);
+      localStorage.setItem(cartKey, JSON.stringify(updatedCartItems));
+      dispatch(setCartState({ cartItems: updatedCartItems }));
     } else {
-      setCartItems(cartItems.map(item => item.id === id ? { ...item, quantity } : item));
+      const updatedCartItems = cartItems.map(item => item.id === id ? { ...item, quantity } : item);
+      localStorage.setItem(cartKey, JSON.stringify(updatedCartItems));
+      dispatch(setCartState({ cartItems: updatedCartItems }));
     }
   };
-
-  const container = window !== undefined ? () => window().document.body : undefined;
 
   const totalPrice = cartItems.reduce((total, item) => total + (item.discountPrice || item.price), 0);
   const totalPointBack = Math.round(totalPrice * 0.05);
@@ -94,7 +118,7 @@ export default function CartDrawer(props: CartDrawerProps) {
       </div>
       <SwipeableDrawer
         className="Swipeable-MuiDrawer-root"
-        container={container}
+        container={window !== undefined ? () => window.document.body : undefined}
         anchor="bottom"
         open={open}
         onClose={toggleDrawer(false)}
@@ -117,7 +141,7 @@ export default function CartDrawer(props: CartDrawerProps) {
           }}
         >
           <Puller />
-          <Typography className="container swipeable-drawer" sx={{ p: 2 }}>
+          <Typography className="container swipeable-drawer" sx={{ p: 2, m: "auto" }}>
             <div className="drawer-title">
               {`注文リスト (${currency(cartItems.length)})`}
               <Button className={`delete-btn ${cartItems.length > 0 ? 'active' : ''}`} onClick={handleDeleteAll}>

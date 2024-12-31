@@ -3,11 +3,15 @@
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
+import { toKatakana } from "wanakana";
 import SearchInput from "@/components/SearchInput";
 import { currency, formatDaysAgo } from "@/common/utils/StringUtils";
 import MuiMenu from "@/components/mui/MuiMenu";
 import MuiTabs from "@/components/mui/MuiTabs";
 import Selecter from "@/components/Selecter";
+import { addToCart } from "@/components/CartDrawer";
+import FoodCard from "@/components/FoodCard";
+import { useAppDispatch } from "@/store";
 
 import IconButton from "@mui/material/IconButton";
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
@@ -20,18 +24,58 @@ export default function ShopInfoPage(
   { params: { shopId } }: { params: { shopId: string } }
 ) {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const searchParams = useSearchParams();
   const q = searchParams.get('q');
 
   const [searchValue, setSearchValue] = useState<string>('');
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [favoriteItems, setFavoriteItems] = useState<string[]>([]);
   const [reviewFilter, setReviewFilter] = useState<string>('latest');
+
+  const [items, setItems] = useState<Food[]>([
+    { id: '1', shopId: 'fuk001', category: 'bento', name: '唐揚げ弁当', price: 1000, discountPrice: 950, rating: 4.3, image: 'https://i.pinimg.com/736x/f2/67/df/f267dfdd2b0cb8eac4b5e9674aa49e97.jpg' },
+    { id: '2', shopId: 'fuk001', category: 'bento', name: '特製のり弁', price: 500, discountPrice: 450, rating: 4.5, image: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg' },
+    { id: '3', shopId: 'fuk001', category: 'bento', name: 'チキン南蛮弁当', price: 750, rating: 3.9, image: 'https://i.pinimg.com/236x/42/d7/59/42d7590255cfd29e56db2b3d968419d4.jpg' },
+    { id: '4', shopId: 'fuk001', category: 'bento', name: 'カレー弁当', price: 550, rating: undefined, image: 'https://i.pinimg.com/236x/3b/4f/0a/3b4f0a758df2243b72d1d4985cda5437.jpg' },
+    { id: '5', shopId: 'fuk001', category: 'bento', name: '5番弁当', price: 550, rating: undefined, image: 'https://i.pinimg.com/236x/3b/4f/0a/3b4f0a758df2243b72d1d4985cda5437.jpg' },
+    { id: '6', shopId: 'fuk001', category: 'bento', name: '6番弁当', price: 750, rating: 3.9, image: 'https://i.pinimg.com/236x/42/d7/59/42d7590255cfd29e56db2b3d968419d4.jpg' },
+    { id: '7', shopId: 'fuk001', category: 'bento', name: '7番弁当', price: 500, rating: 4.5, image: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg' },
+    { id: '8', shopId: 'fuk001', category: 'bento', name: '8番弁当', price: 1000, rating: 4.3, image: 'https://i.pinimg.com/236x/fa/bb/37/fabb376e55255930c8f6cc3e4680d239.jpg' },
+    { id: '9', shopId: 'fuk001', category: 'bento', name: '9番弁当', price: 1000, rating: 4.3, image: 'https://i.pinimg.com/236x/95/a0/44/95a0447698ce226edc3eab2d4bc8d23e.jpg' },
+  ]);
+  const [filteredItems, setFilteredItems] = useState<Food[]>(items);
 
   useEffect(() => {
     if (q) {
       setSearchValue(q);
     }
   }, [q]);
+
+  useEffect(() => {
+    if (searchValue) {
+      const searchKana = toKatakana(searchValue);
+      const searchRegex = new RegExp(searchValue, 'i');
+      const filteredItems = items.filter((item) => {
+        return (
+          searchRegex.test(item.name) || // ひらがな・漢字 一致
+          item.name.includes(searchKana) // カタカナ 一致
+        );
+      });
+      setFilteredItems(filteredItems);
+    } else {
+      setFilteredItems(items);
+    }
+  }, [searchValue]);
+
+  const handleFavorite = (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
+    e.stopPropagation();
+    if (favoriteItems.includes(id)) {
+      setFavoriteItems(favoriteItems.filter((item) => item !== id));
+    } else {
+      setFavoriteItems([...favoriteItems, id]);
+    }
+  };
 
   const shopInfo = {
     id: 1,
@@ -69,6 +113,17 @@ export default function ShopInfoPage(
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
             />
+          </div>
+          <div className="shop-item-body">
+            {filteredItems.map((item) => (
+              <FoodCard
+                key={item.id}
+                data={item}
+                onClick={() => addToCart(dispatch, item)}
+                isFavorite={favoriteItems.includes(item.id)}
+                handleFavorite={handleFavorite}
+              />
+            ))}
           </div>
         </div>
     },
@@ -156,11 +211,24 @@ export default function ShopInfoPage(
     setAnchorEl(e.currentTarget);
   };
 
+  const scrollToReviewSection = () => {
+    const reviewSection = document.querySelector('.shop-review-content');
+    if (reviewSection) {
+      const reviewSectionPadding = 1;
+      const headerHeight = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-height')) + reviewSectionPadding;
+      const headerHeightRem = headerHeight * parseFloat(getComputedStyle(document.documentElement).fontSize);
+      const offsetPosition = reviewSection.getBoundingClientRect().top + window.scrollY - headerHeightRem;
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   const sortedReviewList = useMemo(() => {
     return reviewList.sort((a, b) => {
       const dateA = new Date(a.date).getTime();
       const dateB = new Date(b.date).getTime();
-
       // 最新順
       if (reviewFilter === 'latest') {
         return dateB - dateA;
@@ -178,7 +246,7 @@ export default function ShopInfoPage(
   }, [reviewFilter]);
 
   return (
-    <article className="bento">
+    <article className="shop">
       {/* Shop Info */}
       <section className="shop-header">
         <div className="shop-profile container">
@@ -210,10 +278,10 @@ export default function ShopInfoPage(
             <h1 className="shop-name">{shopInfo.name}</h1>
             <h2 className="shop-description">{shopInfo.description}</h2>
           </div>
-          <p className="shop-rating">
+          <button className="shop-rating" onClick={scrollToReviewSection}>
             <StarRoundedIcon fontSize="small" style={{ color: 'var(--rating-color)' }} />
             {`${shopInfo.ratingAvg} (${currency(shopInfo.reviewcount)})`}
-          </p>
+          </button>
         </div>
         <MuiTabs tabs={tabs} />
       </section>
@@ -223,7 +291,7 @@ export default function ShopInfoPage(
           <div className="review-summary">
             <h2 className="total-rating">
               <StarRoundedIcon style={{ color: 'var(--rating-color)' }} />
-              {`${4.5}`}
+              {`${shopInfo.ratingAvg}`}
               <span className="review-count">
                 {`(${currency(shopInfo.reviewcount)}個の評価)`}
               </span>

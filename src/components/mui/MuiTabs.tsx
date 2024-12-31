@@ -11,7 +11,7 @@ interface TabPanelProps {
   isSp: boolean;
 }
 
-function TabPanel({ children, value, index, isSp, ...other }: TabPanelProps) {
+function TabPanel({ children, index, value, isSp, ...other }: TabPanelProps) {
   return (
     <div
       role="tabpanel"
@@ -78,6 +78,7 @@ export default function MuiTabs({ tabs }: MuiTabsProps) {
       >
         {tabs.map((tab, index) => (
           <Tab
+            key={index}
             sx={{ alignItems: isSp ? 'center' : 'flex-start', minHeight: 'unset' }}
             label={tab.label}
             {...a11yProps(index)}
@@ -85,7 +86,7 @@ export default function MuiTabs({ tabs }: MuiTabsProps) {
         ))}
       </Tabs>
       {tabs.map((tab, index) => (
-        <TabPanel value={value} index={index} isSp={isSp}>
+        <TabPanel key={index} index={index} value={value} isSp={isSp}>
           {tab.panel}
         </TabPanel>
       ))}

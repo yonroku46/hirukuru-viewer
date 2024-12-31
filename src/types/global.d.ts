@@ -30,6 +30,7 @@ declare global {
   interface Food {
     id: string;
     shopId: string;
+    category: string;
     name: string;
     price: number;
     discountPrice?: number;

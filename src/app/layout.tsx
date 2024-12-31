@@ -1,4 +1,5 @@
 import { Noto_Sans_JP } from "next/font/google";
+import dynamic from 'next/dynamic';
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { ThemeProvider } from "@/components/mui/MuiProvider";
@@ -10,6 +11,10 @@ import "slick-carousel/slick/slick-theme.css";
 const notoSansJP = Noto_Sans_JP({
   subsets: ["latin"],
   weight: ["300", "400", "700", "900"]
+});
+
+const ReduxProvider = dynamic(() => import('@/store/reduxProvider'), {
+  ssr: false
 });
 
 export async function generateMetadata() {
@@ -25,11 +30,13 @@ export default function RootLayout({
     <html lang="ja">
       <body className={`${notoSansJP.className}`}>
         <ThemeProvider>
-          <Header />
-          <main>
-            {children}
-          </main>
-          <Footer />
+          <ReduxProvider>
+            <Header />
+            <main>
+              {children}
+            </main>
+              <Footer />
+          </ReduxProvider>
         </ThemeProvider>
       </body>
     </html>

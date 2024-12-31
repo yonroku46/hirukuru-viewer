@@ -48,7 +48,7 @@ export default function SearchInput({ value, searchMode, autoFocus, onChange }: 
         value={value}
         onChange={handleChange}
       />
-      <ClearIcon className="clear-icon" style={{ opacity: showClearIcon }} onClick={handleClick}/>
+      <ClearIcon className={`clear-icon ${showClearIcon ? "active" : ""}`} onClick={handleClick}/>
     </div>
   );
 };

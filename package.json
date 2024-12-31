@@ -13,15 +13,19 @@
     "@emotion/styled": "^11.13.5",
     "@mui/icons-material": "^6.1.10",
     "@mui/material": "^6.1.10",
+    "@reduxjs/toolkit": "^2.5.0",
     "@types/react-slick": "^0.23.13",
     "next": "14.2.3",
     "react": "19.0.0-rc-66855b96-20241106",
     "react-dom": "19.0.0-rc-66855b96-20241106",
+    "react-redux": "^9.2.0",
     "react-responsive": "^10.0.0",
     "react-slick": "^0.30.2",
+    "redux-persist": "^6.0.0",
     "sass": "^1.82.0",
     "slick-carousel": "^1.8.1",
-    "url-join": "^5.0.0"
+    "url-join": "^5.0.0",
+    "wanakana": "^5.3.1"
   },
   "devDependencies": {
     "@types/node": "^20",
