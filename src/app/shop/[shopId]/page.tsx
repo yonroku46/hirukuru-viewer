@@ -103,11 +103,7 @@ export default function ShopInfoPage(
       panel:
         <div className="shop-item">
           <div className="shop-item-header">
-            <SearchInput
-              searchMode={true}
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-            />
+            {filteredItems.length}件の商品
           </div>
           <div className="shop-item-body">
             {filteredItems.map((item) => (
@@ -273,6 +269,13 @@ export default function ShopInfoPage(
             <StarRoundedIcon fontSize="small" style={{ color: 'var(--rating-color)' }} />
             {`${shopInfo.ratingAvg} (${currency(shopInfo.reviewcount)})`}
           </button>
+        </div>
+        <div className="shop-item-search">
+          <SearchInput
+            searchMode={true}
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+          />
         </div>
         <MuiTabs tabs={tabs} />
       </section>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import ClearIcon from "@mui/icons-material/Clear";
 import { useRouter } from "next/navigation";
@@ -14,16 +14,20 @@ interface SearchInputProps {
 
 export default function SearchInput({ value, searchMode, autoFocus, onChange }: SearchInputProps) {
   const router = useRouter();
-  const [showClearIcon, setShowClearIcon] = useState<0 | 1>(0);
+  const [showClearIcon, setShowClearIcon] = useState<boolean>(false);
+
+  useEffect(() => {
+    setShowClearIcon(value === "" ? false : true);
+  }, [value]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setShowClearIcon(e.target.value === "" ? 0 : 1);
+    setShowClearIcon(e.target.value === "" ? false : true);
     onChange(e);
   };
 
   const handleClick = (): void => {
     onChange({ target: { value: "" } } as React.ChangeEvent<HTMLInputElement>);
-    setShowClearIcon(0);
+    setShowClearIcon(false);
   };
 
   const handleSearchClick = (): void => {

@@ -126,7 +126,7 @@ header {
 
 footer {
   width: 100%;
-  background-color: var(--accent-color-hover);
+  background-color: var(--accent-color);
   .top-container {
     flex-direction: row;
     padding-bottom: 0;
@@ -143,7 +143,7 @@ footer {
         line-height: 1.5rem;
         font-weight: bold;
         letter-spacing: -1px;
-        color: var(--accent-color);
+        color: var(--background);
         .description {
           font-size: 0.8rem;
           font-weight: 400;
@@ -315,6 +315,23 @@ button {
   gap: 0.5rem;
 }
 
+.close-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--gray-alpha-300);
+  border-radius: 1rem;
+  padding: 0.5rem;
+  background-color: var(--background);
+  cursor: pointer;
+  width: fit-content;
+  margin-left: auto;
+  margin-top: 1rem;
+  margin-right: 1rem;
+  .close-icon {
+    opacity: 0.75;
+  }
+}
 .cart-btn {
   display: flex;
   align-items: center;
@@ -538,13 +555,6 @@ button {
         }
       }
     }
-    &:not(.clickable) {
-      .image-wrapper {
-        .image {
-          opacity: 0.8;
-        }
-      }
-    }
     .info-wrapper {
       opacity: 0.8
     }
@@ -558,14 +568,13 @@ button {
     .image {
       width: 100%;
       border-radius: 0.5rem;
-      transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
+      transition: transform 0.2s ease-in-out;
     }
     .favorite-icon {
       position: absolute;
       top: 0.5rem;
       right: 0.5rem;
       color: var(--gray-alpha-400);
-      stroke: var(--background-alpha);
       padding: 0;
       transition: color 0.2s ease-in-out;
       &:hover, &.active {
@@ -574,15 +583,18 @@ button {
     }
     .delete-icon {
       position: absolute;
-      top: 0.5rem;
-      right: 0.5rem;
-      color: var(--gray-alpha-400);
-      stroke: var(--background-alpha);
-      padding: 0;
-      transition: color 0.2s ease-in-out;
-      &:hover {
-        color: var(--background);
-      }
+      top: -0.25rem;
+      right: -0.25rem;
+      width: 3.75rem;
+      height: 3.75rem;
+      clip-path: polygon(0 0, 100% 0, 100% 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.65rem 0.65rem 2rem 2rem;
+      border-radius: 0;
+      color: var(--background);
+      background-color: var(--gray-alpha-500);
     }
     .quantity-wrapper {
       position: absolute;
@@ -774,14 +786,17 @@ button {
         padding: 0.25rem 0.75rem;
       }
     }
+    .shop-item-search {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
     .shop-item {
       min-height: 400px;
       .shop-item-header {
         display: flex;
-        flex-direction: row-reverse;
-        justify-content: space-between;
         align-items: center;
-        gap: 1rem;
         margin-bottom: 1rem;
       }
       .shop-item-body {
@@ -957,9 +972,12 @@ button {
       max-width: 100%;
     }
   }
+  .search-input {
+    width: 100%;
+  }
   .swipeable-drawer {
     .cart-items {
-      grid-template-columns: repeat(1, 1fr);
+      grid-template-columns: repeat(2, 1fr);
     }
   }
   .shop {

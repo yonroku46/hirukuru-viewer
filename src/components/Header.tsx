@@ -29,6 +29,7 @@ import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import KeyboardArrowLeftRoundedIcon from '@mui/icons-material/KeyboardArrowLeftRounded';
+import CloseIcon from '@mui/icons-material/Close';
 
 const menuItems: GroupMenuItem[] = [
   { groupName: "カスタム", groupHref: "/my", groupItems: [
@@ -135,10 +136,18 @@ export default function Header() {
   return (
     <header className={isTop ? "top" : ""}>
       <div className="main-header container">
-        <Drawer anchor="right" PaperProps={{ sx: { borderRadius: "4px 0 0 4px" } }} open={menuOpen} onClose={toggleDrawer(false)}>
+        <Drawer
+          anchor="right"
+          PaperProps={{ sx: { borderRadius: "4px 0 0 4px" } }}
+          open={menuOpen}
+          onClose={toggleDrawer(false)}
+        >
           <Box sx={{ width: 250 }} role="presentation">
             <List sx={{ p: 0 }}>
-              <Box sx={{ p: "1rem"}}>
+              <div className="close-btn" onClick={toggleDrawer(false)}>
+                <CloseIcon className="close-icon" />
+              </div>
+              <Box sx={{ p: "2rem 1rem"}}>
                 <Button
                   fullWidth
                   variant="contained"
@@ -158,7 +167,7 @@ export default function Header() {
                   {group.groupItems.map((item) => (
                     <ListItem sx={{ pl: 1, pr: 1 }} key={item.name} disablePadding>
                       <ListItemButton href={item.href} onClick={toggleDrawer(false)}>
-                        <ListItemIcon>
+                        <ListItemIcon sx={{ minWidth: "3rem"}}>
                           {item.icon}
                         </ListItemIcon>
                         <ListItemText primary={item.name} />

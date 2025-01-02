@@ -103,7 +103,7 @@ export default function CartDrawer({ open, setOpen }: CartDrawerProps) {
       <Global
         styles={{
           '.Swipeable-MuiDrawer-root > .MuiPaper-root': {
-            height: `calc(50% - ${drawerBleeding}px)`,
+            height: `calc(70% - ${drawerBleeding}px)`,
             overflow: open ? 'visible' : 'hidden',
           },
           '.PrivateSwipeArea-root': {

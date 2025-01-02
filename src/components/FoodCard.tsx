@@ -47,7 +47,7 @@ export default function FoodCard({ data, onClick, isFavorite, handleFavorite, ha
             className="delete-icon"
             onClick={() => handleDeleteItem(data.id)}
           >
-            <DeleteIcon />
+            <DeleteIcon fontSize="small" />
           </IconButton>
         }
         {handleQuantity &&
