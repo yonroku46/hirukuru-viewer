@@ -44,7 +44,7 @@ const menuItems: GroupMenuItem[] = [
   { groupName: "サービス", groupHref: "/service", groupItems: [
     { name: "お問い合わせ", href: "/service/contact", icon: <SupportAgentIcon /> },
     { name: "パートナー登録", href: "/service/partner", icon: <StorefrontIcon /> },
-    { name: "利用方法", href: "/service/help", icon: <HelpOutlineIcon /> },
+    { name: "利用ガイド", href: "/service/help", icon: <HelpOutlineIcon /> },
   ]},
 ];
 

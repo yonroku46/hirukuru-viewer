@@ -1,7 +1,11 @@
 "use client";
 
-import SearchBox from "@/components/SearchBox";
+import EventSlider from "@/components/EventSlider";
 import FoodCardSlider from "@/components/FoodCardSlider";
+
+import Button from "@mui/material/Button";
+import KeyboardArrowRightTwoToneIcon from '@mui/icons-material/KeyboardArrowRightTwoTone';
+import Link from "next/link";
 
 export default function Home() {
   const foods = [
@@ -15,18 +19,46 @@ export default function Home() {
     { id: '8', shopId: 'fuk001', category: 'bento', name: '8番弁当', price: 1000, rating: 4.3, image: 'https://i.pinimg.com/236x/fa/bb/37/fabb376e55255930c8f6cc3e4680d239.jpg' },
     { id: '9', shopId: 'fuk001', category: 'bento', name: '9番弁当', price: 1000, rating: 4.3, image: 'https://i.pinimg.com/236x/95/a0/44/95a0447698ce226edc3eab2d4bc8d23e.jpg' },
   ];
+  const events = [
+    { id: '1', title: '謹賀新年', description: '2025年もよろしくお願いします', image: 'https://i.pinimg.com/736x/79/5e/90/795e900bb362815db2aacf0abe9116e8.jpg' },
+    { id: '2', title: 'いつでも4%Back!', description: '会員はいつでもポイントバックします', image: 'https://i.pinimg.com/736x/8f/05/4d/8f054d66b37f59a34fd878fc2e783087.jpg' },
+    { id: '3', title: '初めてのガイド', href: '/service/help', description: 'ヒルクルの使い方をご紹介します', image: 'https://i.pinimg.com/736x/19/f1/97/19f197e170d66608885cecb06326b8a7.jpg' },
+    { id: '4', title: 'パートナー募集', href: '/service/partner', description: 'パートナーを募集しています', image: 'https://i.pinimg.com/736x/55/92/d3/5592d36c450bcf881cea45c15c9f8ceb.jpg' },
+  ];
 
   return (
-    <article className="container">
-      <SearchBox />
-      <FoodCardSlider
-        title="おすすめの弁当"
-        data={foods}
-      />
-      <FoodCardSlider
-        title="今話題の弁当"
-        data={foods}
-      />
+    <article className="home">
+      <EventSlider events={events} />
+      <div className="container">
+        <FoodCardSlider
+          title="おすすめの弁当"
+          data={foods}
+        />
+        <FoodCardSlider
+          title="今話題の弁当"
+          data={foods}
+        />
+      </div>
+      <hr className="container" />
+      <div className="container">
+        <div className="introduction">
+          <h2 className="title">ヒルクルのご紹介</h2>
+          <p className="description">
+            ヒルクルは現在、福岡市内限定でサービスを提供しておりますが、今後は全国展開を目指しております。<br/>
+            私たちはランチをもっとラクに、そして余裕のある時間を楽しめるものにすることを目指して取り組んでいます。
+          </p>
+          <div className="link-wrapper">
+            <Link href="/service/contact">
+              お問い合わせ
+              <KeyboardArrowRightTwoToneIcon />
+            </Link>
+            <Link href="/service/partner">
+              パートナー登録
+              <KeyboardArrowRightTwoToneIcon />
+            </Link>
+          </div>
+        </div>
+      </div>
     </article>
   );
 }

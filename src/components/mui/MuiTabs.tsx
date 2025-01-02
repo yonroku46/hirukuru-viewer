@@ -55,9 +55,6 @@ export default function MuiTabs({ tabs }: MuiTabsProps) {
         display: 'flex',
         flexGrow: 1, bgcolor: 'background.paper',
         flexDirection: isSp ? 'column' : 'row',
-        border: isSp ? "0" : "1px solid var(--gray-alpha-300)",
-        padding: isSp ? "0" : "1rem",
-        borderRadius: isSp ? "0" : "0.5rem",
         height: 'auto', width: '100%'
       }}
     >
@@ -79,8 +76,13 @@ export default function MuiTabs({ tabs }: MuiTabsProps) {
         {tabs.map((tab, index) => (
           <Tab
             key={index}
-            sx={{ alignItems: isSp ? 'center' : 'flex-start', minHeight: 'unset' }}
             label={tab.label}
+            sx={{
+              alignItems: isSp ? 'center' : 'flex-start',
+              minHeight: 'unset',
+              color: tab.active ? 'inherit' : 'var(--gray-alpha-400)',
+              pointerEvents: tab.active ? 'auto' : 'none',
+            }}
             {...a11yProps(index)}
           />
         ))}
