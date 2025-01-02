@@ -230,7 +230,7 @@ export default function ShopInfoPage(
       });
 
     return [allTab, specialTab, ...categoryTabs];
-  }, [items, favoriteItems, dispatch, handleFavorite, searchValue]);
+  }, [items, favoriteItems, dispatch, searchValue]);
 
   const reviewFilterOptions = [
     {

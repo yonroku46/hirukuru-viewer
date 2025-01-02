@@ -1,11 +1,10 @@
 "use client";
 
+import Link from "next/link";
 import EventSlider from "@/components/EventSlider";
 import FoodCardSlider from "@/components/FoodCardSlider";
 
-import Button from "@mui/material/Button";
 import KeyboardArrowRightTwoToneIcon from '@mui/icons-material/KeyboardArrowRightTwoTone';
-import Link from "next/link";
 
 export default function Home() {
   const foods = [
