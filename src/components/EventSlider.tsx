@@ -24,6 +24,7 @@ export default function EventSlider({ events }: EventSliderProps) {
     centerMode: true,
     infinite: true,
     draggable: false,
+    arrows: false,
     centerPadding: "30px",
     slidesToShow: itemsPerPage,
     speed: 500,

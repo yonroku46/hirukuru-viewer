@@ -94,7 +94,7 @@ export default function CartDrawer({ open, setOpen }: CartDrawerProps) {
     }
   };
 
-  const totalPrice = cartItems.reduce((total, item) => total + (item.discountPrice || item.price), 0);
+  const totalPrice = cartItems.reduce((total, item) => total + (item.discountPrice || item.price) * (item?.quantity || 1), 0);
   const totalPointBack = Math.round(totalPrice * 0.05);
 
   return (
@@ -163,10 +163,12 @@ export default function CartDrawer({ open, setOpen }: CartDrawerProps) {
             )}
           </div>
           <div className="total-price-container">
-            <div className="point-back">
-              {`予想ポイントバック ${currency(totalPointBack, "P")}`}
-            </div>
-            <Button className="order-btn" variant="contained" color="primary">
+            {totalPointBack > 0 &&
+              <div className="point-back">
+                {`予想ポイントバック ${currency(totalPointBack, "P")}`}
+              </div>
+            }
+            <Button className={`order-btn ${totalPointBack > 0 ? 'active' : ''}`} variant="contained" color="primary">
               合計
               <span className="total-price">{currency(totalPrice, "円")}</span>
               注文する

@@ -27,7 +27,7 @@ export default function Footer() {
           <div className="logo">
             Hirukuru
             <div className="description">
-              ランチをラクに、余裕を
+              ランチをラクに、余裕のある時間へ
             </div>
           </div>
         </div>

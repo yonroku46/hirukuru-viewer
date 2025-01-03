@@ -145,6 +145,7 @@ export default function ShopInfoPage(
                   data={item}
                   onClick={() => addToCart(dispatch, item)}
                   isFavorite={favoriteItems.includes(item.id)}
+                  isAdded={true}
                   handleFavorite={handleFavorite}
                 />
               ))}
@@ -181,6 +182,7 @@ export default function ShopInfoPage(
                   data={item}
                   onClick={() => addToCart(dispatch, item)}
                   isFavorite={favoriteItems.includes(item.id)}
+                  isAdded={true}
                   handleFavorite={handleFavorite}
                 />
               ))}
@@ -219,6 +221,7 @@ export default function ShopInfoPage(
                       data={item}
                       onClick={() => addToCart(dispatch, item)}
                       isFavorite={favoriteItems.includes(item.id)}
+                      isAdded={true}
                       handleFavorite={handleFavorite}
                     />
                   ))}
