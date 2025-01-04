@@ -98,6 +98,7 @@ header {
       align-items: center;
       gap: 0.5rem;
       .search-input {
+        margin-left: 0.75rem;
         margin-right: 0.75rem;
       }
       .menu-btn {
@@ -216,13 +217,15 @@ img {
   object-position: center;
 }
 
-input {
+input, textarea {
+  font-size: 16px;
   &:focus-visible {
     outline: none;
   }
 }
 
 select {
+  font-size: 16px;
   cursor: pointer;
   &:focus-visible {
     outline: none;
@@ -242,6 +245,7 @@ button {
   cursor: pointer;
   background-color: unset;
   transition: filter 0.2s ease-in-out;
+  color: inherit;
   &:hover {
     filter: brightness(0.95);
   }
@@ -298,6 +302,7 @@ button {
     flex-direction: column;
     gap: 0.5rem;
     margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
     margin-left: auto;
     width: 100%;
     max-width: 400px;
@@ -385,7 +390,7 @@ button {
     height: 100%;
     border: 1px solid var(--gray-alpha-300);
     gap: 0.5rem;
-    padding: 0.6rem 2.5rem;
+    padding: 0.5rem 2.5rem;
     border-radius: 1rem;
     background-color: var(--background);
     transition: background-color 0.2s;
