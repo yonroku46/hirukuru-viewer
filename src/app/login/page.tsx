@@ -10,14 +10,14 @@ export default function LoginPage() {
           <h1>ログイン</h1>
           <p>ログイン情報はPCに自動で保存されます。</p>
         </div>
-        <div className="login-button-group">
-          <button className="social-button google">
+        <div className="login-btn-group">
+          <button className="social-btn google">
             <Image src="/assets/icon/google.svg" className="icon" alt="Google" width={24} height={24} />
             <div className="text">
               <span>Googleでログイン</span>
             </div>
           </button>
-          <button className="social-button line">
+          <button className="social-btn line">
             <Image src="/assets/icon/line.svg" className="icon" alt="LINE" width={24} height={24} />
             <div className="text">
               <span>LINEでログイン</span>

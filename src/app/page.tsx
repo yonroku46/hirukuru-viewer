@@ -53,12 +53,12 @@ export default function Home() {
             </div>
           }
           {hasLogin ?
-            <button className="user-code-button">
+            <button className="user-code-btn">
               会員コード
               <QrCodeScannerTwoToneIcon />
             </button>
             :
-            <button className="login-button" onClick={() => setHasLogin(true)}>
+            <button className="login-btn" onClick={() => setHasLogin(true)}>
               ログイン
             </button>
           }
@@ -74,7 +74,7 @@ export default function Home() {
             {quickList.map((item, index) => (
               <button
                 key={index}
-                className="quick-select-button"
+                className="quick-select-btn"
               >
                 <Image
                   className="quick-select-image"
