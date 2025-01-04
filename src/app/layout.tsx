@@ -28,21 +28,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja">
+    <>
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
       </Head>
-      <body className={`${notoSansJP.className}`}>
-        <ThemeProvider>
-          <ReduxProvider>
-            <Header />
-            <main>
-              {children}
-            </main>
-              <Footer />
-          </ReduxProvider>
-        </ThemeProvider>
-      </body>
-    </html>
+      <html lang="ja">
+        <body className={`${notoSansJP.className}`}>
+          <ThemeProvider>
+            <ReduxProvider>
+              <Header />
+              <main>
+                {children}
+              </main>
+                <Footer />
+            </ReduxProvider>
+          </ThemeProvider>
+        </body>
+      </html>
+    </>
   );
 }
