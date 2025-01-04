@@ -1,4 +1,5 @@
 import { Noto_Sans_JP } from "next/font/google";
+import Head from 'next/head';
 import dynamic from 'next/dynamic';
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
@@ -28,9 +29,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <head>
+      <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-      </head>
+      </Head>
       <body className={`${notoSansJP.className}`}>
         <ThemeProvider>
           <ReduxProvider>
