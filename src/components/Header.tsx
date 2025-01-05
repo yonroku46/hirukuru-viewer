@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import SearchInput from "@/components/SearchInput";
-import CartDrawer from "@/components/CartDrawer";
+import CartDialog from "@/components/CartDialog";
 import { config } from "@/config";
 
 import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined';
@@ -196,7 +196,7 @@ export default function Header() {
         </div>
         <div className="right-container">
           {currentPath !== "/search" &&
-            <CartDrawer open={cartOpen} setOpen={setCartOpen} />
+            <CartDialog open={cartOpen} setOpen={setCartOpen} />
           }
           <SearchInput
             searchMode={currentPath === "/search"}

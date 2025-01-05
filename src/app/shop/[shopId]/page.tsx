@@ -9,7 +9,7 @@ import { currency, formatDaysAgo } from "@/common/utils/StringUtils";
 import MuiMenu from "@/components/mui/MuiMenu";
 import MuiTabs from "@/components/mui/MuiTabs";
 import Selecter from "@/components/Selecter";
-import { addToCart } from "@/components/CartDrawer";
+import { addToCart } from "@/components/CartDialog";
 import FoodCard from "@/components/FoodCard";
 import { useAppDispatch } from "@/store";
 

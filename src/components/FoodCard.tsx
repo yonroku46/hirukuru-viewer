@@ -5,9 +5,6 @@ import { currency } from '@/common/utils/StringUtils';
 import Image from "@/components/Image";
 
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import RemoveIcon from '@mui/icons-material/Remove';
-import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 
@@ -17,11 +14,9 @@ interface FoodCardProps {
   isFavorite?: boolean;
   isAdded?: boolean;
   handleFavorite?: (e: React.MouseEvent<HTMLButtonElement>, id: string) => void;
-  handleDeleteItem?: (id: string) => void;
-  handleQuantity?: (e: React.MouseEvent<HTMLButtonElement>, id: string, quantity: number) => void;
 }
 
-export default function FoodCard({ data, onClick, isFavorite, isAdded, handleFavorite, handleDeleteItem, handleQuantity }: FoodCardProps) {
+export default function FoodCard({ data, onClick, isFavorite, isAdded, handleFavorite }: FoodCardProps) {
   const [showAddIcon, setShowAddIcon] = useState<boolean>(false);
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -69,33 +64,6 @@ export default function FoodCard({ data, onClick, isFavorite, isAdded, handleFav
           >
             <FavoriteIcon />
           </IconButton>
-        }
-        {handleDeleteItem &&
-          <IconButton
-            className="delete-icon"
-            onClick={() => handleDeleteItem(data.id)}
-          >
-            <DeleteIcon fontSize="small" />
-          </IconButton>
-        }
-        {handleQuantity &&
-          <div className="quantity-wrapper">
-            <IconButton
-              className="minus-icon"
-              onClick={(e) => handleQuantity(e, data.id, data.quantity ? data.quantity - 1 : 0)}
-            >
-              <RemoveIcon />
-            </IconButton>
-            <div className="quantity">
-              {currency(data.quantity || 0)}
-            </div>
-            <IconButton
-              className="plus-icon"
-              onClick={(e) => handleQuantity(e, data.id, data.quantity ? data.quantity + 1 : 1)}
-            >
-              <AddIcon />
-            </IconButton>
-          </div>
         }
       </div>
       <div className="info-wrapper">

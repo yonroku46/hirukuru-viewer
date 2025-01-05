@@ -75,6 +75,8 @@ export async function generatePageMetadata(type: MetadataType, name?: string): P
       width: "device-width",
       initialScale: 1,
       maximumScale: 1,
+      minimumScale: 1,
+      userScalable: false
     },
   };
 
