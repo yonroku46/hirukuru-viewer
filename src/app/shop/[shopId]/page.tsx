@@ -9,9 +9,8 @@ import { currency, formatDaysAgo } from "@/common/utils/StringUtils";
 import MuiMenu from "@/components/mui/MuiMenu";
 import MuiTabs from "@/components/mui/MuiTabs";
 import Selecter from "@/components/Selecter";
-import { addToCart } from "@/components/CartDialog";
 import FoodCard from "@/components/FoodCard";
-import { useAppDispatch } from "@/store";
+import FoodInfoDialog from "@/components/FoodInfoDialog";
 
 import IconButton from "@mui/material/IconButton";
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
@@ -25,7 +24,6 @@ import MarkChatReadOutlinedIcon from '@mui/icons-material/MarkChatReadOutlined';
 export default function ShopInfoPage(
   { params: { shopId } }: { params: { shopId: string } }
 ) {
-  const dispatch = useAppDispatch();
   const searchParams = useSearchParams();
   const q = searchParams.get('q');
 
@@ -34,6 +32,8 @@ export default function ShopInfoPage(
   const [favoriteItems, setFavoriteItems] = useState<string[]>([]);
   const [reviewFilter, setReviewFilter] = useState<string>('latest');
   const [items, setItems] = useState<Food[]>([]);
+  const [open, setOpen] = useState<boolean>(false);
+  const [selectedItem, setSelectedItem] = useState<Food | null>(null);
   const [reviewList, setReviewList] = useState<ShopReview[]>([]);
 
   const shopInfo = {
@@ -61,16 +61,17 @@ export default function ShopInfoPage(
   useEffect(() => {
     console.log(shopId);
     const dummyItems = [
-      { id: '1', shopId: 'fuk001', category: '日替わり弁当', name: '唐揚げ弁当', price: 1000, discountPrice: 950, rating: 4.3, image: 'https://i.pinimg.com/736x/f2/67/df/f267dfdd2b0cb8eac4b5e9674aa49e97.jpg' },
-      { id: '2', shopId: 'fuk001', category: '特製弁当', name: '特製のり弁', price: 500, discountPrice: 450, rating: 4.5, image: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg' },
+      { id: '1', shopId: 'fuk001', category: '日替わり弁当', name: '唐揚げ弁当', description: "国内産の鶏肉を使用した唐揚げ弁当です。", ingredients: ["唐揚げ", "ほうれん草ナムル", "白ごはん"], price: 1000, discountPrice: 950, rating: 4.3, image: 'https://i.pinimg.com/736x/f2/67/df/f267dfdd2b0cb8eac4b5e9674aa49e97.jpg' },
+      { id: '2', shopId: 'fuk001', category: '特製弁当', name: '特製のり弁', description: "特製のり弁です。", price: 500, discountPrice: 450, rating: 4.5, image: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg' },
       { id: '3', shopId: 'fuk001', category: '特製弁当', name: 'チキン南蛮弁当', price: 750, rating: 3.9, image: 'https://i.pinimg.com/236x/42/d7/59/42d7590255cfd29e56db2b3d968419d4.jpg' },
       { id: '4', shopId: 'fuk001', category: '特製弁当', name: 'カレー弁当', price: 550, rating: undefined, image: 'https://i.pinimg.com/236x/3b/4f/0a/3b4f0a758df2243b72d1d4985cda5437.jpg' },
-      { id: '5', shopId: 'fuk001', category: '定番弁当', name: '5番弁当', price: 550, rating: undefined, image: 'https://i.pinimg.com/236x/3b/4f/0a/3b4f0a758df2243b72d1d4985cda5437.jpg' },
-      { id: '6', shopId: 'fuk001', category: '定番弁当', name: '6番弁当', price: 750, rating: 3.9, image: 'https://i.pinimg.com/236x/42/d7/59/42d7590255cfd29e56db2b3d968419d4.jpg' },
-      { id: '7', shopId: 'fuk001', category: '定番弁当', name: '7番弁当', price: 500, rating: 4.5, image: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg' },
-      { id: '8', shopId: 'fuk001', category: '定番弁当', name: '8番弁当', price: 1000, rating: 4.3, image: 'https://i.pinimg.com/236x/fa/bb/37/fabb376e55255930c8f6cc3e4680d239.jpg' },
-      { id: '9', shopId: 'fuk001', category: '定番弁当', name: '9番弁当', price: 1000, rating: 4.3, image: 'https://i.pinimg.com/236x/95/a0/44/95a0447698ce226edc3eab2d4bc8d23e.jpg' },
-    ]
+      { id: '5', shopId: 'fuk001', category: '定番弁当', name: '塩鮭弁当', price: 550, rating: undefined, image: 'https://i.pinimg.com/736x/53/c1/4c/53c14c49208435da8fca89f4dae85cb4.jpg' },
+      { id: '6', shopId: 'fuk001', category: '定番弁当', name: 'ナポリタン', price: 750, rating: 3.9, image: 'https://i.pinimg.com/736x/a0/44/3e/a0443eb63b9e4e56d4bdad82079d11be.jpg' },
+      { id: '7', shopId: 'fuk001', category: '定番弁当', name: 'ビビンバ', price: 500, rating: 4.5, image: 'https://i.pinimg.com/736x/15/fc/18/15fc1800352f40dc57aba529365dd6dd.jpg' },
+      { id: '8', shopId: 'fuk001', category: '定番弁当', name: '鶏そぼろ丼', price: 1000, rating: 4.3, image: 'https://i.pinimg.com/736x/a3/c0/44/a3c0445cb7ce8a623f9420a2aaa8332c.jpg' },
+      { id: '9', shopId: 'fuk001', category: '定番弁当', name: 'ソースカツ弁当', price: 1000, rating: 4.3, image: 'https://i.pinimg.com/736x/09/cc/18/09cc18f3ab7aeb70638f33170251bceb.jpg' },
+      { id: '10', shopId: 'fuk001', category: '定番弁当', name: 'カツカレー', price: 1000, rating: 4.3, image: 'https://i.pinimg.com/736x/7f/6f/55/7f6f5560ca41e1870c59b18f6f1f2360.jpg' },
+    ];
     const dummyReviewList = [
       { id: '1', userId: 'user1', shopId: 'fuk001', user: "User1", userProfile: "/assets/img/no-user.jpg", userRatingCount: 1120, userRatingAvg: 4.6, rating: 4, date: "2024-11-29", comment: "Good!" },
       { id: '2', userId: 'user2', shopId: 'fuk001', user: "User2", userProfile: "/assets/img/no-user.jpg", userRatingCount: 320, userRatingAvg: 4.9, rating: 5, date: "2024-12-29", comment: "Nice!" },
@@ -88,6 +89,11 @@ export default function ShopInfoPage(
       setFavoriteItems([...favoriteItems, id]);
     }
   };
+
+  const handleClick = (item: Food) => {
+    setSelectedItem(item);
+    setOpen(true);
+  }
 
   const tabs = useMemo(() => {
     const noItemsText = "表示する商品がありません";
@@ -143,9 +149,8 @@ export default function ShopInfoPage(
                 <FoodCard
                   key={item.id}
                   data={item}
-                  onClick={() => addToCart(dispatch, item)}
+                  onClick={() => handleClick(item)}
                   isFavorite={favoriteItems.includes(item.id)}
-                  isAdded={true}
                   handleFavorite={handleFavorite}
                 />
               ))}
@@ -180,9 +185,8 @@ export default function ShopInfoPage(
                 <FoodCard
                   key={item.id}
                   data={item}
-                  onClick={() => addToCart(dispatch, item)}
+                  onClick={() => handleClick(item)}
                   isFavorite={favoriteItems.includes(item.id)}
-                  isAdded={true}
                   handleFavorite={handleFavorite}
                 />
               ))}
@@ -219,9 +223,8 @@ export default function ShopInfoPage(
                     <FoodCard
                       key={item.id}
                       data={item}
-                      onClick={() => addToCart(dispatch, item)}
+                      onClick={() => handleClick(item)}
                       isFavorite={favoriteItems.includes(item.id)}
-                      isAdded={true}
                       handleFavorite={handleFavorite}
                     />
                   ))}
@@ -233,7 +236,7 @@ export default function ShopInfoPage(
       });
 
     return [allTab, specialTab, ...categoryTabs];
-  }, [items, favoriteItems, dispatch, searchValue]);
+  }, [items, favoriteItems, searchValue]);
 
   const reviewFilterOptions = [
     {
@@ -290,6 +293,13 @@ export default function ShopInfoPage(
 
   return (
     <article className="shop">
+      <FoodInfoDialog
+        data={selectedItem}
+        open={open}
+        setOpen={setOpen}
+        isFavorite={selectedItem ? favoriteItems.includes(selectedItem.id) : false}
+        handleFavorite={handleFavorite}
+      />
       {/* Shop Info */}
       <section className="shop-header">
         <div className="shop-profile container">

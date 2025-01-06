@@ -40,6 +40,22 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         primary: foreground,
       },
     },
+    components: {
+      MuiButton: {
+        styleOverrides: {
+          root: {
+            borderRadius: '0.5rem',
+          },
+        },
+      },
+      MuiDialog: {
+        styleOverrides: {
+          paper: {
+            borderRadius: '0.5rem',
+          },
+        },
+      },
+    },
   });
 
   return (

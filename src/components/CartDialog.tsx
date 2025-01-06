@@ -1,11 +1,12 @@
 "use client";
 
 import React, { forwardRef, Fragment, useEffect, useState } from "react";
+import { AppDispatch, useAppDispatch, useAppSelector } from "@/store";
+import { setCartState } from "@/store/slice/cartSlice";
 import Image from "next/image";
 import { useMediaQuery } from "react-responsive";
 import { currency } from "@/common/utils/StringUtils";
-import { AppDispatch, useAppDispatch, useAppSelector } from "@/store";
-import { setCartState } from "@/store/slice/cartSlice";
+import QuantityButton from "@/components/QuantityButton";
 
 import { TransitionProps } from "@mui/material/transitions";
 import Button from "@mui/material/Button";
@@ -20,8 +21,6 @@ import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import DeleteSweepOutlinedIcon from "@mui/icons-material/DeleteSweepOutlined";
-import RemoveIcon from "@mui/icons-material/Remove";
-import AddIcon from "@mui/icons-material/Add";
 import IconButton from "@mui/material/IconButton";
 
 const dummyUserId = "001";
@@ -36,15 +35,15 @@ const Transition = forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export const addToCart = (dispatch: AppDispatch, item: Food) => {
+export const addToCart = (dispatch: AppDispatch, item: Food, quantity?: number) => {
   const existingCartItems = JSON.parse(localStorage.getItem(cartKey) || "[]");
   // 新しいアイテムは追加、既存のアイテムは数量を増やす
   const itemIndex = existingCartItems.findIndex((existingItem: Food) => existingItem.id === item.id);
   let newCartItems;
   if (itemIndex === -1) {
-    newCartItems = [...existingCartItems, { ...item, quantity: 1 }];
+    newCartItems = [...existingCartItems, { ...item, quantity: quantity || 1 }];
   } else {
-    existingCartItems[itemIndex].quantity += 1;
+    existingCartItems[itemIndex].quantity += quantity || 1;
     newCartItems = [...existingCartItems];
   }
   // ローカルストレージとストアに反映
@@ -86,7 +85,7 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
     dispatch(setCartState({ cartItems: updatedCartItems }));
   };
 
-  const handleQuantity = (e: React.MouseEvent<HTMLButtonElement>, id: string, quantity: number) => {
+  const handleQuantity = (id: string, quantity: number) => {
     if (quantity === 0) {
       const updatedCartItems = cartItems.filter(item => item.id !== id);
       localStorage.setItem(cartKey, JSON.stringify(updatedCartItems));
@@ -111,15 +110,15 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
       <Dialog
         className="cart-dialog"
         fullScreen={isSp}
-        keepMounted
         TransitionComponent={Transition}
+        keepMounted
         open={open}
         onClose={handleOpen(false)}
       >
         <DialogTitle className="cart-title">
-          <CloseIcon className="close-icon" onClick={handleOpen(false)} />
-          {`注文リスト`}
           <DeleteSweepOutlinedIcon className={`delete-icon ${cartItems.length > 0 ? "active" : ""}`} onClick={() => setDeleteMode(!deleteMode)} />
+          {`注文リスト`}
+          <CloseIcon className="close-icon" onClick={handleOpen(false)} />
         </DialogTitle>
         <DialogContent className="cart-items">
           <div className="cart-items-count">
@@ -166,15 +165,11 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
                       }
                     </div>
                   </div>
-                  <div className="cart-item-quantity">
-                    <IconButton onClick={(e) => handleQuantity(e, item.id, item.quantity ? item.quantity - 1 : 0)}>
-                      <RemoveIcon />
-                    </IconButton>
-                    <p className="quantity">{item.quantity}</p>
-                    <IconButton onClick={(e) => handleQuantity(e, item.id, item.quantity ? item.quantity + 1 : 1)}>
-                      <AddIcon />
-                    </IconButton>
-                  </div>
+                  <QuantityButton
+                    quantity={item.quantity || 0}
+                    handleMinus={() => handleQuantity(item.id, item.quantity ? item.quantity - 1 : 0)}
+                    handlePlus={() => handleQuantity(item.id, item.quantity ? item.quantity + 1 : 1)}
+                  />
                 </div>
                 <div className="cart-item-total-price">
                   {currency((item.discountPrice ? item.discountPrice : item.price) * (item.quantity || 1), "円")}

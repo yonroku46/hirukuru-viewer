@@ -67,6 +67,8 @@ declare global {
     shopId: string;
     category: string;
     name: string;
+    description?: string;
+    ingredients?: string[];
     price: number;
     discountPrice?: number;
     rating?: number;
