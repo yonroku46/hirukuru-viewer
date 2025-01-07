@@ -32,6 +32,16 @@ declare global {
     active: boolean;
     panel: React.ReactNode
   }
+  interface LinkItem {
+    title: string;
+    href: string;
+    icon?: React.ReactNode;
+  }
+  interface User {
+    name: string;
+    profileImage: string;
+    shopOwner: boolean;
+  }
   interface ServiceEvent {
     id: string;
     title: string;
