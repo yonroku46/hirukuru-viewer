@@ -13,7 +13,7 @@ import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
+import ManageSearchOutlinedIcon from '@mui/icons-material/ManageSearchOutlined';
 import CloseIcon from "@mui/icons-material/Close";
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
@@ -67,14 +67,10 @@ export default function FoodInfoDialog({ data, open, setOpen, isFavorite, handle
         fullScreen={isSp}
         maxWidth="lg"
       >
-        <DialogTitle className="title">
-          <div className="food-name">
-            {data.name}
-            {data.discountPrice && data.discountPrice < data.price &&
-              <div className="sale-tag">
-                {`${Math.round((1 - data.discountPrice / data.price) * 100)}% OFF`}
-              </div>
-            }
+        <DialogTitle className="title-wrapper">
+          <div className="title">
+            <ManageSearchOutlinedIcon />
+            商品詳細
           </div>
           <CloseIcon className="close-icon" onClick={() => setOpen(false)} />
         </DialogTitle>
@@ -96,30 +92,38 @@ export default function FoodInfoDialog({ data, open, setOpen, isFavorite, handle
             }
           </div>
           <div className="food-detail-wrapper">
-            <div className="price-rating">
-              {data.discountPrice && data.discountPrice < data.price ?
-                <div className="price">
-                  <p className="current-price on-sale">
-                    {currency(data.discountPrice)}
-                    <span className="unit">円</span>
-                  </p>
-                  <p className="origin-price">
-                    {currency(data.price)}
-                    <span className="unit">円</span>
-                  </p>
-                </div>
-                :
-                <div className="price">
-                  <p className="current-price">
-                    {currency(data.price)}
-                    <span className="unit">円</span>
-                  </p>
-                </div>
-              }
+            <div className="food-name-rating">
+              <div className="food-name">
+                {data.name}
+                {data.discountPrice && data.discountPrice < data.price &&
+                  <div className="sale-tag">
+                    {`${Math.round((1 - data.discountPrice / data.price) * 100)}% OFF`}
+                  </div>
+                }
+              </div>
               <div className="rating">
                 {data.rating || "-"}
               </div>
             </div>
+            {data.discountPrice && data.discountPrice < data.price ?
+              <div className="price">
+                <p className="current-price on-sale">
+                  {currency(data.discountPrice)}
+                  <span className="unit">円</span>
+                </p>
+                <p className="origin-price">
+                  {currency(data.price)}
+                  <span className="unit">円</span>
+                </p>
+              </div>
+              :
+              <div className="price">
+                <p className="current-price">
+                  {currency(data.price)}
+                  <span className="unit">円</span>
+                </p>
+              </div>
+            }
             {data.description &&
               <div className="info">
                 <label>商品説明</label>
@@ -138,29 +142,29 @@ export default function FoodInfoDialog({ data, open, setOpen, isFavorite, handle
                 </div>
               </div>
             }
+            <div className="actions">
+              <QuantityButton
+                quantity={quantity}
+                handleMinus={() => {
+                  if (quantity > 1) {
+                    setQuantity(quantity - 1);
+                  }
+                }}
+                handlePlus={() => {
+                  setQuantity(quantity + 1);
+                }}
+              />
+              <Button variant="contained" className="add-btn" onClick={handleClick}>
+                {showAddIcon &&
+                  <div className="added-icon">
+                    <AddShoppingCartIcon fontSize="inherit" />
+                  </div>
+                }
+                カートに入れる
+              </Button>
+            </div>
           </div>
         </DialogContent>
-        <DialogActions className="actions">
-          <QuantityButton
-            quantity={quantity}
-            handleMinus={() => {
-              if (quantity > 1) {
-                setQuantity(quantity - 1);
-              }
-            }}
-            handlePlus={() => {
-              setQuantity(quantity + 1);
-            }}
-          />
-          <Button variant="contained" className="add-btn" onClick={handleClick}>
-            {showAddIcon &&
-              <div className="added-icon">
-                <AddShoppingCartIcon fontSize="inherit" />
-              </div>
-            }
-            カートに入れる
-          </Button>
-        </DialogActions>
       </Dialog>
     </Fragment>
   );

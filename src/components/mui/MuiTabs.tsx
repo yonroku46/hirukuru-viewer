@@ -82,6 +82,9 @@ export default function MuiTabs({ tabs }: MuiTabsProps) {
               minHeight: 'unset',
               color: tab.active ? 'inherit' : 'var(--gray-alpha-400)',
               pointerEvents: tab.active ? 'auto' : 'none',
+              '&.Mui-selected': {
+                fontWeight: 'bold',
+              },
             }}
             {...a11yProps(index)}
           />
