@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { ThemeProvider } from "@/components/mui/MuiProvider";
 import { generatePageMetadata } from "@/common/lib/Metadata";
+import type { Viewport } from 'next'
 import "@/styles/globals.scss";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -20,6 +21,13 @@ const ReduxProvider = dynamic(() => import('@/store/ReduxProvider'), {
 
 export async function generateMetadata() {
   return generatePageMetadata("home");
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false
 }
 
 export default function RootLayout({

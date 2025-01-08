@@ -21,7 +21,6 @@ import ListItemText from '@mui/material/ListItemText';
 import MenuIcon from '@mui/icons-material/Menu';
 import Button from "@mui/material/Button";
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import HistoryIcon from '@mui/icons-material/History';
 import SearchIcon from '@mui/icons-material/Search';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
@@ -34,12 +33,11 @@ import CloseIcon from '@mui/icons-material/Close';
 const menuItems: GroupMenuItem[] = [
   { groupName: "カスタム", groupHref: "/my", groupItems: [
     { name: "マイページ", href: "/my", icon: <PersonOutlineIcon /> },
-    { name: "お気に入り", href: "/my/favorite", icon: <FavoriteBorderIcon /> },
-    { name: "注文履歴", href: "/my/history", icon: <HistoryIcon /> },
+    { name: "注文確認", href: "/my/order", icon: <HistoryIcon /> },
   ]},
-  { groupName: "注文", groupHref: "/bento", groupItems: [
-    { name: "弁当/店舗検索", href: "/bento/search", icon: <SearchIcon /> },
-    { name: "ランキング", href: "/bento/ranking", icon: <TrendingUpIcon /> },
+  { groupName: "注文", groupHref: "/shop", groupItems: [
+    { name: "弁当/店舗検索", href: "/shop/search", icon: <SearchIcon /> },
+    { name: "ランキング", href: "/shop/ranking", icon: <TrendingUpIcon /> },
   ]},
   { groupName: "サービス", groupHref: "/service", groupItems: [
     { name: "お問い合わせ", href: "/service/contact", icon: <SupportAgentIcon /> },

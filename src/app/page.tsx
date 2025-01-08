@@ -1,17 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { currency } from "@/common/utils/StringUtils";
 import EventSlider from "@/components/EventSlider";
 import FoodCardSlider from "@/components/FoodCardSlider";
+import Selecter from "@/components/Selecter";
 
 import KeyboardArrowRightTwoToneIcon from '@mui/icons-material/KeyboardArrowRightTwoTone';
 import QrCodeScannerTwoToneIcon from '@mui/icons-material/QrCodeScannerTwoTone';
+import IconButton from "@mui/material/IconButton";
+import Button from "@mui/material/Button";
+import CellTowerSharpIcon from '@mui/icons-material/CellTowerSharp';
 
 export default function Home() {
-  const [hasLogin, setHasLogin] = useState<boolean>(false);
-
   const foods = [
     { id: '1', shopId: 'fuk001', category: '日替わり弁当', name: '唐揚げ弁当', description: "国内産の鶏肉を使用した唐揚げ弁当です。", ingredients: ["唐揚げ", "ほうれん草ナムル", "白ごはん"], price: 1000, discountPrice: 950, rating: 4.3, image: 'https://i.pinimg.com/736x/f2/67/df/f267dfdd2b0cb8eac4b5e9674aa49e97.jpg' },
     { id: '2', shopId: 'fuk001', category: '特製弁当', name: '特製のり弁', description: "特製のり弁です。", price: 500, discountPrice: 450, rating: 4.5, image: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg' },
@@ -40,33 +43,56 @@ export default function Home() {
     { id: '6', name: '魚介系', image: '/assets/img/fish.png' },
     { id: '7', name: '肉系', image: '/assets/img/meat.png' },
   ];
+  const locationOptions = useMemo(() => [
+    { label: '福岡市 博多区', value: 'fukuoka-hakata' },
+    { label: '福岡市 中央区', value: 'fukuoka-chuo' },
+  ], []);
+
+  const [hasLogin, setHasLogin] = useState<boolean>(false);
+  const [location, setLocation] = useState<string>(locationOptions[0].value);
+  const [locationLabel, setLocationLabel] = useState<string>(locationOptions[0].label);
+
+  useEffect(() => {
+    setLocationLabel(locationOptions.find(option => option.value===location)?.label.replace('福岡市 ', '') || '');
+  }, [location, locationOptions]);
 
   return (
     <article className="home">
       <section className="container">
-        <div className="dashboard">
-          {hasLogin ?
-            <div>
-              マイポイント 4P
-            </div>
-            :
-            <div>
-              マイポイント 4P
-            </div>
-          }
-          {hasLogin ?
-            <button className="user-code-btn">
-              会員コード
-              <QrCodeScannerTwoToneIcon />
-            </button>
-            :
-            <button className="login-btn" onClick={() => setHasLogin(true)}>
-              ログイン
-            </button>
-          }
+        <div className="home-wrapper">
+          <div className="user-contents">
+            <CellTowerSharpIcon className="location-icon" />
+            {hasLogin ?
+              <div className="user-dashboard">
+                <div className="user-point">
+                  マイポイント
+                  <div className="point-value">
+                    {currency(1000)}
+                    <span className="unit">p</span>
+                  </div>
+                </div>
+                <IconButton className="user-code-btn">
+                  <QrCodeScannerTwoToneIcon />
+                  会員コード
+                </IconButton>
+              </div>
+              :
+              <div className="user-dashboard">
+                <Selecter
+                  options={locationOptions}
+                  onChange={(e) => setLocation(e.target.value)}
+                />
+                <Button className="user-login-btn" onClick={() => setHasLogin(true)}>
+                  ログイン
+                </Button>
+              </div>
+            }
+          </div>
+          <div className="service-contents">
+            <EventSlider events={events} />
+          </div>
         </div>
       </section>
-      <EventSlider events={events} />
       <section className="container">
         <div className="quick-select">
           <h2 className="title">
@@ -82,8 +108,8 @@ export default function Home() {
                   className="quick-select-image"
                   src={item.image}
                   alt={item.name}
-                  width={100}
-                  height={100}
+                  width={90}
+                  height={90}
                 />
                 <div className="quick-select-name">
                   {item.name}
@@ -95,7 +121,7 @@ export default function Home() {
       </section>
       <section className="container">
         <FoodCardSlider
-          title="おすすめの弁当"
+          title={`${locationLabel}のおすすめ弁当`}
           data={foods}
         />
         <FoodCardSlider

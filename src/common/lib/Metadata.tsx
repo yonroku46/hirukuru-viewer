@@ -70,14 +70,7 @@ export async function generatePageMetadata(type: MetadataType, name?: string): P
         { url: "/assets/icon/apple-touch-icon.png" }
       ],
     },
-    manifest: "/manifest.json",
-    viewport: {
-      width: "device-width",
-      initialScale: 1,
-      maximumScale: 1,
-      minimumScale: 1,
-      userScalable: false
-    },
+    manifest: "/manifest.json"
   };
 
   const pageMetadata: Record<MetadataType, Metadata> = {

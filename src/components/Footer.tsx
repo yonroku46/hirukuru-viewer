@@ -8,9 +8,9 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import FacebookIcon from '@mui/icons-material/Facebook';
 
 const menuItems: GroupMenuItem[] = [
-  { groupName: "注文", groupHref: "/bento", groupItems: [
-    { name: "弁当/店舗検索", href: "/bento/search" },
-    { name: "ランキング", href: "/bento/ranking" },
+  { groupName: "注文", groupHref: "/shop", groupItems: [
+    { name: "弁当/店舗検索", href: "/shop/search" },
+    { name: "ランキング", href: "/shop/ranking" },
   ]},
   { groupName: "サービス", groupHref: "/service", groupItems: [
     { name: "お問い合わせ", href: "/service/contact" },
@@ -32,11 +32,20 @@ export default function Footer() {
           </div>
         </div>
         <div className="right-container">
-          <nav>
-            {menuItems.map((item) => (
-              item.groupItems.map((subItem, index) => (
-                <Link key={index} href={subItem.href}>{subItem.name}</Link>
-              ))
+          <nav className="footer-nav">
+            {menuItems.map((group) => (
+              <div key={group.groupName}>
+                <div className="group-name">
+                  {group.groupName}
+                </div>
+                {group.groupItems.map((item) => (
+                  <div className="group-item" key={item.name}>
+                    <Link href={item.href}>
+                      {item.name}
+                    </Link>
+                  </div>
+                ))}
+              </div>
             ))}
           </nav>
         </div>

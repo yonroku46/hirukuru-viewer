@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { toKatakana } from "wanakana";
@@ -81,14 +81,14 @@ export default function ShopInfoPage(
     setReviewList(dummyReviewList);
   }, [shopId]);
 
-  const handleFavorite = (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
+  const handleFavorite = useCallback((e: React.MouseEvent<HTMLButtonElement>, id: string) => {
     e.stopPropagation();
     if (favoriteItems.includes(id)) {
       setFavoriteItems(favoriteItems.filter((item) => item !== id));
     } else {
       setFavoriteItems([...favoriteItems, id]);
     }
-  };
+  }, [favoriteItems]);
 
   const handleClick = (item: Food) => {
     setSelectedItem(item);
@@ -236,7 +236,7 @@ export default function ShopInfoPage(
       });
 
     return [allTab, specialTab, ...categoryTabs];
-  }, [items, favoriteItems, searchValue]);
+  }, [items, favoriteItems, searchValue, handleFavorite]);
 
   const reviewFilterOptions = [
     {

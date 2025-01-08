@@ -15,21 +15,21 @@ export default function LinkList({ title, linkList }: LinkListProps) {
 
   return (
     <div className="link-list">
-      <label>{title}</label>
+      <h2 className="title">
+        {title}
+      </h2>
       <div className="link-list-items">
         {linkList.map((link, index) => (
           <Link
             key={index}
             href={link.href}
             className="link-list-item"
-            style={{
-              borderBottom: index === linkList.length - 1 ? 'none' : '1px solid var(--gray-alpha-300)',
-            }}
           >
             <div className="link-list-item-content">
-              {index}/{linkList.length - 1}
-              {link.icon}
-              {link.title}
+              <div className="icon-wrapper">
+                {link.icon}
+              </div>
+              <p>{link.title}</p>
             </div>
             <KeyboardArrowRightIcon className="arrow-icon" />
           </Link>

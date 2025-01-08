@@ -40,6 +40,7 @@ declare global {
   interface User {
     name: string;
     profileImage: string;
+    point: number;
     shopOwner: boolean;
   }
   interface ServiceEvent {
