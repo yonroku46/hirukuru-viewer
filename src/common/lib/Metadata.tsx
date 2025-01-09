@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { config } from "@/config";
 import { signOgImageUrl } from "@/common/lib/OgImage";
 
-type MetadataType = "home" | "login" | "my" | "shop" | "contact" | "search";
+type MetadataType = "home" | "login" | "my" | "my/order" | "my/order/review" | "shop" | "contact" | "search";
 
 export async function generatePageMetadata(type: MetadataType, name?: string): Promise<Metadata> {
   const baseMetadata: Metadata = {
@@ -74,27 +74,35 @@ export async function generatePageMetadata(type: MetadataType, name?: string): P
   };
 
   const pageMetadata: Record<MetadataType, Metadata> = {
-    home: {
+    "home": {
       ...baseMetadata,
       title: `${config.service.name}`,
     },
-    login: {
+    "login": {
       ...baseMetadata,
       title: `ログイン | ${config.service.name}`,
     },
-    my: {
+    "my": {
       ...baseMetadata,
       title: `マイページ | ${config.service.name}`,
     },
-    search: {
+    "my/order": {
+      ...baseMetadata,
+      title: `注文管理 | ${config.service.name}`,
+    },
+    "my/order/review": {
+      ...baseMetadata,
+      title: `レビュー | ${config.service.name}`,
+    },
+    "search": {
       ...baseMetadata,
       title: `検索 | ${config.service.name}`,
     },
-    shop: {
+    "shop": {
       ...baseMetadata,
       title: `${name || '店舗'} | ${config.service.name}`,
     },
-    contact: {
+    "contact": {
       ...baseMetadata,
       title: `お問い合わせ | ${config.service.name}`,
     },

@@ -17,6 +17,22 @@ declare global {
   interface CountRes {
     count: number
   }
+  // Table
+  interface Column {
+    id: 'name' | 'code' | 'population' | 'size' | 'density';
+    label: string;
+    minWidth?: number;
+    align?: 'right';
+    format?: (value: number) => string;
+  }
+  interface Rows {
+    name: string;
+    code: string;
+    population: number;
+    size: number;
+    density: number;
+  }
+  // Menu
   interface MenuItem {
     name: string;
     href: string;
@@ -32,10 +48,25 @@ declare global {
     active: boolean;
     panel: React.ReactNode
   }
+  interface Breadcrumb {
+    label: string;
+    href: string;
+    active?: boolean;
+  }
   interface LinkItem {
     title: string;
     href: string;
     icon?: React.ReactNode;
+  }
+  interface OrderStatus {
+    type: 'booked' | 'pickup' | 'done' | 'review' | 'cancel';
+    value: number;
+  }
+  interface SearchFilter {
+    type: 'text' | 'date' | 'year' | 'month';
+    key: string;
+    label: string;
+    value: string;
   }
   interface User {
     name: string;

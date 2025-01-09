@@ -7,8 +7,12 @@ export default function LoginPage() {
     <article>
       <div className="container login">
         <div className="login-header">
-          <h1>ログイン</h1>
-          <p>ログイン情報はPCに自動で保存されます。</p>
+          <h1 className="title">
+            Hirukuru
+          </h1>
+          <p className="description">
+            ランチをラクに、余裕のある時間へ
+          </p>
         </div>
         <div className="login-btn-group">
           <button className="social-btn google">
@@ -24,6 +28,9 @@ export default function LoginPage() {
             </div>
           </button>
         </div>
+        <p className="caution">
+          ログイン情報はPCに自動で保存されます
+        </p>
       </div>
     </article>
   );

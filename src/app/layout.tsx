@@ -1,8 +1,7 @@
 import { Noto_Sans_JP } from "next/font/google";
-import Head from 'next/head';
 import dynamic from 'next/dynamic';
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
+import Footer from "@/components/layout/Footer";
+import Header from "@/components/layout/Header";
 import { ThemeProvider } from "@/components/mui/MuiProvider";
 import { generatePageMetadata } from "@/common/lib/Metadata";
 import type { Viewport } from 'next'
@@ -36,23 +35,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <>
-      <Head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-      </Head>
-      <html lang="ja">
-        <body className={`${notoSansJP.className}`}>
-          <ThemeProvider>
-            <ReduxProvider>
-              <Header />
-              <main>
-                {children}
-              </main>
-                <Footer />
-            </ReduxProvider>
-          </ThemeProvider>
-        </body>
-      </html>
-    </>
+    <html lang="ja">
+      <body className={`${notoSansJP.className}`}>
+        <ThemeProvider>
+          <ReduxProvider>
+            <Header />
+            <main>
+              {children}
+            </main>
+              <Footer />
+          </ReduxProvider>
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }

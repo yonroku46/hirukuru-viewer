@@ -6,7 +6,8 @@ import { setCartState } from "@/store/slice/cartSlice";
 import Image from "next/image";
 import { useMediaQuery } from "react-responsive";
 import { currency } from "@/common/utils/StringUtils";
-import QuantityButton from "@/components/QuantityButton";
+import QuantityButton from "@/components/button/QuantityButton";
+import MiniButton from "@/components/button/MiniButton";
 
 import { TransitionProps } from "@mui/material/transitions";
 import Button from "@mui/material/Button";
@@ -102,11 +103,14 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
 
   return (
     <Fragment>
-      <div className="cart-btn" onClick={handleOpen(true)}>
-        <Badge color="secondary" badgeContent={cartItems.length} max={9} variant={"standard"}>
-          <ShoppingCartOutlinedIcon className="cart-icon" />
-        </Badge>
-      </div>
+      <MiniButton
+        icon={
+          <Badge color="secondary" badgeContent={cartItems.length} max={9} variant={"standard"}>
+            <ShoppingCartOutlinedIcon className="cart-icon" />
+          </Badge>
+        }
+        onClick={handleOpen(true)}
+      />
       <Dialog
         className="cart-dialog"
         fullScreen={isSp}

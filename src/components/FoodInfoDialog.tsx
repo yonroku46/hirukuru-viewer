@@ -6,7 +6,7 @@ import { useAppDispatch } from "@/store";
 import { currency } from '@/common/utils/StringUtils';
 import Image from "@/components/Image";
 import { addToCart } from "@/components/CartDialog";
-import QuantityButton from '@/components/QuantityButton';
+import QuantityButton from '@/components/button/QuantityButton';
 
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';

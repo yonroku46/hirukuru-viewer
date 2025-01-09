@@ -4,8 +4,9 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import SearchInput from "@/components/SearchInput";
+import SearchInput from "@/components/input/SearchInput";
 import CartDialog from "@/components/CartDialog";
+import MiniButton from "@/components/button/MiniButton";
 import { config } from "@/config";
 
 import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined';
@@ -21,7 +22,7 @@ import ListItemText from '@mui/material/ListItemText';
 import MenuIcon from '@mui/icons-material/Menu';
 import Button from "@mui/material/Button";
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
-import HistoryIcon from '@mui/icons-material/History';
+import ShoppingBasketOutlinedIcon from '@mui/icons-material/ShoppingBasketOutlined';
 import SearchIcon from '@mui/icons-material/Search';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
@@ -33,7 +34,7 @@ import CloseIcon from '@mui/icons-material/Close';
 const menuItems: GroupMenuItem[] = [
   { groupName: "カスタム", groupHref: "/my", groupItems: [
     { name: "マイページ", href: "/my", icon: <PersonOutlineIcon /> },
-    { name: "注文確認", href: "/my/order", icon: <HistoryIcon /> },
+    { name: "注文管理", href: "/my/order", icon: <ShoppingBasketOutlinedIcon /> },
   ]},
   { groupName: "注文", groupHref: "/shop", groupItems: [
     { name: "弁当/店舗検索", href: "/shop/search", icon: <SearchIcon /> },
@@ -142,9 +143,16 @@ export default function Header() {
         >
           <Box sx={{ width: 250 }} role="presentation">
             <List sx={{ p: 0 }}>
-              <div className="close-btn" onClick={toggleDrawer(false)}>
-                <CloseIcon className="close-icon" />
-              </div>
+              <MiniButton
+                icon={<CloseIcon />}
+                onClick={toggleDrawer(false)}
+                sx={{
+                  display: "flex",
+                  marginLeft: "auto",
+                  marginTop: "1rem",
+                  marginRight: "1rem",
+                }}
+              />
               <Box sx={{ p: "2rem 1rem"}}>
                 <Button
                   fullWidth

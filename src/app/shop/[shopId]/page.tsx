@@ -4,15 +4,15 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { toKatakana } from "wanakana";
-import SearchInput from "@/components/SearchInput";
+import SearchInput from "@/components/input/SearchInput";
 import { currency, formatDaysAgo } from "@/common/utils/StringUtils";
 import MuiMenu from "@/components/mui/MuiMenu";
 import MuiTabs from "@/components/mui/MuiTabs";
-import Selecter from "@/components/Selecter";
+import Selector from "@/components/input/Selector";
 import FoodCard from "@/components/FoodCard";
 import FoodInfoDialog from "@/components/FoodInfoDialog";
+import MiniButton from "@/components/button/MiniButton";
 
-import IconButton from "@mui/material/IconButton";
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined';
@@ -311,15 +311,30 @@ export default function ShopInfoPage(
             height={74}
           />
           <div className="shop-action-wrapper">
-            <IconButton className="action-btn">
-              <FmdGoodOutlinedIcon />
-            </IconButton>
-            <IconButton className="action-btn">
-              <FavoriteBorderIcon />
-            </IconButton>
-            <IconButton className="action-btn" onClick={handleMore}>
-              <MoreHorizIcon />
-            </IconButton>
+            <MiniButton
+              icon={<FmdGoodOutlinedIcon />}
+              onClick={() => {}}
+              sx={{
+                backgroundColor: "var(--gray-alpha-300)",
+                color: "var(--background)",
+              }}
+            />
+            <MiniButton
+              icon={<FavoriteBorderIcon />}
+              onClick={() => {}}
+              sx={{
+                backgroundColor: "var(--gray-alpha-300)",
+                color: "var(--background)",
+              }}
+            />
+            <MiniButton
+              icon={<MoreHorizIcon />}
+              onClick={handleMore}
+              sx={{
+                backgroundColor: "var(--gray-alpha-300)",
+                color: "var(--background)",
+              }}
+            />
           </div>
         </div>
         <MuiMenu anchorEl={anchorEl} setAnchorEl={setAnchorEl} />
@@ -380,7 +395,7 @@ export default function ShopInfoPage(
             {sortedReviewList.length > 0 ?
               <>
                 <div className="review-filter">
-                  <Selecter
+                  <Selector
                     options={reviewFilterOptions}
                     onChange={(e) => setReviewFilter(e.target.value)}
                   />

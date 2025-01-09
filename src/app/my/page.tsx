@@ -4,17 +4,19 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "@/components/Image";
 import LinkList from "@/components/LinkList";
+import OrderStatus from "@/components/OrderStatus";
 import { currency } from "@/common/utils/StringUtils";
+import NoticeBoard from "@/components/NoticeBoard";
+import MiniButton from "@/components/button/MiniButton";
 
-import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
+import ShoppingBasketOutlinedIcon from '@mui/icons-material/ShoppingBasketOutlined';
 import AddCardOutlinedIcon from '@mui/icons-material/AddCardOutlined';
 import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
+import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import MonetizationOnOutlinedIcon from '@mui/icons-material/MonetizationOnOutlined';
-import HistoryOutlinedIcon from '@mui/icons-material/HistoryOutlined';
 import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
-import IconButton from "@mui/material/IconButton";
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import QrCodeScannerOutlinedIcon from '@mui/icons-material/QrCodeScannerOutlined';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
@@ -34,16 +36,23 @@ export default function MyPage() {
     setUser(dummyUser);
   }, []);
 
+  const statusList: OrderStatus[] = [
+    { type: 'booked', value: 0 },
+    { type: 'pickup', value: 1 },
+    { type: 'done', value: 1 },
+    { type: 'review', value: 1 },
+    { type: 'cancel', value: 0 }
+  ];
   const quickLinkList = [
-    { title: '最近の注文', href: '/my/history', icon: <ShoppingCartOutlinedIcon /> },
+    { title: '注文管理', href: '/my/order', icon: <ShoppingBasketOutlinedIcon /> },
+    { title: 'レビュー', href: '/my/order/review', icon: <SmsOutlinedIcon /> },
     { title: 'お気に入り', href: '/my/favorite', icon: <FavoriteBorderOutlinedIcon /> },
-    { title: 'レビュー', href: '/my/review', icon: <SmsOutlinedIcon /> },
     { title: 'クーポン', href: '/my/coupon', icon: <LocalOfferOutlinedIcon /> },
   ];
   const linkList = [
-    { title: '注文履歴', href: '/my/history', icon: <HistoryOutlinedIcon /> },
     { title: '支払い設定', href: '/my/credit', icon: <AddCardOutlinedIcon /> },
     { title: 'ポイント管理', href: '/my/point', icon: <MonetizationOnOutlinedIcon /> },
+    { title: 'お問い合わせ', href: '/service/contact', icon: <SupportAgentIcon /> },
     { title: '退会', href: '/my/withdraw', icon: <LogoutOutlinedIcon /> },
   ];
 
@@ -82,43 +91,20 @@ export default function MyPage() {
             </div>
           </div>
           <div className="user-action-wrapper">
-            <IconButton className="action-btn">
-              <QrCodeScannerOutlinedIcon />
-            </IconButton>
-            <IconButton className="action-btn">
-              <SettingsOutlinedIcon />
-            </IconButton>
+            <MiniButton
+              icon={<QrCodeScannerOutlinedIcon />}
+              onClick={() => {}}
+            />
+            <MiniButton
+              icon={<SettingsOutlinedIcon />}
+              onClick={() => {}}
+            />
           </div>
         </div>
         {/* Order Management */}
-        <div className="order-management">
-          <div className="order-management-items-wrapper">
-            <div className="order-management-item">
-              <div className="value">
-                {0}
-              </div>
-              <label>予約</label>
-            </div>
-            <div className="order-management-item">
-              <div className="value">
-                {0}
-              </div>
-              <label>受け取り予定</label>
-            </div>
-            <div className="order-management-item">
-              <div className="value">
-                {0}
-              </div>
-              <label>完了・レビュー待ち</label>
-            </div>
-            <div className="order-management-item">
-              <div className="value">
-                {0}
-              </div>
-              <label>キャンセル</label>
-            </div>
-          </div>
-        </div>
+        <OrderStatus
+          statusList={statusList}
+        />
         {/* Quick Link List */}
         <LinkList
           title="クイックリンク"
@@ -128,6 +114,16 @@ export default function MyPage() {
         <LinkList
           title="ユーザー機能"
           linkList={linkList}
+        />
+        {/* Notice */}
+        <NoticeBoard
+          title={"ご確認お願いします！"}
+          contents={[
+            "マイページに登録されている個人情報（名前、メールアドレスなど）に不正が確認された場合、事前の通知なしにアカウントを停止する場合があります。",
+            "現在の予約状況、受け取り予定、完了したサービスを必ずご確認ください。",
+            "保有ポイントや利用可能なクーポンの残高を確認し、期限切れに注意してください。",
+            "重要な情報を見逃さないよう、通知設定（メールやプッシュ通知など）が有効になっているかご確認ください。",
+          ]}
         />
       </div>
     </article>

@@ -6,13 +6,12 @@ import Image from "next/image";
 import { currency } from "@/common/utils/StringUtils";
 import EventSlider from "@/components/EventSlider";
 import FoodCardSlider from "@/components/FoodCardSlider";
-import Selecter from "@/components/Selecter";
+import Selector from "@/components/input/Selector";
 
 import KeyboardArrowRightTwoToneIcon from '@mui/icons-material/KeyboardArrowRightTwoTone';
 import QrCodeScannerTwoToneIcon from '@mui/icons-material/QrCodeScannerTwoTone';
 import IconButton from "@mui/material/IconButton";
 import Button from "@mui/material/Button";
-import CellTowerSharpIcon from '@mui/icons-material/CellTowerSharp';
 
 export default function Home() {
   const foods = [
@@ -38,10 +37,10 @@ export default function Home() {
     { id: '1', name: '揚物', image: '/assets/img/agemono.png' },
     { id: '2', name: '麺類', image: '/assets/img/men.png' },
     { id: '3', name: 'カレー', image: '/assets/img/curry.png' },
-    { id: '4', name: '野菜系', image: '/assets/img/vegetable.png' },
+    { id: '4', name: '野菜', image: '/assets/img/vegetable.png' },
     { id: '5', name: '韓国風', image: '/assets/img/korean.png' },
-    { id: '6', name: '魚介系', image: '/assets/img/fish.png' },
-    { id: '7', name: '肉系', image: '/assets/img/meat.png' },
+    { id: '6', name: 'お魚', image: '/assets/img/fish.png' },
+    { id: '7', name: 'お肉', image: '/assets/img/meat.png' },
   ];
   const locationOptions = useMemo(() => [
     { label: '福岡市 博多区', value: 'fukuoka-hakata' },
@@ -61,7 +60,6 @@ export default function Home() {
       <section className="container">
         <div className="home-wrapper">
           <div className="user-contents">
-            <CellTowerSharpIcon className="location-icon" />
             {hasLogin ?
               <div className="user-dashboard">
                 <div className="user-point">
@@ -78,7 +76,7 @@ export default function Home() {
               </div>
               :
               <div className="user-dashboard">
-                <Selecter
+                <Selector
                   options={locationOptions}
                   onChange={(e) => setLocation(e.target.value)}
                 />
