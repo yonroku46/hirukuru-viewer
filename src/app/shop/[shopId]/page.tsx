@@ -120,8 +120,10 @@ export default function ShopInfoPage(
       const searchRegex = new RegExp(searchValue, 'i');
 
       return items.filter(item =>
-        searchRegex.test(item.name) || // ひらがな・漢字 一致
-        item.name.includes(searchKana) // カタカナ 一致
+        // ひらがな・漢字 一致
+        searchRegex.test(item.name) ||
+        // カタカナ 一致
+        item.name.includes(searchKana)
       );
     };
 

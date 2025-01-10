@@ -122,8 +122,9 @@ export default function Header() {
     if (!currentPath.startsWith('/login')) {
       sessionStorage.setItem('redirect', currentPath);
     }
-    // 移動時メニューバーを閉じる
+    // 移動時メニューバーを閉じてスクロール位置をトップに戻す
     setMenuOpen(false);
+    window.scrollTo(0, 0);
     // スクロールイベントクリーンアップ
     return () => {
       if (currentPath === '') {

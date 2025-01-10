@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { useMediaQuery } from "react-responsive";
 import Image from "@/components/Image";
 import { currency } from '@/common/utils/StringUtils';
@@ -14,6 +14,12 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Chip from '@mui/material/Chip';
+import Rating from '@mui/material/Rating';
+import StarRoundedIcon from '@mui/icons-material/StarRounded';
+import IconButton from '@mui/material/IconButton';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import Collapse from '@mui/material/Collapse';
 
 interface MuiTableProps<T extends Row> {
   topSection?: React.ReactNode;
@@ -39,6 +45,159 @@ export default function MuiTable<T extends Row>({ topSection, columns, rows }: M
     setPage(newPage);
   };
 
+  function Row<T extends Row>({ row }: { row: T }) {
+    const [open, setOpen] = React.useState(false);
+    const visibleColumns = columns.filter(col => !col.hide);
+    const haveListColumn = visibleColumns.find(column => column.type === 'list');
+    const listColumns = haveListColumn ? haveListColumn.listColumns : [];
+    const listRowChild = row[haveListColumn?.key as keyof typeof row];
+
+    return (
+      <Fragment>
+        <TableRow hover tabIndex={-1} key={row.id}>
+          {visibleColumns.map((column) => {
+            const value = row[column.key as keyof typeof row];
+            let dpValue;
+
+            switch (column.type) {
+              case 'image':
+                dpValue = (
+                  <Image
+                    className="profile"
+                    src={value as string}
+                    alt={column.label}
+                    width={38}
+                    height={38}
+                  />
+                );
+                break;
+              case 'rating':
+                dpValue = (
+                  <Rating
+                    readOnly
+                    size="small"
+                    value={value as number}
+                    icon={<StarRoundedIcon fontSize="inherit" style={{ color: 'var(--rating-color)' }} />}
+                    emptyIcon={<StarRoundedIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
+                  />
+                );
+                break;
+              case 'status':
+                dpValue = (
+                  <Chip
+                    size="small"
+                    label={labelDict.find(label => label.key === value)?.label}
+                    sx={{
+                      backgroundColor: labelDict.find(label => label.key === value)?.color,
+                      color: 'var(--background)',
+                      width: '100px',
+                    }}
+                  />
+                );
+                break;
+              case 'list':
+                dpValue = (
+                  <IconButton size="small" onClick={() => setOpen(!open)}>
+                    {open ? <KeyboardArrowRightIcon /> : <KeyboardArrowDownIcon />}
+                  </IconButton>
+                );
+                break;
+              case 'date':
+                  dpValue = new Date(value as string).toLocaleDateString();
+                  break;
+                  case 'number':
+                    dpValue = column.format && typeof value === 'number'
+                      ? column.format(value)
+                      : currency(value as number);
+                    break;
+              default:
+                dpValue = value;
+            }
+
+            return (
+              <TableCell
+                key={column.key as string}
+                align={column.align}
+                sx={{
+                  textOverflow: 'ellipsis',
+                  overflow: 'hidden',
+                  whiteSpace: 'nowrap',
+                  minWidth: column.minWidth,
+                  maxWidth: column.maxWidth,
+                }}
+              >
+                {dpValue}
+              </TableCell>
+            );
+          })}
+        </TableRow>
+        {haveListColumn && listColumns && listColumns.length > 0 && listRowChild && (
+          <TableRow>
+            <TableCell
+              colSpan={visibleColumns.length}
+              style={{ padding: 0, borderBottom: open ? '1px solid var(--gray-alpha-500)' : 'unset' }}
+            >
+              <Collapse in={open} timeout="auto" unmountOnExit>
+                <Table size={isSp ? 'small' : 'medium'} aria-label="purchases">
+                  <TableHead>
+                    <TableRow>
+                      {listColumns.map((listColumn) => {
+                        if (listColumn.hide) return null;
+                        return (
+                          <TableCell
+                            key={listColumn.key as string}
+                            align={listColumn.align}
+                            sx={{
+                              backgroundColor: 'var(--gray-alpha-500)',
+                              color: 'var(--background)',
+                              minWidth: listColumn.minWidth,
+                              maxWidth: listColumn.maxWidth,
+                            }}
+                          >
+                            {listColumn.label}
+                          </TableCell>
+                        );
+                      })}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {Array.isArray(listRowChild) && listRowChild.map((listRow, index) => (
+                      <TableRow key={row.id}>
+                        {listColumns.map((listColumn) => {
+                          if (listColumn.hide) return null;
+                          return (
+                            <TableCell
+                              key={listColumn.key as string}
+                              align={listColumn.align}
+                              sx={{
+                                textOverflow: 'ellipsis',
+                                overflow: 'hidden',
+                                whiteSpace: 'nowrap',
+                                backgroundColor: 'var(--gray-alpha-100)',
+                                minWidth: listColumn.minWidth,
+                                maxWidth: listColumn.maxWidth,
+                                borderBottom: index === listRowChild.length - 1 ? 'unset' : '',
+                              }}
+                            >
+                              {listColumn.type === 'number'
+                                ? currency(listRow[listColumn.key as keyof typeof listRow])
+                                : listRow[listColumn.key as keyof typeof listRow]
+                              }
+                            </TableCell>
+                          );
+                        })}
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </Collapse>
+            </TableCell>
+          </TableRow>
+        )}
+      </Fragment>
+    );
+  }
+
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden', boxShadow: 'unset' }}>
       <div style={{ marginBottom: '1rem' }}>
@@ -59,12 +218,13 @@ export default function MuiTable<T extends Row>({ topSection, columns, rows }: M
                   <TableCell
                     key={column.key as string}
                     align={column.align}
-                    style={{ minWidth: column.minWidth }}
                     sx={{
                       backgroundColor: 'var(--foreground)',
                       color: 'var(--background)',
                       borderTopLeftRadius: visibleIndex === 0 ? '0.5rem' : 'unset',
                       borderTopRightRadius: visibleIndex === visibleColumns.length - 1 ? '0.5rem' : 'unset',
+                      minWidth: column.minWidth,
+                      maxWidth: column.maxWidth,
                     }}
                   >
                     {column.label}
@@ -77,50 +237,7 @@ export default function MuiTable<T extends Row>({ topSection, columns, rows }: M
             {rows
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => {
-                return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                    {columns.map((column) => {
-                      if (column.hide) return null;
-                      const value = row[column.key as keyof typeof row];
-                      let dpValue;
-
-                      switch (column.type) {
-                        case 'image':
-                          dpValue = <Image className="profile" src={value as string} alt={column.label} width={38} height={38} />;
-                          break;
-                        case 'date':
-                          dpValue = new Date(value as string).toLocaleDateString();
-                          break;
-                          case 'number':
-                            dpValue = column.format && typeof value === 'number'
-                              ? column.format(value)
-                              : currency(value as number);
-                            break;
-                        case 'status':
-                          dpValue = (
-                            <Chip
-                              size="small"
-                              label={labelDict.find(label => label.key === value)?.label}
-                              sx={{
-                                backgroundColor: labelDict.find(label => label.key === value)?.color,
-                                color: 'var(--background)',
-                                width: '100px',
-                              }}
-                            />
-                          );
-                          break;
-                        default:
-                          dpValue = value;
-                      }
-
-                      return (
-                        <TableCell key={column.key as string} align={column.align}>
-                          {dpValue}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                );
+                return <Row key={row.id} row={row} />
               })}
           </TableBody>
         </Table>

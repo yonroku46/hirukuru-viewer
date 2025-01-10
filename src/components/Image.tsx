@@ -27,7 +27,7 @@ export default function Image({ src, alt, width, height, fallbackSrc = fallbackI
   const [imgAlt, setImgAlt] = useState<string>('unknown');
 
   useEffect(() => {
-    // Use default image if value is null, undefined, or string 'null','undefined'
+    // 値がnull, undefined, または 'null', 'undefined' の場合はデフォルト画像を使用
     if (!src || src === 'null' || src === 'undefined') {
       setImgSrc(fallbackSrc);
     } else {

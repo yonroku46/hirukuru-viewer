@@ -145,6 +145,7 @@ footer {
     padding-bottom: 0;
     padding-top: 2rem;
     padding-bottom: 1rem;
+    background: transparent;
     .left-container {
       flex: 1;
       display: flex;
@@ -171,6 +172,7 @@ footer {
       flex-direction: column;
       height: 100%;
       width: 100%;
+      background: transparent;
       .footer-nav {
         display: flex;
         justify-content: flex-end;
@@ -741,7 +743,6 @@ table {
     align-items: center;
     gap: 1rem;
     width: 100%;
-    padding: 1rem 0;
     .user-contents {
       flex: 1;
       display: flex;
@@ -808,7 +809,7 @@ table {
     .quick-select-wrapper {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 1rem;
+      gap: 0.5rem;
       .quick-select-btn {
         display: flex;
         flex-direction: column;
@@ -1617,14 +1618,6 @@ table {
     padding-top: 5px;
   }
   .slick-track {
-    .slick-slide {
-      &.slick-active:hover {
-        img {
-          transition: filter 0.3s ease;
-          filter: brightness(0.9);
-        }
-      }
-    }
     .slider-item {
       position: relative;
       overflow: hidden;
@@ -1638,19 +1631,19 @@ table {
         left: 0;
         right: 0;
         bottom: 0;
-        background: linear-gradient(0deg, rgba(0, 0, 0, 0.3), transparent);
+        background: linear-gradient(0deg, rgba(0, 0, 0, 0.4), transparent);
         z-index: 1;
       }
       .event-title {
+        z-index: 2;
         position: absolute;
-        bottom: 0;
+        bottom: 0.25rem;
         left: 0;
         right: 0;
         color: var(--background);
         padding: 0.75rem 1rem;
-        z-index: 2;
         h3 {
-          font-size: 1.5rem;
+          font-size: 1.75rem;
           font-weight: bold;
         }
         p {
@@ -1661,11 +1654,11 @@ table {
     }
   }
   .event-index {
+    z-index: 3;
     position: absolute;
-    bottom: calc(0.75rem + 6px);
+    bottom: calc(1rem + 6px);
     right: 1rem;
     color: var(--background);
-    z-index: 2;
     display: flex;
     align-items: center;
     gap: 0.25rem;

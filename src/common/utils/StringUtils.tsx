@@ -32,6 +32,7 @@ export function formatDaysAgo(dateString: string): string | undefined {
 }
 
 export function currency(num: number, unit?: string): string {
+  if (num === undefined) return '';
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + (unit || '');
 }
 
@@ -59,14 +60,14 @@ export function extractDelimiter(target: string, delimiter = '/'): string {
 }
 
 export function calculateAge(birthday: string): number {
-  // String to Date object
+  // 誕生日をDateオブジェクトに変換
   const birthDate = new Date(birthday);
   const currentDate = new Date();
 
-  // Subtract birth year from current year
+  // 誕生日の年から現在の年を引く
   let age = currentDate.getFullYear() - birthDate.getFullYear();
 
-  // If birthday hasn't passed yet, subtract 1 from age
+  // 誕生日が過ぎていない場合は年齢を1減らす
   const monthDifference = currentDate.getMonth() - birthDate.getMonth();
   const dayDifference = currentDate.getDate() - birthDate.getDate();
   if (monthDifference < 0 || (monthDifference === 0 && dayDifference < 0)) {

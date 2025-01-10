@@ -2,7 +2,7 @@ import { config } from "@/config";
 import { createHmac } from "crypto";
 import urlJoin from "url-join";
 
-// Secret is used for signing and verifying the url to prevent misuse of your service to generate images for others
+// シークレットはURLの署名と検証に使用され、サービスの不正使用を防ぐために使用される
 const secret = config.ogImageSecret;
 
 export interface OpenGraphImageParams {

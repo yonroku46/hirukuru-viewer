@@ -23,14 +23,16 @@ declare global {
     label: string;
     type: 'text' | 'textarea' | 'number' | 'list' | 'select' | 'switch' | 'time' | 'date' | 'image' | 'status' | 'rating';
     minWidth?: number;
+    maxWidth?: number;
     align?: 'right' | 'center';
     hide?: boolean;
     format?: (value: number) => string;
+    listColumns?: Column<T>[];
   }
   interface Row {
     id: string;
     imgFile?: File;
-    [key: string]: string | number | undefined;
+    [key: string]: string | number | any[] | undefined;
   }
   // Menu
   interface MenuItem {
@@ -116,6 +118,14 @@ declare global {
     status: string;
     date: string;
     totalPrice: number;
+    orderDetail: OrderDetail[];
+  }
+  interface OrderDetail {
+    foodId: string;
+    name: string;
+    quantity: number;
+    price: number;
+    discountPrice?: number;
   }
   interface Food {
     foodId: string;

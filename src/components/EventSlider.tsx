@@ -28,7 +28,7 @@ export default function EventSlider({ events }: EventSliderProps) {
     speed: 500,
     autoplay: true,
     autoplaySpeed: 10000,
-    beforeChange: (next: number) => setCurrentSlide(next),
+    beforeChange: (current: number, next: number) => setCurrentSlide(next),
   };
 
   const goToPrevious = (e: React.MouseEvent<HTMLButtonElement>) => {

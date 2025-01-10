@@ -27,11 +27,11 @@ export default function Home() {
     { foodId: '10', shopId: 'fuk001', category: '定番弁当', name: 'カツカレー', price: 1000, rating: 4.3, image: 'https://i.pinimg.com/736x/7f/6f/55/7f6f5560ca41e1870c59b18f6f1f2360.jpg' },
   ];
   const events = [
-    { eventId: '1', title: '謹賀新年', description: '2025年もよろしくお願いします', image: 'https://i.pinimg.com/736x/79/5e/90/795e900bb362815db2aacf0abe9116e8.jpg' },
-    { eventId: '2', title: 'いつでも4%Back!', description: '会員はいつでもポイントバックします', image: 'https://i.pinimg.com/736x/8f/05/4d/8f054d66b37f59a34fd878fc2e783087.jpg' },
+    { eventId: '1', title: '謹賀新年', description: '2025年もよろしくお願いします', image: 'https://i.pinimg.com/736x/f6/eb/1e/f6eb1e567a5b4827a9afb5195dcab446.jpg' },
+    { eventId: '2', title: 'いつでも3%Back!', description: '会員はいつでもポイントバックします', image: 'https://i.pinimg.com/736x/8f/05/4d/8f054d66b37f59a34fd878fc2e783087.jpg' },
     { eventId: '3', title: '初めてのガイド', href: '/service/help', description: 'ヒルクルの使い方をご紹介します', image: 'https://i.pinimg.com/736x/19/f1/97/19f197e170d66608885cecb06326b8a7.jpg' },
-    { eventId: '4', title: 'パートナー募集', href: '/service/partner', description: 'パートナーを募集しています', image: 'https://i.pinimg.com/736x/55/92/d3/5592d36c450bcf881cea45c15c9f8ceb.jpg' },
-    { eventId: '5', title: 'ランキング', description: '今週のランキングは？', image: 'https://i.pinimg.com/736x/d1/53/68/d15368e0ac60820d395db1b90a95ff11.jpg' },
+    { eventId: '4', title: 'パートナー募集', href: '/service/partner', description: 'パートナーを募集しています', image: 'https://i.pinimg.com/736x/75/d7/5b/75d75b4a87ea4a45b3dc78e8a30de06d.jpg' },
+    { eventId: '5', title: 'ランキング', description: '今週のランキングは？', image: 'https://i.pinimg.com/736x/c1/90/a8/c190a833901cfa35fd456012cb9c0f6d.jpg' },
   ];
   const quickList = [
     { id: '1', name: '揚物', image: '/assets/img/agemono.png' },
