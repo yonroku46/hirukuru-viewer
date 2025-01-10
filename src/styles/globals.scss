@@ -20,9 +20,11 @@
   --gray-alpha-200: rgba(var(--gray-rgb), 0.05);
   --gray-alpha-100: rgba(var(--gray-rgb), 0.02);
   // Order Status
-  --booked-color: rgb(21, 115, 201);
+  --booked-color: rgb(238, 194, 22);
   --pickup-color: rgb(252, 125, 45);
   --done-color: rgb(15, 202, 46);
+  --review-color: var(--primary-color);
+  --cancel-color: var(--accent-color);
   // Header
   --header-height: 4.5rem;
   // Event Slider
@@ -42,6 +44,7 @@ body {
   color: var(--foreground);
   background: var(--background);
   &::-webkit-scrollbar {
+    scrollbar-width: none;
     display: none;
   }
 }
@@ -179,7 +182,6 @@ footer {
           font-size: 1rem;
           font-weight: bold;
           margin-bottom: 0.5rem;
-          opacity: 0.75;
         }
         .group-item {
           padding: 0.25rem 0;
@@ -276,6 +278,13 @@ button {
   }
 }
 
+table {
+  .profile {
+    border-radius: 50%;
+    border: 1px solid var(--gray-alpha-300);
+  }
+}
+
 // Layout
 .container {
   display: flex;
@@ -343,6 +352,7 @@ button {
     min-height: 400px;
     padding: 0;
     &::-webkit-scrollbar {
+      scrollbar-width: none;
       display: none;
     }
     &.empty {
@@ -522,7 +532,7 @@ button {
     appearance: none;
     border: 1px solid var(--gray-alpha-300);
     padding: 0.65rem 2rem 0.65rem 0.8rem;
-    border-radius: 0.5rem;
+    border-radius: 1rem;
     background-color: var(--background);
     min-width: 150px;
     width: 100%;
@@ -674,7 +684,8 @@ button {
     width: 100%;
     padding: 1.5rem 1rem;
     border-radius: 0.5rem;
-    border: 1px solid var(--gray-alpha-500);
+    background-color: var(--accent-color);
+    color: var(--background);
     .user-profile-wrapper {
       display: flex;
       align-items: center;
@@ -750,6 +761,7 @@ button {
         select {
           font-size: 1rem;
           border: 1px solid var(--foreground);
+          border-radius: 0.5rem;
         }
         .user-point {
           display: flex;
@@ -860,6 +872,7 @@ button {
   padding: 2rem 1.5rem;
   border-radius: 0.5rem;
   background-color: var(--gray-alpha-200);
+  margin-top: 1rem;
   margin-bottom: 2rem;
   .title {
     font-size: 1rem;
@@ -879,7 +892,7 @@ button {
   }
 }
 
-.order-status {
+.status {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -888,14 +901,14 @@ button {
     font-size: 1rem;
     font-weight: bold;
   }
-  .order-status-items-wrapper {
+  .status-items-wrapper {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 0.75rem;
-    &.optional {
+    &.two-columns {
       grid-template-columns: repeat(2, 1fr);
     }
-    .order-status-item {
+    .status-item {
       flex: 1;
       display: flex;
       align-items: center;
@@ -910,7 +923,7 @@ button {
       transition: background-color 0.2s;
       &.active {
         background-color: var(--background);
-        .order-status-item-title {
+        .status-item-title {
           .icon {
             opacity: 1;
           }
@@ -930,7 +943,7 @@ button {
       }
       &.optional-parts {
         flex-direction: row;
-        .order-status-item-title {
+        .status-item-title {
           .label {
             font-size: 0.875rem;
           }
@@ -940,7 +953,7 @@ button {
           line-height: 1.5rem;
         }
       }
-      .order-status-item-title {
+      .status-item-title {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -964,6 +977,9 @@ button {
           }
           &.done {
             background-color: var(--done-color);
+          }
+          &.count, &.avg {
+            background-color: var(--foreground);
           }
         }
         .label {
@@ -1065,9 +1081,11 @@ button {
       justify-content: flex-end;
       align-items: stretch;
       gap: 0.5rem;
+      padding-top: 1rem;
       margin-top: auto;
       .action-btn {
         flex: 1;
+        font-size: 1rem;
       }
     }
   }
@@ -1207,6 +1225,7 @@ button {
           min-width: 180px;
           position: relative;
           overflow: hidden;
+          font-size: 1rem;
           .added-icon {
             z-index: 1;
             position: absolute;
@@ -1756,6 +1775,7 @@ button {
       flex-direction: column;
       .image-wrapper {
         flex: 1;
+        max-height: 35vh;
       }
       .food-detail-wrapper {
         flex: 5;
@@ -1794,8 +1814,8 @@ button {
   .search-input {
     width: 100%;
   }
-  .order-status {
-    .order-status-items-wrapper {
+  .status {
+    .status-items-wrapper {
       grid-template-columns: repeat(2, 1fr);
     }
   }

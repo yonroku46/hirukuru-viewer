@@ -1,6 +1,8 @@
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
 
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+
 interface MuiBreadcrumbsProps {
   breadcrumbs: Breadcrumb[];
 }
@@ -8,7 +10,10 @@ interface MuiBreadcrumbsProps {
 export default function MuiBreadcrumbs({ breadcrumbs}: MuiBreadcrumbsProps) {
   return (
     <div role="presentation" className="breadcrumbs">
-      <Breadcrumbs aria-label="breadcrumb">
+      <Breadcrumbs
+        aria-label="breadcrumb"
+        separator={<NavigateNextIcon fontSize="inherit" />}
+      >
         {breadcrumbs.map((breadcrumb, index) => (
           <Link
             key={index}

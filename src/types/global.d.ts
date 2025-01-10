@@ -18,19 +18,19 @@ declare global {
     count: number
   }
   // Table
-  interface Column {
-    id: 'name' | 'code' | 'population' | 'size' | 'density';
+  interface Column<T> {
+    key: keyof T;
     label: string;
+    type: 'text' | 'textarea' | 'number' | 'list' | 'select' | 'switch' | 'time' | 'date' | 'image' | 'status' | 'rating';
     minWidth?: number;
-    align?: 'right';
+    align?: 'right' | 'center';
+    hide?: boolean;
     format?: (value: number) => string;
   }
-  interface Rows {
-    name: string;
-    code: string;
-    population: number;
-    size: number;
-    density: number;
+  interface Row {
+    id: string;
+    imgFile?: File;
+    [key: string]: string | number | undefined;
   }
   // Menu
   interface MenuItem {
@@ -62,6 +62,10 @@ declare global {
     type: 'booked' | 'pickup' | 'done' | 'review' | 'cancel';
     value: number;
   }
+  interface ReviewStatus {
+    type: 'count' | 'avg';
+    value: number;
+  }
   interface SearchFilter {
     type: 'text' | 'date' | 'year' | 'month';
     key: string;
@@ -69,20 +73,21 @@ declare global {
     value: string;
   }
   interface User {
+    userId: string;
     name: string;
     profileImage: string;
     point: number;
     shopOwner: boolean;
   }
   interface ServiceEvent {
-    id: string;
+    eventId: string;
     title: string;
     description: string;
     image: string;
     href?: string;
   }
   interface ShopInfo {
-    id: string;
+    shopId: string;
     name: string;
     description: string;
     image: string;
@@ -92,10 +97,10 @@ declare global {
       [key: string]: number | undefined;
     };
   }
-  interface ShopReview {
-    id: string;
+  interface ShopReview extends Row {
+    reviewId: string;
     userId: string;
-    user: string;
+    userName: string;
     userProfile: string;
     userRatingCount?: number;
     userRatingAvg?: number;
@@ -104,8 +109,16 @@ declare global {
     comment: string;
     date: string;
   }
+  interface Order extends Row {
+    orderId: string;
+    userId: string;
+    shopId: string;
+    status: string;
+    date: string;
+    totalPrice: number;
+  }
   interface Food {
-    id: string;
+    foodId: string;
     shopId: string;
     category: string;
     name: string;

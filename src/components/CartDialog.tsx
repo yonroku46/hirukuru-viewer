@@ -39,7 +39,7 @@ const Transition = forwardRef(function Transition(
 export const addToCart = (dispatch: AppDispatch, item: Food, quantity?: number) => {
   const existingCartItems = JSON.parse(localStorage.getItem(cartKey) || "[]");
   // 新しいアイテムは追加、既存のアイテムは数量を増やす
-  const itemIndex = existingCartItems.findIndex((existingItem: Food) => existingItem.id === item.id);
+  const itemIndex = existingCartItems.findIndex((existingItem: Food) => existingItem.foodId === item.foodId);
   let newCartItems;
   if (itemIndex === -1) {
     newCartItems = [...existingCartItems, { ...item, quantity: quantity || 1 }];
@@ -81,18 +81,18 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
   };
 
   const handleDeleteItem = (id: string) => {
-    const updatedCartItems = cartItems.filter((item) => item.id !== id);
+    const updatedCartItems = cartItems.filter((item) => item.foodId !== id);
     localStorage.setItem(cartKey, JSON.stringify(updatedCartItems));
     dispatch(setCartState({ cartItems: updatedCartItems }));
   };
 
   const handleQuantity = (id: string, quantity: number) => {
     if (quantity === 0) {
-      const updatedCartItems = cartItems.filter(item => item.id !== id);
+      const updatedCartItems = cartItems.filter(item => item.foodId !== id);
       localStorage.setItem(cartKey, JSON.stringify(updatedCartItems));
       dispatch(setCartState({ cartItems: updatedCartItems }));
     } else {
-      const updatedCartItems = cartItems.map(item => item.id === id ? { ...item, quantity } : item);
+      const updatedCartItems = cartItems.map(item => item.foodId === id ? { ...item, quantity } : item);
       localStorage.setItem(cartKey, JSON.stringify(updatedCartItems));
       dispatch(setCartState({ cartItems: updatedCartItems }));
     }
@@ -130,12 +130,12 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
           </div>
           {cartItems.length > 0 ?
             cartItems.map((item) =>
-              <div key={item.id} className="cart-item">
+              <div key={item.foodId} className="cart-item">
                 <div className="cart-item-wrapper">
                   <div className="cart-item-img">
                     <Image className={deleteMode ? "delete-mode" : ""} src={item.image} alt={item.name} width={60} height={60} />
                     {deleteMode &&
-                      <IconButton className="delete-icon" onClick={() => handleDeleteItem(item.id)}>
+                      <IconButton className="delete-icon" onClick={() => handleDeleteItem(item.foodId)}>
                         <DeleteOutlineOutlinedIcon />
                       </IconButton>
                     }
@@ -171,8 +171,8 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
                   </div>
                   <QuantityButton
                     quantity={item.quantity || 0}
-                    handleMinus={() => handleQuantity(item.id, item.quantity ? item.quantity - 1 : 0)}
-                    handlePlus={() => handleQuantity(item.id, item.quantity ? item.quantity + 1 : 1)}
+                    handleMinus={() => handleQuantity(item.foodId, item.quantity ? item.quantity - 1 : 0)}
+                    handlePlus={() => handleQuantity(item.foodId, item.quantity ? item.quantity + 1 : 1)}
                   />
                 </div>
                 <div className="cart-item-total-price">

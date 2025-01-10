@@ -19,7 +19,7 @@ export default function FoodCard({ data, onClick, isFavorite, handleFavorite }: 
   };
 
   return (
-    <div key={data.id} className={`food-card ${onClick ? "clickable" : ""}`} onClick={handleClick}>
+    <div key={data.foodId} className={`food-card ${onClick ? "clickable" : ""}`} onClick={handleClick}>
       <div className="image-wrapper">
         <Image
           className="image"
@@ -36,7 +36,7 @@ export default function FoodCard({ data, onClick, isFavorite, handleFavorite }: 
         {handleFavorite &&
           <IconButton
             className={`favorite-icon ${isFavorite ? "active" : ""}`}
-            onClick={(e) => handleFavorite(e, data.id)}
+            onClick={(e) => handleFavorite(e, data.foodId)}
           >
             <FavoriteIcon />
           </IconButton>

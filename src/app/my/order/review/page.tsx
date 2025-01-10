@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import SearchInput from "@/components/input/SearchInput";
+import ReviewStatus from "@/components/ReviewStatus";
 import MuiBreadcrumbs from "@/components/mui/MuiBreadcrumbs";
 import MuiTable from "@/components/mui/MuiTable";
 
@@ -11,58 +12,36 @@ export default function MyOrderReviewPage() {
     { label: '注文管理', href: '/my/order' },
     { label: 'レビュー', href: '/my/order/review', active: true },
   ];
-
-  const columns: Column[] = [
-    { id: 'name', label: 'Name', minWidth: 170 },
-    { id: 'code', label: 'ISO\u00a0Code', minWidth: 100 },
-    {
-      id: 'population',
-      label: 'Population',
-      minWidth: 170,
-      align: 'right',
-      format: (value: number) => value.toLocaleString('en-US'),
-    },
-    {
-      id: 'size',
-      label: 'Size\u00a0(km\u00b2)',
-      minWidth: 170,
-      align: 'right',
-      format: (value: number) => value.toLocaleString('en-US'),
-    },
-    {
-      id: 'density',
-      label: 'Density',
-      minWidth: 170,
-      align: 'right',
-      format: (value: number) => value.toFixed(2),
-    },
+  const reviewStatus: ReviewStatus[] = [
+    { type: 'count', value: 1100 },
+    { type: 'avg', value: 4.5 },
   ];
-  const rows = [
-    createData('India', 'IN', 1324171354, 3287263),
-    createData('China', 'CN', 1403500365, 9596961),
-    createData('Italy', 'IT', 60483973, 301340),
-    createData('United States', 'US', 327167434, 9833520),
-    createData('Canada', 'CA', 37602103, 9984670),
-    createData('Australia', 'AU', 25475400, 7692024),
-    createData('Germany', 'DE', 83019200, 357578),
-    createData('Ireland', 'IE', 4857000, 70273),
-    createData('Mexico', 'MX', 126577691, 1972550),
-    createData('Japan', 'JP', 126317000, 377973),
-    createData('France', 'FR', 67022000, 640679),
-    createData('United Kingdom', 'GB', 67545757, 242495),
-    createData('Russia', 'RU', 146793744, 17098246),
-    createData('Nigeria', 'NG', 200962417, 923768),
-    createData('Brazil', 'BR', 210147125, 8515767),
+
+  const columns: Column<ShopReview>[] = [
+    { key: 'reviewId', type: 'text', label: 'Review ID', hide: true, minWidth: 100 },
+    { key: 'userId', type: 'text', label: 'User ID', hide: true, minWidth: 100 },
+    { key: 'userName', type: 'text', label: 'UserName', minWidth: 100 },
+    { key: 'userProfile', type: 'image', label: 'User Profile', minWidth: 100 },
+    { key: 'shopId', type: 'text', label: 'Shop ID', minWidth: 100 },
+    { key: 'comment', type: 'text', label: 'Comment', minWidth: 100 },
+    { key: 'rating', type: 'rating', label: 'Rating', minWidth: 100 },
+    { key: 'date', type: 'text', label: 'Date', minWidth: 100 },
+  ];
+  const rows: ShopReview[] = [
+    createData('U101', 'U101', 'テストユーザー', '/assets/img/no-user.jpg', 'S101', 'このショップはとてもよかったです。', 5, '2024-01-01'),
   ];
 
   function createData(
-    name: string,
-    code: string,
-    population: number,
-    size: number,
-  ): Rows {
-    const density = population / size;
-    return { name, code, population, size, density };
+    reviewId: string,
+    userId: string,
+    userName: string,
+    userProfile: string,
+    shopId: string,
+    comment: string,
+    rating: number,
+    date: string,
+  ): ShopReview {
+    return { id: reviewId, reviewId, userId, userName, userProfile, shopId, comment, rating, date };
   }
 
   const [user, setUser] = useState<User | null>(null);
@@ -76,6 +55,7 @@ export default function MyOrderReviewPage() {
 
   useEffect(() => {
     const dummyUser = {
+      userId: 'U101',
       name: 'テストユーザー',
       profileImage: '/assets/img/no-user.jpg',
       point: 1000,
@@ -105,21 +85,27 @@ export default function MyOrderReviewPage() {
     <article>
       <div className="myorder container">
         <MuiBreadcrumbs breadcrumbs={breadcrumbs} />
-        <div className="order-history">
-          <h2 className="title">
-            レビュー履歴
-          </h2>
-          <SearchInput
-            searchMode={true}
-            value={searchValue}
-            onChange={(e) => {
-              setSearchValue(e.target.value);
-            }}
-            filters={searchFilters}
-            onFilterApply={handleFilterApply}
-          />
-        </div>
+        <ReviewStatus
+          statusList={reviewStatus}
+        />
+        <hr className="container" style={{ margin: '2rem 0' }} />
         <MuiTable
+          topSection={
+            <div className="order-history">
+              <h2 className="title">
+                レビュー履歴
+              </h2>
+              <SearchInput
+                searchMode
+                value={searchValue}
+                onChange={(e) => {
+                  setSearchValue(e.target.value);
+                }}
+                filters={searchFilters}
+                onFilterApply={handleFilterApply}
+              />
+            </div>
+          }
           columns={columns}
           rows={rows}
         />

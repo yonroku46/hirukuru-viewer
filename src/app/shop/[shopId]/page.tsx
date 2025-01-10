@@ -61,24 +61,24 @@ export default function ShopInfoPage(
   useEffect(() => {
     console.log(shopId);
     const dummyItems = [
-      { id: '1', shopId: 'fuk001', category: '日替わり弁当', name: '唐揚げ弁当', description: "国内産の鶏肉を使用した唐揚げ弁当です。", ingredients: ["唐揚げ", "ほうれん草ナムル", "白ごはん"], price: 1000, discountPrice: 950, rating: 4.3, image: 'https://i.pinimg.com/736x/f2/67/df/f267dfdd2b0cb8eac4b5e9674aa49e97.jpg' },
-      { id: '2', shopId: 'fuk001', category: '特製弁当', name: '特製のり弁', description: "特製のり弁です。", price: 500, discountPrice: 450, rating: 4.5, image: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg' },
-      { id: '3', shopId: 'fuk001', category: '特製弁当', name: 'チキン南蛮弁当', price: 750, rating: 3.9, image: 'https://i.pinimg.com/236x/42/d7/59/42d7590255cfd29e56db2b3d968419d4.jpg' },
-      { id: '4', shopId: 'fuk001', category: '特製弁当', name: 'カレー弁当', price: 550, rating: undefined, image: 'https://i.pinimg.com/236x/3b/4f/0a/3b4f0a758df2243b72d1d4985cda5437.jpg' },
-      { id: '5', shopId: 'fuk001', category: '定番弁当', name: '塩鮭弁当', price: 550, rating: undefined, image: 'https://i.pinimg.com/736x/53/c1/4c/53c14c49208435da8fca89f4dae85cb4.jpg' },
-      { id: '6', shopId: 'fuk001', category: '定番弁当', name: 'ナポリタン', price: 750, rating: 3.9, image: 'https://i.pinimg.com/736x/a0/44/3e/a0443eb63b9e4e56d4bdad82079d11be.jpg' },
-      { id: '7', shopId: 'fuk001', category: '定番弁当', name: 'ビビンバ', price: 500, rating: 4.5, image: 'https://i.pinimg.com/736x/15/fc/18/15fc1800352f40dc57aba529365dd6dd.jpg' },
-      { id: '8', shopId: 'fuk001', category: '定番弁当', name: '鶏そぼろ丼', price: 1000, rating: 4.3, image: 'https://i.pinimg.com/736x/a3/c0/44/a3c0445cb7ce8a623f9420a2aaa8332c.jpg' },
-      { id: '9', shopId: 'fuk001', category: '定番弁当', name: 'ソースカツ弁当', price: 1000, rating: 4.3, image: 'https://i.pinimg.com/736x/09/cc/18/09cc18f3ab7aeb70638f33170251bceb.jpg' },
-      { id: '10', shopId: 'fuk001', category: '定番弁当', name: 'カツカレー', price: 1000, rating: 4.3, image: 'https://i.pinimg.com/736x/7f/6f/55/7f6f5560ca41e1870c59b18f6f1f2360.jpg' },
+      { foodId: '1', shopId: 'fuk001', category: '日替わり弁当', name: '唐揚げ弁当', description: "国内産の鶏肉を使用した唐揚げ弁当です。", ingredients: ["唐揚げ", "ほうれん草ナムル", "白ごはん"], price: 1000, discountPrice: 950, rating: 4.3, image: 'https://i.pinimg.com/736x/f2/67/df/f267dfdd2b0cb8eac4b5e9674aa49e97.jpg' },
+      { foodId: '2', shopId: 'fuk001', category: '特製弁当', name: '特製のり弁', description: "特製のり弁です。", price: 500, discountPrice: 450, rating: 4.5, image: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg' },
+      { foodId: '3', shopId: 'fuk001', category: '特製弁当', name: 'チキン南蛮弁当', price: 750, rating: 3.9, image: 'https://i.pinimg.com/236x/42/d7/59/42d7590255cfd29e56db2b3d968419d4.jpg' },
+      { foodId: '4', shopId: 'fuk001', category: '特製弁当', name: 'カレー弁当', price: 550, rating: undefined, image: 'https://i.pinimg.com/236x/3b/4f/0a/3b4f0a758df2243b72d1d4985cda5437.jpg' },
+      { foodId: '5', shopId: 'fuk001', category: '定番弁当', name: '塩鮭弁当', price: 550, rating: undefined, image: 'https://i.pinimg.com/736x/53/c1/4c/53c14c49208435da8fca89f4dae85cb4.jpg' },
+      { foodId: '6', shopId: 'fuk001', category: '定番弁当', name: 'ナポリタン', price: 750, rating: 3.9, image: 'https://i.pinimg.com/736x/a0/44/3e/a0443eb63b9e4e56d4bdad82079d11be.jpg' },
+      { foodId: '7', shopId: 'fuk001', category: '定番弁当', name: 'ビビンバ', price: 500, rating: 4.5, image: 'https://i.pinimg.com/736x/15/fc/18/15fc1800352f40dc57aba529365dd6dd.jpg' },
+      { foodId: '8', shopId: 'fuk001', category: '定番弁当', name: '鶏そぼろ丼', price: 1000, rating: 4.3, image: 'https://i.pinimg.com/736x/a3/c0/44/a3c0445cb7ce8a623f9420a2aaa8332c.jpg' },
+      { foodId: '9', shopId: 'fuk001', category: '定番弁当', name: 'ソースカツ弁当', price: 1000, rating: 4.3, image: 'https://i.pinimg.com/736x/09/cc/18/09cc18f3ab7aeb70638f33170251bceb.jpg' },
+      { foodId: '10', shopId: 'fuk001', category: '定番弁当', name: 'カツカレー', price: 1000, rating: 4.3, image: 'https://i.pinimg.com/736x/7f/6f/55/7f6f5560ca41e1870c59b18f6f1f2360.jpg' },
     ];
     const dummyReviewList = [
-      { id: '1', userId: 'user1', shopId: 'fuk001', user: "User1", userProfile: "/assets/img/no-user.jpg", userRatingCount: 1120, userRatingAvg: 4.6, rating: 4, date: "2024-11-29", comment: "Good!" },
-      { id: '2', userId: 'user2', shopId: 'fuk001', user: "User2", userProfile: "/assets/img/no-user.jpg", userRatingCount: 320, userRatingAvg: 4.9, rating: 5, date: "2024-12-29", comment: "Nice!" },
-      { id: '3', userId: 'user3', shopId: 'fuk001', user: "User3", userProfile: "/assets/img/no-user.jpg", userRatingCount: undefined, userRatingAvg: undefined, rating: 4, date: "2024-12-28", comment: "Good!" },
+      { reviewId: '1', userId: 'user1', shopId: 'fuk001', userName: "User1", userProfile: "/assets/img/no-user.jpg", userRatingCount: 1120, userRatingAvg: 4.6, rating: 4, date: "2024-11-29", comment: "Good!" },
+      { reviewId: '2', userId: 'user2', shopId: 'fuk001', userName: "User2", userProfile: "/assets/img/no-user.jpg", userRatingCount: 320, userRatingAvg: 4.9, rating: 5, date: "2024-12-29", comment: "Nice!" },
+      { reviewId: '3', userId: 'user3', shopId: 'fuk001', userName: "User3", userProfile: "/assets/img/no-user.jpg", userRatingCount: undefined, userRatingAvg: undefined, rating: 4, date: "2024-12-28", comment: "Good!" },
     ]
-    setItems(dummyItems);
-    setReviewList(dummyReviewList);
+    setItems(dummyItems as Food[]);
+    setReviewList(dummyReviewList as ShopReview[]);
   }, [shopId]);
 
   const handleFavorite = useCallback((e: React.MouseEvent<HTMLButtonElement>, id: string) => {
@@ -147,10 +147,10 @@ export default function ShopInfoPage(
             <div className="shop-item-body">
               {filteredItems.map((item) => (
                 <FoodCard
-                  key={item.id}
+                  key={item.foodId}
                   data={item}
                   onClick={() => handleClick(item)}
-                  isFavorite={favoriteItems.includes(item.id)}
+                  isFavorite={favoriteItems.includes(item.foodId)}
                   handleFavorite={handleFavorite}
                 />
               ))}
@@ -183,10 +183,10 @@ export default function ShopInfoPage(
             <div className="shop-item-body">
               {filteredSpecialTabItems.map((item) => (
                 <FoodCard
-                  key={item.id}
+                  key={item.foodId}
                   data={item}
                   onClick={() => handleClick(item)}
-                  isFavorite={favoriteItems.includes(item.id)}
+                  isFavorite={favoriteItems.includes(item.foodId)}
                   handleFavorite={handleFavorite}
                 />
               ))}
@@ -221,10 +221,10 @@ export default function ShopInfoPage(
                 <div className="shop-item-body">
                   {filteredCategoryItems.map((item) => (
                     <FoodCard
-                      key={item.id}
+                      key={item.foodId}
                       data={item}
                       onClick={() => handleClick(item)}
-                      isFavorite={favoriteItems.includes(item.id)}
+                      isFavorite={favoriteItems.includes(item.foodId)}
                       handleFavorite={handleFavorite}
                     />
                   ))}
@@ -297,7 +297,7 @@ export default function ShopInfoPage(
         data={selectedItem}
         open={open}
         setOpen={setOpen}
-        isFavorite={selectedItem ? favoriteItems.includes(selectedItem.id) : false}
+        isFavorite={selectedItem ? favoriteItems.includes(selectedItem.foodId) : false}
         handleFavorite={handleFavorite}
       />
       {/* Shop Info */}
@@ -314,26 +314,17 @@ export default function ShopInfoPage(
             <MiniButton
               icon={<FmdGoodOutlinedIcon />}
               onClick={() => {}}
-              sx={{
-                backgroundColor: "var(--gray-alpha-300)",
-                color: "var(--background)",
-              }}
+              gray
             />
             <MiniButton
               icon={<FavoriteBorderIcon />}
               onClick={() => {}}
-              sx={{
-                backgroundColor: "var(--gray-alpha-300)",
-                color: "var(--background)",
-              }}
+              gray
             />
             <MiniButton
               icon={<MoreHorizIcon />}
               onClick={handleMore}
-              sx={{
-                backgroundColor: "var(--gray-alpha-300)",
-                color: "var(--background)",
-              }}
+              gray
             />
           </div>
         </div>
@@ -353,7 +344,7 @@ export default function ShopInfoPage(
         </div>
         <div className="shop-item-search">
           <SearchInput
-            searchMode={true}
+            searchMode
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
           />
@@ -409,14 +400,14 @@ export default function ShopInfoPage(
                             <Image
                               className="review-profile"
                               src={review.userProfile}
-                              alt={review.user}
+                              alt={review.userName}
                               width={36}
                               height={36}
                             />
                             <div className="review-user-info">
                               <div className="review-user-name-rating">
                                 <div className="user-name">
-                                  {review.user}
+                                  {review.userName}
                                 </div>
                                 <div className="user-rating">
                                   {`評価 ${currency(review.userRatingCount || 0)} ・ 平均 ${review.userRatingAvg || 0}`}

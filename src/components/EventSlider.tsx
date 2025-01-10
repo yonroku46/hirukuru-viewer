@@ -45,7 +45,7 @@ export default function EventSlider({ events }: EventSliderProps) {
     <div className="event-slider">
       <Slider ref={sliderRef} {...settings}>
         {events.map((event) => (
-          <Link key={event.id} href={event.href || `/events/${event.id}`} className="slider-item">
+          <Link key={event.eventId} href={event.href || `/events/${event.eventId}`} className="slider-item">
             <Image
               src={event.image}
               alt={event.title}

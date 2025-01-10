@@ -7,6 +7,7 @@ import LinkList from "@/components/LinkList";
 import OrderStatus from "@/components/OrderStatus";
 import { currency } from "@/common/utils/StringUtils";
 import NoticeBoard from "@/components/NoticeBoard";
+import ReviewStatus from "@/components/ReviewStatus";
 import MiniButton from "@/components/button/MiniButton";
 
 import ShoppingBasketOutlinedIcon from '@mui/icons-material/ShoppingBasketOutlined';
@@ -28,6 +29,7 @@ export default function MyPage() {
 
   useEffect(() => {
     const dummyUser = {
+      userId: 'U101',
       name: 'テストユーザー',
       profileImage: '/assets/img/no-user.jpg',
       point: 1000,
@@ -36,12 +38,16 @@ export default function MyPage() {
     setUser(dummyUser);
   }, []);
 
-  const statusList: OrderStatus[] = [
+  const orderStatus: OrderStatus[] = [
     { type: 'booked', value: 0 },
     { type: 'pickup', value: 1 },
     { type: 'done', value: 1 },
     { type: 'review', value: 1 },
     { type: 'cancel', value: 0 }
+  ];
+  const reviewStatus: ReviewStatus[] = [
+    { type: 'count', value: 1100 },
+    { type: 'avg', value: 4.5 },
   ];
   const quickLinkList = [
     { title: '注文管理', href: '/my/order', icon: <ShoppingBasketOutlinedIcon /> },
@@ -94,23 +100,27 @@ export default function MyPage() {
             <MiniButton
               icon={<QrCodeScannerOutlinedIcon />}
               onClick={() => {}}
+              gray
             />
             <MiniButton
               icon={<SettingsOutlinedIcon />}
               onClick={() => {}}
+              gray
             />
           </div>
         </div>
-        {/* Order Management */}
+        {/* Status */}
         <OrderStatus
-          statusList={statusList}
+          statusList={orderStatus}
         />
-        {/* Quick Link List */}
+        <ReviewStatus
+          statusList={reviewStatus}
+        />
+        {/* Link List */}
         <LinkList
           title="クイックリンク"
           linkList={quickLinkList}
         />
-        {/* Link List */}
         <LinkList
           title="ユーザー機能"
           linkList={linkList}

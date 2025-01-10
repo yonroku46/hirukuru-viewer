@@ -112,9 +112,9 @@ export default function FoodCardSlider({ title, data }: FoodCardSliderProps) {
       <Slider ref={sliderRef} {...settings}>
         {data.map((item) => (
           <FoodCard
-            key={item.id}
+            key={item.foodId}
             data={item}
-            isFavorite={favoriteItems.includes(item.id)}
+            isFavorite={favoriteItems.includes(item.foodId)}
             handleFavorite={handleFavorite}
             onClick={() => router.push(`/shop/${item.shopId}?q=${item.name}`)}
           />

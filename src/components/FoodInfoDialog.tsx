@@ -36,6 +36,7 @@ export default function FoodInfoDialog({ data, open, setOpen, isFavorite, handle
   useEffect(() => {
     if (open) {
       setQuantity(1);
+      setShowAddIcon(false);
     }
   }, [open]);
 
@@ -47,10 +48,9 @@ export default function FoodInfoDialog({ data, open, setOpen, isFavorite, handle
       addToCart(dispatch, data, quantity);
       setShowAddIcon(true);
       setTimeout(() => {
-        setShowAddIcon(false);
         setOpen(false);
         if (target) target.style.pointerEvents = 'auto';
-      }, 1500);
+      }, 500);
     }
   };
 
@@ -85,7 +85,7 @@ export default function FoodInfoDialog({ data, open, setOpen, isFavorite, handle
             {handleFavorite &&
               <IconButton
                 className={`favorite-icon ${isFavorite ? "active" : ""}`}
-                onClick={(e) => handleFavorite(e, data.id)}
+                onClick={(e) => handleFavorite(e, data.foodId)}
               >
                 <FavoriteIcon />
               </IconButton>
@@ -144,6 +144,7 @@ export default function FoodInfoDialog({ data, open, setOpen, isFavorite, handle
             }
             <div className="actions">
               <QuantityButton
+                notDelete
                 quantity={quantity}
                 handleMinus={() => {
                   if (quantity > 1) {
