@@ -11,13 +11,18 @@ import DialogContent from '@mui/material/DialogContent';
 import CloseIcon from "@mui/icons-material/Close";
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import Button from "@mui/material/Button";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import Badge from "@mui/material/Badge";
 
 interface FilterDialogProps {
   filters: SearchFilter[];
   onFilterApply: (updatedFilters: SearchFilter[]) => void;
+  invisible?: boolean;
 }
 
-export default function FilterDialog({ filters, onFilterApply }: FilterDialogProps) {
+export default function FilterDialog({ filters, onFilterApply, invisible }: FilterDialogProps) {
   const isSp = useMediaQuery({ query: "(max-width: 1179px)" });
 
   const currentYear = new Date().getFullYear();
@@ -51,10 +56,26 @@ export default function FilterDialog({ filters, onFilterApply }: FilterDialogPro
 
   return (
     <Fragment>
-      <MiniButton
-        icon={<FilterAltOutlinedIcon />}
-        onClick={() => setOpen(true)}
-      />
+      <Badge
+        color="secondary"
+        variant="dot"
+        invisible={invisible}
+        sx={{
+          '& .MuiBadge-dot': {
+            top: '0.5rem',
+            right: '0.5rem',
+            backgroundColor: 'var(--badge-color)',
+          }
+        }}
+      >
+        <MiniButton
+          icon={<FilterAltOutlinedIcon />}
+          onClick={() => setOpen(true)}
+          sx={{
+            color: invisible ? 'unset' : 'var(--badge-color)',
+          }}
+        />
+      </Badge>
       <Dialog
         className="filter-dialog"
         open={open}
@@ -69,35 +90,71 @@ export default function FilterDialog({ filters, onFilterApply }: FilterDialogPro
           </div>
           <CloseIcon className="close-icon" onClick={() => setOpen(false)} />
         </DialogTitle>
-        <DialogContent className="content">
-          {filters.map((item, index) => (
-            <div key={index} className="filter-item">
-              <label>
-                {item.label}
-              </label>
-              {item.type === "year" && (
-                <Selector
-                  options={yearOptions}
-                  defaultValue={item.value}
-                  onChange={(e) => {
-                    handleFilterChange(item.key, e.target.value);
-                  }}
-                />
-              )}
-              {item.type === "month" && (
-                <Selector
-                  options={monthOptions}
-                  defaultValue={item.value}
-                  onChange={(e) => {
-                    handleFilterChange(item.key, e.target.value);
-                  }}
-                />
-              )}
-              {item.type === "text" && (
-                <input type="text" value={item.value} onChange={(e) => handleFilterChange(item.key, e.target.value)} />
-              )}
-            </div>
-          ))}
+        <DialogContent className="content" style={{ paddingTop: '1.5rem' }}>
+          {filters.map((item, index) => {
+            const targetFilter = tempFilters.find(filter => filter.key === item.key);
+            return (
+              <div key={index} className="filter-item">
+                <label className="filter-item-label">
+                  {item.label}
+                </label>
+                <div className="filter-item-content">
+                  {item.type === "select" && item.options && (
+                    <Selector
+                      options={item.options}
+                      defaultValue={item.value}
+                      onChange={(e) => handleFilterChange(item.key, e.target.value)}
+                    />
+                  )}
+                  {item.type === "radio" && (
+                    <RadioGroup row value={targetFilter?.value} onChange={(e) => handleFilterChange(item.key, e.target.value)}>
+                      {item.options && item.options.map((option, index) => {
+                        const repeatCount = option.repeat || 1;
+                        const repeatedLabel = Array.from({ length: repeatCount }, () => option.label);
+                        return (
+                            <FormControlLabel
+                              key={index}
+                              value={option.value}
+                              control={<Radio size="small" />}
+                              label={
+                                <span style={{
+                                  letterSpacing: repeatCount > 1 ? '-8px' : '0',
+                                  marginRight: repeatCount > 1 ? '0.5rem' : '0',
+                                }}>
+                                  {repeatedLabel}
+                                </span>
+                              }
+                            />
+                          );
+                        })
+                      }
+                    </RadioGroup>
+                  )}
+                  {item.type === "year" && (
+                    <Selector
+                      options={yearOptions}
+                      defaultValue={item.value}
+                      onChange={(e) => {
+                        handleFilterChange(item.key, e.target.value);
+                      }}
+                    />
+                  )}
+                  {item.type === "month" && (
+                    <Selector
+                      options={monthOptions}
+                      defaultValue={item.value}
+                      onChange={(e) => {
+                        handleFilterChange(item.key, e.target.value);
+                      }}
+                    />
+                  )}
+                  {item.type === "text" && (
+                    <input type="text" value={item.value} onChange={(e) => handleFilterChange(item.key, e.target.value)} />
+                  )}
+                </div>
+              </div>
+            );
+          })}
           <div className="actions">
             <Button variant="outlined" className="action-btn" onClick={() => setOpen(false)}>
               取り消し

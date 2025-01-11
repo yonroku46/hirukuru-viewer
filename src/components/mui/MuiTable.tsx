@@ -102,14 +102,26 @@ export default function MuiTable<T extends Row>({ topSection, columns, rows }: M
                   </IconButton>
                 );
                 break;
+              case 'number':
+                dpValue = column.format && typeof value === 'number'
+                ? column.format(value)
+                : currency(value as number);
+                break;
               case 'date':
-                  dpValue = new Date(value as string).toLocaleDateString();
-                  break;
-                  case 'number':
-                    dpValue = column.format && typeof value === 'number'
-                      ? column.format(value)
-                      : currency(value as number);
-                    break;
+                dpValue = new Date(value as string).toLocaleDateString('ja-JP', {
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                }).replace(/\./g, '-').replace(/ /g, '');
+                break;
+              case 'time':
+                const date = new Date(value as string);
+                dpValue = `${date.toLocaleDateString('ja-JP', {
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                }).replace(/\//g, '-')}\n${date.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}`;
+                break;
               default:
                 dpValue = value;
             }
@@ -121,7 +133,8 @@ export default function MuiTable<T extends Row>({ topSection, columns, rows }: M
                 sx={{
                   textOverflow: 'ellipsis',
                   overflow: 'hidden',
-                  whiteSpace: 'nowrap',
+                  whiteSpace: column.type === 'time' ? 'break-spaces' : 'nowrap',
+                  width: column.width,
                   minWidth: column.minWidth,
                   maxWidth: column.maxWidth,
                 }}
@@ -138,7 +151,7 @@ export default function MuiTable<T extends Row>({ topSection, columns, rows }: M
               style={{ padding: 0, borderBottom: open ? '1px solid var(--gray-alpha-500)' : 'unset' }}
             >
               <Collapse in={open} timeout="auto" unmountOnExit>
-                <Table size={isSp ? 'small' : 'medium'} aria-label="purchases">
+                <Table size="small" aria-label="purchases">
                   <TableHead>
                     <TableRow>
                       {listColumns.map((listColumn) => {
@@ -150,6 +163,7 @@ export default function MuiTable<T extends Row>({ topSection, columns, rows }: M
                             sx={{
                               backgroundColor: 'var(--gray-alpha-500)',
                               color: 'var(--background)',
+                              width: listColumn.width,
                               minWidth: listColumn.minWidth,
                               maxWidth: listColumn.maxWidth,
                             }}
@@ -161,33 +175,42 @@ export default function MuiTable<T extends Row>({ topSection, columns, rows }: M
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {Array.isArray(listRowChild) && listRowChild.map((listRow, index) => (
-                      <TableRow key={row.id}>
-                        {listColumns.map((listColumn) => {
-                          if (listColumn.hide) return null;
-                          return (
-                            <TableCell
-                              key={listColumn.key as string}
-                              align={listColumn.align}
-                              sx={{
-                                textOverflow: 'ellipsis',
-                                overflow: 'hidden',
-                                whiteSpace: 'nowrap',
-                                backgroundColor: 'var(--gray-alpha-100)',
-                                minWidth: listColumn.minWidth,
-                                maxWidth: listColumn.maxWidth,
-                                borderBottom: index === listRowChild.length - 1 ? 'unset' : '',
-                              }}
-                            >
-                              {listColumn.type === 'number'
-                                ? currency(listRow[listColumn.key as keyof typeof listRow])
-                                : listRow[listColumn.key as keyof typeof listRow]
-                              }
-                            </TableCell>
-                          );
-                        })}
-                      </TableRow>
-                    ))}
+                    {Array.isArray(listRowChild) && listRowChild.length > 0 ?
+                      listRowChild.map((listRow, index) => (
+                        <TableRow key={row.id}>
+                          {listColumns.map((listColumn) => {
+                            if (listColumn.hide) return null;
+                            return (
+                              <TableCell
+                                key={listColumn.key as string}
+                                align={listColumn.align}
+                                sx={{
+                                  textOverflow: 'ellipsis',
+                                  overflow: 'hidden',
+                                  whiteSpace: 'nowrap',
+                                  backgroundColor: 'var(--gray-alpha-100)',
+                                  width: listColumn.width,
+                                  minWidth: listColumn.minWidth,
+                                  maxWidth: listColumn.maxWidth,
+                                  borderBottom: index === listRowChild.length - 1 ? 'unset' : '',
+                                }}
+                              >
+                                {listColumn.type === 'number'
+                                  ? currency(listRow[listColumn.key as keyof typeof listRow])
+                                  : listRow[listColumn.key as keyof typeof listRow]
+                                }
+                              </TableCell>
+                            );
+                          })}
+                        </TableRow>
+                      ))
+                    :
+                    <TableRow>
+                      <TableCell colSpan={listColumns.length} align="center" sx={{ opacity: '0.85' }}>
+                        データがありません
+                      </TableCell>
+                    </TableRow>
+                    }
                   </TableBody>
                 </Table>
               </Collapse>
@@ -223,6 +246,7 @@ export default function MuiTable<T extends Row>({ topSection, columns, rows }: M
                       color: 'var(--background)',
                       borderTopLeftRadius: visibleIndex === 0 ? '0.5rem' : 'unset',
                       borderTopRightRadius: visibleIndex === visibleColumns.length - 1 ? '0.5rem' : 'unset',
+                      width: column.width,
                       minWidth: column.minWidth,
                       maxWidth: column.maxWidth,
                     }}
@@ -234,11 +258,19 @@ export default function MuiTable<T extends Row>({ topSection, columns, rows }: M
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => {
-                return <Row key={row.id} row={row} />
-              })}
+            {rows.length > 0 ?
+              rows
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row) => {
+                  return <Row key={row.id} row={row} />
+                })
+              :
+              <TableRow>
+                <TableCell colSpan={columns.length} align="center" sx={{ opacity: '0.85' }}>
+                  データがありません
+                </TableCell>
+              </TableRow>
+            }
           </TableBody>
         </Table>
       </TableContainer>

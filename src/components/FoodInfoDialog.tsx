@@ -87,7 +87,7 @@ export default function FoodInfoDialog({ data, open, setOpen, isFavorite, handle
                 className={`favorite-icon ${isFavorite ? "active" : ""}`}
                 onClick={(e) => handleFavorite(e, data.foodId)}
               >
-                <FavoriteIcon />
+                <FavoriteIcon fontSize="large" />
               </IconButton>
             }
           </div>
@@ -125,10 +125,9 @@ export default function FoodInfoDialog({ data, open, setOpen, isFavorite, handle
               </div>
             }
             {data.description &&
-              <div className="info">
-                <label>商品説明</label>
-                <p>{data.description}</p>
-              </div>
+              <p className="description">
+                {data.description}
+              </p>
             }
             {data.ingredients &&
               <div className="info">

@@ -99,14 +99,23 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
   };
 
   const totalPrice = cartItems.reduce((total, item) => total + (item.discountPrice || item.price) * (item?.quantity || 1), 0);
-  const totalPointBack = Math.round(totalPrice * 0.05);
 
   return (
     <Fragment>
       <MiniButton
         icon={
-          <Badge color="secondary" badgeContent={cartItems.length} max={9} variant={"standard"}>
-            <ShoppingCartOutlinedIcon className="cart-icon" />
+          <Badge
+            color="secondary"
+            variant="standard"
+            badgeContent={cartItems.length}
+            max={9}
+            sx={{
+              '& .MuiBadge-badge': {
+                backgroundColor: 'var(--badge-color)',
+              }
+            }}
+          >
+            <ShoppingCartOutlinedIcon className="cart-icon" sx={{ color: cartItems.length > 0 ? 'var(--badge-color)' : 'unset' }} />
           </Badge>
         }
         onClick={handleOpen(true)}
@@ -188,12 +197,7 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
           }
         </DialogContent>
         <DialogActions className="cart-actions">
-          {totalPointBack > 0 &&
-            <div className="point-back">
-              {`予想ポイントバック ${currency(totalPointBack, "P")}`}
-            </div>
-          }
-          <Button className={`order-btn ${totalPointBack > 0 && !deleteMode ? "active" : ""}`} variant="contained" color="primary">
+          <Button className={`order-btn ${!deleteMode ? "active" : ""}`} variant="contained" color="primary">
             合計
             <span className="total-price">{currency(totalPrice, "円")}</span>
             注文する

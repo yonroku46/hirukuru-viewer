@@ -42,7 +42,7 @@ export default function FoodCardSlider({ title, data }: FoodCardSliderProps) {
   };
 
   useEffect(() => {
-    setItemsPerPage(isSp ? 1 : 4);
+    setItemsPerPage(isSp ? 2 : 4);
   }, [isSp]);
 
   const handleFavorite = (e: React.MouseEvent<HTMLButtonElement>, id: string) => {

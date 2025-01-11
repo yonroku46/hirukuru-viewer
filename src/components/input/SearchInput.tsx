@@ -21,6 +21,13 @@ export default function SearchInput({ value, searchMode, autoFocus, onChange, fi
   const router = useRouter();
 
   const [showClearIcon, setShowClearIcon] = useState<boolean>(false);
+  const [filtersChanged, setFiltersChanged] = useState<boolean>(false);
+  const [initialFilters, setInitialFilters] = useState<SearchFilter[] | undefined>(filters);
+
+  useEffect(() => {
+    setInitialFilters(filters);
+  }, []);
+
   useEffect(() => {
     setShowClearIcon(value === "" ? false : true);
   }, [value]);
@@ -37,6 +44,14 @@ export default function SearchInput({ value, searchMode, autoFocus, onChange, fi
 
   const handleSearchClick = (): void => {
     router.push("/search");
+  };
+
+  const handleFilterApply = (updatedFilters: SearchFilter[]) => {
+    const filtersAreDifferent = JSON.stringify(initialFilters) !== JSON.stringify(updatedFilters);
+    setFiltersChanged(filtersAreDifferent);
+    if (onFilterApply) {
+      onFilterApply(updatedFilters);
+    }
   };
 
   if (!searchMode) {
@@ -56,7 +71,8 @@ export default function SearchInput({ value, searchMode, autoFocus, onChange, fi
       {filters && onFilterApply &&
         <FilterDialog
           filters={filters}
-          onFilterApply={onFilterApply}
+          onFilterApply={handleFilterApply}
+          invisible={!filtersChanged}
         />
       }
       <div className="input-wrapper">

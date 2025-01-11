@@ -22,6 +22,7 @@ declare global {
     key: keyof T;
     label: string;
     type: 'text' | 'textarea' | 'number' | 'list' | 'select' | 'switch' | 'time' | 'date' | 'image' | 'status' | 'rating';
+    width?: number;
     minWidth?: number;
     maxWidth?: number;
     align?: 'right' | 'center';
@@ -69,11 +70,13 @@ declare global {
     value: number;
   }
   interface SearchFilter {
-    type: 'text' | 'date' | 'year' | 'month';
+    type: 'text' | 'number' | 'radio' | 'date' | 'year' | 'month' | 'select';
     key: string;
     label: string;
     value: string;
+    options?: { label: string; repeat?: number; value: string }[];
   }
+
   interface User {
     userId: string;
     name: string;
@@ -116,16 +119,17 @@ declare global {
     userId: string;
     shopId: string;
     status: string;
-    date: string;
     totalPrice: number;
+    pickupTime: string;
+    orderTime: string;
     orderDetail: OrderDetail[];
   }
   interface OrderDetail {
     foodId: string;
     name: string;
-    quantity: number;
     price: number;
-    discountPrice?: number;
+    quantity: number;
+    totalPrice: number;
   }
   interface Food {
     foodId: string;

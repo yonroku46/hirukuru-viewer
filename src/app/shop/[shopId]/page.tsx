@@ -27,6 +27,7 @@ export default function ShopInfoPage(
   const searchParams = useSearchParams();
   const q = searchParams.get('q');
 
+  const maxPrice = 2500;
   const [searchValue, setSearchValue] = useState<string>('');
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [favoriteItems, setFavoriteItems] = useState<string[]>([]);
@@ -35,6 +36,34 @@ export default function ShopInfoPage(
   const [open, setOpen] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<Food | null>(null);
   const [reviewList, setReviewList] = useState<ShopReview[]>([]);
+  const [priceRange, setPriceRange] = useState<number>(maxPrice);
+  const [sort, setSort] = useState<string>('recommend');
+
+  const searchFilters: SearchFilter[] = [
+    { type: 'select', key: 'sort', label: '並び替え', value: sort, options: [
+      { label: 'おすすめ順', value: 'recommend' },
+      { label: '評価順', value: 'rating' },
+      { label: '高価格順', value: 'expensive' },
+      { label: '低価格順', value: 'cheap' },
+    ]},
+    { type: 'radio', key: 'priceRange', label: '価格帯', value: priceRange.toString(), options: [
+      { label: '🪙', repeat: 1, value: '500' },
+      { label: '🪙', repeat: 2, value: '1000' },
+      { label: '🪙', repeat: 3, value: '1500' },
+      { label: '🪙', repeat: 4, value: '2000' },
+      { label: '🪙', repeat: 5, value: maxPrice.toString() },
+    ]},
+  ]
+
+  const handleFilterApply = (updatedFilters: SearchFilter[]) => {
+    updatedFilters.forEach(filter => {
+      if (filter.key === 'priceRange') {
+        setPriceRange(parseInt(filter.value, 10));
+      } else if (filter.key === 'sort') {
+        setSort(filter.value);
+      }
+    });
+  }
 
   const shopInfo = {
     id: 1,
@@ -61,7 +90,7 @@ export default function ShopInfoPage(
   useEffect(() => {
     console.log(shopId);
     const dummyItems = [
-      { foodId: '1', shopId: 'fuk001', category: '日替わり弁当', name: '唐揚げ弁当', description: "国内産の鶏肉を使用した唐揚げ弁当です。", ingredients: ["唐揚げ", "ほうれん草ナムル", "白ごはん"], price: 1000, discountPrice: 950, rating: 4.3, image: 'https://i.pinimg.com/736x/f2/67/df/f267dfdd2b0cb8eac4b5e9674aa49e97.jpg' },
+      { foodId: '1', shopId: 'fuk001', category: '日替わり弁当', name: '唐揚げ弁当', description: "国内産の鶏肉を使用した唐揚げ弁当です。", ingredients: ["唐揚げ", "ほうれん草ナムル", "白ごはん"], price: 2000, discountPrice: 500, rating: 4.3, image: 'https://i.pinimg.com/736x/f2/67/df/f267dfdd2b0cb8eac4b5e9674aa49e97.jpg' },
       { foodId: '2', shopId: 'fuk001', category: '特製弁当', name: '特製のり弁', description: "特製のり弁です。", price: 500, discountPrice: 450, rating: 4.5, image: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg' },
       { foodId: '3', shopId: 'fuk001', category: '特製弁当', name: 'チキン南蛮弁当', price: 750, rating: 3.9, image: 'https://i.pinimg.com/236x/42/d7/59/42d7590255cfd29e56db2b3d968419d4.jpg' },
       { foodId: '4', shopId: 'fuk001', category: '特製弁当', name: 'カレー弁当', price: 550, rating: undefined, image: 'https://i.pinimg.com/236x/3b/4f/0a/3b4f0a758df2243b72d1d4985cda5437.jpg' },
@@ -114,17 +143,33 @@ export default function ShopInfoPage(
     }, {} as Record<string, Food[]>);
 
     const filterItems = (items: Food[]) => {
-      if (!searchValue) return items;
-
+      if (!searchValue && !priceRange && !sort) return items;
+      // 検索
       const searchKana = toKatakana(searchValue);
       const searchRegex = new RegExp(searchValue, 'i');
 
-      return items.filter(item =>
-        // ひらがな・漢字 一致
-        searchRegex.test(item.name) ||
-        // カタカナ 一致
-        item.name.includes(searchKana)
-      );
+      const filteredItems = items.filter(item => {
+        const matchesSearch = searchValue ?
+          searchRegex.test(item.name) || item.name.includes(searchKana) : true;
+        const effectivePrice = item.discountPrice ?? item.price;
+        const matchesPrice = priceRange >= maxPrice || effectivePrice <= priceRange;
+
+        return matchesSearch && matchesPrice;
+      });
+
+      // ソート
+      switch (sort) {
+        case 'recommend':
+          return filteredItems;
+        case 'rating':
+          return filteredItems.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
+        case 'expensive':
+          return filteredItems.sort((a, b) => (b.discountPrice ?? b.price) - (a.discountPrice ?? a.price));
+        case 'cheap':
+          return filteredItems.sort((a, b) => (a.discountPrice ?? a.price) - (b.discountPrice ?? b.price));
+        default:
+          return filteredItems;
+      }
     };
 
     const filteredItems = filterItems(items);
@@ -238,7 +283,7 @@ export default function ShopInfoPage(
       });
 
     return [allTab, specialTab, ...categoryTabs];
-  }, [items, favoriteItems, searchValue, handleFavorite]);
+  }, [items, favoriteItems, searchValue, priceRange, sort, handleFavorite]);
 
   const reviewFilterOptions = [
     {
@@ -349,6 +394,8 @@ export default function ShopInfoPage(
             searchMode
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
+            filters={searchFilters}
+            onFilterApply={handleFilterApply}
           />
         </div>
         <MuiTabs tabs={tabs} />

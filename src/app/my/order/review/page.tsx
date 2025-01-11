@@ -20,12 +20,12 @@ export default function MyOrderReviewPage() {
   const columns: Column<ShopReview>[] = [
     { key: 'reviewId', type: 'text', label: 'レビューID', hide: true },
     { key: 'userId', type: 'text', label: 'ユーザーID', hide: true },
+    { key: 'userProfile', type: 'image', label: 'プロフィール', hide: true },
     { key: 'userName', type: 'text', label: 'ユーザー名', minWidth: 100 },
-    { key: 'userProfile', type: 'image', label: 'プロフィール', minWidth: 100 },
     { key: 'shopId', type: 'text', label: '店舗ID', minWidth: 100 },
     { key: 'comment', type: 'text', label: 'コメント', minWidth: 100, maxWidth: 250 },
-    { key: 'rating', type: 'rating', label: '評価', minWidth: 100, maxWidth: 100, align: 'center' },
-    { key: 'date', type: 'text', label: '日付', minWidth: 100, maxWidth: 100, align: 'center' },
+    { key: 'rating', type: 'rating', label: '評価', width: 120, align: 'center' },
+    { key: 'date', type: 'text', label: '日付', minWidth: 100, maxWidth: 100, align: 'right' },
   ];
   const rows: ShopReview[] = [
     createData('R101', 'U101', 'テストユーザー', '/assets/img/no-user.jpg', 'S101', 'このショップはとてもよかったです。', 4, '2024-01-01'),
