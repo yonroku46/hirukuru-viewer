@@ -62,10 +62,9 @@ export default function FoodInfoDialog({ data, open, setOpen, isFavorite, handle
     <Fragment>
       <Dialog
         className="food-info-dialog"
+        fullScreen={isSp}
         open={open}
         onClose={() => setOpen(false)}
-        fullScreen={isSp}
-        maxWidth="lg"
       >
         <DialogTitle className="title-wrapper">
           <div className="title">

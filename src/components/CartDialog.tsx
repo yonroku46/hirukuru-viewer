@@ -133,7 +133,7 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
           {`注文リスト`}
           <CloseIcon className="close-icon" onClick={handleOpen(false)} />
         </DialogTitle>
-        <DialogContent className="cart-items">
+        <DialogContent className="content">
           <div className="cart-items-count">
             {`${currency(cartItems.length)}項目`}
           </div>
