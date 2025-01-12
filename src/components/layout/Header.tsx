@@ -207,6 +207,7 @@ export default function Header() {
           }
           <SearchInput
             searchMode={currentPath === "/search"}
+            placeholder={"今食べたいものは？"}
             autoFocus={currentPath === "/search"}
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}

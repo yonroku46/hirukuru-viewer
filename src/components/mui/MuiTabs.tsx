@@ -18,7 +18,7 @@ function TabPanel({ children, index, value, isSp, ...other }: TabPanelProps) {
       hidden={value !== index}
       id={`vertical-tabpanel-${index}`}
       aria-labelledby={`vertical-tab-${index}`}
-      style={{ width: '100%', marginLeft: isSp ? '0' : '1rem', marginTop: isSp ? '0.5rem' : '0' }}
+      style={{ width: '100%', marginLeft: isSp ? '0' : '2rem', marginTop: isSp ? '0.5rem' : '0' }}
       {...other}
     >
       {value === index && (

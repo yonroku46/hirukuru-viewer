@@ -98,6 +98,7 @@ export default function MyOrderReviewPage() {
               </h2>
               <SearchInput
                 searchMode
+                placeholder="店舗名で検索"
                 value={searchValue}
                 onChange={(e) => {
                   setSearchValue(e.target.value);

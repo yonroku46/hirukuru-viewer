@@ -392,6 +392,7 @@ export default function ShopInfoPage(
         <div className="shop-item-search">
           <SearchInput
             searchMode
+            placeholder="商品名で検索"
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
             filters={searchFilters}

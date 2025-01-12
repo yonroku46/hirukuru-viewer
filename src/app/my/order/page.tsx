@@ -114,6 +114,7 @@ export default function MyOrderPage() {
               </h2>
               <SearchInput
                 searchMode
+                placeholder="食品名で検索"
                 value={searchValue}
                 onChange={(e) => {
                   setSearchValue(e.target.value);

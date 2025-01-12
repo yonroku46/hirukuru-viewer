@@ -10,6 +10,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 
 interface SearchInputProps {
   value: string;
+  placeholder?: string;
   searchMode?: boolean;
   autoFocus?: boolean;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -17,7 +18,7 @@ interface SearchInputProps {
   onFilterApply?: (updatedFilters: SearchFilter[]) => void;
 }
 
-export default function SearchInput({ value, searchMode, autoFocus, onChange, filters, onFilterApply }: SearchInputProps) {
+export default function SearchInput({ value, placeholder, searchMode, autoFocus, onChange, filters, onFilterApply }: SearchInputProps) {
   const router = useRouter();
 
   const [showClearIcon, setShowClearIcon] = useState<boolean>(false);
@@ -60,7 +61,7 @@ export default function SearchInput({ value, searchMode, autoFocus, onChange, fi
         icon={<SearchIcon />}
         onClick={handleSearchClick}
         sx={{
-          marginRight: "0.75rem",
+          marginRight: "0.85rem",
         }}
       />
     );
@@ -79,7 +80,7 @@ export default function SearchInput({ value, searchMode, autoFocus, onChange, fi
         <SearchIcon className="search-icon" />
         <input
           type="text"
-          placeholder="検索"
+          placeholder={placeholder || "検索"}
           autoFocus={autoFocus}
           value={value}
           onChange={handleChange}
