@@ -17,6 +17,11 @@ import ManageSearchOutlinedIcon from '@mui/icons-material/ManageSearchOutlined';
 import CloseIcon from "@mui/icons-material/Close";
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Radio from '@mui/material/Radio';
+import Checkbox from '@mui/material/Checkbox';
+import FormGroup from '@mui/material/FormGroup';
 
 interface FoodInfoDialogProps {
   data: Food | null;
@@ -129,38 +134,111 @@ export default function FoodInfoDialog({ data, open, setOpen, isFavorite, handle
               </p>
             }
             {data.ingredients &&
-              <div className="info">
-                <label>材料・構成</label>
-                <div className="ingredient-list">
-                  {data.ingredients.map((ingredient, index) => (
-                    <span key={index} className="ingredient">
-                      {ingredient}
+              <div className="ingredient-list">
+                {data.ingredients.map((ingredient, index) => (
+                  <span key={index} className="ingredient">
+                    {ingredient}
+                  </span>
+                ))}
+              </div>
+            }
+            {data.options && data.options.length > 0 &&
+              <div className="option-wrapper">
+                <p className="option-title">
+                  オプション
+                  {data.optionMultiple &&
+                    <span className="option-multiple">
+                      {`(複数選択可)`}
                     </span>
-                  ))}
+                  }
+                </p>
+                <div className="option-list">
+                  {data.optionMultiple ?
+                    <FormGroup>
+                      {data.options.map((option) => (
+                        <FormControlLabel
+                          key={option.optionId}
+                          value={option.optionId}
+                          control={
+                            <Checkbox size="small"
+                              onChange={(e) => {
+                                const optionPrice = e.target.checked ? option.price : -option.price;
+                                console.log(optionPrice);
+                              }}
+                            />}
+                          label={`
+                            ${option.name} ${
+                              option.price > 0
+                                ? `(+${currency(option.price)}円)`
+                                : option.price < 0
+                                  ? `(-${currency(Math.abs(option.price))}円)`
+                                  : `(無料)`
+                            }
+                          `}
+                        />
+                      ))}
+                    </FormGroup>
+                    :
+                    <RadioGroup
+                      onChange={(e) => {
+                        const selectedOption = data.options?.find(option => option.optionId === e.target.value);
+                        if (selectedOption) {
+                          console.log(selectedOption.price);
+                        }
+                      }}
+                    >
+                      {data.options.map((option) => (
+                        <FormControlLabel
+                          key={option.optionId}
+                          value={option.optionId}
+                          control={<Radio size="small" />}
+                          label={`
+                            ${option.name} ${
+                              option.price > 0
+                                ? `(+${currency(option.price)}円)`
+                                : option.price < 0
+                                  ? `(-${currency(Math.abs(option.price))}円)`
+                                  : `(無料)`
+                            }
+                          `}
+                        />
+                      ))}
+                    </RadioGroup>
+                  }
                 </div>
               </div>
             }
             <div className="actions">
-              <QuantityButton
-                notDelete
-                quantity={quantity}
-                handleMinus={() => {
-                  if (quantity > 1) {
-                    setQuantity(quantity - 1);
+              {data.stock && data.stock < 10 &&
+                <div className="stock-alert">
+                  <span className="count">
+                    {`残り${data.stock}個`}
+                  </span>
+                  まもなく完売
+                </div>
+              }
+              <div className="actions-group">
+                <QuantityButton
+                  notDelete
+                  quantity={quantity}
+                  handleMinus={() => {
+                    if (quantity > 1) {
+                      setQuantity(quantity - 1);
+                    }
+                  }}
+                  handlePlus={() => {
+                    setQuantity(quantity + 1);
+                  }}
+                />
+                <Button variant="contained" className="add-btn" onClick={handleClick}>
+                  {showAddIcon &&
+                    <div className="added-icon">
+                      <AddShoppingCartIcon fontSize="inherit" />
+                    </div>
                   }
-                }}
-                handlePlus={() => {
-                  setQuantity(quantity + 1);
-                }}
-              />
-              <Button variant="contained" className="add-btn" onClick={handleClick}>
-                {showAddIcon &&
-                  <div className="added-icon">
-                    <AddShoppingCartIcon fontSize="inherit" />
-                  </div>
-                }
-                カートに入れる
-              </Button>
+                  カートに入れる
+                </Button>
+              </div>
             </div>
           </div>
         </DialogContent>

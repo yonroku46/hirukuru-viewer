@@ -143,6 +143,16 @@ declare global {
     rating?: number;
     image: string;
     quantity?: number;
+    stock?: number;
+    optionMultiple?: boolean;
+    options?: FoodOption[];
+  }
+  interface FoodOption {
+    optionId: string;
+    foodId: string;
+    shopId: string;
+    name: string;
+    price: number;
   }
 }
 
