@@ -162,11 +162,11 @@ export default function FoodInfoDialog({ data, open, setOpen, isFavorite, handle
                           key={option.optionId}
                           value={option.optionId}
                           control={
-                            <Checkbox size="small"
+                            <Checkbox
                               onChange={(e) => {
-                                if (e.target.checked) {
-                                  setOptions([...options, option]);
-                                }
+                                setOptions(e.target.checked ?
+                                  [...options, option] : options.filter(o => o.optionId !== option.optionId)
+                                );
                               }}
                             />}
                           label={`
@@ -186,7 +186,7 @@ export default function FoodInfoDialog({ data, open, setOpen, isFavorite, handle
                       onChange={(e) => {
                         const selectedOption = data.options?.find(option => option.optionId === e.target.value);
                         if (selectedOption) {
-                          setOptions([...options, selectedOption]);
+                          setOptions([selectedOption]);
                         }
                       }}
                     >
@@ -194,7 +194,7 @@ export default function FoodInfoDialog({ data, open, setOpen, isFavorite, handle
                         <FormControlLabel
                           key={option.optionId}
                           value={option.optionId}
-                          control={<Radio size="small" />}
+                          control={<Radio />}
                           label={`
                             ${option.name} ${
                               option.price > 0
