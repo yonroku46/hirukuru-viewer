@@ -5,7 +5,7 @@ import { AppDispatch, useAppDispatch, useAppSelector } from "@/store";
 import { setCartState } from "@/store/slice/cartSlice";
 import Image from "next/image";
 import { useMediaQuery } from "react-responsive";
-import { currency } from "@/common/utils/StringUtils";
+import { currency, optionsToString } from "@/common/utils/StringUtils";
 import QuantityButton from "@/components/button/QuantityButton";
 import MiniButton from "@/components/button/MiniButton";
 
@@ -194,15 +194,7 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
                         </div>
                       }
                       <div className="options">
-                        {item.options?.map((option) =>
-                          `${option.name} ${
-                            option.price > 0
-                              ? `(+${currency(option.price)}円)`
-                              : option.price < 0
-                                ? `(-${currency(Math.abs(option.price))}円)`
-                                : `(無料)`
-                          }`
-                        ).join(' / ')}
+                        {optionsToString(item.options || [])}
                       </div>
                     </div>
                   </div>

@@ -3,9 +3,9 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
-import { toKatakana } from "wanakana";
 import SearchInput from "@/components/input/SearchInput";
 import { currency, formatDaysAgo } from "@/common/utils/StringUtils";
+import { createKanaSearchRegex } from "@/common/utils/SearchUtils";
 import MuiMenu from "@/components/mui/MuiMenu";
 import MuiTabs from "@/components/mui/MuiTabs";
 import Selector from "@/components/input/Selector";
@@ -153,13 +153,10 @@ export default function ShopInfoPage(
 
     const filterItems = (items: Food[]) => {
       if (!searchValue && !priceRange && !sort) return items;
-      // 検索
-      const searchKana = toKatakana(searchValue);
-      const searchRegex = new RegExp(searchValue, 'i');
 
+      const searchRegex = createKanaSearchRegex(searchValue);
       const filteredItems = items.filter(item => {
-        const matchesSearch = searchValue ?
-          searchRegex.test(item.name) || item.name.includes(searchKana) : true;
+        const matchesSearch = searchValue ? searchRegex.test(item.name) : true;
         const effectivePrice = item.discountPrice ?? item.price;
         const matchesPrice = priceRange >= maxPrice || effectivePrice <= priceRange;
 

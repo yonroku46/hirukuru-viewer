@@ -3,7 +3,7 @@
 import React, { Fragment, useState } from 'react';
 import { useMediaQuery } from "react-responsive";
 import Image from "@/components/Image";
-import { currency } from '@/common/utils/StringUtils';
+import { currency, optionsToString, orderStatusDict } from '@/common/utils/StringUtils';
 
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
@@ -29,14 +29,6 @@ interface MuiTableProps<T extends Row> {
 
 export default function MuiTable<T extends Row>({ topSection, columns, rows }: MuiTableProps<T>) {
   const isSp = useMediaQuery({ query: "(max-width: 1179px)" });
-
-  const labelDict = [
-    { key: "done", label: "完了", color: "var(--done-color)" },
-    { key: "pickup", label: "受け取り予定", color: "var(--pickup-color)" },
-    { key: "booked", label: "予約", color: "var(--booked-color)" },
-    { key: "review", label: "レビュー待ち", color: "var(--review-color)" },
-    { key: "cancel", label: "キャンセル", color: "var(--cancel-color)" },
-  ];
 
   const rowsPerPage: number = 50;
   const [page, setPage] = useState<number>(0);
@@ -87,9 +79,9 @@ export default function MuiTable<T extends Row>({ topSection, columns, rows }: M
                 dpValue = (
                   <Chip
                     size="small"
-                    label={labelDict.find(label => label.key === value)?.label}
+                    label={orderStatusDict(value as OrderStatus['type'], 'label')}
                     sx={{
-                      backgroundColor: labelDict.find(label => label.key === value)?.color,
+                      backgroundColor: orderStatusDict(value as OrderStatus['type'], 'color'),
                       color: 'var(--background)',
                       width: '100px',
                     }}
@@ -117,11 +109,13 @@ export default function MuiTable<T extends Row>({ topSection, columns, rows }: M
                 break;
               case 'time':
                 const date = new Date(value as string);
-                dpValue = `${date.toLocaleDateString('ja-JP', {
-                  year: 'numeric',
-                  month: '2-digit',
-                  day: '2-digit',
-                }).replace(/\//g, '-')}\n${date.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}`;
+                if (date.getTime()) {
+                  dpValue = `${date.toLocaleDateString('ja-JP', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                  }).replace(/\//g, '-')}\n${date.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}`;
+                }
                 break;
               default:
                 dpValue = value;
@@ -179,7 +173,7 @@ export default function MuiTable<T extends Row>({ topSection, columns, rows }: M
                   <TableBody>
                     {Array.isArray(listRowChild) && listRowChild.length > 0 ?
                       listRowChild.map((listRow, index) => (
-                        <TableRow key={row.id}>
+                        <TableRow key={index}>
                           {listColumns.map((listColumn) => {
                             if (listColumn.hide) return null;
                             return (
@@ -197,9 +191,11 @@ export default function MuiTable<T extends Row>({ topSection, columns, rows }: M
                                   borderBottom: index === listRowChild.length - 1 ? 'unset' : '',
                                 }}
                               >
-                                {listColumn.type === 'number'
-                                  ? currency(listRow[listColumn.key as keyof typeof listRow], listColumn.typeUnit)
-                                  : listRow[listColumn.key as keyof typeof listRow]
+                                {listColumn.type === 'number' ?
+                                  currency(listRow[listColumn.key as keyof typeof listRow], listColumn.typeUnit)
+                                  : listColumn.type === 'options' ?
+                                    optionsToString(listRow[listColumn.key as keyof typeof listRow])
+                                      : listRow[listColumn.key as keyof typeof listRow]
                                 }
                               </TableCell>
                             );

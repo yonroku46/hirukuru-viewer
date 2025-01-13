@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import MiniButton from "@/components/button/MiniButton";
 import Selector from "@/components/input/Selector";
@@ -15,14 +15,16 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import Badge from "@mui/material/Badge";
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
 
 interface FilterDialogProps {
   filters: SearchFilter[];
+  onReset: () => void;
   onFilterApply: (updatedFilters: SearchFilter[]) => void;
-  invisible?: boolean;
+  changed?: boolean;
 }
 
-export default function FilterDialog({ filters, onFilterApply, invisible }: FilterDialogProps) {
+export default function FilterDialog({ filters, onReset, onFilterApply, changed }: FilterDialogProps) {
   const isSp = useMediaQuery({ query: "(max-width: 1179px)" });
 
   const currentYear = new Date().getFullYear();
@@ -41,12 +43,22 @@ export default function FilterDialog({ filters, onFilterApply, invisible }: Filt
   const [tempFilters, setTempFilters] = useState<SearchFilter[]>(filters);
   const [open, setOpen] = useState<boolean>(false);
 
+  useEffect(() => {
+    setTempFilters(filters);
+  }, [filters]);
+
   const handleFilterChange = (key: string, newValue: string) => {
     setTempFilters(prev =>
       prev.map(filter =>
         filter.key === key ? { ...filter, value: newValue } : filter
       )
     );
+  };
+
+  const handleReset = () => {
+    setTempFilters(filters);
+    onReset();
+    setOpen(false);
   };
 
   const handleFilterApply = () => {
@@ -59,7 +71,7 @@ export default function FilterDialog({ filters, onFilterApply, invisible }: Filt
       <Badge
         color="secondary"
         variant="dot"
-        invisible={invisible}
+        invisible={changed}
         sx={{
           '& .MuiBadge-dot': {
             top: '0.5rem',
@@ -72,7 +84,7 @@ export default function FilterDialog({ filters, onFilterApply, invisible }: Filt
           icon={<FilterAltOutlinedIcon />}
           onClick={() => setOpen(true)}
           sx={{
-            color: invisible ? 'unset' : 'var(--badge-color)',
+            color: changed ? 'unset' : 'var(--badge-color)',
           }}
         />
       </Badge>
@@ -90,7 +102,11 @@ export default function FilterDialog({ filters, onFilterApply, invisible }: Filt
           </div>
           <CloseIcon className="close-icon" onClick={() => setOpen(false)} />
         </DialogTitle>
-        <DialogContent className="content" style={{ paddingTop: '1.5rem' }}>
+        <DialogContent className="content">
+          <div className={`reset-action ${changed ? '' : 'active'}`} onClick={handleReset}>
+            <RestartAltIcon />
+            フィルター初期化
+          </div>
           {filters.map((item, index) => {
             const targetFilter = tempFilters.find(filter => filter.key === item.key);
             return (
@@ -156,12 +172,14 @@ export default function FilterDialog({ filters, onFilterApply, invisible }: Filt
             );
           })}
           <div className="actions">
-            <Button variant="outlined" className="action-btn" onClick={() => setOpen(false)}>
-              取り消し
-            </Button>
-            <Button variant="contained" className="action-btn" onClick={handleFilterApply}>
-              適用
-            </Button>
+            <div className="actions-group">
+              <Button variant="outlined" className="action-btn" onClick={() => setOpen(false)}>
+                取り消し
+              </Button>
+              <Button variant="contained" className="action-btn" onClick={handleFilterApply}>
+                適用
+              </Button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>

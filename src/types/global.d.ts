@@ -21,7 +21,7 @@ declare global {
   interface Column<T> {
     key: keyof T;
     label: string;
-    type: 'text' | 'textarea' | 'number' | 'list' | 'select' | 'switch' | 'time' | 'date' | 'image' | 'status' | 'rating';
+    type: 'text' | 'textarea' | 'number' | 'list' | 'select' | 'switch' | 'time' | 'date' | 'image' | 'status' | 'rating' | 'options';
     typeUnit?: string;
     width?: number;
     minWidth?: number;
@@ -77,7 +77,6 @@ declare global {
     value: string;
     options?: { label: string; repeat?: number; value: string }[];
   }
-
   interface User {
     userId: string;
     name: string;
@@ -111,6 +110,7 @@ declare global {
     userRatingCount?: number;
     userRatingAvg?: number;
     shopId: string;
+    shopName: string;
     rating: number;
     comment: string;
     date: string;
@@ -130,7 +130,7 @@ declare global {
     orderId: string;
     foodId: string;
     name: string;
-    options?: string;
+    options?: FoodOption[];
     price: number;
     quantity: number;
     totalPrice: number;

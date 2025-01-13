@@ -53,11 +53,11 @@ export default function MyPage() {
     { title: '注文管理', href: '/my/order', icon: <ShoppingBasketOutlinedIcon /> },
     { title: 'レビュー', href: '/my/order/review', icon: <SmsOutlinedIcon /> },
     { title: 'お気に入り', href: '/my/favorite', icon: <FavoriteBorderOutlinedIcon /> },
+    { title: 'ポイント管理', href: '/my/point', icon: <MonetizationOnOutlinedIcon /> },
     { title: 'クーポン', href: '/my/coupon', icon: <LocalOfferOutlinedIcon /> },
   ];
   const linkList = [
     { title: '支払い設定', href: '/my/credit', icon: <AddCardOutlinedIcon /> },
-    { title: 'ポイント管理', href: '/my/point', icon: <MonetizationOnOutlinedIcon /> },
     { title: 'お問い合わせ', href: '/service/contact', icon: <SupportAgentIcon /> },
     { title: '退会', href: '/my/withdraw', icon: <LogoutOutlinedIcon /> },
   ];

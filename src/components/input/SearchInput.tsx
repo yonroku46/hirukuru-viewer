@@ -23,10 +23,11 @@ export default function SearchInput({ value, placeholder, searchMode, autoFocus,
 
   const [showClearIcon, setShowClearIcon] = useState<boolean>(false);
   const [filtersChanged, setFiltersChanged] = useState<boolean>(false);
-  const [initialFilters, setInitialFilters] = useState<SearchFilter[] | undefined>(filters);
+  const [initialFilters, setInitialFilters] = useState<SearchFilter[]>(filters || []);
 
   useEffect(() => {
-    setInitialFilters(filters);
+    setInitialFilters(filters || []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -45,6 +46,10 @@ export default function SearchInput({ value, placeholder, searchMode, autoFocus,
 
   const handleSearchClick = (): void => {
     router.push("/search");
+  };
+
+  const handleReset = (): void => {
+    handleFilterApply(initialFilters);
   };
 
   const handleFilterApply = (updatedFilters: SearchFilter[]) => {
@@ -72,8 +77,9 @@ export default function SearchInput({ value, placeholder, searchMode, autoFocus,
       {filters && onFilterApply &&
         <FilterDialog
           filters={filters}
+          onReset={handleReset}
           onFilterApply={handleFilterApply}
-          invisible={!filtersChanged}
+          changed={!filtersChanged}
         />
       }
       <div className="input-wrapper">

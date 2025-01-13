@@ -59,6 +59,34 @@ export function extractDelimiter(target: string, delimiter = '/'): string {
   return result;
 }
 
+export function optionsToString(options: FoodOption | FoodOption[]): string {
+  if (!options) return '';
+
+  const formatOption = (option: FoodOption) => {
+    const priceString = option.price > 0
+      ? `(+${currency(option.price)}円)`
+      : option.price < 0
+        ? `(-${currency(Math.abs(option.price))}円)`
+        : `(無料)`;
+    return `${option.name} ${priceString}`;
+  };
+
+  return Array.isArray(options)
+    ? options.map(formatOption).join(' / ')
+    : formatOption(options);
+}
+
+export function orderStatusDict(orderStatusType: OrderStatus['type'], key: 'label' | 'color'): string {
+  const orderStatus = [
+    { key: "done", label: "完了", color: "var(--done-color)" },
+    { key: "pickup", label: "受け取り予定", color: "var(--pickup-color)" },
+    { key: "booked", label: "予約", color: "var(--booked-color)" },
+    { key: "review", label: "レビュー待ち", color: "var(--review-color)" },
+    { key: "cancel", label: "キャンセル", color: "var(--cancel-color)" },
+  ];
+  return orderStatus.find((s) => s.key === orderStatusType)?.[key] || '';
+}
+
 export function calculateAge(birthday: string): number {
   // 誕生日をDateオブジェクトに変換
   const birthDate = new Date(birthday);

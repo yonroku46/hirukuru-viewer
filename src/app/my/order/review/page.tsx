@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createKanaSearchRegex } from "@/common/utils/SearchUtils";
 import SearchInput from "@/components/input/SearchInput";
 import ReviewStatus from "@/components/ReviewStatus";
 import MuiBreadcrumbs from "@/components/mui/MuiBreadcrumbs";
@@ -21,15 +22,12 @@ export default function MyOrderReviewPage() {
     { key: 'reviewId', type: 'text', label: 'レビューID', hide: true },
     { key: 'userId', type: 'text', label: 'ユーザーID', hide: true },
     { key: 'userProfile', type: 'image', label: 'プロフィール', hide: true },
-    { key: 'userName', type: 'text', label: 'ユーザー名', minWidth: 100 },
-    { key: 'shopId', type: 'text', label: '店舗ID', minWidth: 100 },
-    { key: 'comment', type: 'text', label: 'コメント', minWidth: 100, maxWidth: 250 },
+    { key: 'userName', type: 'text', label: 'ユーザー名', hide: true },
+    { key: 'shopId', type: 'text', label: '店舗ID', hide: true },
+    { key: 'shopName', type: 'text', label: '店舗名', minWidth: 120, maxWidth: 120 },
+    { key: 'comment', type: 'text', label: 'コメント', minWidth: 250, maxWidth: 250 },
     { key: 'rating', type: 'rating', label: '評価', width: 120, align: 'center' },
     { key: 'date', type: 'text', label: '日付', minWidth: 100, maxWidth: 100, align: 'right' },
-  ];
-  const rows: ShopReview[] = [
-    createData('R101', 'U101', 'テストユーザー', '/assets/img/no-user.jpg', 'S101', 'このショップはとてもよかったです。', 4, '2024-01-01'),
-    createData('R102', 'U102', 'テストユーザー', '/assets/img/no-user.jpg', 'S102', 'うまい！また行きたいです。店員さんも親切でした。', 5, '2024-01-01'),
   ];
 
   function createData(
@@ -38,21 +36,20 @@ export default function MyOrderReviewPage() {
     userName: string,
     userProfile: string,
     shopId: string,
+    shopName: string,
     comment: string,
     rating: number,
     date: string,
   ): ShopReview {
-    return { id: reviewId, reviewId, userId, userName, userProfile, shopId, comment, rating, date };
+    return { id: reviewId, reviewId, userId, userName, userProfile, shopId, shopName, comment, rating, date };
   }
 
   const [user, setUser] = useState<User | null>(null);
   const [year, setYear] = useState<number>(new Date().getFullYear());
   const [month, setMonth] = useState<number>(new Date().getMonth() + 1);
   const [searchValue, setSearchValue] = useState<string>("");
-
-  useEffect(() => {
-    console.log(year, month);
-  }, [year, month]);
+  const [rows, setRows] = useState<ShopReview[]>([]);
+  const [filteredRows, setFilteredRows] = useState<ShopReview[]>([]);
 
   useEffect(() => {
     const dummyUser = {
@@ -62,8 +59,27 @@ export default function MyOrderReviewPage() {
       point: 1000,
       shopOwner: false,
     }
+    const dummyRows: ShopReview[] = [
+      createData('R101', 'U101', 'テストユーザー', '/assets/img/no-user.jpg', 'S101', '唐揚げ一番', 'このショップはとてもよかったです。', 4, '2025-01-01'),
+      createData('R102', 'U102', 'テストユーザー', '/assets/img/no-user.jpg', 'S102', 'チキンが一番', 'うまい！また行きたいです。店員さんも親切でした。', 5, '2025-01-02'),
+      createData('R103', 'U102', 'テストユーザー', '/assets/img/no-user.jpg', 'S102', 'チキンが一番', 'Nice!', 5, '2025-02-01'),
+    ];
     setUser(dummyUser);
+    setRows(dummyRows);
   }, []);
+
+  useEffect(() => {
+    const searchRegex = createKanaSearchRegex(searchValue);
+    const updatedFilteredRows = rows
+      .filter(row => {
+        const createDate = new Date(row.date);
+        if (createDate.getFullYear() !== year || (createDate.getMonth() + 1) !== month) return false;
+        if (searchValue && !searchRegex.test(row.shopName)) return false;
+        return true;
+      })
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    setFilteredRows(updatedFilteredRows);
+  }, [rows, searchValue, year, month]);
 
   const searchFilters: SearchFilter[] = [
     { type: 'year', key: 'year', label: '年', value: year.toString() },
@@ -94,7 +110,7 @@ export default function MyOrderReviewPage() {
           topSection={
             <div className="order-history">
               <h2 className="title">
-                レビュー履歴
+                {`レビュー履歴 (${year}年${month}月)`}
               </h2>
               <SearchInput
                 searchMode
@@ -109,7 +125,7 @@ export default function MyOrderReviewPage() {
             </div>
           }
           columns={columns}
-          rows={rows}
+          rows={filteredRows}
         />
       </div>
     </article>

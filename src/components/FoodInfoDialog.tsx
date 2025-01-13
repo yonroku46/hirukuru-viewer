@@ -3,7 +3,7 @@
 import { Fragment, useEffect, useState } from 'react';
 import { useMediaQuery } from "react-responsive";
 import { useAppDispatch } from "@/store";
-import { currency } from '@/common/utils/StringUtils';
+import { currency, optionsToString } from '@/common/utils/StringUtils';
 import Image from "@/components/Image";
 import { addToCart } from "@/components/CartDialog";
 import QuantityButton from '@/components/button/QuantityButton';
@@ -169,15 +169,7 @@ export default function FoodInfoDialog({ data, open, setOpen, isFavorite, handle
                                 );
                               }}
                             />}
-                          label={`
-                            ${option.name} ${
-                              option.price > 0
-                                ? `(+${currency(option.price)}円)`
-                                : option.price < 0
-                                  ? `(-${currency(Math.abs(option.price))}円)`
-                                  : `(無料)`
-                            }
-                          `}
+                          label={optionsToString(option)}
                         />
                       ))}
                     </FormGroup>
@@ -195,15 +187,7 @@ export default function FoodInfoDialog({ data, open, setOpen, isFavorite, handle
                           key={option.optionId}
                           value={option.optionId}
                           control={<Radio />}
-                          label={`
-                            ${option.name} ${
-                              option.price > 0
-                                ? `(+${currency(option.price)}円)`
-                                : option.price < 0
-                                  ? `(-${currency(Math.abs(option.price))}円)`
-                                  : `(無料)`
-                            }
-                          `}
+                          label={optionsToString(option)}
                         />
                       ))}
                     </RadioGroup>

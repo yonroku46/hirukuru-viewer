@@ -1,6 +1,6 @@
 "use client";
 
-import { currency } from '@/common/utils/StringUtils';
+import { currency, orderStatusDict } from '@/common/utils/StringUtils';
 
 import AlarmOnOutlinedIcon from '@mui/icons-material/AlarmOnOutlined';
 import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined';
@@ -12,13 +12,13 @@ interface OrderStatusProps {
 
 export default function OrderStatus({ statusList }: OrderStatusProps) {
   const statusLabels = [
-    { type: 'booked', label: '予約', icon: <AlarmOnOutlinedIcon fontSize="inherit" /> },
-    { type: 'pickup', label: '受け取り予定', icon: <FmdGoodOutlinedIcon fontSize="inherit" /> },
-    { type: 'done', label: '完了', icon: <ThumbUpAltOutlinedIcon fontSize="inherit" /> },
+    { type: 'booked', label: orderStatusDict('booked', 'label'), icon: <AlarmOnOutlinedIcon fontSize="inherit" /> },
+    { type: 'pickup', label: orderStatusDict('pickup', 'label'), icon: <FmdGoodOutlinedIcon fontSize="inherit" /> },
+    { type: 'done', label: orderStatusDict('done', 'label'), icon: <ThumbUpAltOutlinedIcon fontSize="inherit" /> },
   ];
   const statusOptionalLabels = [
-    { type: 'review', label: 'レビュー待ち' },
-    { type: 'cancel', label: 'キャンセル' },
+    { type: 'review', label: orderStatusDict('review', 'label') },
+    { type: 'cancel', label: orderStatusDict('cancel', 'label') },
   ];
 
   return (
