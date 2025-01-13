@@ -22,6 +22,7 @@ declare global {
     key: keyof T;
     label: string;
     type: 'text' | 'textarea' | 'number' | 'list' | 'select' | 'switch' | 'time' | 'date' | 'image' | 'status' | 'rating';
+    typeUnit?: string;
     width?: number;
     minWidth?: number;
     maxWidth?: number;
@@ -119,14 +120,17 @@ declare global {
     userId: string;
     shopId: string;
     status: string;
+    shopName: string;
     totalPrice: number;
     pickupTime: string;
     orderTime: string;
     orderDetail: OrderDetail[];
   }
   interface OrderDetail {
+    orderId: string;
     foodId: string;
     name: string;
+    options?: string;
     price: number;
     quantity: number;
     totalPrice: number;

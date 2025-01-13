@@ -54,6 +54,7 @@ export default function MuiTable<T extends Row>({ topSection, columns, rows }: M
 
     return (
       <Fragment>
+        {/* Main data */}
         <TableRow hover tabIndex={-1} key={row.id}>
           {visibleColumns.map((column) => {
             const value = row[column.key as keyof typeof row];
@@ -105,7 +106,7 @@ export default function MuiTable<T extends Row>({ topSection, columns, rows }: M
               case 'number':
                 dpValue = column.format && typeof value === 'number'
                 ? column.format(value)
-                : currency(value as number);
+                : currency(value as number, column.typeUnit);
                 break;
               case 'date':
                 dpValue = new Date(value as string).toLocaleDateString('ja-JP', {
@@ -144,6 +145,7 @@ export default function MuiTable<T extends Row>({ topSection, columns, rows }: M
             );
           })}
         </TableRow>
+        {/* Detail data */}
         {haveListColumn && listColumns && listColumns.length > 0 && listRowChild && (
           <TableRow>
             <TableCell
@@ -187,7 +189,7 @@ export default function MuiTable<T extends Row>({ topSection, columns, rows }: M
                                 sx={{
                                   textOverflow: 'ellipsis',
                                   overflow: 'hidden',
-                                  whiteSpace: 'nowrap',
+                                  whiteSpace: 'normal',
                                   backgroundColor: 'var(--gray-alpha-100)',
                                   width: listColumn.width,
                                   minWidth: listColumn.minWidth,
@@ -196,7 +198,7 @@ export default function MuiTable<T extends Row>({ topSection, columns, rows }: M
                                 }}
                               >
                                 {listColumn.type === 'number'
-                                  ? currency(listRow[listColumn.key as keyof typeof listRow])
+                                  ? currency(listRow[listColumn.key as keyof typeof listRow], listColumn.typeUnit)
                                   : listRow[listColumn.key as keyof typeof listRow]
                                 }
                               </TableCell>

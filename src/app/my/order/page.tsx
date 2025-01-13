@@ -20,32 +20,36 @@ export default function MyOrderPage() {
   ];
 
   const columns: Column<Order>[] = [
-    { key: 'orderDetail', type: 'list', label: '詳細', width: 80, listColumns: [
-      { key: 'foodId', type: 'text', label: '食品ID', hide: true },
-      { key: 'name', type: 'text', label: '食品名', minWidth: 100 },
-      { key: 'price', type: 'number', label: '単価', minWidth: 100, align: 'right' },
-      { key: 'quantity', type: 'number', label: '数量', minWidth: 100, align: 'right' },
-      { key: 'totalPrice', type: 'number', label: '金額', minWidth: 100, align: 'right' },
-    ] },
+    { key: 'orderDetail', type: 'list', label: '詳細', width: 60, listColumns: [
+        { key: 'orderId', type: 'text', label: '注文ID', hide: true },
+        { key: 'foodId', type: 'text', label: '食品ID', hide: true },
+        { key: 'name', type: 'text', label: '食品名', minWidth: 100, maxWidth: 200 },
+        { key: 'price', type: 'number', typeUnit: '円', label: '単価', minWidth: 100, align: 'right' },
+        { key: 'quantity', type: 'number', label: '数量', minWidth: 100, align: 'right' },
+        { key: 'totalPrice', type: 'number', typeUnit: '円', label: '金額', minWidth: 100, align: 'right' },
+        { key: 'options', type: 'text', label: 'オプション', minWidth: 100, maxWidth: 200 },
+      ]
+    },
     { key: 'orderId', type: 'text', label: '注文ID', hide: true },
     { key: 'userId', type: 'text', label: 'ユーザーID', hide: true },
     { key: 'status', type: 'status', label: '状況', width: 140, align: 'center' },
-    { key: 'shopId', type: 'text', label: '店舗ID', minWidth: 100 },
-    { key: 'totalPrice', type: 'number', label: '合計金額', minWidth: 100, align: 'right' },
+    { key: 'shopId', type: 'text', label: '店舗ID', hide: true },
+    { key: 'shopName', type: 'text', label: '店舗名', minWidth: 100, maxWidth: 200 },
+    { key: 'totalPrice', type: 'number', typeUnit: '円', label: '合計金額', minWidth: 100, align: 'right' },
     { key: 'pickupTime', type: 'time', label: '受取日時', minWidth: 100, maxWidth: 100, align: 'right' },
     { key: 'orderTime', type: 'time', label: '注文日時', minWidth: 100, maxWidth: 100, align: 'right' },
   ];
   const rows: Order[] = [
-    createData('O101', 'booked', 'U101', 'S101', 2500, '2024-01-01 20:07', '2024-01-01 20:07', [
-      { foodId: 'F101', name: '唐揚げ弁当', price: 500, quantity: 1, totalPrice: 500 },
-      { foodId: 'F102', name: 'チキン南蛮弁当', price: 1000, quantity: 2, totalPrice: 2000 },
+    createData('O101', 'booked', 'U101', 'S101', 'テスト店舗', 2500, '2024-01-01 20:07', '2024-01-01 20:07', [
+      { orderId: 'O101', foodId: 'F101', name: '唐揚げ弁当', price: 500, quantity: 1, totalPrice: 900, options: "コーラ(+100円) / メガ盛り(+300円)" },
+      { orderId: 'O101', foodId: 'F102', name: 'チキン南蛮弁当', price: 1000, quantity: 2, totalPrice: 2000, options: "特盛り(+1,000円)" },
     ]),
-    createData('O102', 'pickup', 'U101', 'S101', 500, '2024-01-01 20:10', '2024-01-01 20:10', [
-      { foodId: 'F102', name: 'チキン南蛮弁当', price: 500, quantity: 1, totalPrice: 500 },
+    createData('O102', 'pickup', 'U101', 'S101', 'テスト店舗', 500, '2024-01-01 20:10', '2024-01-01 20:10', [
+      { orderId: 'O102', foodId: 'F102', name: 'チキン南蛮弁当', price: 500, quantity: 1, totalPrice: 500 },
     ]),
-    createData('O103', 'done', 'U101', 'S101', 1000, '2024-01-15 20:10', '2024-01-15 20:10', []),
-    createData('O104', 'review', 'U101', 'S101', 1000, '2024-01-15 20:10', '2024-01-15 20:10', []),
-    createData('O105', 'cancel', 'U101', 'S101', 1000, '2024-01-01 20:10', '2024-01-01 20:10', []),
+    createData('O103', 'done', 'U101', 'S101', 'テスト店舗', 1000, '2024-01-15 20:10', '2024-01-15 20:10', []),
+    createData('O104', 'review', 'U101', 'S101', 'テスト店舗', 1000, '2024-01-15 20:10', '2024-01-15 20:10', []),
+    createData('O105', 'cancel', 'U101', 'S101', 'テスト店舗', 1000, '2024-01-01 20:10', '2024-01-01 20:10', []),
   ];
 
   function createData(
@@ -53,12 +57,13 @@ export default function MyOrderPage() {
     status: string,
     userId: string,
     shopId: string,
+    shopName: string,
     totalPrice: number,
     pickupTime: string,
     orderTime: string,
     orderDetail: OrderDetail[],
   ): Order {
-    return { id: orderId, status, orderId, userId, shopId, totalPrice, pickupTime, orderTime, orderDetail };
+    return { id: orderId, status, orderId, userId, shopId, shopName, totalPrice, pickupTime, orderTime, orderDetail };
   }
 
   const [user, setUser] = useState<User | null>(null);
