@@ -37,11 +37,13 @@ export default function FoodInfoDialog({ data, open, setOpen, isFavorite, handle
 
   const [showAddIcon, setShowAddIcon] = useState<boolean>(false);
   const [quantity, setQuantity] = useState<number>(1);
+  const [options, setOptions] = useState<FoodOption[]>([]);
 
   useEffect(() => {
     if (open) {
       setQuantity(1);
       setShowAddIcon(false);
+      setOptions([]);
     }
   }, [open]);
 
@@ -50,7 +52,7 @@ export default function FoodInfoDialog({ data, open, setOpen, isFavorite, handle
     if (addBtn && data) {
       const target = e.currentTarget as HTMLButtonElement;
       target.style.pointerEvents = 'none';
-      addToCart(dispatch, data, quantity);
+      addToCart(dispatch, data, quantity, options);
       setShowAddIcon(true);
       setTimeout(() => {
         setOpen(false);
@@ -162,8 +164,9 @@ export default function FoodInfoDialog({ data, open, setOpen, isFavorite, handle
                           control={
                             <Checkbox size="small"
                               onChange={(e) => {
-                                const optionPrice = e.target.checked ? option.price : -option.price;
-                                console.log(optionPrice);
+                                if (e.target.checked) {
+                                  setOptions([...options, option]);
+                                }
                               }}
                             />}
                           label={`
@@ -183,7 +186,7 @@ export default function FoodInfoDialog({ data, open, setOpen, isFavorite, handle
                       onChange={(e) => {
                         const selectedOption = data.options?.find(option => option.optionId === e.target.value);
                         if (selectedOption) {
-                          console.log(selectedOption.price);
+                          setOptions([...options, selectedOption]);
                         }
                       }}
                     >
@@ -209,16 +212,21 @@ export default function FoodInfoDialog({ data, open, setOpen, isFavorite, handle
               </div>
             }
             <div className="actions">
-              {data.stock && data.stock < 10 &&
+              {data.stock !== undefined && data.stock < 10 && data.stock > 0 ? (
                 <div className="stock-alert">
                   <span className="count">
                     {`残り${data.stock}個`}
                   </span>
                   まもなく完売
                 </div>
-              }
+              ) : data.stock === 0 && (
+                <div className="stock-alert">
+                  在庫切れ
+                </div>
+              )}
               <div className="actions-group">
                 <QuantityButton
+                  disabled={data.stock !== undefined && data.stock === 0}
                   notDelete
                   quantity={quantity}
                   handleMinus={() => {
@@ -227,10 +235,12 @@ export default function FoodInfoDialog({ data, open, setOpen, isFavorite, handle
                     }
                   }}
                   handlePlus={() => {
-                    setQuantity(quantity + 1);
+                    if (data.stock === undefined || quantity < data.stock) {
+                      setQuantity(quantity + 1);
+                    }
                   }}
                 />
-                <Button variant="contained" className="add-btn" onClick={handleClick}>
+                <Button variant="contained" className="add-btn" onClick={handleClick} disabled={data.stock !== undefined && data.stock === 0}>
                   {showAddIcon &&
                     <div className="added-icon">
                       <AddShoppingCartIcon fontSize="inherit" />

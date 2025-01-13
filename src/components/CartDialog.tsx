@@ -36,17 +36,27 @@ const Transition = forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export const addToCart = (dispatch: AppDispatch, item: Food, quantity?: number) => {
+// オプションチェック
+const optionsEqual = (opts1: FoodOption[], opts2: FoodOption[]) => {
+  if (opts1.length !== opts2.length) return false;
+  return opts1.every((opt1) => opts2.some((opt2) => opt1.optionId === opt2.optionId));
+};
+
+export const addToCart = (dispatch: AppDispatch, item: Food, quantity?: number, options?: FoodOption[]) => {
   const existingCartItems = JSON.parse(localStorage.getItem(cartKey) || "[]");
+
   // 新しいアイテムは追加、既存のアイテムは数量を増やす
-  const itemIndex = existingCartItems.findIndex((existingItem: Food) => existingItem.foodId === item.foodId);
   let newCartItems;
+  const itemIndex = existingCartItems.findIndex((existingItem: Food) =>
+    existingItem.foodId === item.foodId && optionsEqual(existingItem.options || [], options || [])
+  );
   if (itemIndex === -1) {
-    newCartItems = [...existingCartItems, { ...item, quantity: quantity || 1 }];
+    newCartItems = [...existingCartItems, {...item, quantity: quantity || 1, options: options || [] }];
   } else {
     existingCartItems[itemIndex].quantity += quantity || 1;
     newCartItems = [...existingCartItems];
   }
+
   // ローカルストレージとストアに反映
   localStorage.setItem(cartKey, JSON.stringify(newCartItems));
   dispatch(setCartState({ cartItems: newCartItems }));
@@ -80,25 +90,32 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
     setOpen(open);
   };
 
-  const handleDeleteItem = (id: string) => {
-    const updatedCartItems = cartItems.filter((item) => item.foodId !== id);
+  const handleDeleteItem = (id: string, options: FoodOption[]) => {
+    const updatedCartItems = cartItems.filter((item) =>
+      !(item.foodId === id && optionsEqual(item.options || [], options))
+    );
     localStorage.setItem(cartKey, JSON.stringify(updatedCartItems));
     dispatch(setCartState({ cartItems: updatedCartItems }));
   };
 
-  const handleQuantity = (id: string, quantity: number) => {
-    if (quantity === 0) {
-      const updatedCartItems = cartItems.filter(item => item.foodId !== id);
-      localStorage.setItem(cartKey, JSON.stringify(updatedCartItems));
-      dispatch(setCartState({ cartItems: updatedCartItems }));
-    } else {
-      const updatedCartItems = cartItems.map(item => item.foodId === id ? { ...item, quantity } : item);
-      localStorage.setItem(cartKey, JSON.stringify(updatedCartItems));
-      dispatch(setCartState({ cartItems: updatedCartItems }));
-    }
+  const handleQuantity = (id: string, quantity: number, options: FoodOption[]) => {
+    const updatedCartItems = quantity === 0
+      ? cartItems.filter(item => !(item.foodId === id && optionsEqual(item.options || [], options)))
+      : cartItems.map(item =>
+          item.foodId === id && optionsEqual(item.options || [], options)
+            ? { ...item, quantity }
+            : item
+        );
+
+    localStorage.setItem(cartKey, JSON.stringify(updatedCartItems));
+    dispatch(setCartState({ cartItems: updatedCartItems }));
   };
 
-  const totalPrice = cartItems.reduce((total, item) => total + (item.discountPrice || item.price) * (item?.quantity || 1), 0);
+  const totalPrice = cartItems.reduce((total, item) => {
+    const itemPrice = (item.discountPrice || item.price) * (item?.quantity || 1);
+    const optionsPrice = item.options?.reduce((optTotal, option) => optTotal + (option.price || 0) * (item?.quantity || 1), 0) || 0;
+    return total + itemPrice + optionsPrice;
+  }, 0);
 
   return (
     <Fragment>
@@ -138,13 +155,13 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
             {`${currency(cartItems.length)}項目`}
           </div>
           {cartItems.length > 0 ?
-            cartItems.map((item) =>
-              <div key={item.foodId} className="cart-item">
+            cartItems.map((item, index) =>
+              <div key={index} className="cart-item">
                 <div className="cart-item-wrapper">
                   <div className="cart-item-img">
                     <Image className={deleteMode ? "delete-mode" : ""} src={item.image} alt={item.name} width={60} height={60} />
                     {deleteMode &&
-                      <IconButton className="delete-icon" onClick={() => handleDeleteItem(item.foodId)}>
+                      <IconButton className="delete-icon" onClick={() => handleDeleteItem(item.foodId, item.options || [])}>
                         <DeleteOutlineOutlinedIcon />
                       </IconButton>
                     }
@@ -176,20 +193,36 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
                           </p>
                         </div>
                       }
+                      <div className="options">
+                        {item.options?.map((option) =>
+                          `${option.name} ${
+                            option.price > 0
+                              ? `(+${currency(option.price)}円)`
+                              : option.price < 0
+                                ? `(-${currency(Math.abs(option.price))}円)`
+                                : `(無料)`
+                          }`
+                        ).join(' / ')}
+                      </div>
                     </div>
                   </div>
                   <QuantityButton
+                    disabled={deleteMode}
                     quantity={item.quantity || 0}
-                    handleMinus={() => handleQuantity(item.foodId, item.quantity ? item.quantity - 1 : 0)}
-                    handlePlus={() => handleQuantity(item.foodId, item.quantity ? item.quantity + 1 : 1)}
+                    handleMinus={() => handleQuantity(item.foodId, item.quantity ? item.quantity - 1 : 0, item.options || [])}
+                    handlePlus={() => handleQuantity(item.foodId, item.quantity ? item.quantity + 1 : 1, item.options || [])}
                   />
                 </div>
                 <div className="cart-item-total-price">
-                  {currency((item.discountPrice ? item.discountPrice : item.price) * (item.quantity || 1), "円")}
+                  {currency(
+                    ((item.discountPrice ? item.discountPrice : item.price) * (item.quantity || 1)) +
+                    (item.options?.reduce((optTotal, option) => optTotal + (option.price || 0) * (item.quantity || 1), 0) || 0),
+                    "円"
+                  )}
                 </div>
               </div>
             ) : (
-              <div className="cart-items empty">
+              <div className="content empty">
                 <ProductionQuantityLimitsIcon fontSize="large" />
                 <p>まだ何も入っていません</p>
               </div>

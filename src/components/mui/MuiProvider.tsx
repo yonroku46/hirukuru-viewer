@@ -52,7 +52,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         styleOverrides: {
           paper: {
             borderRadius: '0.5rem',
-            backgroundColor: 'transparent',
             '@media (max-width: 1179px)': {
               borderRadius: '0',
             },

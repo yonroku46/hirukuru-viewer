@@ -316,6 +316,10 @@ table {
   border: 1px solid var(--gray-alpha-300);
   border-radius: 0.5rem;
   background-color: var(--background);
+  &.disabled {
+    pointer-events: none;
+    opacity: 0.4;
+  }
   .quantity {
     font-weight: bold;
     margin: 0 0.5rem;
@@ -384,13 +388,12 @@ table {
       }
       .cart-item-wrapper {
         display: flex;
-        display: flex;
-        align-items: center;
+        align-items: flex-start;
         justify-content: space-between;
         padding: 0.75rem 1rem 0 1rem;
         .cart-item-img {
           display: flex;
-          align-items: center;
+          align-items: flex-start;
           gap: 1rem;
           position: relative;
           img {
@@ -444,6 +447,12 @@ table {
                 color: var(--gray-alpha-300);
                 text-decoration: line-through;
               }
+            }
+            .options {
+              display: flex;
+              font-size: 0.875rem;
+              margin-top: 0.5rem;
+              opacity: 0.8;
             }
           }
         }
@@ -1310,6 +1319,11 @@ table {
       width: 100%;
       border-radius: 0.5rem;
       transition: transform 0.2s ease-in-out;
+      position: relative;
+      &.sold-out {
+        opacity: 0.8;
+        filter: brightness(0.5);
+      }
     }
     .favorite-icon {
       position: absolute;
@@ -1323,6 +1337,17 @@ table {
         color: var(--favorite-color);
         animation: pulse 0.5s;
       }
+    }
+    .sold-out-tag {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 1.25rem;
+      color: var(--background);
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
     }
     .sale-tag {
       position: absolute;

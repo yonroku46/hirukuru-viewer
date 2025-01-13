@@ -5,15 +5,17 @@ import Image from "@/components/Image";
 
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import IconButton from '@mui/material/IconButton';
+import OutletIcon from '@mui/icons-material/Outlet';
 
 interface FoodCardProps {
   data: Food;
   onClick?: () => void;
+  soldOut?: boolean;
   isFavorite?: boolean;
   handleFavorite?: (e: React.MouseEvent<HTMLButtonElement>, id: string) => void;
 }
 
-export default function FoodCard({ data, onClick, isFavorite, handleFavorite }: FoodCardProps) {
+export default function FoodCard({ data, onClick, soldOut, isFavorite, handleFavorite }: FoodCardProps) {
   const handleClick = () => {
     if (onClick) onClick();
   };
@@ -22,7 +24,7 @@ export default function FoodCard({ data, onClick, isFavorite, handleFavorite }: 
     <div key={data.foodId} className={`food-card ${onClick ? "clickable" : ""}`} onClick={handleClick}>
       <div className="image-wrapper">
         <Image
-          className="image"
+          className={`image ${soldOut ? "sold-out" : ""}`}
           src={data.image}
           alt={data.name}
           width={280}
@@ -31,6 +33,12 @@ export default function FoodCard({ data, onClick, isFavorite, handleFavorite }: 
         {data.discountPrice && data.discountPrice < data.price &&
           <div className="sale-tag">
             {`${Math.round((1 - data.discountPrice / data.price) * 100)}% OFF`}
+          </div>
+        }
+        {soldOut &&
+          <div className="sold-out-tag">
+            <OutletIcon />
+            在庫切れ
           </div>
         }
         {handleFavorite &&
