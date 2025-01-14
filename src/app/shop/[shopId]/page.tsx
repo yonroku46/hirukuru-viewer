@@ -4,8 +4,10 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import SearchInput from "@/components/input/SearchInput";
-import { currency, formatDaysAgo } from "@/common/utils/StringUtils";
+import { currency, formatDaysAgo, formatRating } from "@/common/utils/StringUtils";
 import { createKanaSearchRegex } from "@/common/utils/SearchUtils";
+import { isBusinessOpen } from "@/common/utils/DateUtils";
+import NoticeBoard from "@/components/NoticeBoard";
 import MuiMenu from "@/components/mui/MuiMenu";
 import MuiTabs from "@/components/mui/MuiTabs";
 import Selector from "@/components/input/Selector";
@@ -65,11 +67,17 @@ export default function ShopInfoPage(
     });
   }
 
-  const shopInfo = {
-    id: 1,
+  const shop: Shop = {
+    shopId: '1',
     name: '唐揚げ壱番屋',
     description: '揚げ物専門店',
+    location: '福岡市博多区',
     image: 'https://i.pinimg.com/236x/71/65/43/716543eb8e6907d7163b55000376e2be.jpg',
+    businessHours: [
+      { day: 'mon', open: '10:00', close: '23:50' },
+      { day: 'tue', open: '10:00', close: '23:50' },
+      { day: 'wed', open: '10:00', close: '23:50' },
+    ],
     reviewcount: 1120,
     ratingAvg: 4.5,
     rating: {
@@ -354,13 +362,13 @@ export default function ShopInfoPage(
         isFavorite={selectedItem ? favoriteItems.includes(selectedItem.foodId) : false}
         handleFavorite={handleFavorite}
       />
-      {/* Shop Info */}
+      {/* Shop Header */}
       <section className="shop-header">
         <div className="shop-profile container">
           <Image
-            className="profile-img"
-            src={shopInfo.image}
-            alt={shopInfo.name}
+            className={`profile-img ${isBusinessOpen(shop.businessHours) ? "open" : ""}`}
+            src={shop.image}
+            alt={shop.name}
             width={74}
             height={74}
           />
@@ -388,12 +396,19 @@ export default function ShopInfoPage(
       <section className="shop-body container">
         <div className="shop-info">
           <div className="shop-info-header">
-            <h1 className="shop-name">{shopInfo.name}</h1>
-            <h2 className="shop-description">{shopInfo.description}</h2>
+            <h1 className="shop-name">
+              {shop.name}
+              <span className="shop-location">
+                {shop.location}
+              </span>
+            </h1>
+            <h2 className="shop-description">
+              {shop.description}
+            </h2>
           </div>
           <button className="shop-rating" onClick={scrollToReviewSection}>
             <StarRoundedIcon fontSize="small" style={{ color: 'var(--rating-color)' }} />
-            {`${shopInfo.ratingAvg || 0} (${currency(shopInfo.reviewcount || 0)})`}
+            {`${formatRating(shop.ratingAvg || 0)} (${currency(shop.reviewcount || 0)})`}
           </button>
         </div>
         <div className="shop-item-search">
@@ -416,15 +431,15 @@ export default function ShopInfoPage(
           <div className="review-summary">
             <h2 className="total-rating">
               <StarRoundedIcon style={{ color: 'var(--rating-color)' }} />
-              {`${shopInfo.ratingAvg || 0}`}
+              {`${formatRating(shop.ratingAvg || 0)}`}
               <span className="review-count">
-                {`(${currency(shopInfo.reviewcount || 0)}個の評価)`}
+                {`(${currency(shop.reviewcount || 0)}個の評価)`}
               </span>
             </h2>
             <div className="rating-distribution">
               {Array.from({ length: 5 }, (_, index) => {
                 const star: string = (5 - index).toString();
-                const rating = shopInfo.rating[star as keyof typeof shopInfo.rating];
+                const rating = shop.rating?.[star as keyof typeof shop.rating];
                 const percentage = rating ? rating.toFixed(0) : "0";
                 return (
                   <div className="rating-bar" key={star}>
@@ -498,6 +513,15 @@ export default function ShopInfoPage(
               </div>
             }
           </div>
+        </div>
+      </section>
+      {/* Shop guide */}
+      <section className="shop-guide container">
+        <div className="guide-list">
+          <NoticeBoard
+            title="店舗ご利用ガイド"
+            contents={["お客様へのお願い"]}
+          />
         </div>
       </section>
     </article>

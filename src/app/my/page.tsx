@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import Image from "@/components/Image";
 import LinkList from "@/components/LinkList";
 import OrderStatus from "@/components/OrderStatus";
@@ -24,7 +24,6 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import StoreTwoToneIcon from '@mui/icons-material/StoreTwoTone';
 
 export default function MyPage() {
-  const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
@@ -68,14 +67,14 @@ export default function MyPage() {
     <article>
       <div className="my container">
         {/* Shop Mode Button */}
-        {user.shopOwner && (
-          <div className="shop-mode-btn" onClick={() => router.push('/myshop')}>
+        {!user.shopOwner && (
+          <Link className="shop-mode-btn" href="/myshop">
             <div className="title">
               <StoreTwoToneIcon />
-              ショップ管理モード
+              ショップ管理へ移動
             </div>
             <KeyboardArrowRightIcon className="arrow-icon" />
-          </div>
+          </Link>
         )}
         {/* User Info */}
         <div className="user-info">
@@ -83,8 +82,8 @@ export default function MyPage() {
             <Image
               src={user.profileImage}
               alt={user.name}
-              width={80}
-              height={80}
+              width={74}
+              height={74}
             />
             <div className="user-name-wrapper">
               <h1 className="user-name">

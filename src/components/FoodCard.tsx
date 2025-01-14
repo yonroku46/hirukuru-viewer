@@ -1,5 +1,6 @@
 "use client";
 
+import Link from 'next/link';
 import { currency } from '@/common/utils/StringUtils';
 import Image from "@/components/Image";
 
@@ -10,18 +11,20 @@ import OutletIcon from '@mui/icons-material/Outlet';
 interface FoodCardProps {
   data: Food;
   onClick?: () => void;
+  href?: string;
+  openNewTab?: boolean;
   soldOut?: boolean;
   isFavorite?: boolean;
   handleFavorite?: (e: React.MouseEvent<HTMLButtonElement>, id: string) => void;
 }
 
-export default function FoodCard({ data, onClick, soldOut, isFavorite, handleFavorite }: FoodCardProps) {
+export default function FoodCard({ data, onClick, href, openNewTab, soldOut, isFavorite, handleFavorite }: FoodCardProps) {
   const handleClick = () => {
     if (onClick) onClick();
   };
 
-  return (
-    <div key={data.foodId} className={`food-card ${onClick ? "clickable" : ""}`} onClick={handleClick}>
+  const content = (
+    <div key={data.foodId} className={`food-card ${onClick || href ? "clickable" : ""}`} onClick={handleClick}>
       <div className="image-wrapper">
         <Image
           className={`image ${soldOut ? "sold-out" : ""}`}
@@ -80,5 +83,13 @@ export default function FoodCard({ data, onClick, soldOut, isFavorite, handleFav
         }
       </div>
     </div>
+  );
+
+  return href ? (
+    <Link href={href} target={openNewTab ? "_blank" : "_self"} rel={openNewTab ? "noopener noreferrer" : undefined}>
+      {content}
+    </Link>
+  ) : (
+    content
   );
 };

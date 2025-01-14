@@ -91,16 +91,23 @@ declare global {
     image: string;
     href?: string;
   }
-  interface ShopInfo {
+  interface Shop {
     shopId: string;
+    location: string;
     name: string;
     description: string;
     image: string;
+    businessHours: BusinessHour[];
     reviewcount?: number;
     ratingAvg?: number;
-    rating: {
+    rating?: {
       [key: string]: number | undefined;
     };
+  }
+  interface BusinessHour {
+    day: 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun';
+    open: string;
+    close: string;
   }
   interface ShopReview extends Row {
     reviewId: string;

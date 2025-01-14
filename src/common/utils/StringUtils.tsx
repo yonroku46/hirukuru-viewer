@@ -1,5 +1,3 @@
-export const daysOrder = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
-
 export function formatDaysAgo(dateString: string): string | undefined {
   const inputDate = new Date(dateString);
   const currentDate = new Date();
@@ -29,6 +27,10 @@ export function formatDaysAgo(dateString: string): string | undefined {
   } else {
     return undefined;
   }
+}
+
+export function formatRating(rating: number): string {
+  return rating === 0 ? "0" : rating.toFixed(1);
 }
 
 export function currency(num: number, unit?: string): string {

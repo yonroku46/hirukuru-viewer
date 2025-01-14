@@ -4,8 +4,9 @@ import Divider from '@mui/material/Divider';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import Check from '@mui/icons-material/Check';
+import SupportAgentOutlinedIcon from '@mui/icons-material/SupportAgentOutlined';
+import PermContactCalendarOutlinedIcon from '@mui/icons-material/PermContactCalendarOutlined';
+import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
 
 interface MuiMenuProps {
   anchorEl: null | HTMLElement;
@@ -29,30 +30,23 @@ export default function MuiMenu({ anchorEl, setAnchorEl }: MuiMenuProps) {
         }}
       >
         <MenuItem>
-          <ListItemText inset>Single</ListItemText>
-        </MenuItem>
-        <MenuItem>
-          <ListItemText inset>1.15</ListItemText>
-        </MenuItem>
-        <MenuItem>
-          <ListItemText inset>Double</ListItemText>
+          <ListItemIcon>
+            <SupportAgentOutlinedIcon />
+          </ListItemIcon>
+          お問い合わせ
         </MenuItem>
         <MenuItem>
           <ListItemIcon>
-            <Check />
+            <PermContactCalendarOutlinedIcon />
           </ListItemIcon>
-          Custom: 1.2
+          店舗ガイド
         </MenuItem>
         <Divider />
         <MenuItem>
-          <ListItemText>Add space before paragraph</ListItemText>
-        </MenuItem>
-        <MenuItem>
-          <ListItemText>Add space after paragraph</ListItemText>
-        </MenuItem>
-        <Divider />
-        <MenuItem>
-          <ListItemText>Custom spacing...</ListItemText>
+          <ListItemIcon>
+            <ShareOutlinedIcon />
+          </ListItemIcon>
+          シェア
         </MenuItem>
       </Menu>
     </Paper>

@@ -3,8 +3,8 @@ import { generatePageMetadata } from "@/common/lib/Metadata";
 import Loading from '@/app/loading';
 
 export async function generateMetadata() {
-  // const shopInfo = await getShopInfo(params.shopId);
-  const shopInfo = {
+  // const shop = await getShop(params.shopId);
+  const shop = {
     id: 1,
     name: '唐揚げ壱番屋',
     description: '揚げ物専門店',
@@ -12,7 +12,7 @@ export async function generateMetadata() {
     reviewcount: 1120,
     ratingAvg: 4.5,
   };
-  return generatePageMetadata('shop', shopInfo.name);
+  return generatePageMetadata('shop', shop.name);
 }
 
 export default function ShopInfoLayout({

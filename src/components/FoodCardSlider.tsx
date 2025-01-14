@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from 'react';
 import Slider, { Settings } from 'react-slick';
 import { useMediaQuery } from 'react-responsive';
-import { useRouter } from 'next/navigation';
 import FoodCard from '@/components/FoodCard';
 
 import { Box } from '@mui/material';
@@ -17,8 +16,6 @@ interface FoodCardSliderProps {
 }
 
 export default function FoodCardSlider({ title, data }: FoodCardSliderProps) {
-  const router = useRouter();
-
   const sliderRef = useRef<Slider>(null);
   const isSp = useMediaQuery({ query: '(max-width: 1179px)' });
 
@@ -116,7 +113,7 @@ export default function FoodCardSlider({ title, data }: FoodCardSliderProps) {
             data={item}
             isFavorite={favoriteItems.includes(item.foodId)}
             handleFavorite={handleFavorite}
-            onClick={() => router.push(`/shop/${item.shopId}?q=${item.name}`)}
+            href={`/shop/${item.shopId}?q=${item.name}`}
           />
         ))}
       </Slider>

@@ -43,8 +43,8 @@ export default function Home() {
     { id: '7', name: 'お肉', image: '/assets/img/meat.png' },
   ];
   const locationOptions = useMemo(() => [
-    { label: '福岡市 博多区', value: 'fukuoka-hakata' },
-    { label: '福岡市 中央区', value: 'fukuoka-chuo' },
+    { label: '福岡市博多区', value: 'fukuoka-hakata' },
+    { label: '福岡市中央区', value: 'fukuoka-chuo' },
   ], []);
 
   const [hasLogin, setHasLogin] = useState<boolean>(false);
