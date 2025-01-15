@@ -1,21 +1,23 @@
-import * as React from 'react';
 import Paper from '@mui/material/Paper';
 import Divider from '@mui/material/Divider';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import SupportAgentOutlinedIcon from '@mui/icons-material/SupportAgentOutlined';
-import PermContactCalendarOutlinedIcon from '@mui/icons-material/PermContactCalendarOutlined';
-import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
 
 interface MuiMenuProps {
   anchorEl: null | HTMLElement;
   setAnchorEl: (anchorEl: null | HTMLElement) => void;
+  menuList: { icon: React.ReactNode, text: string, onClick: () => void }[][];
 }
 
-export default function MuiMenu({ anchorEl, setAnchorEl }: MuiMenuProps) {
+export default function MuiMenu({ anchorEl, setAnchorEl, menuList }: MuiMenuProps) {
   const open = Boolean(anchorEl);
   const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleClick = (onClick: () => void) => {
+    onClick();
     setAnchorEl(null);
   };
 
@@ -29,25 +31,19 @@ export default function MuiMenu({ anchorEl, setAnchorEl }: MuiMenuProps) {
           'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem>
-          <ListItemIcon>
-            <SupportAgentOutlinedIcon />
-          </ListItemIcon>
-          お問い合わせ
-        </MenuItem>
-        <MenuItem>
-          <ListItemIcon>
-            <PermContactCalendarOutlinedIcon />
-          </ListItemIcon>
-          店舗ガイド
-        </MenuItem>
-        <Divider />
-        <MenuItem>
-          <ListItemIcon>
-            <ShareOutlinedIcon />
-          </ListItemIcon>
-          シェア
-        </MenuItem>
+        {menuList.map((menu, index) => (
+          <div key={index}>
+            {index !== 0 && <Divider sx={{ margin: '8px 0' }} />}
+            {menu.map((item, subIndex) => (
+              <MenuItem key={subIndex} onClick={() => handleClick(item.onClick)}>
+                <ListItemIcon>
+                  {item.icon}
+                </ListItemIcon>
+                {item.text}
+              </MenuItem>
+            ))}
+          </div>
+        ))}
       </Menu>
     </Paper>
   );

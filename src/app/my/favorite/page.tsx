@@ -93,7 +93,7 @@ export default function FavoritePage() {
             />
             <SearchInput
               searchMode
-              placeholder={`${favoriteType === 'shop' ? 'エリアまたは店舗名' : '弁当名'}で検索`}
+              placeholder={`${favoriteType === 'shop' ? 'エリア・店舗名' : '弁当名'}で検索`}
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
             />

@@ -1,10 +1,10 @@
+import type { Viewport } from "next";
 import { Noto_Sans_JP } from "next/font/google";
 import dynamic from 'next/dynamic';
+import { ThemeProvider } from "@/components/provider/MuiProvider";
+import { generatePageMetadata } from "@/common/lib/Metadata";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
-import { ThemeProvider } from "@/components/mui/MuiProvider";
-import { generatePageMetadata } from "@/common/lib/Metadata";
-import type { Viewport } from 'next'
 import "@/styles/globals.scss";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -15,6 +15,10 @@ const notoSansJP = Noto_Sans_JP({
 });
 
 const ReduxProvider = dynamic(() => import('@/store/ReduxProvider'), {
+  ssr: false
+});
+
+const SnackbarProvider = dynamic(() => import('@/components/provider/SnackbarProvider'), {
   ssr: false
 });
 
@@ -37,15 +41,17 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body className={`${notoSansJP.className}`}>
-        <ThemeProvider>
-          <ReduxProvider>
-            <Header />
-            <main>
-              {children}
-            </main>
+        <SnackbarProvider>
+          <ThemeProvider>
+            <ReduxProvider>
+              <Header />
+              <main>
+                {children}
+              </main>
               <Footer />
-          </ReduxProvider>
-        </ThemeProvider>
+            </ReduxProvider>
+          </ThemeProvider>
+        </SnackbarProvider>
       </body>
     </html>
   );

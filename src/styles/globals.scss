@@ -617,6 +617,7 @@ table {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    margin-top: -2rem;
     margin-bottom: 2rem;
     color: var(--foreground);
     width: 100%;
@@ -682,7 +683,7 @@ table {
     border: 1px solid var(--gray-alpha-300);
     border-radius: 0.5rem;
     margin-bottom: -1rem;
-    width: 100%;
+    width: 96%;
     color: var(--background);
     background-color: var(--dialog-color);
     transition: opacity 0.2s;
@@ -1711,6 +1712,7 @@ table {
     }
   }
   .shop-review  {
+    width: 100%;
     .shop-review-content {
       display: flex;
       justify-content: space-between;
@@ -1839,6 +1841,36 @@ table {
   .shop-guide {
     display: flex;
     align-items: stretch;
+    .guide-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      .title {
+        font-size: 1rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+      }
+      .guide-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        padding: 1.5rem 1rem;
+        border: 1px solid var(--gray-alpha-300);
+        border-radius: 0.5rem;
+        .guide-item-title {
+          flex: 1;
+          display: flex;
+          font-weight: bold;
+          gap: 0.5rem;
+        }
+        .guide-item-description {
+          flex: 4;
+          font-size: 0.875rem;
+          white-space: break-spaces;
+        }
+      }
+    }
   }
 }
 
@@ -2025,17 +2057,6 @@ table {
       gap: 1rem;
     }
   }
-  .shop-review {
-    .shop-review-content {
-      flex-direction: column;
-      .review-summary {
-        max-width: 100%;
-      }
-      .review-list {
-        max-width: 100%;
-      }
-    }
-  }
   .search-input {
     width: 100%;
   }
@@ -2049,6 +2070,24 @@ table {
       .shop-item {
         .shop-item-body {
           grid-template-columns: repeat(2, 1fr);
+        }
+      }
+    }
+    .shop-review {
+      .shop-review-content {
+        flex-direction: column;
+        .review-summary {
+          max-width: 100%;
+        }
+        .review-list {
+          max-width: 100%;
+        }
+      }
+    }
+    .shop-guide {
+      .guide-list {
+        .guide-item {
+          flex-direction: column;
         }
       }
     }

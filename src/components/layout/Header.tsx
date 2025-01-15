@@ -142,7 +142,7 @@ export default function Header() {
           open={menuOpen}
           onClose={toggleDrawer(false)}
         >
-          <Box sx={{ width: 250 }} role="presentation">
+          <Box sx={{ width: 280 }} role="presentation">
             <List sx={{ p: 0 }}>
               <MiniButton
                 icon={<CloseIcon />}
@@ -154,13 +154,13 @@ export default function Header() {
                   marginRight: "1rem",
                 }}
               />
-              <Box sx={{ p: "2rem 1rem"}}>
+              <Box sx={{ p: "1rem", fontSize: "0.875rem", display: "flex", alignItems: "center", justifyContent: "space-between"}}>
+                ログインが必要です
                 <Button
-                  fullWidth
                   variant="contained"
                   onClick={loginHandle()}
                 >
-                  <ListItemText primary="ログイン" />
+                 ログイン
                 </Button>
               </Box>
               <Divider />

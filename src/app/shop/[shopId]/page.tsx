@@ -2,12 +2,12 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
-import SearchInput from "@/components/input/SearchInput";
+import { useSearchParams, useRouter } from "next/navigation";
+import { useSnackbar } from 'notistack';
 import { currency, formatDaysAgo, formatRating } from "@/common/utils/StringUtils";
 import { createKanaSearchRegex } from "@/common/utils/SearchUtils";
 import { isBusinessOpen } from "@/common/utils/DateUtils";
-import NoticeBoard from "@/components/NoticeBoard";
+import SearchInput from "@/components/input/SearchInput";
 import MuiMenu from "@/components/mui/MuiMenu";
 import MuiTabs from "@/components/mui/MuiTabs";
 import Selector from "@/components/input/Selector";
@@ -22,10 +22,19 @@ import Rating from '@mui/material/Rating';
 import StarRoundedIcon from '@mui/icons-material/StarRounded';
 import SearchOffIcon from '@mui/icons-material/SearchOff';
 import MarkChatReadOutlinedIcon from '@mui/icons-material/MarkChatReadOutlined';
+import SupportAgentOutlinedIcon from '@mui/icons-material/SupportAgentOutlined';
+import PermContactCalendarOutlinedIcon from '@mui/icons-material/PermContactCalendarOutlined';
+import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import CachedIcon from '@mui/icons-material/Cached';
+import CreditCardIcon from '@mui/icons-material/CreditCard';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 
 export default function ShopInfoPage(
   { params: { shopId } }: { params: { shopId: string } }
 ) {
+  const { enqueueSnackbar } = useSnackbar();
+  const router = useRouter();
   const searchParams = useSearchParams();
   const q = searchParams.get('q');
 
@@ -40,6 +49,16 @@ export default function ShopInfoPage(
   const [reviewList, setReviewList] = useState<ShopReview[]>([]);
   const [priceRange, setPriceRange] = useState<number>(maxPrice);
   const [sort, setSort] = useState<string>('recommend');
+
+  const moreMenuList = [
+    [
+      { icon: <PermContactCalendarOutlinedIcon />, text: "お問い合わせ", onClick: () => router.push("/service/contact") },
+      { icon: <SupportAgentOutlinedIcon />, text: "店舗ガイド", onClick: () => scrollToGuideSection() },
+    ],
+    [
+      { icon: <ShareOutlinedIcon />, text: "シェア", onClick: () => handleShare() },
+    ]
+  ]
 
   const searchFilters: SearchFilter[] = [
     { type: 'select', key: 'sort', label: '並び替え', value: sort, options: [
@@ -88,6 +107,13 @@ export default function ShopInfoPage(
       "5": 55
     }
   };
+
+  const shopGuideList = [
+    { icon: <ShoppingCartIcon />, title: "ご注文方法", description: "メニューやランキングからお弁当ラインナップを閲覧していただき、お気に入りの商品をネットまたはお電話でご注文いただく事ができます。" },
+    { icon: <CachedIcon />, title: "変更・キャンセル", description: "納品日1日前：16:59まで	キャンセル料不要\n納品日1日前：17:00以降	ご注文金額の100%のキャンセル料がかかります。" },
+    { icon: <CreditCardIcon />, title: "支払方法", description: "現金、請求書、クレジットカードがお選びいただけます。" },
+    { icon: <MonetizationOnIcon />, title: "ポイント", description: "会員登録後にログインしてご注文いただくと下記ポイントが貯まります。" },
+  ]
 
   useEffect(() => {
     if (q) {
@@ -322,8 +348,8 @@ export default function ShopInfoPage(
   const scrollToReviewSection = () => {
     const reviewSection = document.querySelector('.shop-review-content');
     if (reviewSection) {
-      const reviewSectionPadding = 1;
-      const headerHeight = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-height')) + reviewSectionPadding;
+      const sectionPadding = 1;
+      const headerHeight = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-height')) + sectionPadding;
       const headerHeightRem = headerHeight * parseFloat(getComputedStyle(document.documentElement).fontSize);
       const offsetPosition = reviewSection.getBoundingClientRect().top + window.scrollY - headerHeightRem;
       window.scrollTo({
@@ -332,6 +358,36 @@ export default function ShopInfoPage(
       });
     }
   };
+
+  const scrollToGuideSection = () => {
+    const guideSection = document.querySelector('.guide-list');
+    if (guideSection) {
+      const sectionPadding = 1;
+      const headerHeight = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-height')) + sectionPadding;
+      const headerHeightRem = headerHeight * parseFloat(getComputedStyle(document.documentElement).fontSize);
+      const offsetPosition = guideSection.getBoundingClientRect().top + window.scrollY - headerHeightRem;
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  async function handleShare() {
+    try {
+      const shareData = {
+        title: document.title,
+        text: "詳細はこちらをクリック！",
+        url: window.location.href,
+      };
+      await navigator.share(shareData);
+    } catch (err) {
+      console.log(err);
+      // Android WebViewなど対応してない時はURLをクリップボードにコピーする
+      navigator.clipboard.writeText(window.location.href);
+      enqueueSnackbar('クリップボードにコピーしました！', { variant: 'success' });
+    }
+  }
 
   const sortedReviewList = useMemo(() => {
     return reviewList.sort((a, b) => {
@@ -390,7 +446,7 @@ export default function ShopInfoPage(
             />
           </div>
         </div>
-        <MuiMenu anchorEl={anchorEl} setAnchorEl={setAnchorEl} />
+        <MuiMenu anchorEl={anchorEl} setAnchorEl={setAnchorEl} menuList={moreMenuList} />
       </section>
       {/* Shop Menu & Items */}
       <section className="shop-body container">
@@ -518,10 +574,20 @@ export default function ShopInfoPage(
       {/* Shop guide */}
       <section className="shop-guide container">
         <div className="guide-list">
-          <NoticeBoard
-            title="店舗ご利用ガイド"
-            contents={["お客様へのお願い"]}
-          />
+          <div className="title">
+            店舗ご利用ガイド
+          </div>
+          {shopGuideList.map((guide, index) => (
+            <div className="guide-item" key={index}>
+              <div className="guide-item-title">
+                {guide.icon}
+                {guide.title}
+              </div>
+              <div className="guide-item-description">
+                {guide.description}
+              </div>
+            </div>
+          ))}
         </div>
       </section>
     </article>
