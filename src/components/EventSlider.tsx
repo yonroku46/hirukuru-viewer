@@ -5,6 +5,8 @@ import { useMediaQuery } from "react-responsive";
 import Image from "next/image";
 import Slider from "react-slick";
 import Link from "next/link";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 import ArrowLeftRoundedIcon from '@mui/icons-material/ArrowLeftRounded';
 import ArrowRightRoundedIcon from '@mui/icons-material/ArrowRightRounded';
@@ -25,7 +27,7 @@ export default function EventSlider({ events }: EventSliderProps) {
     arrows: false,
     dots: false,
     slidesToShow: 1,
-    speed: 500,
+    speed: 1500,
     autoplay: true,
     autoplaySpeed: 10000,
     beforeChange: (current: number, next: number) => setCurrentSlide(next),

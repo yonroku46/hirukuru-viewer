@@ -1,13 +1,16 @@
 import Link from 'next/link';
-
-import Button from '@mui/material/Button';
-import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
+import Image from 'next/image';
 
 export default function NotFound() {
   return (
     <div className="container not-found">
       <div className="not-found-content">
-        <SentimentVeryDissatisfiedIcon className="icon" />
+        <Image
+          src="/assets/icon/not-found.png"
+          alt="not-found"
+          width={70}
+          height={70}
+        />
         <div className="not-found-title">
           <h1>404</h1>
           <div>Page not found</div>
@@ -20,9 +23,9 @@ export default function NotFound() {
         </p>
       </div>
       <Link href="/">
-        <Button variant="contained">
+        <button className="not-found-btn">
           ホームに戻る
-        </Button>
+        </button>
       </Link>
     </div>
   );

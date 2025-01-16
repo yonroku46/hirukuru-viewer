@@ -3,10 +3,8 @@
   // Global
   --background: #ffffff;
   --foreground: #171717;
-  --primary-color: #3087fa;
-  --primary-color-hover: #a3cbff;
-  --secondary-color: #ff6600;
-  --secondary-color-hover: #f5873e;
+  --primary-color: #ff6600;
+  --primary-color-hover: #f5873e;
   --accent-color: #ff5959;
   --accent-color-hover: #ffa0a0;
   --favorite-color: #ff2643;
@@ -22,21 +20,19 @@
   --gray-alpha-300: rgba(var(--gray-rgb), 0.12);
   --gray-alpha-200: rgba(var(--gray-rgb), 0.05);
   --gray-alpha-100: rgba(var(--gray-rgb), 0.02);
-  // Order Status
-  --booked-color: #5e7cf5;
-  --pickup-color: #9b23ea;
-  --done-color: rgb(15, 202, 46);
-  --review-color: var(--primary-color);
-  --cancel-color: var(--accent-color);
   // Shop Status
-  --open-color: var(--pickup-color);
-  --open-light-color: var(--booked-color);
+  --open-color: var(--primary-color);
+  --open-light-color: #ffb535;
   --close-color: #596164;
-  --close-light-color: #868f96;
+  --close-light-color: #757b7f;
+  // Order Status
+  --booked-color: var(--open-light-color);
+  --pickup-color: var(--open-color);
+  --done-color: #0fca2e;
+  --review-color: #02a918;
+  --cancel-color: var(--accent-color);
   // Header
   --header-height: 4.5rem;
-  // Event Slider
-  --event-slider-height: 250px;
 }
 
 // Global styles
@@ -246,7 +242,6 @@ hr {
 a {
   color: inherit;
   text-decoration: none;
-  display: contents;
 }
 
 img {
@@ -428,7 +423,7 @@ table {
                 border-radius: 0.5rem;
                 font-size: 0.7rem;
                 font-weight: bold;
-                background: var(--secondary-color);
+                background: var(--primary-color);
                 padding: 0.125rem 0.5rem;
                 text-align: center;
                 color: var(--background);
@@ -468,7 +463,7 @@ table {
         padding: 0 1rem 0.75rem 1rem;
         text-align: right;
         font-size: 0.9rem;
-        color: var(--secondary-color);
+        color: var(--primary-color);
       }
     }
   }
@@ -491,7 +486,7 @@ table {
       }
       .total-price {
         font-weight: bold;
-        color: var(--secondary-color);
+        color: var(--primary-color);
         margin: 0 0.25rem;
       }
     }
@@ -589,9 +584,6 @@ table {
     align-items: center;
     justify-content: center;
     gap: 1rem;
-    .icon {
-      font-size: 5rem;
-    }
     .not-found-title {
       display: flex;
       flex-direction: column;
@@ -603,6 +595,13 @@ table {
   .not-found-text {
     text-align: center;
     margin-bottom: 1rem;
+  }
+  .not-found-btn {
+    background-color: var(--foreground);
+    color: var(--background);
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
   }
 }
 
@@ -683,7 +682,7 @@ table {
     border: 1px solid var(--gray-alpha-300);
     border-radius: 0.5rem;
     margin-bottom: -1rem;
-    width: 96%;
+    width: 98%;
     color: var(--background);
     background-color: var(--dialog-color);
     transition: opacity 0.2s;
@@ -764,10 +763,15 @@ table {
     }
     .item-list {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
       justify-items: center;
       gap: 1rem;
       margin-bottom: 3rem;
+      &.shop, &.food {
+        grid-template-columns: repeat(4, 1fr);
+      }
+      a {
+        display: contents;
+      }
       .food-card, .shop-card {
         width: 100%;
       }
@@ -799,9 +803,12 @@ table {
 }
 
 .home {
+  .home-top {
+    margin-bottom: 1rem;
+  }
   .home-wrapper {
     display: flex;
-    align-items: center;
+    align-items: stretch;
     gap: 1rem;
     width: 100%;
     .user-contents {
@@ -810,7 +817,6 @@ table {
       flex-direction: column;
       align-items: stretch;
       justify-content: center;
-      height: calc(var(--event-slider-height) - 2px);
       padding: 3rem 1.5rem;
       border-radius: 0.5rem;
       border: 1px solid var(--gray-alpha-300);
@@ -1252,7 +1258,7 @@ table {
             border-radius: 0.5rem;
             font-size: 0.875rem;
             font-weight: bold;
-            background: var(--secondary-color);
+            background: var(--primary-color);
             padding: 0.125rem 0.5rem;
             text-align: center;
             color: var(--background);
@@ -1275,7 +1281,7 @@ table {
           font-size: 1.5rem;
           font-weight: bold;
           &.on-sale {
-            color: var(--secondary-color);
+            color: var(--primary-color);
           }
           .unit {
             font-size: 1rem;
@@ -1506,7 +1512,7 @@ table {
       margin: 0.5rem;
       font-size: 0.8rem;
       font-weight: bold;
-      background: var(--secondary-color);
+      background: var(--primary-color);
       padding: 0.125rem 0.5rem;
       text-align: center;
       color: var(--background);
@@ -1539,7 +1545,7 @@ table {
         font-size: 1.25rem;
         font-weight: bold;
         &.on-sale {
-          color: var(--secondary-color);
+          color: var(--primary-color);
         }
         .unit {
           font-size: 0.875rem;
@@ -1643,8 +1649,6 @@ table {
       display: flex;
       align-items: baseline;
       justify-content: space-between;
-      padding-bottom: 1rem;
-      margin-bottom: 0.5rem;
       gap: 1rem;
       .shop-info-header {
         .shop-name {
@@ -1661,11 +1665,6 @@ table {
             }
           }
         }
-        .shop-description {
-          font-size: 1rem;
-          font-weight: normal;
-          color: var(--gray-alpha-500);
-        }
       }
       .shop-rating {
         display: flex;
@@ -1676,6 +1675,12 @@ table {
         border-radius: 0.5rem;
         padding: 0.25rem 0.75rem;
       }
+    }
+    .shop-description {
+      font-size: 1rem;
+      font-weight: normal;
+      margin-top: 1rem;
+      margin-bottom: 2rem;
     }
     .shop-item-search {
       display: flex;
@@ -1880,40 +1885,41 @@ table {
   position: relative;
   .slick-list {
     position: relative;
-    padding-top: 5px;
+    border-radius: 0.5rem;
   }
   .slick-track {
-    .slider-item {
-      position: relative;
-      overflow: hidden;
-      border-radius: 0.5rem;
-      height: 200px;
-      border: 1px solid var(--gray-alpha-300);
-      &:after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(0deg, rgba(0, 0, 0, 0.4), transparent);
-        z-index: 1;
-      }
-      .event-title {
-        z-index: 2;
-        position: absolute;
-        bottom: 0.25rem;
-        left: 0;
-        right: 0;
-        color: var(--background);
-        padding: 0.75rem 1rem;
-        h3 {
-          font-size: 1.75rem;
-          font-weight: bold;
+    .slick-slide {
+      height: 280px;
+      .slider-item {
+        position: relative;
+        overflow: hidden;
+        height: 280px;
+        &:after {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: linear-gradient(0deg, rgba(0, 0, 0, 0.4), transparent);
+          z-index: 1;
         }
-        p {
-          font-size: 1.1rem;
-          font-weight: 300;
+        .event-title {
+          z-index: 2;
+          position: absolute;
+          bottom: 1rem;
+          left: 0;
+          right: 0;
+          color: var(--background);
+          padding: 0.75rem 1rem;
+          h3 {
+            font-size: 1.75rem;
+            font-weight: bold;
+          }
+          p {
+            font-size: 1.1rem;
+            font-weight: 300;
+          }
         }
       }
     }
@@ -1921,13 +1927,14 @@ table {
   .event-index {
     z-index: 3;
     position: absolute;
-    bottom: calc(1rem + 6px);
+    bottom: 1rem;
     right: 1rem;
     color: var(--background);
     display: flex;
     align-items: center;
     gap: 0.25rem;
     background-color: var(--foreground);
+    border: 1px solid var(--gray-alpha-300);
     border-radius: 1rem;
     padding: 0.25rem 0.5rem;
     p {
@@ -1960,13 +1967,6 @@ table {
         &:nth-last-child(-n+2) {
           border-bottom: none;
         }
-      }
-    }
-  }
-  .event-slider {
-    .slick-track {
-      .slider-item {
-        height: var(--event-slider-height);
       }
     }
   }
@@ -2028,6 +2028,19 @@ table {
       }
     }
   }
+  .event-slider {
+    .slick-list {
+      border-radius: 0;
+    }
+    .slick-track {
+      .slick-slide {
+        height: 200px;
+        .slider-item {
+          height: 200px;
+        }
+      }
+    }
+  }
   .food-info-dialog {
     .content {
       .image-wrapper {
@@ -2040,9 +2053,14 @@ table {
     }
   }
   .home {
+    .home-top {
+      padding: 0;
+    }
     .home-wrapper {
       flex-direction: column;
-      align-items: stretch;
+      .user-contents {
+        display: none;
+      }
     }
     .quick-select {
       .quick-select-wrapper {
@@ -2095,7 +2113,12 @@ table {
   .my {
     .favorite {
       .item-list {
-        grid-template-columns: repeat(1, 1fr);
+        &.shop {
+          grid-template-columns: repeat(1, 1fr);
+        }
+        &.food {
+          grid-template-columns: repeat(2, 1fr);
+        }
       }
     }
   }

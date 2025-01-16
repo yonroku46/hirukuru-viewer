@@ -458,14 +458,14 @@ export default function ShopInfoPage(
                 {shop.location}
               </span>
             </h1>
-            <h2 className="shop-description">
-              {shop.description}
-            </h2>
           </div>
           <button className="shop-rating" onClick={scrollToReviewSection}>
             <StarRoundedIcon fontSize="small" style={{ color: 'var(--rating-color)' }} />
             {`${formatRating(shop.ratingAvg || 0)} (${currency(shop.reviewcount || 0)})`}
           </button>
+        </div>
+        <div className="shop-description">
+          {shop.description}
         </div>
         <div className="shop-item-search">
           <SearchInput

@@ -7,11 +7,9 @@ export function imgRender(src: string): string {
   if (!src || src === 'null' || src === 'undefined') {
     return fallbackImg;
   }
-  if (src.startsWith('/assets') || src.startsWith('data') || src.startsWith('https')) {
-    return src;
-  } else {
-    return `https://${process.env.NEXT_PUBLIC_S3_PREFIX}/${src}`;
-  }
+  return src.startsWith('/assets') || src.startsWith('data') || src.startsWith('https')
+    ? src
+    : `https://${process.env.NEXT_PUBLIC_S3_PREFIX}/${src}`;
 }
 
 interface ImgProps extends Omit<ImageProps, 'src' | 'alt'> {
@@ -28,17 +26,9 @@ export default function Image({ src, alt, width, height, fallbackSrc = fallbackI
 
   useEffect(() => {
     // 値がnull, undefined, または 'null', 'undefined' の場合はデフォルト画像を使用
-    if (!src || src === 'null' || src === 'undefined') {
-      setImgSrc(fallbackSrc);
-    } else {
-      setImgSrc(imgRender(src));
-    }
-
-    if (!alt || alt === 'alt' || src === 'undefined') {
-      setImgAlt('unknown');
-    } else {
-      setImgAlt(alt);
-    }
+    const resolvedSrc = imgRender(src ?? fallbackSrc);
+    setImgSrc(resolvedSrc);
+    setImgAlt(alt ?? 'unknown');
   }, [src, alt, fallbackSrc]);
 
   const handleError = () => {

@@ -28,6 +28,10 @@ export default function FavoritePage() {
           { day: 'mon', open: '10:00', close: '23:50' },
           { day: 'tue', open: '10:00', close: '23:50' },
           { day: 'wed', open: '10:00', close: '23:50' },
+          { day: 'thu', open: '10:00', close: '23:50' },
+          { day: 'fri', open: '10:00', close: '23:50' },
+          { day: 'sat', open: '10:00', close: '23:50' },
+          { day: 'sun', open: '10:00', close: '23:50' },
         ]
       },
       { shopId: '2', location: '福岡市中央区', name: 'チキンが一番', description: 'チキン専門店', image: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', ratingAvg: 4.0, businessHours: [
@@ -99,7 +103,7 @@ export default function FavoritePage() {
             />
           </div>
           {filteredItems.length > 0 ? (
-            <div className="item-list">
+            <div className={`item-list ${favoriteType === 'shop' ? 'shop' : 'food'}`}>
               {filteredItems.map((item, index) => (
                 favoriteType === 'shop' ?
                   <ShopCard

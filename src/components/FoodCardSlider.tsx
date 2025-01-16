@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 import Slider, { Settings } from 'react-slick';
 import { useMediaQuery } from 'react-responsive';
 import FoodCard from '@/components/FoodCard';
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 import { Box } from '@mui/material';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';

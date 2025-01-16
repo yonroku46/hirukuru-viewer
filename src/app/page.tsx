@@ -57,7 +57,7 @@ export default function Home() {
 
   return (
     <article className="home">
-      <section className="container">
+      <section className="container home-top">
         <div className="home-wrapper">
           <div className="user-contents">
             {hasLogin ?
@@ -106,8 +106,8 @@ export default function Home() {
                   className="quick-select-image"
                   src={item.image}
                   alt={item.name}
-                  width={90}
-                  height={90}
+                  width={86}
+                  height={86}
                 />
                 <div className="quick-select-name">
                   {item.name}

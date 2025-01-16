@@ -6,8 +6,6 @@ import { generatePageMetadata } from "@/common/lib/Metadata";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
 import "@/styles/globals.scss";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 
 const notoSansJP = Noto_Sans_JP({
   subsets: ["latin"],

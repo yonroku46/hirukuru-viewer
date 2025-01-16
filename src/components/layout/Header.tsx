@@ -111,11 +111,9 @@ export default function Header() {
   };
 
   useEffect(() => {
-    fetchAddress();
-  }, []);
-
-  useEffect(() => {
     if (typeof window === 'undefined') return;
+    // 位置情報取得
+    fetchAddress();
     // スクロールイベント
     window.addEventListener('scroll', handleScroll);
     // リダイレクトパス保存
