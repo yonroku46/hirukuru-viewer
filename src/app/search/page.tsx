@@ -1,11 +1,13 @@
 "use client";
 
+import Link from "next/link";
+
 export default function SearchPage() {
   return (
-    <article>
-      <div className="container">
-        <h1>検索</h1>
-      </div>
-    </article>
+    <div className="search-page">
+      <Link href="/search/map">
+        マップで検索
+      </Link>
+    </div>
   );
 }

@@ -6,9 +6,9 @@ import SearchInput from "@/components/input/SearchInput";
 import MuiBreadcrumbs from "@/components/mui/MuiBreadcrumbs";
 import ShopCard from "@/components/ShopCard";
 import FoodCard from "@/components/FoodCard";
-import Selector from "@/components/input/Selector";
 
 import SearchOffIcon from '@mui/icons-material/SearchOff';
+import SwitchButton from "@/components/button/SwitchButton";
 
 export default function FavoritePage() {
   const breadcrumbs: Breadcrumb[] = [
@@ -62,10 +62,6 @@ export default function FavoritePage() {
   }, []);
 
   useEffect(() => {
-    setSearchValue('');
-  }, [favoriteType]);
-
-  useEffect(() => {
     const searchRegex = createKanaSearchRegex(searchValue);
     const items = favoriteType === 'shop' ? favoriteShops : favoriteFoods;
     setFilteredItems(
@@ -88,12 +84,12 @@ export default function FavoritePage() {
             </span>
           </h2>
           <div className="search-wrapper">
-            <Selector
-              options={[
-                { label: '店舗', value: 'shop' },
-                { label: '弁当', value: 'food' },
-              ]}
-              onChange={(e) => setFavoriteType(e.target.value as 'shop' | 'food')}
+            <SwitchButton
+              labels={[{ label: "店舗", value: "shop" }, { label: "弁当", value: "food" }]}
+              onChange={(value) => {
+                setFavoriteType(value as 'shop' | 'food');
+                setSearchValue('');
+              }}
             />
             <SearchInput
               searchMode

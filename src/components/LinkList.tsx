@@ -23,7 +23,7 @@ export default function LinkList({ title, linkList }: LinkListProps) {
           <Link
             key={index}
             href={link.href}
-            className="link-list-item"
+            className={`link-list-item ${link.disabled ? 'disabled' : ''}`}
           >
             <div className="link-list-item-content">
               <div className="icon-wrapper">

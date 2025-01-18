@@ -13,7 +13,7 @@ export default function MiniButton({ icon, onClick, gray, sx }: MiniButtonProps)
     <IconButton
       onClick={onClick}
       sx={{
-        borderRadius: "1rem",
+        borderRadius: "0.75rem",
         border: "1px solid var(--gray-alpha-300)",
         backgroundColor: gray ? "var(--gray-alpha-300)" : "var(--background)",
         color: gray ? "var(--background)" : "var(--icon-color)",

@@ -11,6 +11,7 @@ import OutletIcon from '@mui/icons-material/Outlet';
 interface FoodCardProps {
   data: Food;
   onClick?: () => void;
+  onHover?: () => void;
   href?: string;
   openNewTab?: boolean;
   soldOut?: boolean;
@@ -18,13 +19,17 @@ interface FoodCardProps {
   handleFavorite?: (e: React.MouseEvent<HTMLButtonElement>, id: string) => void;
 }
 
-export default function FoodCard({ data, onClick, href, openNewTab, soldOut, isFavorite, handleFavorite }: FoodCardProps) {
+export default function FoodCard({ data, onClick, onHover, href, openNewTab, soldOut, isFavorite, handleFavorite }: FoodCardProps) {
   const handleClick = () => {
     if (onClick) onClick();
   };
 
+  const handleHover = () => {
+    if (onHover) onHover();
+  };
+
   const content = (
-    <div key={data.foodId} className={`food-card ${onClick || href ? "clickable" : ""}`} onClick={handleClick}>
+    <div key={data.foodId} className={`food-card ${onClick || href ? "clickable" : ""}`} onClick={handleClick} onMouseEnter={handleHover}>
       <div className="image-wrapper">
         <Image
           className={`image ${soldOut ? "sold-out" : ""}`}

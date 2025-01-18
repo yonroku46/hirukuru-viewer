@@ -13,6 +13,7 @@
     "@emotion/styled": "^11.13.5",
     "@mui/icons-material": "^6.1.10",
     "@mui/material": "^6.1.10",
+    "@react-google-maps/api": "^2.20.5",
     "@reduxjs/toolkit": "^2.5.0",
     "@types/react-slick": "^0.23.13",
     "fast-average-color": "^9.4.0",

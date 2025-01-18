@@ -61,6 +61,7 @@ declare global {
     title: string;
     href: string;
     icon?: React.ReactNode;
+    disabled?: boolean;
   }
   interface OrderStatus {
     type: 'booked' | 'pickup' | 'done' | 'review' | 'cancel';
@@ -90,6 +91,15 @@ declare global {
     description: string;
     image: string;
     href?: string;
+  }
+  interface Place {
+    placeId: string;
+    shopId?: string;
+    position: PlacePosition;
+  }
+  interface PlacePosition {
+    lat: number;
+    lng: number;
   }
   interface Shop {
     shopId: string;

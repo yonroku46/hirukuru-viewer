@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import Image from "next/image";
-import Slider from "react-slick";
+import Slider, { Settings } from "react-slick";
 import Link from "next/link";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -21,13 +21,14 @@ export default function EventSlider({ events }: EventSliderProps) {
   const sliderRef = useRef<Slider | null>(null);
   const [currentSlide, setCurrentSlide] = useState<number>(0);
 
-  const settings = {
+  const settings: Settings = {
     infinite: true,
     draggable: false,
     arrows: false,
     dots: false,
+    pauseOnHover: true,
     slidesToShow: 1,
-    speed: 1500,
+    speed: 500,
     autoplay: true,
     autoplaySpeed: 10000,
     beforeChange: (current: number, next: number) => setCurrentSlide(next),

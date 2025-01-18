@@ -136,7 +136,7 @@ export default function Header() {
       <div className="main-header container">
         <Drawer
           anchor="right"
-          PaperProps={{ sx: { borderRadius: "4px 0 0 4px" } }}
+          PaperProps={{ sx: { borderRadius: "0.5rem 0 0 0.5rem" } }}
           open={menuOpen}
           onClose={toggleDrawer(false)}
         >
