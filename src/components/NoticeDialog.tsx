@@ -1,14 +1,20 @@
+import Link from 'next/link';
+
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import PlaceIcon from '@mui/icons-material/Place';
 
 interface NoticeDialogProps {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  href?: string;
+  hrefText?: string;
   open: boolean;
   setOpen: (open: boolean) => void;
 }
 
-export default function NoticeDialog({ open, setOpen }: NoticeDialogProps) {
+export default function NoticeDialog({ icon, title, description, href, hrefText, open, setOpen }: NoticeDialogProps) {
 
   const handleClose = () => {
     setOpen(false);
@@ -26,14 +32,21 @@ export default function NoticeDialog({ open, setOpen }: NoticeDialogProps) {
       }}
     >
       <DialogTitle className="title-wrapper">
-        <PlaceIcon fontSize="large" className="icon" />
-        {"位置情報の許可を変更してください"}
+        <span className="icon">
+          {icon}
+        </span>
+        {title}
       </DialogTitle>
       <DialogContent className="content-wrapper">
         <p className="description">
-          {`サービス利用には位置情報が必要です。\nブラウザ設定で位置情報をオンにしてください。`}
+          {description}
         </p>
-        <button onClick={handleClose} className="confirm-button">
+        {href && hrefText && (
+          <Link href={href} className="action-btn">
+            {hrefText}
+          </Link>
+        )}
+        <button onClick={handleClose} className="action-btn">
           確認
         </button>
       </DialogContent>

@@ -395,16 +395,20 @@ table {
       white-space: break-spaces;
       padding: 0.5rem 1rem;
       font-size: 1rem;
+      margin-bottom: 1.5rem;
     }
-    .confirm-button {
-      margin-top: 1rem;
+    .action-btn, .link-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       color: var(--notice-color);
       opacity: 0.75;
       font-size: 1.1rem;
       border-top: 1px solid var(--gray-alpha-300);
       width: 100%;
-      padding: 1rem;
+      padding: 0.75rem;
       border-radius: 0;
+      height: 3.25rem;
       transition: opacity 0.2s, background-color 0.2s;
       &:hover {
         background-color: var(--gray-alpha-100);
@@ -2335,11 +2339,10 @@ table {
       .results {
         margin-top: -2rem;
         border-right: none;
-        border-radius: 0.75rem;
+        border-radius: 0.75rem 0.75rem 0 0;
         box-shadow: 0px -2px 6px var(--gray-alpha-400);
         transition: height 0.3s ease;
         &.open {
-          flex: unset;
           .results-list {
             display: none;
           }
@@ -2356,7 +2359,12 @@ table {
         }
       }
       .map {
-        flex: 0;
+        &.open {
+          flex: 8;
+        }
+        &.close {
+          flex: 0;
+        }
       }
       .toggle-results-btn, .zoom-btn-group {
         display: none;

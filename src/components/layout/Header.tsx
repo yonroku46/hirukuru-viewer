@@ -31,6 +31,7 @@ import StorefrontIcon from '@mui/icons-material/Storefront';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import KeyboardArrowLeftRoundedIcon from '@mui/icons-material/KeyboardArrowLeftRounded';
 import CloseIcon from '@mui/icons-material/Close';
+import PlaceIcon from '@mui/icons-material/Place';
 
 const menuItems: GroupMenuItem[] = [
   { groupName: "カスタム", groupHref: "/my", groupItems: [
@@ -107,7 +108,7 @@ export default function Header() {
       },
       (err) => {
         setAddress('取得失敗');
-        if (err.code === err.PERMISSION_DENIED) {
+        if (err.code === err.PERMISSION_DENIED && !currentPath.startsWith("/service/")) {
           setNoticeOpen(true);
         } else {
           console.error(err.message);
@@ -144,6 +145,11 @@ export default function Header() {
     <header className={isTop ? "top" : ""}>
       <div className="main-header container">
         <NoticeDialog
+          icon={<PlaceIcon fontSize="large" />}
+          title={"位置情報の許可を変更してください"}
+          description={`サービス利用には位置情報が必要です。\nブラウザ設定で位置情報をオンにしてください。`}
+          href={"/service/terms"}
+          hrefText={"設定を変更する"}
           open={noticeOpen}
           setOpen={setNoticeOpen}
         />

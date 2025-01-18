@@ -289,7 +289,7 @@ export default function SearchMapPage() {
           </div>
         )}
         {/* Google Map */}
-        <div className="map" style={{ flex: isSp && isMapVisible ? "8" : "" }}>
+        <div className={`map ${isSp && isMapVisible ? "open" : "close"}`}>
           <button className="toggle-results-btn" onClick={toggleResultsVisibility}>
             <KeyboardArrowRightIcon className={`arrow-icon ${isResultsVisible ? "open" : "close"}`} />
             {!isResultsVisible &&
