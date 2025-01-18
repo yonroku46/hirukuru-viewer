@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useSnackbar } from 'notistack';
+import { enqueueSnackbar } from "notistack";
 import { currency, formatDaysAgo, formatRating } from "@/common/utils/StringUtils";
 import { createKanaSearchRegex } from "@/common/utils/SearchUtils";
 import { isBusinessOpen } from "@/common/utils/DateUtils";
@@ -33,7 +33,6 @@ import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 export default function ShopInfoPage(
   { params: { shopId } }: { params: { shopId: string } }
 ) {
-  const { enqueueSnackbar } = useSnackbar();
   const router = useRouter();
   const searchParams = useSearchParams();
   const q = searchParams.get('q');
@@ -109,10 +108,10 @@ export default function ShopInfoPage(
   };
 
   const shopGuideList = [
-    { icon: <ShoppingCartIcon />, title: "ご注文方法", description: "メニューやランキングからお弁当ラインナップを閲覧していただき、お気に入りの商品をネットまたはお電話でご注文いただく事ができます。" },
-    { icon: <CachedIcon />, title: "変更・キャンセル", description: "納品日1日前：16:59まで	キャンセル料不要\n納品日1日前：17:00以降	ご注文金額の100%のキャンセル料がかかります。" },
+    { icon: <ShoppingCartIcon />, title: "ご注文方法", description: "メニューからお弁当ラインナップを閲覧していただき、お気に入りの商品をカートに入れてご注文いただく事ができます。\n大量注文の場合は「お問い合わせ」ページからご連絡お願いします。" },
+    { icon: <CachedIcon />, title: "変更・キャンセル", description: "納品日1日前：16:59まで\n → キャンセル料不要\n納品日1日前：17:00以降\n → ご注文金額の100%のキャンセル料がかかります。" },
     { icon: <CreditCardIcon />, title: "支払方法", description: "現金、請求書、クレジットカードがお選びいただけます。" },
-    { icon: <MonetizationOnIcon />, title: "ポイント", description: "会員登録後にログインしてご注文いただくと下記ポイントが貯まります。" },
+    { icon: <MonetizationOnIcon />, title: "ポイント", description: "ログインしてご注文いただくと支払い金額の「3%」がポイントとして貯まります。\nポイントはご注文の際にご利用、またはギフト券などに交換できます。\n(※オフラインで購入する場合は会員証のご提示で同じくポイントが貯まります。)" },
   ]
 
   useEffect(() => {

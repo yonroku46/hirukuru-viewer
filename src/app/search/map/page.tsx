@@ -5,6 +5,7 @@ import { GoogleMap, LoadScript, Marker, InfoWindow } from "@react-google-maps/ap
 import Link from "next/link";
 import Image from "next/image";
 import { useMediaQuery } from "react-responsive";
+import { enqueueSnackbar } from "notistack";
 import Loading from "@/app/loading";
 import { formatRating } from "@/common/utils/StringUtils";
 import ShopCard from "@/components/ShopCard";
@@ -28,6 +29,10 @@ import FoodCard from "@/components/FoodCard";
 //   scale: 1.25,
 // };
 
+const defaultPosition = {
+  lat: 37.5665,
+  lng: 126.9780,
+};
 const maxZoom = 20;
 const minZoom = 5;
 const googleMapOptions = {
@@ -79,7 +84,7 @@ export default function SearchMapPage() {
   const [zoomLevel, setZoomLevel] = useState<number>(15);
 
   const handleFavorite = useCallback((e: React.MouseEvent<HTMLButtonElement>, id: string) => {
-    e.stopPropagation();
+    e.preventDefault();
     if (favoriteItems.includes(id)) {
       setFavoriteItems(favoriteItems.filter((item) => item !== id));
     } else {
@@ -192,16 +197,27 @@ export default function SearchMapPage() {
     ];
     setFoods(dummyFoods);
     setMarkPlaces(dummyPlaces);
-    navigator.geolocation.getCurrentPosition((position) => {
-      const userPlace: Place = {
-        placeId: "current",
-        position: {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        },
-      };
-      setCurrentPlace(userPlace);
-    });
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const userPlace: Place = {
+          placeId: "current",
+          position: {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          },
+        };
+        setCurrentPlace(userPlace);
+      },
+      (err) => {
+        console.error(err.message);
+        const defaultPlace: Place = {
+          placeId: "default",
+          position: defaultPosition
+        };
+        setCurrentPlace(defaultPlace);
+        enqueueSnackbar('位置情報を取得に失敗しました。', { variant: 'error' });
+      }
+    );
   }, []);
 
   return (

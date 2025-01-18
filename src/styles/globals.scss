@@ -14,6 +14,7 @@
   --icon-hover-color: #f0f0f0;
   --dialog-color: #2c2c2c;
   --badge-color: #ff5959;
+  --notice-color: #0381FE;
   --box-shadow: hsla(210, 8%, 62%, .2) 0px 8px 24px;
   --gray-rgb: 0, 0, 0;
   --gray-alpha-500: rgba(var(--gray-rgb), 0.40);
@@ -368,6 +369,48 @@ table {
     transform: translateY(-50%);
     box-shadow: 0px 0px 4px var(--gray-alpha-400);
     transition: left 0.3s ease;
+  }
+}
+
+.notice-dialog {
+  .title-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+    .icon {
+      color: var(--notice-color);
+    }
+  }
+  .content-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+    .description {
+      text-align: center;
+      white-space: break-spaces;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+    }
+    .confirm-button {
+      margin-top: 1rem;
+      color: var(--notice-color);
+      opacity: 0.75;
+      font-size: 1.1rem;
+      border-top: 1px solid var(--gray-alpha-300);
+      width: 100%;
+      padding: 1rem;
+      border-radius: 0;
+      transition: opacity 0.2s, background-color 0.2s;
+      &:hover {
+        background-color: var(--gray-alpha-100);
+        opacity: 1;
+      }
+    }
   }
 }
 
@@ -762,13 +805,16 @@ table {
       padding: 1.5rem 1rem;
       border-right: 1px solid var(--gray-alpha-300);
       background-color: var(--background);
-      max-width: 1180px;
+      width: 100%;
+      max-width: 980px;
+      margin-left: auto;
+      margin-right: auto;
       .results-wrapper {
         display: flex;
         align-items: center;
         justify-content: space-between;
         font-size: 1rem;
-        margin-bottom: 1.5rem;
+        margin-bottom: 2rem;
         .count {
           font-weight: bold;
           margin-left: 0.25rem;
@@ -782,12 +828,13 @@ table {
           color: var(--background);
           border-radius: 0.75rem;
           padding: 0.65rem 1rem;
+          font-size: 0.875rem;
         }
       }
       .results-list {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 0.5rem;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
         margin-bottom: 1rem;
       }
     }

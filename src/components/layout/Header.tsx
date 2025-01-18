@@ -7,6 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import SearchInput from "@/components/input/SearchInput";
 import CartDialog from "@/components/CartDialog";
 import MiniButton from "@/components/button/MiniButton";
+import NoticeDialog from "@/components/NoticeDialog";
 import { config } from "@/config";
 
 import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined';
@@ -50,6 +51,7 @@ const menuItems: GroupMenuItem[] = [
 export default function Header() {
   const currentPath: string = usePathname();
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
+  const [noticeOpen, setNoticeOpen] = useState<boolean>(false);
   const [cartOpen, setCartOpen] = useState<boolean>(false);
   const [isTop, setIsTop] = useState<boolean>(false);
   const [address, setAddress] = useState<string | null>(null);
@@ -105,15 +107,22 @@ export default function Header() {
       },
       (err) => {
         setAddress('取得失敗');
-        console.error(err.message);
+        if (err.code === err.PERMISSION_DENIED) {
+          setNoticeOpen(true);
+        } else {
+          console.error(err.message);
+        }
       }
     );
   };
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
     // 位置情報取得
     fetchAddress();
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
     // スクロールイベント
     window.addEventListener('scroll', handleScroll);
     // リダイレクトパス保存
@@ -134,6 +143,10 @@ export default function Header() {
   return (
     <header className={isTop ? "top" : ""}>
       <div className="main-header container">
+        <NoticeDialog
+          open={noticeOpen}
+          setOpen={setNoticeOpen}
+        />
         <Drawer
           anchor="right"
           PaperProps={{ sx: { borderRadius: "0.5rem 0 0 0.5rem" } }}
