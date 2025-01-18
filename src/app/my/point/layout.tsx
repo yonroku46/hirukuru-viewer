@@ -6,9 +6,7 @@ export async function generateMetadata() {
   return generatePageMetadata('my/point');
 }
 
-export default function MyPointLayout({
-  children,
-}: Readonly<{
+export default function MyPointLayout({ children }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (

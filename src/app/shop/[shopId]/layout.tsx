@@ -15,9 +15,7 @@ export async function generateMetadata() {
   return generatePageMetadata('shop', shop.name);
 }
 
-export default function ShopInfoLayout({
-  children,
-}: Readonly<{
+export default function ShopInfoLayout({ children }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (

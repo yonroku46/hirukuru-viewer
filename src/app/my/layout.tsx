@@ -6,9 +6,7 @@ export async function generateMetadata() {
   return generatePageMetadata('my');
 }
 
-export default function MyLayout({
-  children,
-}: Readonly<{
+export default function MyLayout({ children }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (

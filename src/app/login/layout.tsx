@@ -6,9 +6,7 @@ export async function generateMetadata() {
   return generatePageMetadata('login');
 }
 
-export default function LoginLayout({
-  children,
-}: Readonly<{
+export default function LoginLayout({ children }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (

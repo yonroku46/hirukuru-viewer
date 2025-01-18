@@ -6,9 +6,7 @@ export async function generateMetadata() {
   return generatePageMetadata('my/favorite');
 }
 
-export default function MyFavoriteLayout({
-  children,
-}: Readonly<{
+export default function MyFavoriteLayout({ children }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (

@@ -141,7 +141,7 @@ export default function Home() {
               <KeyboardArrowRightTwoToneIcon />
             </Link>
             <Link href="/service/partner">
-              パートナー登録
+              パートナー申請
               <KeyboardArrowRightTwoToneIcon />
             </Link>
           </div>

@@ -6,9 +6,7 @@ export async function generateMetadata() {
   return generatePageMetadata('search');
 }
 
-export default function SearchLayout({
-  children,
-}: Readonly<{
+export default function SearchLayout({ children }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -44,7 +44,7 @@ const menuItems: GroupMenuItem[] = [
   ]},
   { groupName: "サービス", groupHref: "/service", groupItems: [
     { name: "お問い合わせ", href: "/service/contact", icon: <SupportAgentIcon /> },
-    { name: "パートナー登録", href: "/service/partner", icon: <StorefrontIcon /> },
+    { name: "パートナー申請", href: "/service/partner", icon: <StorefrontIcon /> },
     { name: "利用ガイド", href: "/service/help", icon: <HelpOutlineIcon /> },
   ]},
 ];
@@ -77,7 +77,12 @@ export default function Header() {
     }
   };
 
-  const fetchAddress = async () => {
+  const fetchAddress = useCallback(async () => {
+    // サービスページは位置情報取得しない
+    if (currentPath.startsWith("/service/")) {
+      return;
+    }
+    // 位置情報取得不可の場合はエラーを表示
     if (!navigator.geolocation) {
       setAddress('取得失敗');
       console.error('GPSをサポートしていないブラウザです。');
@@ -108,19 +113,19 @@ export default function Header() {
       },
       (err) => {
         setAddress('取得失敗');
-        if (err.code === err.PERMISSION_DENIED && !currentPath.startsWith("/service/")) {
+        if (err.code === err.PERMISSION_DENIED) {
           setNoticeOpen(true);
         } else {
           console.error(err.message);
         }
       }
     );
-  };
+  }, [currentPath]);
 
   useEffect(() => {
     // 位置情報取得
     fetchAddress();
-  }, []);
+  }, [fetchAddress]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -148,7 +153,7 @@ export default function Header() {
           icon={<PlaceIcon fontSize="large" />}
           title={"位置情報の許可を変更してください"}
           description={`サービス利用には位置情報が必要です。\nブラウザ設定で位置情報をオンにしてください。`}
-          href={"/service/terms"}
+          href={"/service/help"}
           hrefText={"設定を変更する"}
           open={noticeOpen}
           setOpen={setNoticeOpen}

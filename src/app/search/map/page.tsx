@@ -30,8 +30,8 @@ import FoodCard from "@/components/FoodCard";
 // };
 
 const defaultPosition = {
-  lat: 37.5665,
-  lng: 126.9780,
+  lat: 33.5902,
+  lng: 130.4017
 };
 const maxZoom = 20;
 const minZoom = 5;

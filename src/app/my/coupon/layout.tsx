@@ -6,9 +6,7 @@ export async function generateMetadata() {
   return generatePageMetadata('my/coupon');
 }
 
-export default function MyCouponLayout({
-  children,
-}: Readonly<{
+export default function MyCouponLayout({ children }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (

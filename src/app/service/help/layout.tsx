@@ -3,10 +3,10 @@ import { generatePageMetadata } from "@/common/lib/Metadata";
 import Loading from '@/app/loading';
 
 export async function generateMetadata() {
-  return generatePageMetadata('my/order/review');
+  return generatePageMetadata('service/help');
 }
 
-export default function MyOrderLayout({ children }: Readonly<{
+export default function ServiceHelpLayout({ children }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (

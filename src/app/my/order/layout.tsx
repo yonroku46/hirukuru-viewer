@@ -6,9 +6,7 @@ export async function generateMetadata() {
   return generatePageMetadata('my/order');
 }
 
-export default function MyOrderLayout({
-  children,
-}: Readonly<{
+export default function MyOrderLayout({ children }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
