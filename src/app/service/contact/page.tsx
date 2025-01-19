@@ -2,10 +2,10 @@
 
 import { useState, FormEvent, useEffect, useMemo } from 'react';
 import Link from 'next/link';
+import Image from "next/image";
 import Selector from '@/components/input/Selector';
 import InputField from '@/components/input/InputField';
 
-import MarkEmailReadRoundedIcon from '@mui/icons-material/MarkEmailReadRounded';
 import MuiBreadcrumbs from "@/components/mui/MuiBreadcrumbs";
 
 export default function ServiceContactPage() {
@@ -36,27 +36,6 @@ export default function ServiceContactPage() {
     setPlaceholderText(categoryList.find(item => item.value === category)?.placeholder || '');
   }, [category, categoryList]);
 
-  if (submitted) {
-    return (
-      <div className='service container'>
-        <div className='empty-page'>
-          <MarkEmailReadRoundedIcon className='icon' />
-          <div className='notice'>
-            <div className='code'>
-              送信完了
-            </div>
-            <div className='text'>
-              お問い合わせを送信しました。
-            </div>
-          </div>
-        </div>
-        <Link href='/' className='home-btn'>
-          ホームへ戻る
-        </Link>
-      </div>
-    )
-  }
-
   return (
     <div className="service container">
       <MuiBreadcrumbs breadcrumbs={breadcrumbs} />
@@ -72,49 +51,67 @@ export default function ServiceContactPage() {
             {`いただいたご質問・大量注文については\nできるだけ早くお返事させていただきます。`}
           </p>
         </div>
-        <form onSubmit={handleSubmit} className='contact-form'>
-          <div>
-            <label>お問い合わせ内容</label>
-            <Selector
-              options={categoryList}
-              defaultValue={category}
-              onChange={(e) => setCategory(e.target.value)}
+        {submitted &&
+          <div className='contact-form submitted'>
+            <Image
+              src='/assets/img/send.avif'
+              alt='submitted'
+              width={200}
+              height={200}
             />
+            <p className='submitted-text'>
+              内容を担当者に送信しました
+            </p>
+            <Link href='/' className='home-btn'>
+              ホームへ戻る
+            </Link>
           </div>
-          <div>
-            <label>メールアドレス</label>
-            <InputField
-              type='email'
-              value={mail}
-              required
-              placeholder='メールアドレスを入力してください'
-              onChange={(e) => setMail(e.target.value)}
-            />
-          </div>
-          <div>
-            <label>電話番号</label>
-            <InputField
-              type='tel'
-              value={phoneNum || ''}
-              placeholder='電話番号を入力してください'
-              onChange={(e) => setPhoneNum(e.target.value)}
-            />
-          </div>
-          <div>
-            <label>詳細</label>
-            <InputField
-              type='textarea'
-              value={contents}
-              required
-              placeholder={placeholderText}
-              onChange={(e) => setContents(e.target.value)}
-              rows={8}
-            />
-          </div>
-          <button type='submit' className='submit-btn'>
-            送信
-          </button>
-        </form>
+        }
+        {!submitted &&
+          <form onSubmit={handleSubmit} className="contact-form">
+            <div>
+              <label>お問い合わせ内容</label>
+              <Selector
+                options={categoryList}
+                defaultValue={category}
+                onChange={(e) => setCategory(e.target.value)}
+              />
+            </div>
+            <div>
+              <label>メールアドレス</label>
+              <InputField
+                type='email'
+                value={mail}
+                required
+                placeholder='メールアドレスを入力してください'
+                onChange={(e) => setMail(e.target.value)}
+              />
+            </div>
+            <div>
+              <label>電話番号</label>
+              <InputField
+                type='tel'
+                value={phoneNum || ''}
+                placeholder='電話番号を入力してください'
+                onChange={(e) => setPhoneNum(e.target.value)}
+              />
+            </div>
+            <div>
+              <label>詳細</label>
+              <InputField
+                type='textarea'
+                value={contents}
+                required
+                placeholder={placeholderText}
+                onChange={(e) => setContents(e.target.value)}
+                rows={8}
+              />
+            </div>
+            <button type='submit' className='submit-btn'>
+              送信
+            </button>
+          </form>
+        }
       </div>
     </div>
   );

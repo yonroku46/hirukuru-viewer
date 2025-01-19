@@ -829,22 +829,10 @@ table {
         align-items: center;
         justify-content: space-between;
         font-size: 1rem;
-        margin-bottom: 2rem;
+        margin-bottom: 1.5rem;
         .count {
           font-weight: bold;
           margin-left: 0.25rem;
-        }
-        .map-btn {
-          display: flex;
-          gap: 0.5rem;
-          align-items: center;
-          justify-content: center;
-          background-color: var(--background);
-          border: 1px solid var(--gray-alpha-300);
-          color: var(--icon-color);
-          border-radius: 0.75rem;
-          padding: 0.45rem 1rem;
-          font-size: 0.875rem;
         }
       }
       .results-list {
@@ -866,19 +854,8 @@ table {
   .list-btn {
     z-index: 9;
     position: absolute;
-    top: 1rem;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--background);
-    border: 1px solid var(--gray-alpha-300);
-    color: var(--icon-color);
-    border-radius: 0.75rem;
-    padding: 0.45rem 1rem;
-    font-size: 0.875rem;
+    top: calc(1rem + 6px);
+    right: 1rem;
   }
   .toggle-results-btn {
     position: absolute;
@@ -2246,7 +2223,7 @@ table {
   .contact-page {
     display: flex;
     width: 100%;
-    padding: 2rem 0;
+    padding: 2rem 1rem;
     .contact-message {
       flex: 1;
       display: flex;
@@ -2280,6 +2257,24 @@ table {
       flex-direction: column;
       width: 100%;
       gap: 1rem;
+      height: calc(100vh - var(--header-height) - 12rem);
+      &.submitted {
+        align-items: center;
+        justify-content: center;
+        padding: 5rem 0;
+        .submitted-text {
+          font-size: 1.25rem;
+          text-align: center;
+          margin-bottom: 2rem;
+        }
+        .home-btn {
+          background-color: var(--foreground);
+          color: var(--background);
+          border-radius: 0.5rem;
+          padding: 0.5rem 3rem;
+          font-size: 1rem;
+        }
+      }
       label {
         display: flex;
         align-items: center;
@@ -2449,19 +2444,9 @@ table {
         height: calc(100vh - var(--header-height) - var(--map-filter-height) + 1px);
       }
       .results {
-        margin-top: -2rem;
         border-right: none;
-        border-radius: 0.75rem 0.75rem 0 0;
-        box-shadow: 0px -2px 6px var(--gray-alpha-400);
         &.open {
-          .results-list {
-            display: none;
-          }
-        }
-        &.close {
-          margin-top: 0;
-          border-radius: 0;
-          box-shadow: none;
+          display: none;
         }
         .results-list {
           grid-template-columns: repeat(1, 1fr);
@@ -2473,6 +2458,7 @@ table {
         }
         &.close {
           flex: 0;
+          display: none;
         }
       }
       .toggle-results-btn, .zoom-btn-group {

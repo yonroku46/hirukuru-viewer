@@ -131,6 +131,10 @@ export default function Header() {
     if (!currentPath.startsWith('/login')) {
       sessionStorage.setItem('redirect', currentPath);
     }
+    // 検索ページ以外は検索バーをクリア
+    if (!currentPath.startsWith('/search')) {
+      setSearchValue("");
+    }
     // 移動時メニューバーを閉じてスクロール位置をトップに戻す
     setMenuOpen(false);
     window.scrollTo(0, 0);
@@ -209,7 +213,7 @@ export default function Header() {
           </Box>
         </Drawer>
         <div className="left-container">
-          {currentPath === "/search" ? (
+          {currentPath.startsWith("/search") ? (
             <button onClick={() => router.back()}>
               <KeyboardArrowLeftRoundedIcon />
             </button>
@@ -220,15 +224,16 @@ export default function Header() {
           )}
         </div>
         <div className="right-container">
-          {currentPath !== "/search" &&
+          {!currentPath.startsWith("/search") &&
             <CartDialog open={cartOpen} setOpen={setCartOpen} />
           }
           <SearchInput
-            searchMode={currentPath === "/search"}
+            searchMode={currentPath.startsWith("/search")}
             placeholder={"今食べたいものは？"}
-            autoFocus={currentPath === "/search"}
+            autoFocus={currentPath.startsWith("/search")}
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
+            onKeyDown={() => router.replace(`/search/map?q=${searchValue}`)}
           />
           <IconButton
             edge="start"

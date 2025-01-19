@@ -11,6 +11,7 @@ import { formatRating } from "@/common/utils/StringUtils";
 import ShopCard from "@/components/ShopCard";
 import Selector from "@/components/input/Selector";
 import SwitchButton from "@/components/button/SwitchButton";
+import MiniButton from "@/components/button/MiniButton";
 
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import StarRoundedIcon from '@mui/icons-material/StarRounded';
@@ -256,10 +257,10 @@ export default function SearchMapPage() {
                 件
               </div>
               {isSp && !isMapVisible && (
-                <button className="map-btn" onClick={toggleMapVisibility}>
-                  <MapOutlinedIcon />
-                  マップを表示
-                </button>
+                <MiniButton
+                  icon={<MapOutlinedIcon />}
+                  onClick={toggleMapVisibility}
+                />
               )}
             </div>
             <div className="results-list">
@@ -300,10 +301,11 @@ export default function SearchMapPage() {
             }
           </button>
           {isSp && isMapVisible && (
-            <button className="list-btn " onClick={toggleMapVisibility}>
-              <ListOutlinedIcon />
-              リストを表示
-            </button>
+            <MiniButton
+              className="list-btn"
+              icon={<ListOutlinedIcon />}
+              onClick={toggleMapVisibility}
+            />
           )}
           <div className="zoom-btn-group">
             <button className={`zoom-btn zoom-in ${zoomLevel >= maxZoom ? 'over' : ''}`} onClick={zoomIn}>

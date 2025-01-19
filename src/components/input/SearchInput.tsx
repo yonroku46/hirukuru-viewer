@@ -14,11 +14,12 @@ interface SearchInputProps {
   searchMode?: boolean;
   autoFocus?: boolean;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
   filters?: SearchFilter[];
   onFilterApply?: (updatedFilters: SearchFilter[]) => void;
 }
 
-export default function SearchInput({ value, placeholder, searchMode, autoFocus, onChange, filters, onFilterApply }: SearchInputProps) {
+export default function SearchInput({ value, placeholder, searchMode, autoFocus, onChange, onKeyDown, filters, onFilterApply }: SearchInputProps) {
   const router = useRouter();
 
   const [showClearIcon, setShowClearIcon] = useState<boolean>(false);
@@ -37,6 +38,18 @@ export default function SearchInput({ value, placeholder, searchMode, autoFocus,
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setShowClearIcon(e.target.value === "" ? false : true);
     onChange(e);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
+    if (e.key === "Enter" && onKeyDown) {
+      onKeyDown(e);
+    }
+  };
+
+  const handleIconClick = (): void => {
+    if (onKeyDown) {
+      onKeyDown({ key: "Enter" } as React.KeyboardEvent<HTMLInputElement>);
+    }
   };
 
   const handleClick = (): void => {
@@ -83,13 +96,14 @@ export default function SearchInput({ value, placeholder, searchMode, autoFocus,
         />
       }
       <div className="input-wrapper">
-        <SearchIcon className="search-icon" />
+        <SearchIcon className="search-icon" onClick={handleIconClick} />
         <input
           type="text"
           placeholder={placeholder || "検索"}
           autoFocus={autoFocus}
           value={value}
           onChange={handleChange}
+          onKeyDown={handleKeyDown}
         />
         <ClearIcon className={`clear-icon ${showClearIcon ? "active" : ""}`} onClick={handleClick}/>
       </div>
