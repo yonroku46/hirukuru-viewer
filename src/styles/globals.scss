@@ -835,7 +835,6 @@ table {
           margin-left: 0.25rem;
         }
         .map-btn {
-          z-index: 1;
           display: flex;
           gap: 0.5rem;
           align-items: center;
@@ -845,6 +844,7 @@ table {
           border-radius: 0.75rem;
           padding: 0.65rem 1rem;
           font-size: 0.875rem;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
       }
       .results-list {
@@ -938,14 +938,14 @@ table {
     }
   }
   .info-window {
-    width: 250px;
+    width: 220px;
     border-radius: 0.5rem;
     overflow: hidden;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     font-size: 1rem;
     .info-image {
       position: relative;
-      height: 140px;
+      height: 120px;
       img {
         width: 100%;
       }
@@ -975,6 +975,11 @@ table {
       .shop-description {
         font-size: 0.875rem;
         margin-bottom: 0.25rem;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
     }
   }
@@ -2428,6 +2433,7 @@ table {
         &.open {
           .results-wrapper {
             .map-btn {
+              z-index: 10;
               position: absolute;
               top: calc(var(--header-height) + var(--map-filter-height) + 1.5rem - 1px);
               right: 1rem;

@@ -340,7 +340,7 @@ export default function SearchMapPage() {
                         <Link href={`/shop/${shop.shopId}`} target="_blank">
                           <div className="info-window">
                             <div className="info-image">
-                              <Image src={shop.image} alt={shop.name} width={250} height={140} />
+                              <Image src={shop.image} alt={shop.name} width={220} height={120} />
                               <button className="close-btn" onClick={handleCloseInfoWindow}>
                                 <CloseIcon fontSize="small" />
                               </button>
