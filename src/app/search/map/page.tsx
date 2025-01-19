@@ -15,6 +15,7 @@ import SwitchButton from "@/components/button/SwitchButton";
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import StarRoundedIcon from '@mui/icons-material/StarRounded';
 import CloseIcon from "@mui/icons-material/Close";
+import ListOutlinedIcon from '@mui/icons-material/ListOutlined';
 import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -242,7 +243,7 @@ export default function SearchMapPage() {
           </div>
         </div>
       </div>
-      <div className="content">
+      <div className={`content ${isSp && isMapVisible ? "open" : "close"}`}>
         {/* Search Results */}
         {isResultsVisible && (
           <div className={`results ${isSp && isMapVisible ? "open" : "close"}`}>
@@ -254,10 +255,10 @@ export default function SearchMapPage() {
                 </span>
                 件
               </div>
-              {isSp && (
+              {isSp && !isMapVisible && (
                 <button className="map-btn" onClick={toggleMapVisibility}>
                   <MapOutlinedIcon />
-                  {isMapVisible ? "マップ非表示" : "マップを表示"}
+                  マップを表示
                 </button>
               )}
             </div>
@@ -298,6 +299,12 @@ export default function SearchMapPage() {
               </span>
             }
           </button>
+          {isSp && isMapVisible && (
+            <button className="list-btn " onClick={toggleMapVisibility}>
+              <ListOutlinedIcon />
+              リストを表示
+            </button>
+          )}
           <div className="zoom-btn-group">
             <button className={`zoom-btn zoom-in ${zoomLevel >= maxZoom ? 'over' : ''}`} onClick={zoomIn}>
               <AddIcon className="icon" />
