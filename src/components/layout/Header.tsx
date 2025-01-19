@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -54,7 +54,7 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const [noticeOpen, setNoticeOpen] = useState<boolean>(false);
   const [cartOpen, setCartOpen] = useState<boolean>(false);
-  const [isTop, setIsTop] = useState<boolean>(false);
+  const [isTop, setIsTop] = useState<boolean>(true);
   const [address, setAddress] = useState<string | null>(null);
   const [searchValue, setSearchValue] = useState<string>("");
 
@@ -77,7 +77,7 @@ export default function Header() {
     }
   };
 
-  const fetchAddress = useCallback(async () => {
+  useEffect(() => {
     // サービスページは位置情報取得しない
     if (currentPath.startsWith("/service/")) {
       return;
@@ -120,12 +120,8 @@ export default function Header() {
         }
       }
     );
-  }, [currentPath]);
-
-  useEffect(() => {
-    // 位置情報取得
-    fetchAddress();
-  }, [fetchAddress]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -147,7 +143,7 @@ export default function Header() {
   }, [currentPath]);
 
   return (
-    <header className={isTop ? "top" : ""}>
+    <header className={`${isTop ? "top" : ""}`}>
       <div className="main-header container">
         <NoticeDialog
           icon={<PlaceIcon fontSize="large" />}

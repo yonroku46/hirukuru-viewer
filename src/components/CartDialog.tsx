@@ -222,7 +222,7 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
           }
         </DialogContent>
         <DialogActions className="cart-actions">
-          <Button className={`order-btn ${!deleteMode ? "active" : ""}`} variant="contained" color="primary">
+          <Button className={`order-btn ${!deleteMode && cartItems.length !== 0 ? "active" : ""}`} variant="contained" color="primary">
             合計
             <span className="total-price">{currency(totalPrice, "円")}</span>
             注文する

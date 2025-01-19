@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, FormEvent, useEffect } from 'react';
+import { useState, FormEvent, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import Selector from '@/components/input/Selector';
 import InputField from '@/components/input/InputField';
@@ -14,15 +14,11 @@ export default function ServiceContactPage() {
     { label: 'お問い合わせ', href: '/service/contact', active: true },
   ];
 
-  const categoryList = [
-    { value: 'suggest', label: 'ご意見・ご要望' },
-    { value: 'bulk', label: '大量注文' },
-    { value: 'inquiry', label: 'その他お問い合わせ' },
-  ]
-  const placeholderMap: Record<string, string> = useMemo(() => ({
-    suggest: 'ご意見内容を入力してください',
-    bulk: '注文(店舗名、商品名、数量、希望日等)を入力してください\nサービス担当者からのご案内の連絡をさせていただきます',
-  }), []);
+  const categoryList = useMemo(() => [
+    { value: 'suggest', label: 'ご意見・ご要望', placeholder: 'ご意見内容を入力してください' },
+    { value: 'bulk', label: '大量注文', placeholder: '注文(店舗名、商品名、数量、希望日等)を入力してください\nサービス担当者からのご案内の連絡をさせていただきます' },
+    { value: 'inquiry', label: 'その他お問い合わせ', placeholder: 'お問い合わせ内容を入力してください' },
+  ], []);
 
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [category, setCategory] = useState<string>(categoryList[0].value);
@@ -37,8 +33,8 @@ export default function ServiceContactPage() {
   };
 
   useEffect(() => {
-    setPlaceholderText(placeholderMap[category] || 'お問い合わせ内容を入力してください');
-  }, [category, placeholderMap]);
+    setPlaceholderText(categoryList.find(item => item.value === category)?.placeholder || '');
+  }, [category, categoryList]);
 
   if (submitted) {
     return (

@@ -58,10 +58,10 @@ export default function ShopCard({ data, onClick, onHover, href, openNewTab, isF
         </div>
         <div className="info-detail-wrapper">
           <div className="details">
-            <span className="location">{data.location}</span>
-            <span className="time">
-              {formatTodayBusinessHours(data.businessHours)}
-            </span>
+            <div className="location">{data.location}</div>
+            <div className="description">
+              {data.description || formatTodayBusinessHours(data.businessHours)}
+            </div>
           </div>
         </div>
       </div>
