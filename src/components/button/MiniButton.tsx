@@ -19,6 +19,9 @@ export default function MiniButton({ className, icon, onClick, gray, sx }: MiniB
         border: "1px solid var(--gray-alpha-300)",
         backgroundColor: gray ? "var(--gray-alpha-300)" : "var(--background)",
         color: gray ? "var(--background)" : "var(--icon-color)",
+        "&:hover": {
+          backgroundColor: gray ? "var(--gray-alpha-200)" : "var(--icon-hover-color)",
+        },
         ...sx,
       }}
     >

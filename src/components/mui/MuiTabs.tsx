@@ -1,24 +1,23 @@
 import React, { useState } from 'react';
+
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import { useMediaQuery } from 'react-responsive';
 import Box from '@mui/material/Box';
 
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
   value: number;
-  isSp: boolean;
 }
 
-function TabPanel({ children, index, value, isSp, ...other }: TabPanelProps) {
+function TabPanel({ children, index, value, ...other }: TabPanelProps) {
   return (
     <div
       role="tabpanel"
       hidden={value !== index}
       id={`vertical-tabpanel-${index}`}
       aria-labelledby={`vertical-tab-${index}`}
-      style={{ width: '100%', marginLeft: isSp ? '0' : '2rem', marginTop: isSp ? '0.5rem' : '0' }}
+      style={{ width: '100%' }}
       {...other}
     >
       {value === index && (
@@ -42,7 +41,6 @@ interface MuiTabsProps {
 }
 
 export default function MuiTabs({ tabs }: MuiTabsProps) {
-  const isSp = useMediaQuery({ query: '(max-width: 1179px)' });
   const [value, setValue] = useState<number>(0);
 
   const handleChange = (e: React.SyntheticEvent, newValue: number) => {
@@ -54,20 +52,25 @@ export default function MuiTabs({ tabs }: MuiTabsProps) {
       sx={{
         display: 'flex',
         flexGrow: 1, bgcolor: 'background.paper',
-        flexDirection: isSp ? 'column' : 'row',
+        flexDirection: 'column',
         height: 'auto', width: '100%'
       }}
     >
       <Tabs
-        orientation={isSp ? 'horizontal' : 'vertical'}
+        orientation='horizontal'
         variant="scrollable"
         value={value}
         onChange={handleChange}
         aria-label="tabs"
         sx={{
-          borderRight: isSp ? 0 : 1,
+          zIndex: 1,
+          position: 'sticky',
+          top: 'calc(var(--header-height) - 1px)',
+          backgroundColor: 'var(--background)',
+          borderBottom: 1,
           borderColor: 'divider',
-          minWidth: isSp ? '100%' : '150px',
+          minWidth: '100%',
+          minHeight: 'unset',
           '& .MuiTabs-scroller': {
             height: 'fit-content',
           },
@@ -78,7 +81,7 @@ export default function MuiTabs({ tabs }: MuiTabsProps) {
             key={index}
             label={tab.label}
             sx={{
-              alignItems: isSp ? 'center' : 'flex-start',
+              alignItems: 'center',
               minHeight: 'unset',
               color: tab.active ? 'inherit' : 'var(--gray-alpha-400)',
               pointerEvents: tab.active ? 'auto' : 'none',
@@ -91,7 +94,7 @@ export default function MuiTabs({ tabs }: MuiTabsProps) {
         ))}
       </Tabs>
       {tabs.map((tab, index) => (
-        <TabPanel key={index} index={index} value={value} isSp={isSp}>
+        <TabPanel key={index} index={index} value={value}>
           {tab.panel}
         </TabPanel>
       ))}

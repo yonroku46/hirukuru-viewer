@@ -84,7 +84,7 @@ export default function FilterDialog({ filters, onReset, onFilterApply, changed 
           icon={<FilterAltOutlinedIcon />}
           onClick={() => setOpen(true)}
           sx={{
-            color: changed ? 'unset' : 'var(--badge-color)',
+            color: changed ? 'var(--icon-color)' : 'var(--badge-color)',
           }}
         />
       </Badge>

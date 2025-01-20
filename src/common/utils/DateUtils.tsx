@@ -27,3 +27,13 @@ export function formatTodayBusinessHours(businessHours: BusinessHour[]): string 
 
   return `${dayMap[today]}曜日休み`;
 }
+
+export function formatWeeklyBusinessHours(businessHours: BusinessHour[]): string {
+  return daysOrder.map(day => {
+    const dayHours = businessHours.find(hour => hour.day === day);
+    if (dayHours) {
+      return `${dayMap[day]}：${dayHours.open} - ${dayHours.close}`;
+    }
+    return `${dayMap[day]}：休み`;
+  }).join('\n');
+}

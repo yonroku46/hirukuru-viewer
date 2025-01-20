@@ -13,24 +13,25 @@ import MuiTabs from "@/components/mui/MuiTabs";
 import Selector from "@/components/input/Selector";
 import FoodCard from "@/components/FoodCard";
 import FoodInfoDialog from "@/components/FoodInfoDialog";
+import ShopInfoDialog from "@/components/ShopInfoDialog";
 import MiniButton from "@/components/button/MiniButton";
 
+import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined';
 import Rating from '@mui/material/Rating';
 import StarRoundedIcon from '@mui/icons-material/StarRounded';
 import SearchOffIcon from '@mui/icons-material/SearchOff';
 import MarkChatReadOutlinedIcon from '@mui/icons-material/MarkChatReadOutlined';
-import SupportAgentOutlinedIcon from '@mui/icons-material/SupportAgentOutlined';
-import PermContactCalendarOutlinedIcon from '@mui/icons-material/PermContactCalendarOutlined';
 import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import CachedIcon from '@mui/icons-material/Cached';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import SupportAgentOutlinedIcon from '@mui/icons-material/SupportAgentOutlined';
+import ContactSupportOutlinedIcon from '@mui/icons-material/ContactSupportOutlined';
 
-export default function ShopInfoPage(
+export default function ShopPage(
   { params: { shopId } }: { params: { shopId: string } }
 ) {
   const router = useRouter();
@@ -43,7 +44,8 @@ export default function ShopInfoPage(
   const [favoriteItems, setFavoriteItems] = useState<string[]>([]);
   const [reviewFilter, setReviewFilter] = useState<string>('latest');
   const [items, setItems] = useState<Food[]>([]);
-  const [open, setOpen] = useState<boolean>(false);
+  const [foodInfoOpen, setFoodInfoOpen] = useState<boolean>(false);
+  const [shopInfoOpen, setShopInfoOpen] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<Food | null>(null);
   const [reviewList, setReviewList] = useState<ShopReview[]>([]);
   const [priceRange, setPriceRange] = useState<number>(maxPrice);
@@ -51,8 +53,8 @@ export default function ShopInfoPage(
 
   const moreMenuList = [
     [
-      { icon: <PermContactCalendarOutlinedIcon />, text: "お問い合わせ", onClick: () => router.push("/service/contact") },
-      { icon: <SupportAgentOutlinedIcon />, text: "店舗ガイド", onClick: () => scrollToGuideSection() },
+      { icon: <SupportAgentOutlinedIcon />, text: "お問い合わせ", onClick: () => router.push("/service/contact") },
+      { icon: <ContactSupportOutlinedIcon />, text: "店舗ガイド", onClick: () => scrollToGuideSection() },
     ],
     [
       { icon: <ShareOutlinedIcon />, text: "シェア", onClick: () => handleShare() },
@@ -90,6 +92,7 @@ export default function ShopInfoPage(
     name: '唐揚げ壱番屋',
     description: '揚げ物専門店',
     location: '福岡市博多区',
+    detailAddress: '福岡市博多区',
     image: 'https://i.pinimg.com/236x/71/65/43/716543eb8e6907d7163b55000376e2be.jpg',
     businessHours: [
       { day: 'mon', open: '10:00', close: '23:50' },
@@ -106,11 +109,15 @@ export default function ShopInfoPage(
       "5": 55
     }
   };
+  const position: PlacePosition = {
+    lat: 33.5902,
+    lng: 130.4017
+  };
 
   const shopGuideList = [
-    { icon: <ShoppingCartIcon />, title: "ご注文方法", description: "メニューからお弁当ラインナップを閲覧していただき、お気に入りの商品をカートに入れてご注文いただく事ができます。\n大量注文の場合は「お問い合わせ」ページからご連絡お願いします。" },
+    { icon: <ShoppingCartIcon />, title: "ご注文方法", description: "メニューから食品のラインナップを閲覧していただき、お気に入りの商品をカートに入れてご注文いただく事ができます。\n大量注文の場合は「お問い合わせ」ページからご連絡お願いします。" },
     { icon: <CachedIcon />, title: "変更・キャンセル", description: "納品日1日前：16:59まで\n → キャンセル料不要\n納品日1日前：17:00以降\n → ご注文金額の100%のキャンセル料がかかります。" },
-    { icon: <CreditCardIcon />, title: "支払方法", description: "現金、請求書、クレジットカードがお選びいただけます。" },
+    { icon: <CreditCardIcon />, title: "支払方法", description: "現金、クレジットカードがお選びいただけます。" },
     { icon: <MonetizationOnIcon />, title: "ポイント", description: "ログインしてご注文いただくと支払い金額の「3%」がポイントとして貯まります。\nポイントはご注文の際にご利用、またはギフト券などに交換できます。\n(※オフラインで購入する場合は会員証のご提示で同じくポイントが貯まります。)" },
   ]
 
@@ -147,6 +154,8 @@ export default function ShopInfoPage(
       { reviewId: '1', userId: 'user1', shopId: 'fuk001', userName: "User1", userProfile: "/assets/img/no-user.jpg", userRatingCount: 1120, userRatingAvg: 4.6, rating: 4, date: "2024-11-29", comment: "Good!" },
       { reviewId: '2', userId: 'user2', shopId: 'fuk001', userName: "User2", userProfile: "/assets/img/no-user.jpg", userRatingCount: 320, userRatingAvg: 4.9, rating: 5, date: "2024-12-29", comment: "Nice!" },
       { reviewId: '3', userId: 'user3', shopId: 'fuk001', userName: "User3", userProfile: "/assets/img/no-user.jpg", userRatingCount: undefined, userRatingAvg: undefined, rating: 4, date: "2024-12-28", comment: "Good!" },
+      { reviewId: '4', userId: 'user4', shopId: 'fuk001', userName: "User4", userProfile: "/assets/img/no-user.jpg", userRatingCount: undefined, userRatingAvg: undefined, rating: 4, date: "2024-12-28", comment: "Good!" },
+      { reviewId: '5', userId: 'user5', shopId: 'fuk001', userName: "User5", userProfile: "/assets/img/no-user.jpg", userRatingCount: undefined, userRatingAvg: undefined, rating: 4, date: "2024-12-28", comment: "Good!" },
     ]
     setItems(dummyItems as Food[]);
     setReviewList(dummyReviewList as ShopReview[]);
@@ -163,7 +172,7 @@ export default function ShopInfoPage(
 
   const handleClick = (item: Food) => {
     setSelectedItem(item);
-    setOpen(true);
+    setFoodInfoOpen(true);
   }
 
   const tabs = useMemo(() => {
@@ -214,16 +223,10 @@ export default function ShopInfoPage(
     const filteredItems = filterItems(items);
 
     const allTab = {
-      label: '全て',
+      label: `全て (${filteredItems.length})`,
       active: filteredItems.length > 0,
       panel: (
         <div className={`shop-item ${filteredItems.length === 0 ? 'non-active' : ''}`}>
-          <div className="shop-item-header">
-            <span className="count">
-              {currency(filteredItems.length)}
-            </span>
-            件の商品
-          </div>
           {filteredItems.length === 0 ? (
             <div className="shop-item-body no-items">
               <SearchOffIcon fontSize="large" />
@@ -255,12 +258,6 @@ export default function ShopInfoPage(
       active: filteredSpecialTabItems.length > 0,
       panel: (
         <div className={`shop-item ${filteredSpecialTabItems.length === 0 ? 'non-active' : ''}`}>
-          <div className="shop-item-header">
-            <span className="count">
-              {currency(filteredSpecialTabItems.length)}
-            </span>
-            件の商品
-          </div>
           {filteredSpecialTabItems.length === 0 ? (
             <div className="shop-item-body no-items">
               <SearchOffIcon fontSize="large" />
@@ -293,12 +290,6 @@ export default function ShopInfoPage(
           active: filteredCategoryItems.length > 0,
           panel: (
             <div className={`shop-item ${filteredCategoryItems.length === 0 ? 'non-active' : ''}`}>
-              <div className="shop-item-header">
-                <span className="count">
-                  {currency(filteredCategoryItems.length)}
-                </span>
-                件の商品
-              </div>
               {filteredCategoryItems.length === 0 ? (
                 <div className="shop-item-body no-items">
                   <SearchOffIcon fontSize="large" />
@@ -410,16 +401,22 @@ export default function ShopInfoPage(
 
   return (
     <article className="shop">
+      <ShopInfoDialog
+        data={shop}
+        position={position}
+        open={shopInfoOpen}
+        setOpen={setShopInfoOpen}
+      />
       <FoodInfoDialog
         data={selectedItem}
-        open={open}
-        setOpen={setOpen}
+        open={foodInfoOpen}
+        setOpen={setFoodInfoOpen}
         isFavorite={selectedItem ? favoriteItems.includes(selectedItem.foodId) : false}
         handleFavorite={handleFavorite}
       />
       {/* Shop Header */}
-      <section className="shop-header">
-        <div className="shop-profile container">
+      <section className="shop-header-wrapper">
+        <div className="shop-header container">
           <Image
             className={`profile-img ${isBusinessOpen(shop.businessHours) ? "open" : ""}`}
             src={shop.image}
@@ -430,7 +427,7 @@ export default function ShopInfoPage(
           <div className="shop-action-wrapper">
             <MiniButton
               icon={<FmdGoodOutlinedIcon />}
-              onClick={() => {}}
+              onClick={() => setShopInfoOpen(true)}
               gray
             />
             <MiniButton
@@ -453,18 +450,15 @@ export default function ShopInfoPage(
           <div className="shop-info-header">
             <h1 className="shop-name">
               {shop.name}
-              <span className="shop-location">
-                {shop.location}
-              </span>
             </h1>
+            <div className="shop-location">
+              {shop.location}
+            </div>
           </div>
           <button className="shop-rating" onClick={scrollToReviewSection}>
             <StarRoundedIcon fontSize="small" style={{ color: 'var(--rating-color)' }} />
             {`${formatRating(shop.ratingAvg || 0)} (${currency(shop.reviewcount || 0)})`}
           </button>
-        </div>
-        <div className="shop-description">
-          {shop.description}
         </div>
         <div className="shop-item-search">
           <SearchInput
@@ -570,23 +564,25 @@ export default function ShopInfoPage(
           </div>
         </div>
       </section>
-      {/* Shop guide */}
-      <section className="shop-guide container">
-        <div className="guide-list">
-          <div className="title">
-            店舗ご利用ガイド
-          </div>
-          {shopGuideList.map((guide, index) => (
-            <div className="guide-item" key={index}>
-              <div className="guide-item-title">
-                {guide.icon}
-                {guide.title}
-              </div>
-              <div className="guide-item-description">
-                {guide.description}
-              </div>
+      {/* Shop Guide */}
+      <section className="shop-guide">
+        <div className="container">
+          <div className="guide-list">
+            <div className="title">
+              店舗ご利用ガイド
             </div>
-          ))}
+            {shopGuideList.map((guide, index) => (
+              <div className="guide-item" key={index}>
+                <div className="guide-item-title">
+                  {guide.icon}
+                  {guide.title}
+                </div>
+                <div className="guide-item-description">
+                  {guide.description}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
     </article>

@@ -28,8 +28,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import StorefrontIcon from '@mui/icons-material/Storefront';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import KeyboardArrowLeftRoundedIcon from '@mui/icons-material/KeyboardArrowLeftRounded';
+import ContactSupportOutlinedIcon from '@mui/icons-material/ContactSupportOutlined';
+import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import CloseIcon from '@mui/icons-material/Close';
 import PlaceIcon from '@mui/icons-material/Place';
 
@@ -45,7 +45,7 @@ const menuItems: GroupMenuItem[] = [
   { groupName: "サービス", groupHref: "/service", groupItems: [
     { name: "お問い合わせ", href: "/service/contact", icon: <SupportAgentIcon /> },
     { name: "パートナー申請", href: "/service/partner", icon: <StorefrontIcon /> },
-    { name: "利用ガイド", href: "/service/help", icon: <HelpOutlineIcon /> },
+    { name: "利用ガイド", href: "/service/help", icon: <ContactSupportOutlinedIcon /> },
   ]},
 ];
 
@@ -215,7 +215,7 @@ export default function Header() {
         <div className="left-container">
           {currentPath.startsWith("/search") ? (
             <button onClick={() => router.back()}>
-              <KeyboardArrowLeftRoundedIcon />
+              <ArrowBackRoundedIcon />
             </button>
           ) : (
             <Link href="/" className="logo">

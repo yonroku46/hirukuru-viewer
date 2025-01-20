@@ -104,6 +104,7 @@ declare global {
   interface Shop {
     shopId: string;
     location: string;
+    detailAddress?: string;
     name: string;
     description: string;
     image: string;

@@ -130,6 +130,9 @@ header {
         border-radius: 0.75rem;
         gap: 0.5rem;
         padding: 0.4rem 0.75rem;
+        &:hover {
+          background-color: var(--icon-hover-color);
+        }
         .menu-icon {
           opacity: 0.75;
         }
@@ -284,10 +287,10 @@ button {
   border-radius: 0.5rem;
   cursor: pointer;
   background-color: unset;
-  transition: filter 0.2s ease-in-out;
+  transition: opacity 0.2s ease-in-out;
   color: inherit;
   &:hover {
-    filter: brightness(0.95);
+    opacity: 0.9;
   }
   &:focus-visible {
     outline: none;
@@ -964,6 +967,7 @@ table {
         align-items: center;
         justify-content: space-between;
         font-weight: bold;
+        font-size: 0.9rem;
         .shop-rating {
           display: flex;
           align-items: center;
@@ -972,7 +976,7 @@ table {
       }
       .shop-description {
         font-size: 0.875rem;
-        margin-bottom: 0.25rem;
+        margin: 0.25rem 0;
         display: -webkit-box;
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 2;
@@ -1504,6 +1508,93 @@ table {
   }
 }
 
+.shop-info-dialog {
+  .title-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 1rem;
+    background-color: var(--dialog-color);
+    color: var(--background);
+    font-size: 1rem;
+    position: sticky;
+    top: 0;
+    .title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .close-icon {
+      cursor: pointer;
+    }
+  }
+  .content {
+    display: flex;
+    flex-direction: column;
+    overflow-y: overlay;
+    padding: 0;
+    .shop-map {
+      display: flex;
+      flex-direction: column;
+      border-radius: 0.5rem;
+      border: 1px solid var(--gray-alpha-300);
+      .map-image-wrapper {
+        flex: 2;
+        object-fit: cover;
+        overflow: hidden;
+        object-fit: contain;
+        display: flex;
+        position: relative;
+        border-bottom: 1px solid var(--gray-alpha-300);
+        img {
+          width: 100%;
+          height: 100%;
+        }
+        .link-btn {
+          z-index: 10;
+          position: absolute;
+          top: 1rem;
+          right: 1rem;
+          font-size: 0.875rem;
+          color: var(--background);
+          background-color: var(--foreground);
+          border-radius: 0.5rem;
+          padding: 0.25rem 0.75rem;
+        }
+      }
+      .map-info-wrapper {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        .map-info-item {
+          flex: 1;
+          display: flex;
+          align-items: flex-start;
+          gap: 1rem;
+          padding: 1rem;
+          &:not(:last-child) {
+            border-bottom: 1px solid var(--gray-alpha-300);
+          }
+          .item-icon {
+            color: var(--icon-color);
+          }
+          .item-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 0.25rem;
+            p {
+              white-space: break-spaces;
+              margin-left: 0.5rem;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 .food-info-dialog {
   .title-wrapper {
     display: flex;
@@ -1955,17 +2046,16 @@ table {
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  padding-bottom: 2rem;
-  .shop-header {
+  .shop-header-wrapper {
     background-color: var(--accent-color);
-    .shop-profile {
+    .shop-header {
       display: flex;
       flex-direction: row;
       justify-content: space-between;
       align-items: center;
       .profile-img {
         border-radius: 50%;
-        border: 4px solid white;
+        border: 5px solid white;
         margin-bottom: -4rem;
       }
       .shop-action-wrapper {
@@ -1987,15 +2077,12 @@ table {
           font-size: 1.5rem;
           line-height: 1;
           font-weight: bold;
-          .shop-location {
-            font-size: 1rem;
-            font-weight: normal;
-            color: var(--gray-alpha-500);
-            &:before {
-              content: '/';
-              margin: 0 0.25rem;
-            }
-          }
+        }
+        .shop-location {
+          font-size: 1rem;
+          font-weight: normal;
+          color: var(--gray-alpha-500);
+          margin-top: 0.25rem;
         }
       }
       .shop-rating {
@@ -2012,30 +2099,23 @@ table {
       font-size: 1rem;
       font-weight: normal;
       margin-top: 1rem;
-      margin-bottom: 2rem;
     }
     .shop-item-search {
       display: flex;
       justify-content: flex-end;
       align-items: center;
-      margin: 1rem 0;
+      margin-top: 3rem;
+      margin-bottom: 1rem;
     }
     .shop-item {
       display: flex;
       flex-direction: column;
       min-height: 400px;
-      .shop-item-header {
-        display: flex;
-        align-items: center;
-        margin-bottom: 1rem;
-        .count {
-          font-weight: bold;
-        }
-      }
       .shop-item-body {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 1rem;
+        padding: 1.5rem 0.125rem;
         &.no-items {
           flex: 1;
           display: flex;
@@ -2050,14 +2130,19 @@ table {
   }
   .shop-review  {
     width: 100%;
+    padding: 0 1rem;
     .shop-review-content {
       display: flex;
       justify-content: space-between;
       width: 100%;
       gap: 2rem;
       .review-summary {
+        z-index: 1;
         flex: 1;
         max-width: 35%;
+        height: fit-content;
+        background-color: var(--background);
+        padding: 1rem 0;
         .total-rating {
           display: flex;
           align-items: center;
@@ -2102,6 +2187,7 @@ table {
         display: flex;
         flex-direction: column;
         max-width: 65%;
+        padding: 1rem 0;
         .no-review {
           flex: 1;
           display: flex;
@@ -2178,13 +2264,15 @@ table {
   .shop-guide {
     display: flex;
     align-items: stretch;
+    padding: 3rem 0rem;
+    background-color: var(--gray-alpha-200);
     .guide-list {
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
-      margin-bottom: 2rem;
+      width: 100%;
       .title {
-        font-size: 1rem;
+        font-size: 1.25rem;
         font-weight: bold;
         margin-bottom: 0.5rem;
       }
@@ -2194,6 +2282,7 @@ table {
         gap: 1rem;
         padding: 1.5rem 1rem;
         border: 1px solid var(--gray-alpha-300);
+        background-color: var(--background);
         border-radius: 0.5rem;
         .guide-item-title {
           flex: 1;
@@ -2383,6 +2472,16 @@ table {
       .link-list-item {
         &:nth-last-child(-n+2) {
           border-bottom: none;
+        }
+      }
+    }
+  }
+  .shop {
+    .shop-review  {
+      .shop-review-content {
+        .review-summary {
+          position: sticky;
+          top: calc(var(--header-height) - 1px);
         }
       }
     }
