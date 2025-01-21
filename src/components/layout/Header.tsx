@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import Image from "@/components/Image";
 import SearchInput from "@/components/input/SearchInput";
 import CartDialog from "@/components/CartDialog";
 import MiniButton from "@/components/button/MiniButton";
@@ -236,7 +236,6 @@ export default function Header() {
             onKeyDown={() => router.replace(`/search/map?q=${searchValue}`)}
           />
           <IconButton
-            edge="start"
             color="inherit"
             aria-label="menu"
             className="menu-btn"

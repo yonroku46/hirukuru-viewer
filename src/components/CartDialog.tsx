@@ -3,11 +3,13 @@
 import React, { forwardRef, Fragment, useEffect, useState } from "react";
 import { AppDispatch, useAppDispatch, useAppSelector } from "@/store";
 import { setCartState } from "@/store/slice/cartSlice";
-import Image from "next/image";
+import Image from "@/components/Image";
 import { useMediaQuery } from "react-responsive";
 import { currency, optionsToString } from "@/common/utils/StringUtils";
 import QuantityButton from "@/components/button/QuantityButton";
 import MiniButton from "@/components/button/MiniButton";
+import { enqueueSnackbar } from "notistack";
+import { Payments, payments } from '@square/web-sdk';
 
 import { TransitionProps } from "@mui/material/transitions";
 import Button from "@mui/material/Button";
@@ -22,7 +24,14 @@ import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import DeleteSweepOutlinedIcon from "@mui/icons-material/DeleteSweepOutlined";
+import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import IconButton from "@mui/material/IconButton";
+import CreditCardIcon from '@mui/icons-material/CreditCard';
+import AppleIcon from '@mui/icons-material/Apple';
+import GoogleIcon from '@mui/icons-material/Google';
+import CurrencyYenIcon from '@mui/icons-material/CurrencyYen';
+import NoticeBoard from "./NoticeBoard";
+import Link from "next/link";
 
 const dummyUserId = "001";
 const cartKey = `cart_${dummyUserId}`;
@@ -75,10 +84,54 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
 
   const [deleteMode, setDeleteMode] = useState<boolean>(false);
   const [cartItems, setCartItems] = useState<Food[]>([]);
+  const [paymentStep, setPaymentStep] = useState<'ready' | 'payment' | 'done'>('ready');
+  const [payType, setPayType] = useState<PayType['type']>('card');
+  const [squarePayments, setSquarePayments] = useState<Payments | null>(null);
+
+  const stepTitle = {
+    ready: '注文リスト',
+    payment: 'お支払い',
+    done: '注文完了'
+  };
+  const stepStatus = {
+    ready: `${currency(cartItems.length)}項目`,
+    payment: 'お支払い方法を選択',
+  };
+  const paymentMethods = [
+    { type: 'cash', icon: <CurrencyYenIcon fontSize="large" />, label: '現地払い', content:
+      <NoticeBoard simple title="注意事項" contents={["受け取りの際には必ず「会員証のご提示」をお願い致します。", "注文後、お客様の事情によるキャンセルにつきましては「ペナルティ」が発生しますのでご注意ください。"]} />
+    },
+    { type: 'card', icon: <CreditCardIcon fontSize="large" />, label: 'カード決済', content:
+      <div id="card-container" />
+    },
+    { type: 'apple', icon: <AppleIcon fontSize="large" />, label: 'Apple Pay' },
+    { type: 'google', icon: <GoogleIcon fontSize="large" />, label: 'Google Pay'  },
+  ];
+
+  useEffect(() => {
+    const loadSquarePayments = async () => {
+      const paymentsInstance = await payments(
+        process.env.NEXT_PUBLIC_SQUARE_SANDBOX_ID || '',
+        process.env.NEXT_PUBLIC_SQUARE_SANDBOX_LOCATION_ID || ''
+      );
+      if (!paymentsInstance) {
+        console.error('Square Payments SDK failed to load');
+        return;
+      }
+      await paymentsInstance.setLocale('ja-JP');
+      setSquarePayments(paymentsInstance);
+    }
+    loadSquarePayments();
+    return () => {
+      setSquarePayments(null);
+    }
+  }, []);
 
   useEffect(() => {
     if (open) {
       setDeleteMode(false);
+      setPaymentStep('ready');
+      setPayType('card');
     }
   }, [open]);
 
@@ -109,6 +162,55 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
 
     localStorage.setItem(cartKey, JSON.stringify(updatedCartItems));
     dispatch(setCartState({ cartItems: updatedCartItems }));
+  };
+
+  const handlePayment = async () => {
+    if (cartItems.length > 0 && totalPrice > 0) {
+      if (!squarePayments) {
+        enqueueSnackbar('Squareがロードされていません', { variant: 'error' });
+        return;
+      }
+      if (paymentStep === 'ready') {
+        // お支払い情報選択
+        try {
+          setPaymentStep('payment');
+          const card = await squarePayments.card();
+          const cardContainer = document.querySelector('#card-container');
+          if (cardContainer && cardContainer.children.length === 0) {
+            await card.attach('#card-container');
+          }
+        } catch (error) {
+          console.error('Payment request error:', error);
+        }
+      } else if (paymentStep === 'payment') {
+        // 決済実行
+        try {
+          const card = await squarePayments.card();
+          await handleTokenizeCard(card);
+          setPaymentStep('done');
+        } catch (error) {
+          console.error('Tokenization error:', error);
+        }
+      } else if (paymentStep === 'done') {
+        // 注文完了
+        setOpen(false);
+      }
+    } else {
+      enqueueSnackbar('不正なリクエストです', { variant: 'error' });
+    }
+  };
+
+  const handleTokenizeCard = async (card: any) => {
+    try {
+      const paymentResult = await card.tokenize();
+      if (paymentResult.status === 'OK') {
+        console.log('Payment success:', paymentResult.token);
+      } else {
+        console.error('Payment failed:', paymentResult.errors);
+      }
+    } catch (error) {
+      console.error('Tokenization error:', error);
+    }
   };
 
   const totalPrice = cartItems.reduce((total, item) => {
@@ -146,86 +248,162 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
         onClose={handleOpen(false)}
       >
         <DialogTitle className="cart-title">
-          <DeleteSweepOutlinedIcon className={`delete-icon ${cartItems.length > 0 ? "active" : ""}`} onClick={() => setDeleteMode(!deleteMode)} />
-          {`注文リスト`}
-          <CloseIcon className="close-icon" onClick={handleOpen(false)} />
+          {paymentStep === 'ready' &&
+            <DeleteSweepOutlinedIcon
+              className={`delete-icon ${cartItems.length > 0 ? "active" : ""}`}
+              onClick={() => setDeleteMode(!deleteMode)}
+            />
+          }
+          {paymentStep !== 'ready' &&
+            <ArrowBackRoundedIcon
+              className={`back-icon active ${paymentStep === 'done' ? "disabled" : ""}`}
+              onClick={() => setPaymentStep('ready')}
+            />
+          }
+          {stepTitle[paymentStep]}
+          <CloseIcon
+            className="close-icon"
+            onClick={handleOpen(false)}
+          />
         </DialogTitle>
         <DialogContent className="content">
-          <div className="cart-items-count">
-            {`${currency(cartItems.length)}項目`}
-          </div>
-          {cartItems.length > 0 ?
-            cartItems.map((item, index) =>
-              <div key={index} className="cart-item">
-                <div className="cart-item-wrapper">
-                  <div className="cart-item-img">
-                    <Image className={deleteMode ? "delete-mode" : ""} src={item.image} alt={item.name} width={60} height={60} />
-                    {deleteMode &&
-                      <IconButton className="delete-icon" onClick={() => handleDeleteItem(item.foodId, item.options || [])}>
-                        <DeleteOutlineOutlinedIcon />
-                      </IconButton>
-                    }
-                    <div className="cart-item-info">
-                      <div className="cart-item-name">
-                        {item.name}
-                        {item.discountPrice && item.discountPrice < item.price &&
-                          <div className="sale-tag">
-                            {`${Math.round((1 - item.discountPrice / item.price) * 100)}% OFF`}
+          {paymentStep !== 'done' &&
+            <div className="cart-status">
+              {stepStatus[paymentStep]}
+            </div>
+          }
+          {/* Ready Step */}
+          <div className={`content-step ready ${paymentStep === 'ready' ? "active" : ""}`}>
+            {cartItems.length > 0 ?
+              cartItems.map((item, index) =>
+                <div key={index} className="cart-item">
+                  <div className="cart-item-wrapper">
+                    <div className="cart-item-img">
+                      <Image className={deleteMode ? "delete-mode" : ""} src={item.image} alt={item.name} width={60} height={60} />
+                      {deleteMode &&
+                        <IconButton className="delete-icon" onClick={() => handleDeleteItem(item.foodId, item.options || [])}>
+                          <DeleteOutlineOutlinedIcon />
+                        </IconButton>
+                      }
+                      <div className="cart-item-info">
+                        <div className="cart-item-name">
+                          {item.name}
+                          {item.discountPrice && item.discountPrice < item.price &&
+                            <div className="sale-tag">
+                              {`${Math.round((1 - item.discountPrice / item.price) * 100)}% OFF`}
+                            </div>
+                          }
+                        </div>
+                        {item.discountPrice && item.discountPrice < item.price ?
+                          <div className="price">
+                            <p className="current-price on-sale">
+                              {currency(item.discountPrice)}
+                              <span className="unit">円</span>
+                            </p>
+                            <p className="origin-price">
+                              {currency(item.price)}
+                              <span className="unit">円</span>
+                            </p>
+                          </div>
+                          :
+                          <div className="price">
+                            <p className="current-price">
+                              {currency(item.price)}
+                              <span className="unit">円</span>
+                            </p>
                           </div>
                         }
-                      </div>
-                      {item.discountPrice && item.discountPrice < item.price ?
-                        <div className="price">
-                          <p className="current-price on-sale">
-                            {currency(item.discountPrice)}
-                            <span className="unit">円</span>
-                          </p>
-                          <p className="origin-price">
-                            {currency(item.price)}
-                            <span className="unit">円</span>
-                          </p>
+                        <div className="options">
+                          {optionsToString(item.options || [])}
                         </div>
-                        :
-                        <div className="price">
-                          <p className="current-price">
-                            {currency(item.price)}
-                            <span className="unit">円</span>
-                          </p>
-                        </div>
-                      }
-                      <div className="options">
-                        {optionsToString(item.options || [])}
                       </div>
                     </div>
+                    <QuantityButton
+                      disabled={deleteMode}
+                      quantity={item.quantity || 0}
+                      handleMinus={() => handleQuantity(item.foodId, item.quantity ? item.quantity - 1 : 0, item.options || [])}
+                      handlePlus={() => handleQuantity(item.foodId, item.quantity ? item.quantity + 1 : 1, item.options || [])}
+                    />
                   </div>
-                  <QuantityButton
-                    disabled={deleteMode}
-                    quantity={item.quantity || 0}
-                    handleMinus={() => handleQuantity(item.foodId, item.quantity ? item.quantity - 1 : 0, item.options || [])}
-                    handlePlus={() => handleQuantity(item.foodId, item.quantity ? item.quantity + 1 : 1, item.options || [])}
-                  />
+                  <div className="cart-item-total-price">
+                    {currency(
+                      ((item.discountPrice ? item.discountPrice : item.price) * (item.quantity || 1)) +
+                      (item.options?.reduce((optTotal, option) => optTotal + (option.price || 0) * (item.quantity || 1), 0) || 0),
+                      "円"
+                    )}
+                  </div>
                 </div>
-                <div className="cart-item-total-price">
-                  {currency(
-                    ((item.discountPrice ? item.discountPrice : item.price) * (item.quantity || 1)) +
-                    (item.options?.reduce((optTotal, option) => optTotal + (option.price || 0) * (item.quantity || 1), 0) || 0),
-                    "円"
-                  )}
+              ) : (
+                <div className="content empty">
+                  <ProductionQuantityLimitsIcon fontSize="large" />
+                  <p>まだ何も入っていません</p>
                 </div>
+              )
+            }
+          </div>
+          {/* Payment Step */}
+          <div className={`content-step payment ${paymentStep === 'payment' ? "active" : ""} ${paymentStep === 'done' ? "completed" : ""}`}>
+            {paymentMethods.map((method, index) => (
+              <div
+                key={index}
+                className={`payment-method-wrapper ${payType === method.type ? "active" : ""}`}
+                onClick={() => setPayType(method.type as PayType['type'])}
+              >
+                <div className="payment-method">
+                  {method.icon}
+                  {method.label}
+                </div>
+                {method.content &&
+                  <div className="payment-method-content">
+                    {method.content}
+                  </div>
+                }
               </div>
-            ) : (
-              <div className="content empty">
-                <ProductionQuantityLimitsIcon fontSize="large" />
-                <p>まだ何も入っていません</p>
-              </div>
-            )
-          }
+            ))}
+          </div>
+          {/* Done Step */}
+          <div className={`content-step done ${paymentStep === 'done' ? "active" : ""}`}>
+            <div className="done-wrapper">
+              <Image
+                src="/assets/img/done.png"
+                alt="注文完了"
+                width={280}
+                height={280}
+              />
+              <h2 className="done-title">注文完了</h2>
+              <p className="done-description">
+                {`ご注文ありがとうございます！\n注文状況は下記の注文番号をクリックするとご確認できます。`}
+              </p>
+              <Link href="/my/order" className="done-order-number" onClick={handleOpen(false)}>
+                注文番号：{Math.floor(Math.random() * 100000)}
+              </Link>
+            </div>
+          </div>
         </DialogContent>
         <DialogActions className="cart-actions">
-          <Button className={`order-btn ${!deleteMode && cartItems.length !== 0 ? "active" : ""}`} variant="contained" color="primary">
-            合計
-            <span className="total-price">{currency(totalPrice, "円")}</span>
-            注文する
+          <Button
+            variant="contained"
+            className={`order-btn ${!deleteMode && cartItems.length !== 0 ? "active" : ""}`}
+            onClick={handlePayment}
+          >
+            {paymentStep === 'ready' &&
+              <div>
+                合計
+                <span className="total-price">{currency(totalPrice, "円")}</span>
+                注文する
+              </div>
+            }
+            {paymentStep === 'payment' &&
+              <div>
+                <span className="total-price">{currency(totalPrice, "円")}</span>
+                お支払い
+              </div>
+            }
+            {paymentStep === 'done' &&
+              <div>
+                閉じる
+              </div>
+            }
           </Button>
         </DialogActions>
       </Dialog>

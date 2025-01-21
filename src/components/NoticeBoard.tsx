@@ -1,11 +1,12 @@
 interface NoticeBoardProps {
   title: string;
   contents: string[];
+  simple?: boolean;
 }
 
-export default function NoticeBoard({ title, contents }: NoticeBoardProps) {
+export default function NoticeBoard({ title, contents, simple }: NoticeBoardProps) {
   return (
-    <div className="notice-board">
+    <div className={`notice-board ${simple ? 'simple' : ''}`}>
       <h2 className="title">
         {title}
       </h2>

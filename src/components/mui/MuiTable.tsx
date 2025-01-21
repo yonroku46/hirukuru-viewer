@@ -3,7 +3,7 @@
 import React, { Fragment, useState } from 'react';
 import { useMediaQuery } from "react-responsive";
 import Image from "@/components/Image";
-import { currency, optionsToString, orderStatusDict } from '@/common/utils/StringUtils';
+import { currency, optionsToString, orderStatusDict, payTypeDict } from '@/common/utils/StringUtils';
 
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
@@ -86,6 +86,13 @@ export default function MuiTable<T extends Row>({ topSection, columns, rows }: M
                       width: '100px',
                     }}
                   />
+                );
+                break;
+              case 'payType':
+                dpValue = (
+                  <div>
+                    {payTypeDict(value as PayType['type'], 'label')}
+                  </div>
                 );
                 break;
               case 'list':

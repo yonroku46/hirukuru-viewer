@@ -21,7 +21,7 @@ declare global {
   interface Column<T> {
     key: keyof T;
     label: string;
-    type: 'text' | 'textarea' | 'number' | 'list' | 'select' | 'switch' | 'time' | 'date' | 'image' | 'status' | 'rating' | 'options';
+    type: 'text' | 'textarea' | 'number' | 'list' | 'select' | 'switch' | 'time' | 'date' | 'image' | 'status' | 'rating' | 'options' | 'payType';
     typeUnit?: string;
     width?: number;
     minWidth?: number;
@@ -139,6 +139,7 @@ declare global {
     shopId: string;
     status: string;
     shopName: string;
+    payType: PayType['type'];
     totalPrice: number;
     pickupTime: string;
     orderTime: string;
@@ -152,6 +153,9 @@ declare global {
     price: number;
     quantity: number;
     totalPrice: number;
+  }
+  interface PayType {
+    type: 'cash' | 'card' | 'apple' | 'google';
   }
   interface Food {
     foodId: string;

@@ -89,6 +89,16 @@ export function orderStatusDict(orderStatusType: OrderStatus['type'], key: 'labe
   return orderStatus.find((s) => s.key === orderStatusType)?.[key] || '';
 }
 
+export function payTypeDict(payTypeType: PayType['type'], key: 'label'): string {
+  const payType = [
+    { key: "cash", label: "現金" },
+    { key: "card", label: "カード" },
+    { key: "apple", label: "Apple Pay" },
+    { key: "google", label: "Google Pay" },
+  ];
+  return payType.find((s) => s.key === payTypeType)?.[key] || '';
+}
+
 export function calculateAge(birthday: string): number {
   // 誕生日をDateオブジェクトに変換
   const birthDate = new Date(birthday);

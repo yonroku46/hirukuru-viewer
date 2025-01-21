@@ -3,10 +3,10 @@
 import { useState, useEffect, useCallback } from "react";
 import { GoogleMap, LoadScript, Marker, InfoWindow } from "@react-google-maps/api";
 import Link from "next/link";
-import Image from "next/image";
 import { useMediaQuery } from "react-responsive";
 import { enqueueSnackbar } from "notistack";
 import Loading from "@/app/loading";
+import Image from "@/components/Image";
 import { formatRating } from "@/common/utils/StringUtils";
 import ShopCard from "@/components/ShopCard";
 import Selector from "@/components/input/Selector";
@@ -342,6 +342,9 @@ export default function SearchMapPage() {
                     onClick={() => {
                       setActiveMarker(place.placeId);
                       setLastSelectedPosition(place.position);
+                    }}
+                    onMouseOver={() => {
+                      setActiveMarker(place.placeId);
                     }}
                   >
                     {activeMarker === place.placeId && shop && (

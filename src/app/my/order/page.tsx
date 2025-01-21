@@ -37,6 +37,7 @@ export default function MyOrderPage() {
     { key: 'status', type: 'status', label: '状況', width: 140, align: 'center' },
     { key: 'shopId', type: 'text', label: '店舗ID', hide: true },
     { key: 'shopName', type: 'text', label: '店舗名', minWidth: 100, maxWidth: 200 },
+    { key: 'payType', type: 'payType', label: '支払方法', minWidth: 100, maxWidth: 100, align: 'right' },
     { key: 'totalPrice', type: 'number', typeUnit: '円', label: '合計金額', minWidth: 100, align: 'right' },
     { key: 'pickupTime', type: 'time', label: '受取日時', minWidth: 100, maxWidth: 100, align: 'right' },
     { key: 'orderTime', type: 'time', label: '注文日時', minWidth: 100, maxWidth: 100, align: 'right' },
@@ -48,12 +49,13 @@ export default function MyOrderPage() {
     userId: string,
     shopId: string,
     shopName: string,
+    payType: string,
     totalPrice: number,
     pickupTime: string,
     orderTime: string,
     orderDetail: OrderDetail[],
   ): Order {
-    return { id: orderId, status, orderId, userId, shopId, shopName, totalPrice, pickupTime, orderTime, orderDetail };
+    return { id: orderId, status, orderId, userId, shopId, shopName, payType: payType as PayType['type'], totalPrice, pickupTime, orderTime, orderDetail };
   }
 
   const [user, setUser] = useState<User | null>(null);
@@ -73,7 +75,7 @@ export default function MyOrderPage() {
       shopOwner: false,
     }
     const dummyRows: Order[] = [
-      createData('O101', 'booked', 'U101', 'S101', 'テスト店舗', 2500, '2025-01-01 20:07', '2025-01-01 20:07', [
+      createData('O101', 'booked', 'U101', 'S101', 'テスト店舗', 'cash', 2500, '2025-01-01 20:07', '2025-01-01 20:07', [
         { orderId: 'O101', foodId: 'F101', name: '唐揚げ弁当', price: 500, quantity: 1, totalPrice: 900, options: [
           { optionId: 'O101', foodId: 'F101', shopId: 'S101', name: 'コーラ', price: 100 },
           { optionId: 'O102', foodId: 'F101', shopId: 'S101', name: 'メガ盛り', price: 300 },
@@ -82,12 +84,12 @@ export default function MyOrderPage() {
           { optionId: 'O103', foodId: 'F102', shopId: 'S101', name: '特盛り', price: 1000 },
         ] },
       ]),
-      createData('O102', 'pickup', 'U101', 'S101', 'テスト店舗', 500, '2025-01-01 20:10', '2025-01-02 20:10', [
+      createData('O102', 'pickup', 'U101', 'S101', 'テスト店舗', 'card', 500, '2025-01-01 20:10', '2025-01-02 20:10', [
         { orderId: 'O102', foodId: 'F102', name: 'チキン南蛮弁当', price: 500, quantity: 1, totalPrice: 500 },
       ]),
-      createData('O103', 'done', 'U101', 'S101', 'テスト店舗', 1000, '2025-01-15 20:10', '2025-01-15 20:10', []),
-      createData('O104', 'review', 'U101', 'S101', 'テスト店舗', 1000, '2025-01-15 20:10', '2025-01-14 20:10', []),
-      createData('O105', 'cancel', 'U101', 'S101', 'テスト店舗', 1000, '', '2025-02-01 20:10', []),
+      createData('O103', 'done', 'U101', 'S101', 'テスト店舗', 'google', 1000, '2025-01-15 20:10', '2025-01-15 20:10', []),
+      createData('O104', 'review', 'U101', 'S101', 'テスト店舗', 'apple', 1000, '2025-01-15 20:10', '2025-01-14 20:10', []),
+      createData('O105', 'cancel', 'U101', 'S101', 'テスト店舗', 'cash', 1000, '', '2025-02-01 20:10', []),
     ];
     setUser(dummyUser);
     setRows(dummyRows);
