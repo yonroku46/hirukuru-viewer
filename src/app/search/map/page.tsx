@@ -223,13 +223,15 @@ export default function SearchMapPage() {
   }, []);
 
   useEffect(() => {
-    if (isMapVisible) {
+    if (isSp && isMapVisible) {
       window.scrollTo({
         top: 0,
-        behavior: 'smooth'
       });
+      document.body.style.overflowY = 'hidden';
+    } else {
+      document.body.style.overflowY = '';
     }
-  }, [isMapVisible]);
+  }, [isSp, isMapVisible]);
 
   return (
     <div className="search-map-page">

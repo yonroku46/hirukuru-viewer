@@ -38,9 +38,9 @@ const menuItems: GroupMenuItem[] = [
     { name: "マイページ", href: "/my", icon: <PersonOutlineIcon /> },
     { name: "注文管理", href: "/my/order", icon: <ShoppingBasketOutlinedIcon /> },
   ]},
-  { groupName: "注文", groupHref: "/shop", groupItems: [
-    { name: "弁当/店舗検索", href: "/shop/search", icon: <SearchIcon /> },
-    { name: "ランキング", href: "/shop/ranking", icon: <TrendingUpIcon /> },
+  { groupName: "注文", groupHref: "/search", groupItems: [
+    { name: "弁当/店舗検索", href: "/search/map", icon: <SearchIcon /> },
+    { name: "ランキング", href: "/search/ranking", icon: <TrendingUpIcon /> },
   ]},
   { groupName: "サービス", groupHref: "/service", groupItems: [
     { name: "お問い合わせ", href: "/service/contact", icon: <SupportAgentIcon /> },

@@ -6,9 +6,9 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import FacebookIcon from '@mui/icons-material/Facebook';
 
 const menuItems: GroupMenuItem[] = [
-  { groupName: "注文", groupHref: "/shop", groupItems: [
-    { name: "弁当/店舗検索", href: "/shop/search" },
-    { name: "ランキング", href: "/shop/ranking" },
+  { groupName: "注文", groupHref: "/search", groupItems: [
+    { name: "弁当/店舗検索", href: "/search/map" },
+    { name: "ランキング", href: "/search/ranking" },
   ]},
   { groupName: "サービス", groupHref: "/service", groupItems: [
     { name: "お問い合わせ", href: "/service/contact" },

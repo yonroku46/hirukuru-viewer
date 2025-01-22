@@ -47,7 +47,7 @@ export default function SearchInput({ value, placeholder, searchMode, autoFocus,
   };
 
   const handleIconClick = (): void => {
-    if (onKeyDown) {
+    if (onKeyDown && value !== "") {
       onKeyDown({ key: "Enter" } as React.KeyboardEvent<HTMLInputElement>);
     }
   };
