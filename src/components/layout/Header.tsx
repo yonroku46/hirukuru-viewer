@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Image from "@/components/Image";
 import SearchInput from "@/components/input/SearchInput";
 import CartDialog from "@/components/CartDialog";
@@ -51,6 +51,9 @@ const menuItems: GroupMenuItem[] = [
 
 export default function Header() {
   const currentPath: string = usePathname();
+  const searchParams = useSearchParams();
+  const q = searchParams.get('q');
+
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const [noticeOpen, setNoticeOpen] = useState<boolean>(false);
   const [cartOpen, setCartOpen] = useState<boolean>(false);
@@ -67,6 +70,29 @@ export default function Header() {
   const loginHandle = () => () => {
     setMenuOpen(false);
     router.push('/login');
+  };
+
+  const searchHandle = () => {
+    if (searchValue !== "") {
+      const history = localStorage.getItem("search-history");
+      const searchHistory: string[] = history ? JSON.parse(history) : [];
+
+      // 検索履歴に同じ値がある場合は処理しない
+      if (searchHistory.includes(searchValue)) return;
+      // 履歴が10個を超える場合は最も古い項目を削除
+      if (searchHistory.length >= 10) {
+        searchHistory.shift();
+      }
+      // 検索履歴に新しい値を追加
+      searchHistory.push(searchValue);
+      localStorage.setItem("search-history", JSON.stringify(searchHistory));
+      // 検索ページに移動、検索パラメータを更新(検索ページでは戻るボタン対応のためreplaceを使用)
+      if (currentPath.startsWith("/search/map")) {
+        router.replace(`/search/map?q=${searchValue}`);
+      } else {
+        router.push(`/search/map?q=${searchValue}`);
+      }
+    }
   };
 
   const handleScroll = () => {
@@ -131,10 +157,6 @@ export default function Header() {
     if (!currentPath.startsWith('/login')) {
       sessionStorage.setItem('redirect', currentPath);
     }
-    // 検索ページ以外は検索バーをクリア
-    if (!currentPath.startsWith('/search')) {
-      setSearchValue("");
-    }
     // 移動時メニューバーを閉じてスクロール位置をトップに戻す
     setMenuOpen(false);
     window.scrollTo(0, 0);
@@ -145,6 +167,15 @@ export default function Header() {
       }
     };
   }, [currentPath]);
+
+  useEffect(() => {
+    // 検索ページ以外は検索バーをクリア
+    if (currentPath.startsWith('/search')) {
+      setSearchValue(q || "");
+    } else {
+      setSearchValue("");
+    }
+  }, [currentPath, q]);
 
   return (
     <header className={`${isTop ? "top" : ""}`}>
@@ -233,7 +264,7 @@ export default function Header() {
             autoFocus={currentPath.startsWith("/search")}
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
-            onKeyDown={() => router.replace(`/search/map?q=${searchValue}`)}
+            onKeyDown={searchHandle}
           />
           <IconButton
             color="inherit"

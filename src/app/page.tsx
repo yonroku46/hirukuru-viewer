@@ -59,6 +59,9 @@ export default function Home() {
     <article className="home">
       <section className="container home-top">
         <div className="home-wrapper">
+          <div className="service-contents">
+            <EventSlider events={events} />
+          </div>
           <div className="user-contents">
             {hasLogin ?
               <div className="user-dashboard">
@@ -85,9 +88,6 @@ export default function Home() {
                 </Button>
               </div>
             }
-          </div>
-          <div className="service-contents">
-            <EventSlider events={events} />
           </div>
         </div>
       </section>

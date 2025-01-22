@@ -92,6 +92,10 @@ declare global {
     image: string;
     href?: string;
   }
+  interface HotKeywords {
+    label: string;
+    status?: 'up' | 'down';
+  }
   interface Place {
     placeId: string;
     shopId?: string;

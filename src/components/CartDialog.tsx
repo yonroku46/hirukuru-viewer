@@ -34,7 +34,7 @@ import NoticeBoard from "./NoticeBoard";
 import Link from "next/link";
 
 const dummyUserId = "001";
-const cartKey = `cart_${dummyUserId}`;
+const cartKey = `cart-${dummyUserId}`;
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {

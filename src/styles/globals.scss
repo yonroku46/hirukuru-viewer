@@ -15,6 +15,8 @@
   --dialog-color: #2c2c2c;
   --badge-color: #ff5959;
   --notice-color: #0381FE;
+  --red-color: #ff2643;
+  --blue-color: #0381FE;
   --box-shadow: hsla(210, 8%, 62%, .2) 0px 8px 24px;
   --gray-rgb: 0, 0, 0;
   --gray-alpha-500: rgba(var(--gray-rgb), 0.40);
@@ -869,6 +871,114 @@ table {
     font-size: 0.875rem;
     margin-top: 2rem;
     opacity: 0.6;
+  }
+}
+
+.search-page {
+  gap: 2rem;
+  .history-wrapper {
+    width: 100%;
+    .title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+      .delete-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        font-size: 0.875rem;
+        opacity: 0.8;
+        &.disabled {
+          opacity: 0.4;
+          pointer-events: none;
+        }
+      }
+    }
+    .history-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      width: 100%;
+    }
+    .history-label {
+      padding: 0 1rem;
+      font-size: 1rem;
+      opacity: 0.7;
+    }
+    .no-history {
+      color: var(--gray-alpha-500);
+      background-color: var(--gray-alpha-200);
+      padding: 2.5rem 1rem;
+      border-radius: 0.5rem;
+      width: 100%;
+      text-align: center;
+    }
+  }
+  .suggested-wrapper {
+    width: 100%;
+    .title {
+      font-size: 1.25rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+    .suggested-list {
+      display: flex;
+      width: 100%;
+      gap: 2rem;
+      .left-column, .right-column {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        .suggested-item {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 1rem;
+          padding: 0.5rem;
+          border-radius: 0.5rem;
+          font-size: 1rem;
+          cursor: pointer;
+          transition: background-color 0.2s;
+          &:hover {
+            background-color: var(--gray-alpha-200);
+          }
+          .item-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            p {
+              display: -webkit-box;
+              -webkit-line-clamp: 1;
+              -webkit-box-orient: vertical;
+              overflow-wrap: break-word;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+            .rank {
+              font-size: 1.125rem;
+              font-weight: bold;
+              width: 1.25rem;
+              text-align: right;
+            }
+          }
+          .status-icon {
+            display: flex;
+            color: var(--icon-color);
+            opacity: 0.7;
+            &.up {
+              color: var(--red-color);
+            }
+            &.down {
+              transform: rotate(180deg);
+              color: var(--blue-color);
+            }
+          }
+        }
+      }
+    }
   }
 }
 

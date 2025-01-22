@@ -29,7 +29,7 @@ export default function LoginPage() {
           </button>
         </div>
         <p className="caution">
-          ログイン情報はPCに自動で保存されます
+          ログイン情報は自動で保存されます
         </p>
       </div>
     </article>
