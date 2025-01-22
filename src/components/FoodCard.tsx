@@ -6,7 +6,6 @@ import Image from "@/components/Image";
 
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import IconButton from '@mui/material/IconButton';
-import OutletIcon from '@mui/icons-material/Outlet';
 
 interface FoodCardProps {
   data: Food;
@@ -45,7 +44,6 @@ export default function FoodCard({ data, onClick, onHover, href, openNewTab, sol
         }
         {soldOut &&
           <div className="sold-out-tag">
-            <OutletIcon />
             在庫切れ
           </div>
         }

@@ -14,7 +14,7 @@ import ManageSearchOutlinedIcon from '@mui/icons-material/ManageSearchOutlined';
 import CloseIcon from "@mui/icons-material/Close";
 import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
-import MessageOutlinedIcon from '@mui/icons-material/MessageOutlined';
+import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
 
 interface ShopInfoDialogProps {
   data: Shop | null;
@@ -86,7 +86,7 @@ export default function ShopInfoDialog({ data, position, open, setOpen }: ShopIn
                 </div>
               </div>
               <div className="map-info-item">
-                <MessageOutlinedIcon className="item-icon" />
+                <StorefrontOutlinedIcon className="item-icon" />
                 <div className="item-content">
                   {data.description}
                 </div>

@@ -222,6 +222,15 @@ export default function SearchMapPage() {
     );
   }, []);
 
+  useEffect(() => {
+    if (isMapVisible) {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+  }, [isMapVisible]);
+
   return (
     <div className="search-map-page">
       <div className="content-header">
@@ -258,6 +267,7 @@ export default function SearchMapPage() {
               </div>
               {isSp && !isMapVisible && (
                 <MiniButton
+                  className="sp-map-btn"
                   icon={<MapOutlinedIcon />}
                   onClick={toggleMapVisibility}
                 />
@@ -302,7 +312,7 @@ export default function SearchMapPage() {
           </button>
           {isSp && isMapVisible && (
             <MiniButton
-              className="list-btn"
+              className="sp-list-btn"
               icon={<ListOutlinedIcon />}
               onClick={toggleMapVisibility}
             />

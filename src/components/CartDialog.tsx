@@ -69,6 +69,7 @@ export const addToCart = (dispatch: AppDispatch, item: Food, quantity?: number, 
   // ローカルストレージとストアに反映
   localStorage.setItem(cartKey, JSON.stringify(newCartItems));
   dispatch(setCartState({ cartItems: newCartItems }));
+  enqueueSnackbar("カートに追加しました", { variant: 'success' });
   return newCartItems;
 }
 
@@ -98,7 +99,7 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
     payment: 'お支払い方法を選択',
   };
   const paymentMethods = [
-    { type: 'cash', icon: <CurrencyYenIcon fontSize="large" />, label: '現地払い', content:
+    { type: 'cash', icon: <CurrencyYenIcon fontSize="large" />, label: '現金（現地払い）', content:
       <NoticeBoard simple title="注意事項" contents={["受け取りの際には必ず「会員証のご提示」をお願い致します。", "注文後、お客様の事情によるキャンセルにつきましては「ペナルティ」が発生しますのでご注意ください。"]} />
     },
     { type: 'card', icon: <CreditCardIcon fontSize="large" />, label: 'カード決済', content:
@@ -395,8 +396,16 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
             }
             {paymentStep === 'payment' &&
               <div>
-                <span className="total-price">{currency(totalPrice, "円")}</span>
-                お支払い
+                {payType === 'cash' ?
+                  <div>
+                    注文確定
+                  </div>
+                  :
+                  <div>
+                    <span className="total-price">{currency(totalPrice, "円")}</span>
+                    お支払い
+                  </div>
+                }
               </div>
             }
             {paymentStep === 'done' &&
