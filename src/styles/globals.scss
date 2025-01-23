@@ -904,9 +904,13 @@ table {
       width: 100%;
     }
     .history-label {
-      padding: 0 1rem;
+      padding-left: 0.5rem;
+      padding-right: 0.75rem;
       font-size: 1rem;
       opacity: 0.7;
+    }
+    .history-delete-icon {
+      padding-right: 0.25rem;
     }
     .no-history {
       color: var(--gray-alpha-500);
@@ -1336,53 +1340,9 @@ table {
     align-items: stretch;
     gap: 1rem;
     width: 100%;
-    .user-contents {
+    .sub-contents {
       flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-      justify-content: center;
-      padding: 3rem 1.5rem;
-      border-radius: 0.5rem;
-      border: 1px solid var(--gray-alpha-300);
-      position: relative;
-      box-shadow: var(--box-shadow);
-      .user-dashboard {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        select {
-          font-size: 1rem;
-          border: 1px solid var(--foreground);
-          border-radius: 0.5rem;
-        }
-        .user-point {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          .point-value {
-            color: var(--accent-color);
-            font-size: 1.5rem;
-            font-weight: 900;
-            .unit {
-              margin-left: 0.25rem;
-              font-size: 1rem;
-            }
-          }
-        }
-        .user-code-btn, .user-login-btn {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 0.25rem;
-          border-radius: 0.5rem;
-          font-size: 1rem;
-          border: 1px solid var(--gray-alpha-300);
-          padding: 0.5rem 1rem;
-          background-color: var(--foreground);
-          color: var(--background);
-        }
-      }
+      overflow: hidden;
     }
     .service-contents {
       flex: 3;
@@ -2600,6 +2560,123 @@ table {
   }
 }
 
+.newshop-slider {
+  margin: 0 auto;
+  max-width: -webkit-fill-available;
+  position: relative;
+  height: 100%;
+  .slick-slider {
+    height: 100%;
+    .slick-list {
+      height: 100%;
+      .slick-track {
+        height: 100%;
+        .slick-slide {
+          height: 100%;
+          div {
+            height: 100%;
+          }
+        }
+      }
+    }
+    .slick-dots {
+      width: fit-content;
+      left: 1rem;
+      bottom: 1rem;
+      li {
+        height: auto;
+        width: fit-content;
+        &.slick-active {
+          .dot {
+            background-color: var(--foreground);
+            width: 14px;
+          }
+        }
+        .dot {
+          display: block;
+          background-color: var(--gray-alpha-400);
+          border-radius: 2px;
+          width: 8px;
+          height: 5px;
+          // transition: width 0.2s, background-color 0.2s;
+        }
+      }
+    }
+  }
+  .newshop-link {
+    height: 100%;
+    .newshop-item {
+      background-color: var(--gray-alpha-500);
+      border-radius: 0.5rem;
+      position: relative;
+      padding-top: 1rem;
+      padding-left: 1rem;
+      padding-bottom: 6rem;
+      height: 100%;
+      overflow: hidden;
+      cursor: pointer;
+      &:hover {
+        .newshop-image {
+          transform: scale(1.05);
+        }
+      }
+      &:after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(0deg, rgba(110, 110, 110, 0.4), transparent);
+        z-index: 1;
+      }
+      .newshop-title {
+        background-color: var(--foreground);
+        color: var(--background);
+        padding: 0.25rem 0.75rem;
+        border-radius: 0.5rem;
+        width: fit-content;
+        font-size: 0.875rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        margin-left: -0.25rem;
+        position: relative;
+        overflow: visible;
+        &:after {
+          content: '';
+          position: absolute;
+          bottom: -0.75rem;
+          left: 0.75rem;
+          border-width: 0.4rem;
+          border-style: solid;
+          border-color: var(--foreground) transparent transparent transparent;
+          transform: scaleX(0.7);
+        }
+      }
+      .newshop-name {
+        font-size: 1.25rem;
+        font-weight: bold;
+        color: var(--background);
+        width: 80%;
+      }
+      .newshop-description {
+        font-size: 0.875rem;
+        font-weight: normal;
+        color: var(--background);
+        opacity: 0.75;
+        width: 80%;
+      }
+      .newshop-image {
+        z-index: 2;
+        position: absolute;
+        bottom: -3rem;
+        right: -2rem;
+        transition: transform 0.2s;
+      }
+    }
+  }
+}
+
 .event-slider {
   margin: 0 auto;
   max-width: -webkit-fill-available;
@@ -2828,8 +2905,9 @@ table {
     }
     .home-wrapper {
       flex-direction: column;
-      .user-contents {
-        display: none;
+      gap: 2rem;
+      .sub-contents {
+        padding: 0 1rem;
       }
     }
     .quick-select {

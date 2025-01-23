@@ -1,17 +1,10 @@
-"use client";
-
-import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { currency } from "@/common/utils/StringUtils";
 import EventSlider from "@/components/EventSlider";
 import FoodCardSlider from "@/components/FoodCardSlider";
-import Selector from "@/components/input/Selector";
+import NewShopSlider from "@/components/NewShopSlider";
 
 import KeyboardArrowRightTwoToneIcon from '@mui/icons-material/KeyboardArrowRightTwoTone';
-import QrCodeScannerTwoToneIcon from '@mui/icons-material/QrCodeScannerTwoTone';
-import IconButton from "@mui/material/IconButton";
-import Button from "@mui/material/Button";
 
 export default function Home() {
   const foods = [
@@ -26,6 +19,20 @@ export default function Home() {
     { foodId: '9', shopId: 'fuk001', category: '定番弁当', name: 'ソースカツ弁当', price: 1000, rating: 4.3, image: 'https://i.pinimg.com/736x/09/cc/18/09cc18f3ab7aeb70638f33170251bceb.jpg' },
     { foodId: '10', shopId: 'fuk001', category: '定番弁当', name: 'カツカレー', price: 1000, rating: 4.3, image: 'https://i.pinimg.com/736x/7f/6f/55/7f6f5560ca41e1870c59b18f6f1f2360.jpg' },
   ];
+  const shops: Shop[] = [
+    { shopId: 'fuk001', name: 'ヒルクル 福岡店', location: '福岡市中央区',
+      description: 'ヒルクル福岡店は福岡市中央区天神2丁目1-1にあるお弁当屋さんです。',
+    } as Shop,
+    { shopId: 'fuk002', name: 'ヒルクル 天神店', location: '福岡市中央区',
+      description: 'ヒルクル福岡店は福岡市中央区天神2丁目1-1にあるお弁当屋さんです。',
+    } as Shop,
+    { shopId: 'fuk003', name: '唐揚げ壱番屋', location: '福岡市中央区',
+      description: 'ヒルクル福岡店は福岡市中央区天神2丁目1-1にあるお弁当屋さんです。',
+    } as Shop,
+    { shopId: 'fuk004', name: '弁当光', location: '福岡市中央区',
+      description: 'ヒルクル福岡店は福岡市中央区天神2丁目1-1にあるお弁当屋さんです。',
+    } as Shop,
+];
   const events = [
     { eventId: '1', title: '謹賀新年', description: '2025年もよろしくお願いします', image: 'https://i.pinimg.com/736x/f6/eb/1e/f6eb1e567a5b4827a9afb5195dcab446.jpg' },
     { eventId: '2', title: 'いつでも3%Back!', description: '会員はいつでもポイントバックします', image: 'https://i.pinimg.com/736x/8f/05/4d/8f054d66b37f59a34fd878fc2e783087.jpg' },
@@ -42,18 +49,6 @@ export default function Home() {
     { id: '6', name: 'お魚', image: '/assets/img/fish.png' },
     { id: '7', name: 'お肉', image: '/assets/img/meat.png' },
   ];
-  const locationOptions = useMemo(() => [
-    { label: '福岡市博多区', value: 'fukuoka-hakata' },
-    { label: '福岡市中央区', value: 'fukuoka-chuo' },
-  ], []);
-
-  const [hasLogin, setHasLogin] = useState<boolean>(false);
-  const [location, setLocation] = useState<string>(locationOptions[0].value);
-  const [locationLabel, setLocationLabel] = useState<string>(locationOptions[0].label);
-
-  useEffect(() => {
-    setLocationLabel(locationOptions.find(option => option.value===location)?.label.replace('福岡市 ', '') || '');
-  }, [location, locationOptions]);
 
   return (
     <article className="home">
@@ -62,32 +57,8 @@ export default function Home() {
           <div className="service-contents">
             <EventSlider events={events} />
           </div>
-          <div className="user-contents">
-            {hasLogin ?
-              <div className="user-dashboard">
-                <div className="user-point">
-                  マイポイント
-                  <div className="point-value">
-                    {currency(1000)}
-                    <span className="unit">p</span>
-                  </div>
-                </div>
-                <IconButton className="user-code-btn">
-                  <QrCodeScannerTwoToneIcon />
-                  会員コード
-                </IconButton>
-              </div>
-              :
-              <div className="user-dashboard">
-                <Selector
-                  options={locationOptions}
-                  onChange={(e) => setLocation(e.target.value)}
-                />
-                <Button className="user-login-btn" onClick={() => setHasLogin(true)}>
-                  ログイン
-                </Button>
-              </div>
-            }
+          <div className="sub-contents">
+            <NewShopSlider shops={shops} />
           </div>
         </div>
       </section>
@@ -119,7 +90,7 @@ export default function Home() {
       </section>
       <section className="container">
         <FoodCardSlider
-          title={`${locationLabel}のおすすめ弁当`}
+          title="近所のおすすめ弁当"
           data={foods}
         />
         <FoodCardSlider

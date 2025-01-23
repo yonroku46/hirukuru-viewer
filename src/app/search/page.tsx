@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import Chip from "@mui/material/Chip";
+import CloseIcon from '@mui/icons-material/Close';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -30,6 +31,11 @@ export default function SearchPage() {
 
   const handleClick = (value: string) => {
     router.push(`/search/map?q=${value}`);
+  };
+
+  const handleDelete = (value: string) => {
+    setSearchHistory(searchHistory.filter(item => item !== value));
+    localStorage.setItem("search-history", JSON.stringify(searchHistory.filter(item => item !== value)));
   };
 
   const handleDeleteAll = () => {
@@ -90,7 +96,9 @@ export default function SearchPage() {
                 key={index}
                 sx={{ backgroundColor: "var(--gray-alpha-200)" }}
                 label={<div className="history-label">{item}</div>}
+                deleteIcon={<CloseIcon className="history-delete-icon" />}
                 onClick={() => handleClick(item)}
+                onDelete={() => handleDelete(item)}
               />
             ))}
           </div>
