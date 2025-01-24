@@ -2,6 +2,7 @@
 
 import { Fragment } from 'react';
 import { useMediaQuery } from "react-responsive";
+import { config } from "@/config";
 import Link from 'next/link';
 import { isBusinessOpen } from '@/common/utils/DateUtils';
 import { formatWeeklyBusinessHours } from '@/common/utils/DateUtils';
@@ -26,12 +27,11 @@ interface ShopInfoDialogProps {
 export default function ShopInfoDialog({ data, position, open, setOpen }: ShopInfoDialogProps) {
   const isSp = useMediaQuery({ query: "(max-width: 1179px)" });
 
-  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string;
   const mapUrl = `https://maps.googleapis.com/maps/api/staticmap?
   &center=${position.lat},${position.lng}&zoom=17&size=600x300
   &markers=color:red%7C${position.lat},${position.lng}
   &style=element:labels|saturation:-15|lightness:20
-  &key=${apiKey}`;
+  &key=${config.googleMaps.apiKey}`;
   const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${position.lat},${position.lng}`;
 
 

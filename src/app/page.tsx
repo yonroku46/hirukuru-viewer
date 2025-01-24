@@ -22,15 +22,19 @@ export default function Home() {
   const shops: Shop[] = [
     { shopId: 'fuk001', name: 'ヒルクル 福岡店', location: '福岡市中央区',
       description: 'ヒルクル福岡店は福岡市中央区天神2丁目1-1にあるお弁当屋さんです。',
+      image: '/assets/img/new-open.png',
     } as Shop,
     { shopId: 'fuk002', name: 'ヒルクル 天神店', location: '福岡市中央区',
       description: 'ヒルクル福岡店は福岡市中央区天神2丁目1-1にあるお弁当屋さんです。',
+      image: '/assets/img/new-open2.png',
     } as Shop,
     { shopId: 'fuk003', name: '唐揚げ壱番屋', location: '福岡市中央区',
       description: 'ヒルクル福岡店は福岡市中央区天神2丁目1-1にあるお弁当屋さんです。',
+      image: '/assets/img/new-open.png',
     } as Shop,
     { shopId: 'fuk004', name: '弁当光', location: '福岡市中央区',
       description: 'ヒルクル福岡店は福岡市中央区天神2丁目1-1にあるお弁当屋さんです。',
+      image: '/assets/img/new-open2.png',
     } as Shop,
 ];
   const events = [

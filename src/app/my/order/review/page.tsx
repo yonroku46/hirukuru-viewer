@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { createKanaSearchRegex } from "@/common/utils/SearchUtils";
+import { dateNow } from "@/common/utils/DateUtils";
+import dayjs from "dayjs";
 import SearchInput from "@/components/input/SearchInput";
 import ReviewStatus from "@/components/ReviewStatus";
 import MuiBreadcrumbs from "@/components/mui/MuiBreadcrumbs";
@@ -45,8 +47,8 @@ export default function MyOrderReviewPage() {
   }
 
   const [user, setUser] = useState<User | null>(null);
-  const [year, setYear] = useState<number>(new Date().getFullYear());
-  const [month, setMonth] = useState<number>(new Date().getMonth() + 1);
+  const [year, setYear] = useState<number>(dateNow().year());
+  const [month, setMonth] = useState<number>(dateNow().month() + 1);
   const [searchValue, setSearchValue] = useState<string>("");
   const [rows, setRows] = useState<ShopReview[]>([]);
   const [filteredRows, setFilteredRows] = useState<ShopReview[]>([]);
@@ -72,12 +74,12 @@ export default function MyOrderReviewPage() {
     const searchRegex = createKanaSearchRegex(searchValue);
     const updatedFilteredRows = rows
       .filter(row => {
-        const createDate = new Date(row.date);
-        if (createDate.getFullYear() !== year || (createDate.getMonth() + 1) !== month) return false;
+        const createDate = dayjs(row.date);
+        if (createDate.year() !== year || createDate.month() + 1 !== month) return false;
         if (searchValue && !searchRegex.test(row.shopName)) return false;
         return true;
       })
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      .sort((a, b) => dayjs(b.date).unix() - dayjs(a.date).unix());
     setFilteredRows(updatedFilteredRows);
   }, [rows, searchValue, year, month]);
 

@@ -12,7 +12,7 @@ interface SelectorProps {
 export default function Selector({ options, defaultValue, onChange }: SelectorProps) {
   return (
     <div className="selector">
-      <select onChange={onChange} defaultValue={defaultValue || options[0].value}>
+      <select onChange={onChange} defaultValue={defaultValue || options[0]?.value}>
         {options.map(option => (
           <option key={option.value} value={option.value}>
             {option.label}

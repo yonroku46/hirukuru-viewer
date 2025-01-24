@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
+import dayjs from "dayjs";
 import { useSearchParams, useRouter } from "next/navigation";
 import { enqueueSnackbar } from "notistack";
 import { currency, formatDaysAgo, formatRating } from "@/common/utils/StringUtils";
@@ -135,7 +136,7 @@ export default function ShopPage(
         { optionId: '2', foodId: '1', shopId: 'fuk001', name: 'コーラ', price: 200 },
         { optionId: '11', foodId: '1', shopId: 'fuk001', name: 'メガ盛り', price: 300 },
       ]},
-      { foodId: '2', shopId: 'fuk001', category: '特製弁当', name: '特製のり弁', description: "特製のり弁です。", price: 500, discountPrice: 450, rating: 4.5, image: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', optionMultiple: false, options: [
+      { foodId: '2', shopId: 'fuk002', category: '特製弁当', name: '他店舗弁当', description: "特製のり弁です。", price: 500, discountPrice: 450, rating: 4.5, image: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', optionMultiple: false, options: [
         { optionId: '3', foodId: '2', shopId: 'fuk001', name: '特盛', price: 1000 },
         { optionId: '4', foodId: '2', shopId: 'fuk001', name: '大盛', price: 200 },
         { optionId: '5', foodId: '2', shopId: 'fuk001', name: '中盛', price: 0 },
@@ -155,7 +156,7 @@ export default function ShopPage(
       { reviewId: '2', userId: 'user2', shopId: 'fuk001', userName: "User2", userProfile: "/assets/img/no-user.jpg", userRatingCount: 320, userRatingAvg: 4.9, rating: 5, date: "2024-12-29", comment: "Nice!" },
       { reviewId: '3', userId: 'user3', shopId: 'fuk001', userName: "User3", userProfile: "/assets/img/no-user.jpg", userRatingCount: undefined, userRatingAvg: undefined, rating: 4, date: "2024-12-28", comment: "Good!" },
       { reviewId: '4', userId: 'user4', shopId: 'fuk001', userName: "User4", userProfile: "/assets/img/no-user.jpg", userRatingCount: undefined, userRatingAvg: undefined, rating: 4, date: "2024-12-28", comment: "Good!" },
-      { reviewId: '5', userId: 'user5', shopId: 'fuk001', userName: "User5", userProfile: "/assets/img/no-user.jpg", userRatingCount: undefined, userRatingAvg: undefined, rating: 4, date: "2024-12-28", comment: "Good!" },
+      { reviewId: '5', userId: 'user5', shopId: 'fuk001', userName: "User5", userProfile: "/assets/img/no-user.jpg", userRatingCount: undefined, userRatingAvg: undefined, rating: 4, date: "2025-01-24", comment: "Good!" },
     ]
     setItems(dummyItems as Food[]);
     setReviewList(dummyReviewList as ShopReview[]);
@@ -372,7 +373,7 @@ export default function ShopPage(
       };
       await navigator.share(shareData);
     } catch (err) {
-      console.log(err);
+      console.error(err);
       // Android WebViewなど対応してない時はURLをクリップボードにコピーする
       navigator.clipboard.writeText(window.location.href);
       enqueueSnackbar('クリップボードにコピーしました！', { variant: 'success' });
@@ -381,8 +382,8 @@ export default function ShopPage(
 
   const sortedReviewList = useMemo(() => {
     return reviewList.sort((a, b) => {
-      const dateA = new Date(a.date).getTime();
-      const dateB = new Date(b.date).getTime();
+      const dateA = dayjs(a.date).unix();
+      const dateB = dayjs(b.date).unix();
       // 最新順
       if (reviewFilter === 'latest') {
         return dateB - dateA;

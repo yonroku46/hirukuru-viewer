@@ -1,6 +1,7 @@
 "use client";
 
 import React, { Fragment, useState } from 'react';
+import dayjs from 'dayjs';
 import { useMediaQuery } from "react-responsive";
 import Image from "@/components/Image";
 import { currency, optionsToString, orderStatusDict, payTypeDict } from '@/common/utils/StringUtils';
@@ -108,20 +109,12 @@ export default function MuiTable<T extends Row>({ topSection, columns, rows }: M
                 : currency(value as number, column.typeUnit);
                 break;
               case 'date':
-                dpValue = new Date(value as string).toLocaleDateString('ja-JP', {
-                  year: 'numeric',
-                  month: '2-digit',
-                  day: '2-digit',
-                }).replace(/\./g, '-').replace(/ /g, '');
+                dpValue = dayjs(value as string).format('YYYY-MM-DD');
                 break;
               case 'time':
-                const date = new Date(value as string);
-                if (date.getTime()) {
-                  dpValue = `${date.toLocaleDateString('ja-JP', {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                  }).replace(/\//g, '-')}\n${date.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}`;
+                const date = dayjs(value as string);
+                if (date.isValid()) {
+                  dpValue = `${date.format('YYYY-MM-DD')}\n${date.format('HH:mm')}`;
                 }
                 break;
               default:

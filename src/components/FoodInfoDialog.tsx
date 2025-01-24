@@ -9,7 +9,6 @@ import { addToCart } from "@/components/CartDialog";
 import QuantityButton from '@/components/button/QuantityButton';
 
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
@@ -35,29 +34,21 @@ export default function FoodInfoDialog({ data, open, setOpen, isFavorite, handle
   const dispatch = useAppDispatch();
   const isSp = useMediaQuery({ query: "(max-width: 1179px)" });
 
-  const [showAddIcon, setShowAddIcon] = useState<boolean>(false);
   const [quantity, setQuantity] = useState<number>(1);
   const [options, setOptions] = useState<FoodOption[]>([]);
 
   useEffect(() => {
     if (open) {
       setQuantity(1);
-      setShowAddIcon(false);
       setOptions([]);
     }
   }, [open]);
 
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    const addBtn = e.currentTarget;
-    if (addBtn && data) {
-      const target = e.currentTarget as HTMLButtonElement;
-      target.style.pointerEvents = 'none';
-      addToCart(dispatch, data, quantity, options);
-      setShowAddIcon(true);
-      setTimeout(() => {
+  const handleClick = () => {
+    if (data) {
+      if (addToCart(dispatch, data, quantity, options)) {
         setOpen(false);
-        if (target) target.style.pointerEvents = 'auto';
-      }, 500);
+      }
     }
   };
 
@@ -224,12 +215,12 @@ export default function FoodInfoDialog({ data, open, setOpen, isFavorite, handle
                     }
                   }}
                 />
-                <Button variant="contained" className="add-btn" onClick={handleClick} disabled={data.stock !== undefined && data.stock === 0}>
-                  {showAddIcon &&
-                    <div className="added-icon">
-                      <AddShoppingCartIcon fontSize="inherit" />
-                    </div>
-                  }
+                <Button
+                  variant="contained"
+                  className="add-btn"
+                  onClick={handleClick}
+                  disabled={data.stock !== undefined && data.stock === 0}
+                >
                   カートに入れる
                 </Button>
               </div>

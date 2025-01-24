@@ -1,5 +1,6 @@
 import { config } from "@/config";
 import Link from "next/link";
+import { dateNow } from "@/common/utils/DateUtils";
 
 import XIcon from '@mui/icons-material/X';
 import InstagramIcon from '@mui/icons-material/Instagram';
@@ -62,7 +63,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="copyright">
-        © {config.service.copyright} {new Date().getFullYear()}
+        © {config.service.copyright} {dateNow().year()}
       </div>
     </footer>
   );

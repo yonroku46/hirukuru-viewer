@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { GoogleMap, LoadScript, Marker, InfoWindow } from "@react-google-maps/api";
+import { config } from "@/config";
 import Link from "next/link";
 import { useMediaQuery } from "react-responsive";
 import { enqueueSnackbar } from "notistack";
@@ -328,7 +329,7 @@ export default function SearchMapPage() {
             </button>
           </div>
           <LoadScript
-            googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string}
+            googleMapsApiKey={config.googleMaps.apiKey}
             loadingElement={<Loading />}
           >
             <GoogleMap

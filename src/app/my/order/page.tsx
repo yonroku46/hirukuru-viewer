@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { orderStatusDict } from "@/common/utils/StringUtils";
 import { createKanaSearchRegex } from "@/common/utils/SearchUtils";
+import { dateNow } from "@/common/utils/DateUtils";
+import dayjs from "dayjs";
 import SearchInput from "@/components/input/SearchInput";
 import OrderStatus from "@/components/OrderStatus";
 import MuiBreadcrumbs from "@/components/mui/MuiBreadcrumbs";
@@ -59,8 +61,8 @@ export default function MyOrderPage() {
   }
 
   const [user, setUser] = useState<User | null>(null);
-  const [year, setYear] = useState<number>(new Date().getFullYear());
-  const [month, setMonth] = useState<number>(new Date().getMonth() + 1);
+  const [year, setYear] = useState<number>(dateNow().year());
+  const [month, setMonth] = useState<number>(dateNow().month() + 1);
   const [status, setStatus] = useState<string>('all');
   const [searchValue, setSearchValue] = useState<string>("");
   const [rows, setRows] = useState<Order[]>([]);
@@ -100,12 +102,12 @@ export default function MyOrderPage() {
     const updatedFilteredRows = rows
       .filter(row => {
         if (status !== 'all' && row.status !== status) return false;
-        const orderDate = new Date(row.orderTime);
-        if (orderDate.getFullYear() !== year || (orderDate.getMonth() + 1) !== month) return false;
+        const orderDate = dayjs(row.orderTime);
+        if (orderDate.year() !== year || orderDate.month() + 1 !== month) return false;
         if (searchValue && !row.orderDetail.some(detail => searchRegex.test(detail.name))) return false;
         return true;
       })
-      .sort((a, b) => new Date(b.orderTime).getTime() - new Date(a.orderTime).getTime()); // 최신 날짜가 앞에 오도록 정렬
+      .sort((a, b) => dayjs(b.orderTime).unix() - dayjs(a.orderTime).unix());
     setFilteredRows(updatedFilteredRows);
   }, [rows, searchValue, status, year, month]);
 

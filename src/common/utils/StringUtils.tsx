@@ -1,18 +1,17 @@
-export function formatDaysAgo(dateString: string): string | undefined {
-  const inputDate = new Date(dateString);
-  const currentDate = new Date();
-  inputDate.setHours(0, 0, 0, 0);
-  currentDate.setHours(0, 0, 0, 0);
+import dayjs from "dayjs";
 
-  if (isNaN(inputDate.getTime())) {
+export function formatDaysAgo(dateString: string): string | undefined {
+  const inputDate = dayjs(dateString).startOf('day');
+  const currentDate = dayjs().startOf('day');
+
+  if (!inputDate.isValid()) {
     return undefined;
   }
 
-  const timeDifference = currentDate.getTime() - inputDate.getTime();
-  const daysDifference = Math.floor(timeDifference / (1000 * 3600 * 24));
+  const daysDifference = currentDate.diff(inputDate, 'day');
   const weeksDifference = Math.floor(daysDifference / 7);
-  const monthsDifference = currentDate.getMonth() - inputDate.getMonth() + (currentDate.getFullYear() - inputDate.getFullYear()) * 12;
-  const yearsDifference = currentDate.getFullYear() - inputDate.getFullYear();
+  const monthsDifference = currentDate.diff(inputDate, 'month');
+  const yearsDifference = currentDate.diff(inputDate, 'year');
 
   if (daysDifference === 0) {
     return '今日';
@@ -101,15 +100,15 @@ export function payTypeDict(payTypeType: PayType['type'], key: 'label'): string 
 
 export function calculateAge(birthday: string): number {
   // 誕生日をDateオブジェクトに変換
-  const birthDate = new Date(birthday);
-  const currentDate = new Date();
+  const birthDate = dayjs(birthday);
+  const currentDate = dayjs();
 
   // 誕生日の年から現在の年を引く
-  let age = currentDate.getFullYear() - birthDate.getFullYear();
+  let age = currentDate.year() - birthDate.year();
 
   // 誕生日が過ぎていない場合は年齢を1減らす
-  const monthDifference = currentDate.getMonth() - birthDate.getMonth();
-  const dayDifference = currentDate.getDate() - birthDate.getDate();
+  const monthDifference = currentDate.month() - birthDate.month();
+  const dayDifference = currentDate.date() - birthDate.date();
   if (monthDifference < 0 || (monthDifference === 0 && dayDifference < 0)) {
     age--;
   }

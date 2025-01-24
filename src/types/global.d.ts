@@ -158,8 +158,14 @@ declare global {
     quantity: number;
     totalPrice: number;
   }
+  interface CartStatus {
+    type: 'ready' | 'pickup' | 'payment' | 'final' | 'done';
+  }
   interface PayType {
     type: 'cash' | 'card' | 'apple' | 'google';
+  }
+  interface PickupType {
+    type: 'pre' | 'today';
   }
   interface Food {
     foodId: string;

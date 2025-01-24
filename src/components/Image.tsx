@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import NextImage, { ImageProps } from 'next/image';
+import { config } from '@/config';
 
 const fallbackImg = '/assets/img/no-image.png';
 
@@ -9,7 +10,7 @@ export function imgRender(src: string): string {
   }
   return src.startsWith('/assets') || src.startsWith('data') || src.startsWith('https')
     ? src
-    : `https://${process.env.NEXT_PUBLIC_S3_PREFIX}/${src}`;
+    : `${config.aws.s3Prefix}/${src}`;
 }
 
 interface ImgProps extends Omit<ImageProps, 'src' | 'alt'> {

@@ -2,6 +2,7 @@
 
 import React, { Fragment, useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
+import dayjs from "dayjs";
 import MiniButton from "@/components/button/MiniButton";
 import Selector from "@/components/input/Selector";
 
@@ -26,8 +27,7 @@ interface FilterDialogProps {
 
 export default function FilterDialog({ filters, onReset, onFilterApply, changed }: FilterDialogProps) {
   const isSp = useMediaQuery({ query: "(max-width: 1179px)" });
-
-  const currentYear = new Date().getFullYear();
+  const currentYear = dayjs().year();
   const yearOptions = Array.from({ length: 5 }, (_, i) => currentYear - i)
     .filter(year => year >= 2025)
     .map(year => ({
