@@ -23,15 +23,6 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import FoodCard from "@/components/FoodCard";
 
-// const markerIcon = {
-//   path: "M 0, 0 m -5, 0 a 5,5 0 1,0 10,0 a 5,5 0 1,0 -10,0",
-//   fillColor: "#FF0000",
-//   fillOpacity: 1,
-//   strokeColor: "#522044",
-//   strokeWeight: 2,
-//   scale: 1.25,
-// };
-
 const defaultPosition = {
   lat: 33.5902,
   lng: 130.4017
@@ -160,7 +151,7 @@ export default function SearchMapPage() {
 
   useEffect(() => {
     const dummyShops: Shop[] = [
-      { shopId: '1', location: '福岡市博多区', name: '唐揚げ壱番屋', description: '揚げ物専門店', image: 'https://i.pinimg.com/236x/71/65/43/716543eb8e6907d7163b55000376e2be.jpg', ratingAvg: 4.5, businessHours: [
+      { shopId: '1', location: '福岡市博多区', name: '唐揚げ壱番屋', description: '揚げ物専門店', type: 'bento', image: 'https://i.pinimg.com/236x/71/65/43/716543eb8e6907d7163b55000376e2be.jpg', ratingAvg: 4.5, businessHours: [
           { day: 'mon', open: '10:00', close: '23:50' },
           { day: 'tue', open: '10:00', close: '23:50' },
           { day: 'wed', open: '10:00', close: '23:50' },
@@ -170,17 +161,17 @@ export default function SearchMapPage() {
           { day: 'sun', open: '10:00', close: '23:50' },
         ]
       },
-      { shopId: '2', location: '福岡市中央区', name: 'チキンが一番', description: 'チキン専門店', image: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', ratingAvg: 4.0, businessHours: [
+      { shopId: '2', location: '福岡市中央区', name: 'チキンが一番', description: 'チキン専門店', type: 'foodtruck', image: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', ratingAvg: 4.0, businessHours: [
           { day: 'mon', open: '10:00', close: '20:00' },
           { day: 'wed', open: '10:00', close: '20:00' },
         ]
       },
-      { shopId: '2', location: '福岡市中央区', name: 'チキンが一番', description: 'チキン専門店', image: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', ratingAvg: 4.0, businessHours: [
+      { shopId: '3', location: '福岡市中央区', name: 'チキンが一番', description: 'チキン専門店', type: 'foodtruck', image: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', ratingAvg: 4.0, businessHours: [
           { day: 'mon', open: '10:00', close: '20:00' },
           { day: 'wed', open: '10:00', close: '20:00' },
         ]
       },
-      { shopId: '2', location: '福岡市中央区', name: 'チキンが一番', description: 'チキン専門店', image: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', ratingAvg: 4.0, businessHours: [
+      { shopId: '4', location: '福岡市中央区', name: 'チキンが一番', description: 'チキン専門店', type: 'foodtruck', image: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', ratingAvg: 4.0, businessHours: [
           { day: 'mon', open: '10:00', close: '20:00' },
           { day: 'wed', open: '10:00', close: '20:00' },
         ]
@@ -233,6 +224,12 @@ export default function SearchMapPage() {
       document.body.style.overflowY = '';
     }
   }, [isSp, isMapVisible]);
+
+  useEffect(() => {
+    if (isSp) {
+      setIsMapVisible(true);
+    }
+  }, [isSp]);
 
   return (
     <div className="search-map-page">
@@ -345,13 +342,20 @@ export default function SearchMapPage() {
               zoom={zoomLevel}
               options={googleMapOptions}
             >
+              {currentPlace?.position && (
+                <Marker
+                  position={currentPlace?.position}
+                  icon={`/assets/icon/user-marker.svg`}
+                />
+              )}
               {markPlaces.map((place, index) => {
                 const shop = shops.find((s) => s.shopId === place.shopId);
+                if (!shop) return null;
                 return (
                   <Marker
                     key={index}
                     position={place.position}
-                    // icon={markerIcon}
+                    icon={`/assets/icon/${shop.type}-marker.svg`}
                     onClick={() => {
                       setActiveMarker(place.placeId);
                       setLastSelectedPosition(place.position);

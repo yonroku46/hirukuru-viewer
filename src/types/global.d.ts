@@ -111,6 +111,7 @@ declare global {
     detailAddress?: string;
     name: string;
     description: string;
+    type: ShopType['type'];
     image: string;
     businessHours: BusinessHour[];
     reviewcount?: number;
@@ -118,6 +119,9 @@ declare global {
     rating?: {
       [key: string]: number | undefined;
     };
+  }
+  interface ShopType {
+    type: 'bento' | 'foodtruck';
   }
   interface BusinessHour {
     day: 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun';

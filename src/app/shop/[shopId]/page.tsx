@@ -94,6 +94,7 @@ export default function ShopPage(
     description: '揚げ物専門店',
     location: '福岡市博多区',
     detailAddress: '福岡市博多区',
+    type: 'bento',
     image: 'https://i.pinimg.com/236x/71/65/43/716543eb8e6907d7163b55000376e2be.jpg',
     businessHours: [
       { day: 'mon', open: '10:00', close: '23:50' },
