@@ -270,6 +270,7 @@ export default function SearchMapPage() {
                   className="sp-map-btn"
                   icon={<MapOutlinedIcon />}
                   onClick={toggleMapVisibility}
+                  label="マップ表示"
                 />
               )}
             </div>
@@ -315,6 +316,7 @@ export default function SearchMapPage() {
               className="sp-list-btn"
               icon={<ListOutlinedIcon />}
               onClick={toggleMapVisibility}
+              label="リスト表示"
             />
           )}
           <div className="zoom-btn-group">
@@ -338,6 +340,7 @@ export default function SearchMapPage() {
                   setZoomLevel(map.getZoom() ?? 15);
                 }
               }}
+              onClick={() => setActiveMarker(null)}
               center={lastSelectedPosition || currentPlace?.position}
               zoom={zoomLevel}
               options={googleMapOptions}

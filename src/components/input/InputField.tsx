@@ -5,7 +5,7 @@ import React from "react";
 interface InputFieldProps {
   type: React.HTMLInputTypeAttribute | 'textarea';
   value: string;
-  placeholder: string;
+  placeholder?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   required?: boolean;
   rows?: number;

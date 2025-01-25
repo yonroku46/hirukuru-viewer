@@ -208,7 +208,7 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
         setPickupTime(availableTimeOptions[0]?.value);
       }
     }
-  }, [pickupType, pickupOption, pickupNowOptions, availableTimeOptions]);
+  }, [pickupType, pickupOption, availableTimeOptions]);
 
   useEffect(() => {
     setCartItems(cartState.cartItems || []);

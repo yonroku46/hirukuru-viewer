@@ -40,19 +40,19 @@ export default function ServiceContactPage() {
     <div className="service container">
       <MuiBreadcrumbs breadcrumbs={breadcrumbs} />
       <div className='contact-page'>
-        <div className='contact-message'>
+        <div className='main-message'>
           <div className='thanks'>
             {`いつものご利用ありがとうございます✨`}
           </div>
-          <h1 className='contact-title'>
+          <h1 className='title'>
             {`お問い合わせ・大量注文`}
           </h1>
-          <p className='contact-description'>
+          <p className='description'>
             {`いただいたご質問・大量注文については\nできるだけ早くお返事させていただきます。`}
           </p>
         </div>
-        {submitted &&
-          <div className='contact-form submitted'>
+        {submitted ? (
+          <div className='format submitted'>
             <Image
               src='/assets/img/send.avif'
               alt='submitted'
@@ -66,9 +66,8 @@ export default function ServiceContactPage() {
               ホームへ戻る
             </Link>
           </div>
-        }
-        {!submitted &&
-          <form onSubmit={handleSubmit} className="contact-form">
+        ) : (
+          <form onSubmit={handleSubmit} className="format">
             <div>
               <label>お問い合わせ内容</label>
               <Selector
@@ -83,7 +82,7 @@ export default function ServiceContactPage() {
                 type='email'
                 value={mail}
                 required
-                placeholder='メールアドレスを入力してください'
+                placeholder='example@example.com'
                 onChange={(e) => setMail(e.target.value)}
               />
             </div>
@@ -92,7 +91,7 @@ export default function ServiceContactPage() {
               <InputField
                 type='tel'
                 value={phoneNum || ''}
-                placeholder='電話番号を入力してください'
+                placeholder='080-1234-5678'
                 onChange={(e) => setPhoneNum(e.target.value)}
               />
             </div>
@@ -111,7 +110,7 @@ export default function ServiceContactPage() {
               送信
             </button>
           </form>
-        }
+        )}
       </div>
     </div>
   );

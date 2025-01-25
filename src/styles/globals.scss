@@ -1224,7 +1224,7 @@ table {
   .sp-list-btn {
     z-index: 9;
     position: absolute;
-    top: calc(1rem + 6px);
+    top: calc(1rem + 7px);
     right: 1rem;
     padding: 0.75rem;
   }
@@ -1320,8 +1320,8 @@ table {
       }
       .close-btn {
         position: absolute;
-        top: 0.5rem;
-        right: 0.5rem;
+        top: 0.25rem;
+        right: 0.25rem;
         background-color: rgba(255, 255, 255, 0.8);
         border-radius: 50%;
         padding: 0.25rem;
@@ -1588,7 +1588,7 @@ table {
     margin: 0;
     background-color: transparent;
   }
-  .title {
+  .notice-board-title {
     font-size: 1rem;
     font-weight: bold;
   }
@@ -1601,6 +1601,16 @@ table {
       &:before {
         content: "・";
         margin-right: 0.25rem;
+      }
+      &.numbering {
+        display: flex;
+        gap: 0.5rem;
+        font-size: 1rem;
+        margin-left: 0.25rem;
+        &:before {
+          content: unset;
+          margin-right: 0;
+        }
       }
     }
   }
@@ -2623,15 +2633,16 @@ table {
     font-size: 1rem;
     font-weight: bold;
   }
-  .contact-page {
+  .contact-page, .partner-page {
     display: flex;
     width: 100%;
     padding: 2rem 1rem;
-    .contact-message {
+    gap: 1rem;
+    .main-message {
       flex: 1;
       display: flex;
       flex-direction: column;
-      padding-left: 1rem;
+      padding: 0 2rem;
       .thanks {
         font-size: 0.9rem;
         background-color: var(--gray-alpha-500);
@@ -2639,21 +2650,28 @@ table {
         padding: 0.5rem 1.5rem;
         border-radius: 3rem;
         width: fit-content;
+        &.partner {
+          background-color: var(--accent-color);
+        }
       }
-      .contact-title {
+      .title {
         font-size: 1.75rem;
         font-weight: bold;
-        margin: 1rem 0;
+        margin-top: 1rem;
+        margin-bottom: 2rem;
       }
-      .contact-description {
+      .description {
         font-size: 1rem;
         font-weight: normal;
         white-space: pre-line;
         opacity: 0.7;
         margin-bottom: 1rem;
+        .service-btn {
+          text-decoration: underline;
+        }
       }
     }
-    .contact-form {
+    .format {
       flex: 1;
       display: flex;
       margin: auto;
@@ -2685,8 +2703,15 @@ table {
         font-size: 1rem;
         margin-bottom: 0.5rem;
       }
+      .name-group {
+        display: flex;
+        gap: 1rem;
+        .name-group-item {
+          width: 100%;
+        }
+      }
       .submit-btn {
-        background-color: var(--primary-color);
+        background-color: var(--foreground);
         color: var(--background);
         padding: 0.65rem 1rem;
         margin-top: 1.5rem;
@@ -3110,12 +3135,12 @@ table {
     }
   }
   .service {
-    .contact-page {
+    .contact-page, .partner-page {
       flex-direction: column;
       gap: 2rem;
-      .contact-message {
+      .main-message {
         align-items: center;
-        padding-left: 0;
+        padding: 0;
       }
     }
   }

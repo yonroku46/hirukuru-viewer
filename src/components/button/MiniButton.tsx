@@ -4,12 +4,13 @@ import IconButton from "@mui/material/IconButton";
 interface MiniButtonProps {
   className?: string;
   icon: React.ReactNode;
+  label?: string;
   onClick: (() => void) | ((e: React.MouseEvent<HTMLButtonElement>) => void);
   gray?: boolean;
   sx?: React.CSSProperties;
 }
 
-export default function MiniButton({ className, icon, onClick, gray, sx }: MiniButtonProps) {
+export default function MiniButton({ className, icon, label, onClick, gray, sx }: MiniButtonProps) {
   return (
     <IconButton
       className={className}
@@ -19,6 +20,7 @@ export default function MiniButton({ className, icon, onClick, gray, sx }: MiniB
         border: "1px solid var(--gray-alpha-300)",
         backgroundColor: gray ? "var(--gray-alpha-300)" : "var(--background)",
         color: gray ? "var(--background)" : "var(--icon-color)",
+        gap: "0.25rem",
         "&:hover": {
           backgroundColor: gray ? "var(--gray-alpha-200)" : "var(--icon-hover-color)",
         },
@@ -26,6 +28,11 @@ export default function MiniButton({ className, icon, onClick, gray, sx }: MiniB
       }}
     >
       {icon}
+      {label && (
+        <label style={{ fontSize: "0.875rem" }}>
+          {label}
+        </label>
+      )}
     </IconButton>
   );
 };
