@@ -19,6 +19,18 @@ const menuItems: GroupMenuItem[] = [
   ]},
 ];
 
+const snsItems = [
+  { icon: <XIcon />, href: "https://x.com/hirukuru_jp" },
+  { icon: <InstagramIcon />, href: "https://www.instagram.com/hirukuru_jp/" },
+  { icon: <FacebookIcon />, href: "https://www.facebook.com/hirukuru.jp" },
+];
+
+const policyItems = [
+  { name: "利用規約", href: "/service/terms" },
+  { name: "会社概要", href: "/service/company" },
+  { name: "プライバシーポリシー", href: "/service/privacy" },
+];
+
 export default function Footer() {
   return (
     <footer>
@@ -52,14 +64,18 @@ export default function Footer() {
       </div>
       <div className="container bottom-container">
         <div className="sns">
-          <Link href="https://x.com/hirukuru_jp"><XIcon /></Link>
-          <Link href="https://www.instagram.com/hirukuru_jp/"><InstagramIcon /></Link>
-          <Link href="https://www.facebook.com/hirukuru.jp"><FacebookIcon /></Link>
+          {snsItems.map((item) => (
+            <Link key={item.href} href={item.href}>
+              {item.icon}
+            </Link>
+          ))}
         </div>
         <div className="policy">
-          <Link href="/service/terms">利用規約</Link>
-          <Link href="/service/company">会社概要</Link>
-          <Link href="/service/privacy">プライバシーポリシー</Link>
+          {policyItems.map((item) => (
+            <Link key={item.href} href={item.href}>
+              {item.name}
+            </Link>
+          ))}
         </div>
       </div>
       <div className="copyright">

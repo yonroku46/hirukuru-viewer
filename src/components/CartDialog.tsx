@@ -32,6 +32,7 @@ import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import DeleteSweepOutlinedIcon from "@mui/icons-material/DeleteSweepOutlined";
+import ClearAllOutlinedIcon from '@mui/icons-material/ClearAllOutlined';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import IconButton from "@mui/material/IconButton";
 import CreditCardIcon from '@mui/icons-material/CreditCard';
@@ -39,10 +40,23 @@ import AppleIcon from '@mui/icons-material/Apple';
 import GoogleIcon from '@mui/icons-material/Google';
 import CurrencyYenIcon from '@mui/icons-material/CurrencyYen';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
 
 const dummyUserId = "001";
 const dummyUserPoint = 1000;
 const cartKey = `cart-${dummyUserId}`;
+
+const pickupTypeOptions = [
+  { label: "今から", value: 'now' },
+  { label: "時間帯を指定", value: 'time' },
+];
+const pickupNowOptions = [
+  { label: "10分以内に受け取り予定", value: "10分以内" },
+  { label: "20分以内に受け取り予定", value: "20分以内" },
+  { label: "30分以内に受け取り予定", value: "30分以内" },
+];
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -101,11 +115,6 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
   const [currentDateTime, setCurrentDateTime] = useState<string>("");
   const [cartItems, setCartItems] = useState<Food[]>([]);
 
-  const pickupNowOptions = [
-    { label: "10分以内に受け取り予定", value: "10分以内" },
-    { label: "20分以内に受け取り予定", value: "20分以内" },
-    { label: "30分以内に受け取り予定", value: "30分以内" },
-  ]
   const [allTimeOptions, setAllTimeOptions] = useState<{ label: string, value: string }[]>([]);
   const [availableTimeOptions, setAvailableTimeOptions] = useState<{ label: string, value: string }[]>([]);
 
@@ -142,6 +151,7 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
       setPayType('card');
       setUsedPoint(undefined);
       setCurrentPoint(dummyUserPoint);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }
   }, [open]);
 
@@ -186,7 +196,7 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
       setPickupDate(dateNow().add(1, 'day').format('YYYY-MM-DD'));
       setPickupTime(allTimeOptions[0].value);
     }
-  }, [pickupType]);
+  }, [pickupType, allTimeOptions]);
 
   useEffect(() => {
     // 受け取り方法(当日注文)の初期化
@@ -198,7 +208,7 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
         setPickupTime(availableTimeOptions[0]?.value);
       }
     }
-  }, [pickupType, pickupOption, availableTimeOptions]);
+  }, [pickupType, pickupOption, pickupNowOptions, availableTimeOptions]);
 
   useEffect(() => {
     setCartItems(cartState.cartItems || []);
@@ -212,7 +222,7 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
       for (let hour = 0; hour < 24; hour++) {
         const label = `${hour.toString().padStart(2, '0')}:00~${(hour + 1).toString().padStart(2, '0')}:00`;
         allOptions.push({ label, value: label });
-        if (hour >= currentHour) {
+        if (hour > currentHour) {
           availableOptions.push({ label, value: label });
         }
       }
@@ -271,34 +281,20 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
     },
     { type: 'today', label: '当日注文', content:
       <div className="pickup-option-wrapper">
-        <div className="pickup-option">
-          <div className="pickup-option-title">
-            <input
-              type="radio"
-              id="now"
-              name="pickup-option"
-              checked={pickupOption === 'now'}
-              onChange={() => setPickupOption('now')}
+        <RadioGroup
+          onChange={(e) => {
+            setPickupOption(e.target.value as 'now' | 'time');
+          }}
+        >
+          {pickupTypeOptions.map((option) => (
+            <FormControlLabel
+              key={option.value}
+              value={option.value}
+              control={<Radio checked={pickupOption === option.value} />}
+              label={option.label}
             />
-            <label htmlFor="now">
-              今から
-            </label>
-          </div>
-        </div>
-        <div className="pickup-option">
-          <div className="pickup-option-title">
-            <input
-              type="radio"
-              id="time"
-              name="pickup-option"
-              checked={pickupOption === 'time'}
-              onChange={() => setPickupOption('time')}
-            />
-            <label htmlFor="time">
-              時間帯を指定
-            </label>
-          </div>
-        </div>
+          ))}
+        </RadioGroup>
         {pickupOption === 'now' && (
           <div className="pickup-option">
             <Selector
@@ -332,11 +328,6 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
     { type: 'apple', icon: <AppleIcon fontSize="large" />, label: 'Apple Pay' },
     { type: 'google', icon: <GoogleIcon fontSize="large" />, label: 'Google Pay'  },
   ];
-
-  const getNextStep = (currentStep: string) => {
-    const currentIndex = steps.indexOf(currentStep);
-    return currentIndex < steps.length - 1 ? steps[currentIndex + 1] : null;
-  };
 
   const getPreviousStep = (currentStep: string) => {
     const currentIndex = steps.indexOf(currentStep);
@@ -525,7 +516,7 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
             }}
           >
             <div className="method-title">
-              <ArrowDropDownIcon />
+              <ArrowDropDownIcon fontSize="large" />
               {method.label}
             </div>
             {method.content &&
@@ -564,7 +555,7 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
           <div className="final-title">
             {"唐揚げ壱番屋"}
             <div className="final-title-description">
-              {`${cartItems[0]?.name} 外${cartItems.length - 1}項目`}
+              {`${cartItems[0]?.name} ${cartItems.length > 1 ? "他" + (cartItems.length - 1) + "項目" : ""}`}
             </div>
           </div>
           <div className="final-details">
@@ -678,10 +669,16 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
       >
         <DialogTitle className="cart-title">
           {paymentStep === 'ready' ?
-            <DeleteSweepOutlinedIcon
-              className={`delete-icon ${cartItems.length > 0 ? "active" : ""}`}
-              onClick={() => setDeleteMode(!deleteMode)}
-            />
+            !deleteMode || cartItems.length === 0 ?
+              <DeleteSweepOutlinedIcon
+                className={`delete-icon ${cartItems.length > 0 ? "active" : ""}`}
+                onClick={() => setDeleteMode(true)}
+              />
+              :
+              <ClearAllOutlinedIcon
+                className={`list-icon ${cartItems.length > 0 ? "active" : ""}`}
+                onClick={() => setDeleteMode(false)}
+              />
             :
             <ArrowBackRoundedIcon
               className={`back-icon active ${paymentStep === 'done' ? "disabled" : ""}`}
@@ -708,9 +705,7 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
           {stepContents.map((content, index) => (
             <div
               key={index}
-              className={`step-content ${content.type}
-                ${paymentStep === content.type ? "active" : ""}
-                ${paymentStep !== 'ready' && getNextStep(content.type) === paymentStep ? "completed" : ""}`}
+              className={`step-content ${content.type} ${paymentStep === content.type ? "active" : ""} ${steps.indexOf(paymentStep) > steps.indexOf(content.type) ? "completed" : ""}`}
             >
               {content.content}
             </div>

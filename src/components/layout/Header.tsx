@@ -2,12 +2,11 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import dynamic from 'next/dynamic';
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Image from "@/components/Image";
 import SearchInput from "@/components/input/SearchInput";
-import CartDialog from "@/components/CartDialog";
 import MiniButton from "@/components/button/MiniButton";
-import NoticeDialog from "@/components/NoticeDialog";
 import { config } from "@/config";
 
 import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined';
@@ -33,6 +32,9 @@ import ContactSupportOutlinedIcon from '@mui/icons-material/ContactSupportOutlin
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import CloseIcon from '@mui/icons-material/Close';
 import PlaceIcon from '@mui/icons-material/Place';
+
+const NoticeDialog = dynamic(() => import('@/components/NoticeDialog'), { ssr: false });
+const CartDialog = dynamic(() => import('@/components/CartDialog'), { ssr: false });
 
 const menuItems: GroupMenuItem[] = [
   { groupName: "カスタム", groupHref: "/my", groupItems: [
