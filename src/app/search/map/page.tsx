@@ -13,15 +13,16 @@ import ShopCard from "@/components/ShopCard";
 import Selector from "@/components/input/Selector";
 import SwitchButton from "@/components/button/SwitchButton";
 import MiniButton from "@/components/button/MiniButton";
+import FoodCard from "@/components/FoodCard";
 
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import StarRoundedIcon from '@mui/icons-material/StarRounded';
 import CloseIcon from "@mui/icons-material/Close";
+import MyLocationOutlinedIcon from '@mui/icons-material/MyLocationOutlined';
 import ListOutlinedIcon from '@mui/icons-material/ListOutlined';
 import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import FoodCard from "@/components/FoodCard";
 
 const defaultPosition = {
   lat: 33.5902,
@@ -94,6 +95,10 @@ export default function SearchMapPage() {
     setIsMapVisible(!isMapVisible);
   };
 
+  const handleCurrentLocation = () => {
+    getCurrentLocation();
+  };
+
   const zoomIn = () => {
     if (map) {
       const newZoom = Math.min((map.getZoom() ?? 0) + 1, maxZoom);
@@ -149,6 +154,33 @@ export default function SearchMapPage() {
     }
   }
 
+  const getCurrentLocation = useCallback(() => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const userPlace: Place = {
+          placeId: "current",
+          position: {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          },
+        };
+        setCurrentPlace(userPlace);
+        if (map) {
+          map.setCenter(userPlace.position);
+        }
+      },
+      (err) => {
+        console.error(err.message);
+        const defaultPlace: Place = {
+          placeId: "default",
+          position: defaultPosition
+        };
+        setCurrentPlace(defaultPlace);
+        enqueueSnackbar('位置情報を取得に失敗しました。', { variant: 'error' });
+      }
+    );
+  }, [map]);
+
   useEffect(() => {
     const dummyShops: Shop[] = [
       { shopId: '1', location: '福岡市博多区', name: '唐揚げ壱番屋', description: '揚げ物専門店', type: 'bento', image: 'https://i.pinimg.com/236x/71/65/43/716543eb8e6907d7163b55000376e2be.jpg', ratingAvg: 4.5, businessHours: [
@@ -191,37 +223,14 @@ export default function SearchMapPage() {
     ];
     setFoods(dummyFoods);
     setMarkPlaces(dummyPlaces);
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const userPlace: Place = {
-          placeId: "current",
-          position: {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          },
-        };
-        setCurrentPlace(userPlace);
-      },
-      (err) => {
-        console.error(err.message);
-        const defaultPlace: Place = {
-          placeId: "default",
-          position: defaultPosition
-        };
-        setCurrentPlace(defaultPlace);
-        enqueueSnackbar('位置情報を取得に失敗しました。', { variant: 'error' });
-      }
-    );
-  }, []);
+    getCurrentLocation();
+  }, [getCurrentLocation]);
 
   useEffect(() => {
     if (isSp && isMapVisible) {
       window.scrollTo({
         top: 0,
       });
-      document.body.style.overflowY = 'hidden';
-    } else {
-      document.body.style.overflowY = '';
     }
   }, [isSp, isMapVisible]);
 
@@ -312,20 +321,32 @@ export default function SearchMapPage() {
             }
           </button>
           {isSp && isMapVisible && (
-            <MiniButton
-              className="sp-list-btn"
-              icon={<ListOutlinedIcon />}
-              onClick={toggleMapVisibility}
-              label="リスト表示"
-            />
+            <>
+              <MiniButton
+                className="sp-current-btn"
+                icon={<MyLocationOutlinedIcon />}
+                onClick={handleCurrentLocation}
+              />
+              <MiniButton
+                className="sp-list-btn"
+                icon={<ListOutlinedIcon />}
+                onClick={toggleMapVisibility}
+                label="リスト表示"
+              />
+            </>
           )}
           <div className="zoom-btn-group">
             <button className={`zoom-btn zoom-in ${zoomLevel >= maxZoom ? 'over' : ''}`} onClick={zoomIn}>
-              <AddIcon className="icon" />
+              <AddIcon />
             </button>
             <button className={`zoom-btn zoom-out ${zoomLevel <= minZoom ? 'over' : ''}`} onClick={zoomOut}>
-              <RemoveIcon className="arrow-icon" />
+              <RemoveIcon />
             </button>
+            <MiniButton
+              className="current-btn"
+              icon={<MyLocationOutlinedIcon />}
+              onClick={handleCurrentLocation}
+            />
           </div>
           <LoadScript
             googleMapsApiKey={config.googleMaps.apiKey}

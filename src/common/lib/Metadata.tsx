@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { config } from "@/config";
 import { signOgImageUrl } from "@/common/lib/OgImage";
 
-type MetadataType = "home" | "login" |
+type MetadataType = "home" | "login" | "signup" |
                     "my" | "my/order" | "my/favorite" | "my/point" | "my/coupon" | "my/order/review" |
                     "service" | "service/contact" | "service/partner" | "service/help" |
                     "shop" | "search";
@@ -84,6 +84,10 @@ export async function generatePageMetadata(type: MetadataType, name?: string): P
     "login": {
       ...baseMetadata,
       title: `ログイン | ${config.service.name}`,
+    },
+    "signup": {
+      ...baseMetadata,
+      title: `新規登録 | ${config.service.name}`,
     },
     "my": {
       ...baseMetadata,
