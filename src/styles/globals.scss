@@ -339,6 +339,10 @@ table {
   }
 }
 
+.snackbar {
+  white-space: pre-wrap;
+}
+
 .item-quantity-btn {
   display: flex;
   align-items: center;
@@ -3075,6 +3079,11 @@ table {
     .bottom-container {
       flex-direction: column;
       gap: 0.5rem;
+    }
+  }
+  .snackbar {
+    #notistack-snackbar {
+      width: 88%;
     }
   }
   .search-map-page {

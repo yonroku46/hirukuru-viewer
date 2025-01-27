@@ -85,6 +85,15 @@ declare global {
     point: number;
     shopOwner: boolean;
   }
+  interface UserState {
+    userId?: string;
+    name?: string;
+    profileImg?: string;
+    mail?: string;
+    token?: string;
+    refreshToken?: string;
+    mailAuth?: boolean;
+  }
   interface ServiceEvent {
     eventId: string;
     title: string;

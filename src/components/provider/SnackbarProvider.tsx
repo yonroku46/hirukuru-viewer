@@ -22,6 +22,9 @@ export default function SnackbarProvider({ children }: { children: React.ReactNo
       autoHideDuration={4500}
       preventDuplicate={true}
       action={(key) => <SnackbarAction id={key} />}
+      classes={{
+        root: "snackbar",
+      }}
     >
       {children}
     </NotistackSnackbarProvider>
