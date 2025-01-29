@@ -48,7 +48,7 @@ export default function ServiceContactPage() {
       <div className='partner-page'>
         <div className='main-message'>
           <div className='thanks partner'>
-            {`Webで簡単！サービス導入・運営は無料！`}
+            {`Webで簡単！サービス導入・運営が永久無料！`}
           </div>
           <h1 className='title'>
             {`パートナー申請`}

@@ -32,7 +32,7 @@ export default function FoodCard({ data, onClick, onHover, href, openNewTab, sol
       <div className="image-wrapper">
         <Image
           className={`image ${soldOut ? "sold-out" : ""}`}
-          src={data.image}
+          src={data.thumbnailImg}
           alt={data.name}
           width={280}
           height={160}

@@ -1,13 +1,16 @@
 "use client";
 
-import Link from "next/link";
-
 export default function ServicePage() {
   return (
     <div className="service container">
-      <Link href="/search/map">
-        マップで検索
-      </Link>
+      <div className="service-container">
+        <h1 className="title">
+          Hirukuru
+        </h1>
+        <p className="description">
+          ランチをラクに、余裕のある時間へ
+        </p>
+      </div>
     </div>
   );
 }

@@ -58,7 +58,7 @@ export default function NewShopSlider({ shops }: NewShopSliderProps) {
               </p>
               <Image
                 className="newshop-image"
-                src={shop.image}
+                src={shop.thumbnailImg}
                 alt={shop.name}
                 width={200}
                 height={200}

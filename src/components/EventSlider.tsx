@@ -12,7 +12,7 @@ import ArrowLeftRoundedIcon from '@mui/icons-material/ArrowLeftRounded';
 import ArrowRightRoundedIcon from '@mui/icons-material/ArrowRightRounded';
 
 interface EventSliderProps {
-  events: ServiceEvent[];
+  events: ServiceNotice[];
 }
 
 export default function EventSlider({ events }: EventSliderProps) {
@@ -48,9 +48,9 @@ export default function EventSlider({ events }: EventSliderProps) {
     <div className="event-slider">
       <Slider ref={sliderRef} {...settings}>
         {events.map((event) => (
-          <Link key={event.eventId} href={event.href || `/service/notice/${event.eventId}`} className="slider-item">
+          <Link key={event.noticeId} href={event.href || `/service/notice/${event.noticeId}`} className="slider-item">
             <Image
-              src={event.image}
+              src={event.thumbnailImg}
               alt={event.title}
               fill
             />

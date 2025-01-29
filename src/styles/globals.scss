@@ -2200,6 +2200,68 @@ table {
   }
 }
 
+.notice-card {
+  transition: opacity 0.2s ease-in-out;
+  &:hover {
+    cursor: pointer;
+    opacity: 0.8;
+  }
+  .image-wrapper {
+    display: flex;
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.5rem;
+    box-shadow: 0px 0px 4px var(--gray-alpha-300);
+    .image {
+      width: 100%;
+      position: relative;
+    }
+  }
+  .info-wrapper {
+    padding: 0.25rem;
+    border-radius: 0.5rem;
+    .type-date-wrapper {
+      display: flex;
+      align-items: baseline;
+      font-size: 0.875rem;
+      padding-top: 0.25rem;
+      padding-bottom: 0.5rem;
+      .type {
+        font-weight: bold;
+        &.notice {
+          color: var(--primary-color);
+        }
+        &.event {
+          color: var(--accent-color);
+        }
+      }
+      .date {
+        &:before {
+          content: "|";
+          margin-right: 0.5rem;
+          padding-left: 0.5rem;
+          color: var(--gray-alpha-400);
+        }
+      }
+    }
+    .title {
+      font-size: 1.1rem;
+      font-weight: bold;
+      padding-bottom: 0.25rem;
+    }
+    .description {
+      font-size: 0.875rem;
+      font-weight: normal;
+      white-space: break-spaces;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
 .shop-card {
   transition: opacity 0.2s ease-in-out;
   &:hover {
@@ -2811,6 +2873,34 @@ table {
       }
     }
   }
+  .notice-page {
+    width: 100%;
+    .title-wrapper {
+      display: flex;
+      flex-direction: column;
+      .title {
+        font-size: 1.75rem;
+        font-weight: bold;
+      }
+      .description {
+        font-size: 1rem;
+        font-weight: normal;
+      }
+    }
+    .search-wrapper {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-top: 3rem;
+      margin-bottom: 1rem;
+    }
+    .notice-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      padding-bottom: 2rem;
+    }
+  }
 }
 
 .newshop-slider {
@@ -3235,6 +3325,11 @@ table {
       .main-message {
         align-items: center;
         padding: 0;
+      }
+    }
+    .notice-page {
+      .notice-list {
+        grid-template-columns: repeat(1, 1fr);
       }
     }
   }

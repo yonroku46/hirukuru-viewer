@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "@/components/Image";
@@ -34,21 +34,21 @@ export default function MyPage() {
 
   const [user, setUser] = useState<User | null>(null);
 
+  const getUserInfo = useCallback(() => {
+    userService.userInfo().then((user) => {
+      if (user) {
+        setUser(user);
+      }
+    });
+  }, [userService]);
+
   useEffect(() => {
     if (!authState.hasLogin) {
       router.replace('/login');
       return;
     }
     getUserInfo();
-  }, [authState.hasLogin]);
-
-  async function getUserInfo() {
-    userService.userInfo().then((user) => {
-      if (user) {
-        setUser(user);
-      }
-    });
-  }
+  }, [router, authState, getUserInfo]);
 
   const orderStatus: OrderStatus[] = [
     { type: 'booked', value: 0 },

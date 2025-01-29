@@ -183,7 +183,7 @@ export default function SearchMapPage() {
 
   useEffect(() => {
     const dummyShops: Shop[] = [
-      { shopId: '1', location: '福岡市博多区', name: '唐揚げ壱番屋', description: '揚げ物専門店', type: 'bento', image: 'https://i.pinimg.com/236x/71/65/43/716543eb8e6907d7163b55000376e2be.jpg', ratingAvg: 4.5, businessHours: [
+      { shopId: '1', location: '福岡市博多区', name: '唐揚げ壱番屋', description: '揚げ物専門店', type: 'bento', thumbnailImg: 'https://i.pinimg.com/236x/71/65/43/716543eb8e6907d7163b55000376e2be.jpg', ratingAvg: 4.5, businessHours: [
           { day: 'mon', open: '10:00', close: '23:50' },
           { day: 'tue', open: '10:00', close: '23:50' },
           { day: 'wed', open: '10:00', close: '23:50' },
@@ -193,17 +193,17 @@ export default function SearchMapPage() {
           { day: 'sun', open: '10:00', close: '23:50' },
         ]
       },
-      { shopId: '2', location: '福岡市中央区', name: 'チキンが一番', description: 'チキン専門店', type: 'foodtruck', image: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', ratingAvg: 4.0, businessHours: [
+      { shopId: '2', location: '福岡市中央区', name: 'チキンが一番', description: 'チキン専門店', type: 'foodtruck', thumbnailImg: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', ratingAvg: 4.0, businessHours: [
           { day: 'mon', open: '10:00', close: '20:00' },
           { day: 'wed', open: '10:00', close: '20:00' },
         ]
       },
-      { shopId: '3', location: '福岡市中央区', name: 'チキンが一番', description: 'チキン専門店', type: 'foodtruck', image: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', ratingAvg: 4.0, businessHours: [
+      { shopId: '3', location: '福岡市中央区', name: 'チキンが一番', description: 'チキン専門店', type: 'foodtruck', thumbnailImg: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', ratingAvg: 4.0, businessHours: [
           { day: 'mon', open: '10:00', close: '20:00' },
           { day: 'wed', open: '10:00', close: '20:00' },
         ]
       },
-      { shopId: '4', location: '福岡市中央区', name: 'チキンが一番', description: 'チキン専門店', type: 'foodtruck', image: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', ratingAvg: 4.0, businessHours: [
+      { shopId: '4', location: '福岡市中央区', name: 'チキンが一番', description: 'チキン専門店', type: 'foodtruck', thumbnailImg: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', ratingAvg: 4.0, businessHours: [
           { day: 'mon', open: '10:00', close: '20:00' },
           { day: 'wed', open: '10:00', close: '20:00' },
         ]
@@ -215,7 +215,7 @@ export default function SearchMapPage() {
     ];
     setShops(dummyShops);
     const dummyFoods: Food[] = [
-      { foodId: '1', shopId: '1', category: '日替わり弁当', name: '唐揚げ弁当', description: "国内産の鶏肉を使用した唐揚げ弁当です。", ingredients: ["唐揚げ", "ほうれん草ナムル", "白ごはん"], price: 2000, discountPrice: 500, rating: 4.3, stock: 9, image: 'https://i.pinimg.com/736x/f2/67/df/f267dfdd2b0cb8eac4b5e9674aa49e97.jpg', optionMultiple: true, options: [
+      { foodId: '1', shopId: '1', category: '日替わり弁当', name: '唐揚げ弁当', description: "国内産の鶏肉を使用した唐揚げ弁当です。", ingredients: ["唐揚げ", "ほうれん草ナムル", "白ごはん"], price: 2000, discountPrice: 500, rating: 4.3, stock: 9, thumbnailImg: 'https://i.pinimg.com/736x/f2/67/df/f267dfdd2b0cb8eac4b5e9674aa49e97.jpg', optionMultiple: true, options: [
         { optionId: '1', foodId: '1', shopId: 'fuk001', name: 'お茶', price: 150 },
         { optionId: '2', foodId: '1', shopId: 'fuk001', name: 'コーラ', price: 200 },
         { optionId: '11', foodId: '1', shopId: 'fuk001', name: 'メガ盛り', price: 300 },
@@ -393,7 +393,7 @@ export default function SearchMapPage() {
                         <Link href={`/shop/${shop.shopId}`} target="_blank">
                           <div className="info-window">
                             <div className="info-image">
-                              <Image src={shop.image} alt={shop.name} width={220} height={120} />
+                              <Image src={shop.thumbnailImg} alt={shop.name} width={220} height={120} />
                               <button className="close-btn" onClick={handleCloseInfoWindow}>
                                 <CloseIcon fontSize="small" />
                               </button>

@@ -451,7 +451,7 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
             <div key={index} className="cart-item">
               <div className="cart-item-wrapper">
                 <div className="cart-item-img">
-                  <Image className={deleteMode ? "delete-mode" : ""} src={item.image} alt={item.name} width={60} height={60} />
+                  <Image className={deleteMode ? "delete-mode" : ""} src={item.thumbnailImg} alt={item.name} width={60} height={60} />
                   {deleteMode &&
                     <IconButton className="delete-icon" onClick={() => handleDeleteItem(item.foodId, item.options || [])}>
                       <DeleteOutlineOutlinedIcon />

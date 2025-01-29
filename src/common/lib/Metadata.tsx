@@ -4,7 +4,7 @@ import { signOgImageUrl } from "@/common/lib/OgImage";
 
 type MetadataType = "home" | "login" | "signup" |
                     "my" | "my/order" | "my/favorite" | "my/point" | "my/coupon" | "my/order/review" |
-                    "service" | "service/contact" | "service/partner" | "service/help" |
+                    "service" | "service/contact" | "service/partner" | "service/notice" | "service/help" |
                     "shop" | "search";
 
 export async function generatePageMetadata(type: MetadataType, name?: string): Promise<Metadata> {
@@ -132,6 +132,10 @@ export async function generatePageMetadata(type: MetadataType, name?: string): P
     "service/partner": {
       ...baseMetadata,
       title: `パートナー申請 | ${config.service.name}`,
+    },
+    "service/notice": {
+      ...baseMetadata,
+      title: `お知らせ | ${config.service.name}`,
     },
     "service/help": {
       ...baseMetadata,

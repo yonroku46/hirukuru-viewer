@@ -78,10 +78,10 @@ export default function ShopInfoDialog({ data, position, open, setOpen }: ShopIn
                 <AccessTimeOutlinedIcon className="item-icon" />
                 <div className="item-content">
                   <strong>
-                    {isBusinessOpen(data.businessHours) ? '営業中' : '営業時間外'}
+                    {isBusinessOpen(data.businessHours || []) ? '営業中' : '営業時間外'}
                   </strong>
                   <p>
-                    {formatWeeklyBusinessHours(data.businessHours)}
+                    {formatWeeklyBusinessHours(data.businessHours || [])}
                   </p>
                 </div>
               </div>

@@ -30,13 +30,13 @@ export default function ShopCard({ data, onClick, onHover, href, openNewTab, isF
       <div className="image-wrapper">
         <Image
           className="image"
-          src={data.image}
+          src={data.thumbnailImg}
           alt={data.name}
           width={280}
           height={160}
         />
-        <div className={`open-tag ${isBusinessOpen(data.businessHours) ? 'open' : 'closed'}`}>
-          {isBusinessOpen(data.businessHours) ? '営業中' : '営業時間外'}
+        <div className={`open-tag ${isBusinessOpen(data.businessHours || []) ? 'open' : 'closed'}`}>
+          {isBusinessOpen(data.businessHours || []) ? '営業中' : '営業時間外'}
         </div>
         {handleFavorite &&
           <IconButton
@@ -60,7 +60,7 @@ export default function ShopCard({ data, onClick, onHover, href, openNewTab, isF
           <div className="details">
             <div className="location">{data.location}</div>
             <div className="description">
-              {data.description || formatTodayBusinessHours(data.businessHours)}
+              {data.description || formatTodayBusinessHours(data.businessHours || [])}
             </div>
           </div>
         </div>

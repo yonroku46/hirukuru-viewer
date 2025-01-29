@@ -72,7 +72,7 @@ export default function MyOrderPage() {
     const dummyUser = {
       userId: 'U101',
       name: 'テストユーザー',
-      profileImage: '/assets/img/no-user.jpg',
+      profileImg: '/assets/img/no-user.jpg',
       point: 1000,
       shopOwner: false,
     }

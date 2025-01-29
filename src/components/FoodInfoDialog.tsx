@@ -74,7 +74,7 @@ export default function FoodInfoDialog({ data, open, setOpen, isFavorite, handle
         <DialogContent className="content">
           <div className="image-wrapper">
             <Image
-              src={data.image}
+              src={data.thumbnailImg}
               alt={data.name}
               width={280}
               height={160}

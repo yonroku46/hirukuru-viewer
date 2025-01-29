@@ -94,12 +94,17 @@ declare global {
     refreshToken?: string;
     mailAuth?: boolean;
   }
-  interface ServiceEvent {
-    eventId: string;
+  interface ServiceNotice {
+    noticeId: string;
+    type: ServiceNoticeType['type'];
     title: string;
     description: string;
-    image: string;
+    thumbnailImg: string;
     href?: string;
+    date: string;
+  }
+  interface ServiceNoticeType {
+    type: 'notice' | 'event';
   }
   interface HotKeywords {
     label: string;
@@ -121,8 +126,8 @@ declare global {
     name: string;
     description: string;
     type: ShopType['type'];
-    image: string;
-    businessHours: BusinessHour[];
+    thumbnailImg: string;
+    businessHours?: BusinessHour[];
     reviewcount?: number;
     ratingAvg?: number;
     rating?: {
@@ -190,7 +195,7 @@ declare global {
     price: number;
     discountPrice?: number;
     rating?: number;
-    image: string;
+    thumbnailImg: string;
     quantity?: number;
     stock?: number;
     optionMultiple?: boolean;
