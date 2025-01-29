@@ -1,5 +1,15 @@
 import dayjs from "dayjs";
 
+export function createState(len: number) {
+  let characters = '0123456789abcdefghijklmnopqrstuvwxyz';
+  let result = '';
+  for (let i = 0; i < len; i++) {
+    let randomIndex = Math.floor(Math.random() * characters.length);
+    result += characters.charAt(randomIndex);
+  }
+  return result;
+}
+
 export function formatDaysAgo(dateString: string): string | undefined {
   const inputDate = dayjs(dateString).startOf('day');
   const currentDate = dayjs().startOf('day');

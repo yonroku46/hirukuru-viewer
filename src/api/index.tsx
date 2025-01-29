@@ -12,7 +12,7 @@ interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
 }
 
 const ApiInstance = axios.create()
-axios.defaults.baseURL = `${process.env.NEXT_PUBLIC_APP_ADDRESS}:${process.env.NEXT_PUBLIC_VIEW_PORT}`;
+axios.defaults.baseURL = `${process.env.NEXT_PUBLIC_BASE_URL}:${process.env.NEXT_PUBLIC_VIEW_PORT}`;
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
 axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
 

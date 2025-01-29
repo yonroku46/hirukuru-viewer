@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import Link from "next/link";
 import { enqueueSnackbar } from "notistack";
 import { useAppSelector, useAppDispatch } from "@/store";
-import { googleLogin } from "@/common/utils/OAuth2Utils";
+import { googleLogin, lineLogin } from "@/common/utils/OAuth2Utils";
 import Loading from "@/app/loading";
 import AuthService from "@/api/service/AuthService";
 import OAuth2Service from "@/api/service/OAuth2Service";
@@ -41,10 +41,25 @@ export default function LoginPage() {
         console.error(event.data.error)
         return;
       }
-      if (event.data.platform === 'google' && event.data.code) {
+      const platform = event.data.platform;
+      const code = event.data.code;
+      if (platform === 'google' && code) {
         setLoginSuccess(true);
         clearInterval(checkPopupInterval as NodeJS.Timeout);
-        oAuth2Service.googleAccess(event.data.code).then(data => {
+        oAuth2Service.googleAccess(code).then(data => {
+          if (data) {
+            const redirect = sessionStorage.getItem('redirect') || '/';
+            router.replace(redirect);
+          } else {
+            enqueueSnackbar("ログインに失敗しました", { variant: "error" });
+          }
+          setLoading(false);
+        });
+      }
+      if (platform === 'line' && code) {
+        setLoginSuccess(true);
+        clearInterval(checkPopupInterval as NodeJS.Timeout);
+        oAuth2Service.lineAccess(code).then(data => {
           if (data) {
             const redirect = sessionStorage.getItem('redirect') || '/';
             router.replace(redirect);
@@ -91,9 +106,7 @@ export default function LoginPage() {
   const handleEmailLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (userId === "" || userPw === "") {
-      enqueueSnackbar("ログイン情報を入力してください", {
-        variant: "warning",
-      });
+      enqueueSnackbar("ログイン情報を入力してください", { variant: "warning" });
       return;
     }
     const result = await authService.login(userId, userPw);
@@ -108,7 +121,7 @@ export default function LoginPage() {
     if (platform === 'GOOGLE') {
       openLoginModal(googleLogin());
     } else if (platform === 'LINE') {
-      enqueueSnackbar("LINEログインは現在サポートしていません", { variant: "info" });
+      openLoginModal(lineLogin());
     }
   }
 

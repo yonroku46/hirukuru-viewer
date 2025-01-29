@@ -7,6 +7,9 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Image from "@/components/Image";
 import SearchInput from "@/components/input/SearchInput";
 import MiniButton from "@/components/button/MiniButton";
+import AuthService from "@/api/service/AuthService";
+import CartDialog from "@/components/CartDialog";
+import { useAppDispatch, useAppSelector } from "@/store";
 import { config } from "@/config";
 
 import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined';
@@ -14,7 +17,6 @@ import IconButton from "@mui/material/IconButton";
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -32,9 +34,9 @@ import ContactSupportOutlinedIcon from '@mui/icons-material/ContactSupportOutlin
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import CloseIcon from '@mui/icons-material/Close';
 import PlaceIcon from '@mui/icons-material/Place';
+import { enqueueSnackbar } from "notistack";
 
 const NoticeDialog = dynamic(() => import('@/components/NoticeDialog'), { ssr: false });
-const CartDialog = dynamic(() => import('@/components/CartDialog'), { ssr: false });
 
 const menuItems: GroupMenuItem[] = [
   { groupName: "カスタム", groupHref: "/my", groupItems: [
@@ -58,6 +60,11 @@ export default function Header() {
   const searchParams = useSearchParams();
   const q = searchParams.get('q');
 
+  const dispatch = useAppDispatch();
+  const authService = AuthService(dispatch);
+
+  const authState = useAppSelector((state) => state.auth);
+
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const [noticeOpen, setNoticeOpen] = useState<boolean>(false);
   const [cartOpen, setCartOpen] = useState<boolean>(false);
@@ -71,9 +78,19 @@ export default function Header() {
     setMenuOpen(newOpen);
   };
 
-  const loginHandle = () => () => {
+  const loginHandle = () => {
     setMenuOpen(false);
     router.push('/login');
+  };
+
+  const logoutHandle = async () => {
+    setMenuOpen(false);
+    await authService.logout(true).then((result) => {
+      if (result) {
+        router.push('/');
+        enqueueSnackbar("ログアウトしました", { variant: "success" });
+      }
+    });
   };
 
   const searchHandle = () => {
@@ -211,16 +228,27 @@ export default function Header() {
                   marginRight: "1rem",
                 }}
               />
-              <Box sx={{ p: "1rem", fontSize: "0.875rem", display: "flex", alignItems: "center", justifyContent: "space-between"}}>
-                ログインが必要です
-                <Button
-                  variant="contained"
-                  onClick={loginHandle()}
-                >
-                 ログイン
-                </Button>
-              </Box>
-              <Divider />
+              {authState.hasLogin ?
+                <Box sx={{ p: "1rem", fontSize: "0.875rem", display: "flex", alignItems: "center", justifyContent: "space-between"}}>
+                  ログイン中
+                  <Button
+                    variant="contained"
+                    onClick={() => logoutHandle()}
+                  >
+                    ログアウト
+                  </Button>
+                </Box>
+              :
+                <Box sx={{ p: "1rem", fontSize: "0.875rem", display: "flex", alignItems: "center", justifyContent: "space-between"}}>
+                  ログインが必要です
+                  <Button
+                    variant="contained"
+                    onClick={() => loginHandle()}
+                  >
+                    ログイン
+                  </Button>
+                </Box>
+              }
               {menuItems.map((group) => (
                 <div key={group.groupName}>
                   <ListItem disablePadding>

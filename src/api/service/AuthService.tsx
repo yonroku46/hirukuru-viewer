@@ -1,23 +1,24 @@
 import ApiInstance from '@/api';
 import ApiRoutes from '@/api/module/ApiRoutes';
+import { dateNow } from '@/common/utils/DateUtils';
 import { AppDispatch } from '@/store';
 import { setAuthState } from '@/store/slice/authSlice';
 
 export default function AuthService(dispatch: AppDispatch) {
   async function login(userId: string, userPw: string): Promise<any> {
     const params = {
-      userId: userId,
-      userPw: userPw
+      mail: userId,
+      password: userPw
     }
-    const response: ApiResponse = await ApiInstance.post(ApiRoutes.LOGIN, { params });
+    const response: ApiResponse = await ApiInstance.post(ApiRoutes.LOGIN, params);
     if (response && !response.hasErrors) {
-      const current = new Date();
+      const current = dateNow();
       const userInfo = response.responseData;
       if (userInfo) {
         const jwtInfo = {
           mail: userInfo.mail,
-          iat: current.getTime(),
-          lat: current.getTime() + (1000*60*60*24)
+          iat: current.valueOf(),
+          lat: current.valueOf() + (1000*60*60*24)
         }
         localStorage.setItem('jwtInfo', JSON.stringify(jwtInfo));
         localStorage.setItem('currentUser', JSON.stringify(userInfo));
@@ -28,19 +29,17 @@ export default function AuthService(dispatch: AppDispatch) {
   }
 
   async function logout(isSendReq: boolean): Promise<any> {
+    storageClear();
     if (isSendReq) {
       try {
         const response: ApiResponse = await ApiInstance.post(ApiRoutes.LOGOUT);
         if (response && !response.hasErrors) {
-          storageClear();
           return true;
         }
       } catch (err) {
         console.error(err);
         return false;
       }
-    } else {
-      storageClear();
     }
   }
 

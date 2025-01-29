@@ -139,6 +139,31 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
   }, 0);
 
   useEffect(() => {
+    // Square Payments SDKのロード
+    const loadSquarePayments = async () => {
+      try {
+        const paymentsInstance = await payments(
+          config.square.sandboxId,
+          config.square.sandboxLocationId
+        );
+        if (!paymentsInstance) {
+          console.error('Square Payments SDK failed to load');
+          return;
+        }
+        await paymentsInstance.setLocale('ja-JP');
+        setSquarePayments(paymentsInstance);
+      } catch (err) {
+        console.error('Error loading Square Payments SDK:', err);
+      }
+    }
+    loadSquarePayments();
+
+    return () => {
+      setSquarePayments(null);
+    }
+  }, []);
+
+  useEffect(() => {
     // 初期化
     if (open) {
       setCurrentDateTime(dateNow().format('YYYY-MM-DD HH:mm'));
@@ -156,21 +181,6 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
   }, [open]);
 
   useEffect(() => {
-    // Square Payments SDKのロード
-    const loadSquarePayments = async () => {
-      const paymentsInstance = await payments(
-        config.square.sandboxId,
-        config.square.sandboxLocationId
-      );
-      if (!paymentsInstance) {
-        console.error('Square Payments SDK failed to load');
-        return;
-      }
-      await paymentsInstance.setLocale('ja-JP');
-      setSquarePayments(paymentsInstance);
-    }
-    loadSquarePayments();
-
     // 現在時刻の更新
     const interval = setInterval(() => {
       if (open && paymentStep === 'final') {
@@ -180,7 +190,6 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
     }, 1000);
 
     return () => {
-      setSquarePayments(null);
       clearInterval(interval);
     }
   }, [open, paymentStep]);

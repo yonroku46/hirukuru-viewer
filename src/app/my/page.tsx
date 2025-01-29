@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Image from "@/components/Image";
 import LinkList from "@/components/LinkList";
 import OrderStatus from "@/components/OrderStatus";
@@ -9,6 +10,8 @@ import { currency } from "@/common/utils/StringUtils";
 import NoticeBoard from "@/components/NoticeBoard";
 import ReviewStatus from "@/components/ReviewStatus";
 import MiniButton from "@/components/button/MiniButton";
+import UserService from "@/api/service/UserService";
+import { useAppSelector } from "@/store";
 
 import ShoppingBasketOutlinedIcon from '@mui/icons-material/ShoppingBasketOutlined';
 import AddCardOutlinedIcon from '@mui/icons-material/AddCardOutlined';
@@ -24,18 +27,28 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import StoreTwoToneIcon from '@mui/icons-material/StoreTwoTone';
 
 export default function MyPage() {
+  const router = useRouter();
+  const authState = useAppSelector((state) => state.auth);
+
+  const userService = UserService();
+
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const dummyUser = {
-      userId: 'U101',
-      name: 'テストユーザー',
-      profileImage: '/assets/img/no-user.jpg',
-      point: 1000,
-      shopOwner: false,
+    if (!authState.hasLogin) {
+      router.replace('/login');
+      return;
     }
-    setUser(dummyUser);
-  }, []);
+    getUserInfo();
+  }, [authState.hasLogin]);
+
+  async function getUserInfo() {
+    userService.userInfo().then((user) => {
+      if (user) {
+        setUser(user);
+      }
+    });
+  }
 
   const orderStatus: OrderStatus[] = [
     { type: 'booked', value: 0 },
@@ -80,7 +93,7 @@ export default function MyPage() {
         <div className="user-info">
           <div className="user-profile-wrapper">
             <Image
-              src={user.profileImage}
+              src={user.profileImg}
               alt={user.name}
               width={74}
               height={74}
