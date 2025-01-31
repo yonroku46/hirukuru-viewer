@@ -233,8 +233,6 @@ export default function MuiTable<T extends Row>({ topSection, columns, rows }: M
             <TableRow>
               {columns.map((column) => {
                 if (column.hide) return null;
-                const visibleColumns = columns.filter(col => !col.hide);
-                const visibleIndex = visibleColumns.findIndex(col => col.key === column.key);
                 return (
                   <TableCell
                     key={column.key as string}
@@ -242,8 +240,6 @@ export default function MuiTable<T extends Row>({ topSection, columns, rows }: M
                     sx={{
                       backgroundColor: 'var(--foreground)',
                       color: 'var(--background)',
-                      borderTopLeftRadius: visibleIndex === 0 ? '0.5rem' : 'unset',
-                      borderTopRightRadius: visibleIndex === visibleColumns.length - 1 ? '0.5rem' : 'unset',
                       width: column.width,
                       minWidth: column.minWidth,
                       maxWidth: column.maxWidth,

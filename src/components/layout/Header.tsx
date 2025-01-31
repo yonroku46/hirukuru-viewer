@@ -29,6 +29,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import StorefrontIcon from '@mui/icons-material/Storefront';
+import LocalLibraryOutlinedIcon from '@mui/icons-material/LocalLibraryOutlined';
 import InterestsOutlinedIcon from '@mui/icons-material/InterestsOutlined';
 import ContactSupportOutlinedIcon from '@mui/icons-material/ContactSupportOutlined';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
@@ -48,6 +49,7 @@ const menuItems: GroupMenuItem[] = [
     { name: "ランキング", href: "/search/ranking", icon: <TrendingUpIcon /> },
   ]},
   { groupName: "サービス", groupHref: "/service", groupItems: [
+    { name: "サービス紹介", href: "/service", icon: <LocalLibraryOutlinedIcon /> },
     { name: "お問い合わせ", href: "/service/contact", icon: <SupportAgentIcon /> },
     { name: "パートナー申請", href: "/service/partner", icon: <StorefrontIcon /> },
     { name: "お知らせ", href: "/service/notice", icon: <InterestsOutlinedIcon /> },

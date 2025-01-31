@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { createKanaSearchRegex } from "@/common/utils/SearchUtils";
 import SearchInput from "@/components/input/SearchInput";
 import MuiBreadcrumbs from "@/components/mui/MuiBreadcrumbs";
 import NoticeCard from "@/components/NoticeCard";
+
+import SearchOffIcon from '@mui/icons-material/SearchOff';
+import Pagination from '@mui/material/Pagination';
 
 export default function ServiceNoticePage() {
   const breadcrumbs: Breadcrumb[] = [
@@ -12,26 +14,14 @@ export default function ServiceNoticePage() {
     { label: 'お知らせ', href: '/service/notice', active: true },
   ];
 
-  const [type, setType] = useState<'all' | ServiceNoticeType['type']>('all');
   const [searchValue, setSearchValue] = useState<string>('');
   const [noticeList, setNoticeList] = useState<ServiceNotice[]>([]);
-  const [filteredNoticeList, setFilteredNoticeList] = useState<ServiceNotice[]>([]);
+  const [page, setPage] = useState<number>(1);
+  const perPage = 9;
 
-   const searchFilters: SearchFilter[] = [
-    { type: 'select', key: 'type', label: '種類', value: type, options: [
-      { label: '全て', value: 'all' },
-      { label: 'お知らせ', value: 'notice' },
-      { label: 'イベント', value: 'event' }
-    ]},
-  ]
-
-  const handleFilterApply = (updatedFilters: SearchFilter[]) => {
-    updatedFilters.forEach(filter => {
-      if (filter.key === 'type') {
-        setType(filter.value as 'all' | ServiceNoticeType['type']);
-      }
-    });
-  }
+  const handleChange = (e: React.ChangeEvent<unknown>, value: number) => {
+    setPage(value);
+  };
 
   useEffect(() => {
     const dummyNoticeList: ServiceNotice[] = [
@@ -44,43 +34,50 @@ export default function ServiceNoticePage() {
     setNoticeList(dummyNoticeList);
   }, []);
 
-  useEffect(() => {
-    const filteredNoticeList = noticeList.filter((notice) => {
-      const searchRegex = createKanaSearchRegex(searchValue);
-      if (type !== 'all' && notice.type !== type) return false;
-      return searchRegex.test(notice.title) || searchRegex.test(notice.description);
-    });
-    setFilteredNoticeList(filteredNoticeList);
-  }, [searchValue, noticeList, type]);
-
   return (
-    <div className="service container">
-      <MuiBreadcrumbs breadcrumbs={breadcrumbs} />
-      <div className="notice-page">
-        <div className="title-wrapper">
-          <h1 className="title">
-            お知らせ
-          </h1>
-          <p className="description">
-            サービスのイベント及びお知らせを掲載しています
-          </p>
-        </div>
-        <div className="search-wrapper">
-          <SearchInput
-            searchMode
-            placeholder="キーワード検索"
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            filters={searchFilters}
-            onFilterApply={handleFilterApply}
-          />
-        </div>
-        <div className="notice-list">
-          {filteredNoticeList.map((notice, index) => (
-            <NoticeCard key={index} data={notice} />
-          ))}
+    <article>
+      <div className="background" />
+      <div className="service container">
+        <MuiBreadcrumbs breadcrumbs={breadcrumbs} />
+        <div className="notice-page">
+          <div className="title-wrapper">
+            <h1 className="title">
+              お知らせ
+            </h1>
+            <p className="description">
+              サービスのイベント及びお知らせを掲載しています
+            </p>
+          </div>
+          <div className="search-wrapper">
+            <SearchInput
+              searchMode
+              placeholder="キーワード検索"
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+            />
+          </div>
+          {noticeList.length > 0 ?
+            <div className="notice-list">
+              {noticeList.slice((page - 1) * perPage, page * perPage).map((notice, index) => (
+                <NoticeCard key={index} data={notice} />
+              ))}
+            </div>
+          :
+            <div className="notice-list empty">
+              <SearchOffIcon fontSize="large" />
+              表示するコンテンツがありません
+            </div>
+          }
+          <div className="pagination-wrapper">
+            <Pagination
+              count={Math.ceil(noticeList.length / perPage)}
+              shape="rounded"
+              page={page}
+              onChange={handleChange}
+            />
+          </div>
         </div>
       </div>
-    </div>
+    </article>
   );
 }

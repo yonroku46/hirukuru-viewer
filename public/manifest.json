@@ -1,7 +1,7 @@
 {
-  "name": "Univus",
-  "short_name": "Univus",
-  "description": "Univus Inc.",
+  "name": "Hirukuru",
+  "short_name": "Hirukuru",
+  "description": "ランチをラクに、余裕のある時間へ",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

@@ -12,6 +12,7 @@ const menuItems: GroupMenuItem[] = [
     { name: "ランキング", href: "/search/ranking" },
   ]},
   { groupName: "サービス", groupHref: "/service", groupItems: [
+    { name: "サービス紹介", href: "/service" },
     { name: "お問い合わせ", href: "/service/contact" },
     { name: "パートナー申請", href: "/service/partner" },
     { name: "お知らせ", href: "/service/notice" },
