@@ -343,6 +343,41 @@ table {
   border-bottom: 1px solid var(--gray-alpha-300);
 }
 
+.main-menu {
+  .menu-top {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem 1rem;
+    .login-btn {
+      gap: 0.75rem;
+      font-size: 1rem;
+      padding: 0.75rem 1rem;
+      background-color: var(--foreground);
+      color: var(--background);
+      width: 100%;
+    }
+    .user-profilie {
+      border-radius: 50%;
+    }
+    .user-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      .user-name {
+        font-size: 1.25rem;
+      }
+      .logout-btn {
+        display: flex;
+        align-items: center;
+        font-size: 0.875rem;
+        cursor: pointer;
+        opacity: 0.7;
+      }
+    }
+  }
+}
+
 .breadcrumbs {
   width: 100%;
   a {
@@ -820,6 +855,7 @@ table {
       opacity: 0.4;
       pointer-events: none;
       width: 100%;
+      padding: 0.75rem 1rem;
       transition: opacity 0.2s;
       margin: 0;
       &.active {
@@ -2949,7 +2985,7 @@ table {
               td {
                 border-bottom: none;
                 font-weight: bold;
-                font-size: 1.5rem;
+                font-size: 1.25rem;
               }
             }
             td {

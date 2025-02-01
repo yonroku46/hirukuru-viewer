@@ -9,6 +9,7 @@ import SearchInput from "@/components/input/SearchInput";
 import MiniButton from "@/components/button/MiniButton";
 import AuthService from "@/api/service/AuthService";
 import CartDialog from "@/components/CartDialog";
+import { enqueueSnackbar } from "notistack";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { config } from "@/config";
 
@@ -22,7 +23,6 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import MenuIcon from '@mui/icons-material/Menu';
-import Button from "@mui/material/Button";
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import ShoppingBasketOutlinedIcon from '@mui/icons-material/ShoppingBasketOutlined';
 import SearchIcon from '@mui/icons-material/Search';
@@ -35,7 +35,7 @@ import ContactSupportOutlinedIcon from '@mui/icons-material/ContactSupportOutlin
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import CloseIcon from '@mui/icons-material/Close';
 import PlaceIcon from '@mui/icons-material/Place';
-import { enqueueSnackbar } from "notistack";
+import ExitToAppSharpIcon from '@mui/icons-material/ExitToAppSharp';
 
 const NoticeDialog = dynamic(() => import('@/components/NoticeDialog'), { ssr: false });
 
@@ -217,6 +217,7 @@ export default function Header() {
           PaperProps={{ sx: { borderRadius: "0.5rem 0 0 0.5rem" } }}
           open={menuOpen}
           onClose={toggleDrawer(false)}
+          className="main-menu"
         >
           <Box sx={{ width: 280 }} role="presentation">
             <List sx={{ p: 0 }}>
@@ -231,25 +232,36 @@ export default function Header() {
                 }}
               />
               {authState.hasLogin ?
-                <Box sx={{ p: "1rem", fontSize: "0.875rem", display: "flex", alignItems: "center", justifyContent: "space-between"}}>
-                  ログイン中
-                  <Button
-                    variant="contained"
-                    onClick={() => logoutHandle()}
-                  >
-                    ログアウト
-                  </Button>
-                </Box>
+                <div className="menu-top">
+                  <Image
+                    className="user-profilie"
+                    src="/assets/img/no-user.jpg"
+                    alt={"TestUser"}
+                    width={50}
+                    height={50}
+                  />
+                  <div className="user-wrapper">
+                    <div className="user-name">
+                      {"TestUser"}
+                    </div>
+                    <div className="logout-btn" onClick={() => logoutHandle()}>
+                      ログアウト
+                      <ExitToAppSharpIcon fontSize="small" />
+                    </div>
+                  </div>
+                </div>
               :
-                <Box sx={{ p: "1rem", fontSize: "0.875rem", display: "flex", alignItems: "center", justifyContent: "space-between"}}>
-                  ログインが必要です
-                  <Button
-                    variant="contained"
-                    onClick={() => loginHandle()}
-                  >
-                    ログイン
-                  </Button>
-                </Box>
+                <div className="menu-top">
+                  <button className="login-btn" onClick={() => loginHandle()}>
+                    <span>
+                      ログイン
+                    </span>
+                    <span>|</span>
+                    <span>
+                      会員登録
+                    </span>
+                  </button>
+                </div>
               }
               {menuItems.map((group) => (
                 <div key={group.groupName}>

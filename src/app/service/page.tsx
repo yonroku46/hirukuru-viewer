@@ -69,13 +69,13 @@ export default function ServicePage() {
 
   const serviceFunctions = [
     { title: "マップ検索", backgroundColor: "#003366",
-      img: "/assets/img/func_search.png", description: "お店の位置とメニュー情報をリアルタイムで共有してお互いによりよい環境を提供" },
+      img: "/assets/img/func-search.png", description: "お店の位置とメニュー情報をリアルタイムで共有してお互いによりよい環境を提供" },
     { title: "事前予約", backgroundColor: "#FF6600",
-      img: "/assets/img/func_reserve.png", description: "食事を予約することでよりお得に、素早く受け取り・販売が可能" },
+      img: "/assets/img/func-reserve.png", description: "食事を予約することでよりお得に、素早く受け取り・販売が可能" },
     { title: "ポイント", backgroundColor: "#009688",
-      img: "/assets/img/func_point.png", description: "食べるたびにポイントを貯めて次回のランチをもっとお得に" },
+      img: "/assets/img/func-point.png", description: "食べるたびにポイントを貯めて次回のランチをもっとお得に" },
     { title: "データ提供", backgroundColor: "#5D4037",
-      img: "/assets/img/func_data.png", description: "販売・購入したデータを提供。活用方法は人それぞれ" },
+      img: "/assets/img/func-data.png", description: "販売・購入したデータを提供。活用方法は人それぞれ" },
   ];
 
   const serviceImportantLists = [
@@ -107,15 +107,7 @@ export default function ServicePage() {
                   </button>
                 </div>
               </div>
-              <div className="right-wrapper">
-                {/* <Image
-                  className="service-intro-image"
-                  src="/assets/img/service-intro.jpeg"
-                  alt="service-intro"
-                  width={300}
-                  height={300}
-                /> */}
-              </div>
+              <div className="right-wrapper" />
           </div>
         </div>
       </div>
