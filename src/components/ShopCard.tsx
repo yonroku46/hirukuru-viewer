@@ -31,7 +31,7 @@ export default function ShopCard({ data, onClick, onHover, href, openNewTab, isF
         <Image
           className="image"
           src={data.thumbnailImg}
-          alt={data.name}
+          alt={data.shopName}
           width={280}
           height={160}
         />
@@ -50,7 +50,7 @@ export default function ShopCard({ data, onClick, onHover, href, openNewTab, isF
       <div className="info-wrapper">
         <div className="info">
           <div className="name">
-            {data.name}
+            {data.shopName}
           </div>
           <div className="rating">
             {formatRating(data.ratingAvg || 0)}

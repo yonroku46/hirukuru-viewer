@@ -46,9 +46,10 @@ export default function MyPage() {
     if (!authState.hasLogin) {
       router.replace('/login');
       return;
+    } else if (!user) {
+      getUserInfo();
     }
-    getUserInfo();
-  }, [router, authState, getUserInfo]);
+  }, [router, authState.hasLogin, getUserInfo]);
 
   const orderStatus: OrderStatus[] = [
     { type: 'booked', value: 0 },
@@ -94,16 +95,16 @@ export default function MyPage() {
           <div className="user-profile-wrapper">
             <Image
               src={user.profileImg}
-              alt={user.name}
+              alt={user.userName}
               width={74}
               height={74}
             />
             <div className="user-name-wrapper">
               <h1 className="user-name">
-                {user.name}
+                {user.userName}
               </h1>
               <p className="user-point">
-                {currency(user.point)}
+                {currency(user.point || 0)}
                 <span className="unit">p</span>
               </p>
             </div>
@@ -112,12 +113,10 @@ export default function MyPage() {
             <MiniButton
               icon={<QrCodeScannerOutlinedIcon />}
               onClick={() => {}}
-              gray
             />
             <MiniButton
               icon={<SettingsOutlinedIcon />}
               onClick={() => {}}
-              gray
             />
           </div>
         </div>

@@ -90,7 +90,7 @@ export default function ShopPage(
 
   const shop: Shop = {
     shopId: '1',
-    name: '唐揚げ壱番屋',
+    shopName: '唐揚げ壱番屋',
     description: '揚げ物専門店',
     location: '福岡市博多区',
     detailAddress: '福岡市博多区',
@@ -422,7 +422,7 @@ export default function ShopPage(
           <Image
             className={`profile-img ${isBusinessOpen(shop.businessHours || []) ? "open" : ""}`}
             src={shop.thumbnailImg}
-            alt={shop.name}
+            alt={shop.shopName}
             width={74}
             height={74}
           />
@@ -451,7 +451,7 @@ export default function ShopPage(
         <div className="shop-info">
           <div className="shop-info-header">
             <h1 className="shop-name">
-              {shop.name}
+              {shop.shopName}
             </h1>
             <div className="shop-location">
               {shop.location}

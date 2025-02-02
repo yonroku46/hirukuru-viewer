@@ -23,6 +23,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import MenuIcon from '@mui/icons-material/Menu';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import ShoppingBasketOutlinedIcon from '@mui/icons-material/ShoppingBasketOutlined';
 import SearchIcon from '@mui/icons-material/Search';
@@ -39,11 +40,12 @@ import ExitToAppSharpIcon from '@mui/icons-material/ExitToAppSharp';
 
 const NoticeDialog = dynamic(() => import('@/components/NoticeDialog'), { ssr: false });
 
+const customMenuItems: MenuItem[] = [
+  { name: "マイページ", href: "/my", icon: <PersonOutlineIcon /> },
+  { name: "お気に入り", href: "/my/favorite", icon: <FavoriteBorderIcon /> },
+  { name: "注文管理", href: "/my/order", icon: <ShoppingBasketOutlinedIcon /> },
+];
 const menuItems: GroupMenuItem[] = [
-  { groupName: "カスタム", groupHref: "/my", groupItems: [
-    { name: "マイページ", href: "/my", icon: <PersonOutlineIcon /> },
-    { name: "注文管理", href: "/my/order", icon: <ShoppingBasketOutlinedIcon /> },
-  ]},
   { groupName: "注文", groupHref: "/search", groupItems: [
     { name: "弁当/店舗検索", href: "/search/map", icon: <SearchIcon /> },
     { name: "ランキング", href: "/search/ranking", icon: <TrendingUpIcon /> },
@@ -232,24 +234,44 @@ export default function Header() {
                 }}
               />
               {authState.hasLogin ?
-                <div className="menu-top">
-                  <Image
-                    className="user-profilie"
-                    src="/assets/img/no-user.jpg"
-                    alt={"TestUser"}
-                    width={50}
-                    height={50}
-                  />
-                  <div className="user-wrapper">
-                    <div className="user-name">
-                      {"TestUser"}
-                    </div>
-                    <div className="logout-btn" onClick={() => logoutHandle()}>
-                      ログアウト
-                      <ExitToAppSharpIcon fontSize="small" />
+                <>
+                  <div className="menu-top">
+                    <Image
+                      className="user-profilie"
+                      src="/assets/img/no-user.jpg"
+                      alt={"TestUser"}
+                      width={50}
+                      height={50}
+                    />
+                    <div className="user-wrapper">
+                      <div className="user-name">
+                        {"TestUser"}
+                      </div>
+                      <div className="logout-btn" onClick={() => logoutHandle()}>
+                        ログアウト
+                        <ExitToAppSharpIcon fontSize="small" />
+                      </div>
                     </div>
                   </div>
-                </div>
+                  {customMenuItems.map((item, index) => (
+                    <ListItem
+                      key={index}
+                      sx={{
+                        pl: 1, pr: 1, pb: index === customMenuItems.length - 1 ? "1.5rem" : 0,
+                        borderBottom: index === customMenuItems.length - 1 ? "1px solid var(--gray-alpha-300)" : "none",
+                      }}
+                      disablePadding
+                    >
+                      <ListItemButton href={item.href} onClick={toggleDrawer(false)}>
+                        <ListItemIcon sx={{ minWidth: "3rem"}}>
+                          {item.icon}
+                        </ListItemIcon>
+                        <ListItemText primary={item.name} />
+                      </ListItemButton>
+                    </ListItem>
+                  ))}
+
+                </>
               :
                 <div className="menu-top">
                   <button className="login-btn" onClick={() => loginHandle()}>
@@ -270,8 +292,8 @@ export default function Header() {
                       <ListItemText primary={group.groupName} />
                     </ListItemButton>
                   </ListItem>
-                  {group.groupItems.map((item) => (
-                    <ListItem sx={{ pl: 1, pr: 1 }} key={item.name} disablePadding>
+                  {group.groupItems.map((item, index) => (
+                    <ListItem sx={{ pl: 1, pr: 1 }} key={index} disablePadding>
                       <ListItemButton href={item.href} onClick={toggleDrawer(false)}>
                         <ListItemIcon sx={{ minWidth: "3rem"}}>
                           {item.icon}

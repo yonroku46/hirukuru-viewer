@@ -32,8 +32,7 @@ export default function ShopInfoDialog({ data, position, open, setOpen }: ShopIn
   &markers=color:red%7C${position.lat},${position.lng}
   &style=element:labels|saturation:-15|lightness:20
   &key=${config.googleMaps.apiKey}`;
-  const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${position.lat},${position.lng}`;
-
+  const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&travelmode=walking&destination=${position.lat},${position.lng}`;
 
   if (!data) {
     return null;
@@ -59,7 +58,7 @@ export default function ShopInfoDialog({ data, position, open, setOpen }: ShopIn
             <div className="map-image-wrapper">
               <Image
                 src={mapUrl}
-                alt={data.name}
+                alt={data.shopName}
                 width={600}
                 height={300}
               />

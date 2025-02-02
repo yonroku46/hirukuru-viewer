@@ -24,7 +24,7 @@ export default function FavoritePage() {
 
   useEffect(() => {
     const dummyShops: Shop[] = [
-      { shopId: '1', location: '福岡市博多区', name: '唐揚げ壱番屋', description: '揚げ物専門店', type: 'bento', thumbnailImg: 'https://i.pinimg.com/236x/71/65/43/716543eb8e6907d7163b55000376e2be.jpg', ratingAvg: 4.5, businessHours: [
+      { shopId: '1', location: '福岡市博多区', shopName: '唐揚げ壱番屋', description: '揚げ物専門店', type: 'bento', thumbnailImg: 'https://i.pinimg.com/236x/71/65/43/716543eb8e6907d7163b55000376e2be.jpg', ratingAvg: 4.5, businessHours: [
           { day: 'mon', open: '10:00', close: '23:50' },
           { day: 'tue', open: '10:00', close: '23:50' },
           { day: 'wed', open: '10:00', close: '23:50' },
@@ -34,7 +34,7 @@ export default function FavoritePage() {
           { day: 'sun', open: '10:00', close: '23:50' },
         ]
       },
-      { shopId: '2', location: '福岡市中央区', name: 'チキンが一番', description: 'チキン専門店', type: 'bento', thumbnailImg: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', ratingAvg: 4.0, businessHours: [
+      { shopId: '2', location: '福岡市中央区', shopName: 'チキンが一番', description: 'チキン専門店', type: 'bento', thumbnailImg: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', ratingAvg: 4.0, businessHours: [
           { day: 'mon', open: '10:00', close: '20:00' },
           { day: 'wed', open: '10:00', close: '20:00' },
         ]
@@ -66,7 +66,9 @@ export default function FavoritePage() {
     const items = favoriteType === 'shop' ? favoriteShops : favoriteFoods;
     setFilteredItems(
       items.filter(item =>
-        searchRegex.test(item.name) ||
+        searchRegex.test(
+          favoriteType === 'shop' ? (item as Shop).shopName : (item as Food).name
+        ) ||
         (favoriteType === 'shop' && searchRegex.test((item as Shop).location))
       )
     );
@@ -112,7 +114,7 @@ export default function FavoritePage() {
                   <FoodCard
                     key={index}
                     data={item as Food}
-                    href={`/shop/${item.shopId}?q=${item.name}`}
+                    href={`/shop/${item.shopId}?q=${(item as Food).name}`}
                     openNewTab
                   />
               ))}

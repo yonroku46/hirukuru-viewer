@@ -80,14 +80,14 @@ declare global {
   }
   interface User {
     userId: string;
-    name: string;
+    userName: string;
     profileImg: string;
     point: number;
     shopOwner: boolean;
   }
   interface UserState {
     userId?: string;
-    name?: string;
+    userName?: string;
     profileImg?: string;
     mail?: string;
     token?: string;
@@ -123,7 +123,7 @@ declare global {
     shopId: string;
     location: string;
     detailAddress?: string;
-    name: string;
+    shopName: string;
     description: string;
     type: ShopType['type'];
     thumbnailImg: string;

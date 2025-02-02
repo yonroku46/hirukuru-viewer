@@ -18,7 +18,7 @@ export default function MyCouponPage() {
   useEffect(() => {
     const dummyUser: User = {
       userId: 'U101',
-      name: 'テストユーザー',
+      userName: 'テストユーザー',
       profileImg: '/assets/img/no-user.jpg',
       point: 1000,
       shopOwner: false,

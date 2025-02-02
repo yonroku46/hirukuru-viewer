@@ -32,7 +32,7 @@ export default function SignupPage() {
               Welcome!
             </h1>
             <p className="description" style={{ marginTop: "0.5rem", marginBottom: "-0.5rem" }}>
-              {`登録はあと少しで完了！\nメールに記載されているリンクをクリックで登録は完了します。`}
+              {`登録まであと少し！\nメールに記載されているリンクをクリックで登録は完了します。`}
             </p>
           </div>
           <div className="body-wrapper">

@@ -51,7 +51,7 @@ export default function NewShopSlider({ shops }: NewShopSliderProps) {
             <div className="newshop-item" style={{ backgroundColor: getRandomDarkColor() }}>
               <p className="newshop-title">New Open</p>
               <p className="newshop-name">
-                {shop.name}
+                {shop.shopName}
               </p>
               <p className="newshop-description">
                 {"#福岡 #ランチ"}
@@ -59,7 +59,7 @@ export default function NewShopSlider({ shops }: NewShopSliderProps) {
               <Image
                 className="newshop-image"
                 src={shop.thumbnailImg}
-                alt={shop.name}
+                alt={shop.shopName}
                 width={200}
                 height={200}
               />

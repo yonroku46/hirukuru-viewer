@@ -183,7 +183,7 @@ export default function SearchMapPage() {
 
   useEffect(() => {
     const dummyShops: Shop[] = [
-      { shopId: '1', location: '福岡市博多区', name: '唐揚げ壱番屋', description: '揚げ物専門店', type: 'bento', thumbnailImg: 'https://i.pinimg.com/236x/71/65/43/716543eb8e6907d7163b55000376e2be.jpg', ratingAvg: 4.5, businessHours: [
+      { shopId: '1', location: '福岡市博多区', shopName: '唐揚げ壱番屋', description: '揚げ物専門店', type: 'bento', thumbnailImg: 'https://i.pinimg.com/236x/71/65/43/716543eb8e6907d7163b55000376e2be.jpg', ratingAvg: 4.5, businessHours: [
           { day: 'mon', open: '10:00', close: '23:50' },
           { day: 'tue', open: '10:00', close: '23:50' },
           { day: 'wed', open: '10:00', close: '23:50' },
@@ -193,17 +193,17 @@ export default function SearchMapPage() {
           { day: 'sun', open: '10:00', close: '23:50' },
         ]
       },
-      { shopId: '2', location: '福岡市中央区', name: 'チキンが一番', description: 'チキン専門店', type: 'foodtruck', thumbnailImg: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', ratingAvg: 4.0, businessHours: [
+      { shopId: '2', location: '福岡市中央区', shopName: 'チキンが一番', description: 'チキン専門店', type: 'foodtruck', thumbnailImg: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', ratingAvg: 4.0, businessHours: [
           { day: 'mon', open: '10:00', close: '20:00' },
           { day: 'wed', open: '10:00', close: '20:00' },
         ]
       },
-      { shopId: '3', location: '福岡市中央区', name: 'チキンが一番', description: 'チキン専門店', type: 'foodtruck', thumbnailImg: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', ratingAvg: 4.0, businessHours: [
+      { shopId: '3', location: '福岡市中央区', shopName: 'チキンが一番', description: 'チキン専門店', type: 'foodtruck', thumbnailImg: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', ratingAvg: 4.0, businessHours: [
           { day: 'mon', open: '10:00', close: '20:00' },
           { day: 'wed', open: '10:00', close: '20:00' },
         ]
       },
-      { shopId: '4', location: '福岡市中央区', name: 'チキンが一番', description: 'チキン専門店', type: 'foodtruck', thumbnailImg: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', ratingAvg: 4.0, businessHours: [
+      { shopId: '4', location: '福岡市中央区', shopName: 'チキンが一番', description: 'チキン専門店', type: 'foodtruck', thumbnailImg: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', ratingAvg: 4.0, businessHours: [
           { day: 'mon', open: '10:00', close: '20:00' },
           { day: 'wed', open: '10:00', close: '20:00' },
         ]
@@ -393,14 +393,14 @@ export default function SearchMapPage() {
                         <Link href={`/shop/${shop.shopId}`} target="_blank">
                           <div className="info-window">
                             <div className="info-image">
-                              <Image src={shop.thumbnailImg} alt={shop.name} width={220} height={120} />
+                              <Image src={shop.thumbnailImg} alt={shop.shopName} width={220} height={120} />
                               <button className="close-btn" onClick={handleCloseInfoWindow}>
                                 <CloseIcon fontSize="small" />
                               </button>
                             </div>
                             <div className="info-content">
                               <div className="shop-title">
-                                {shop.name}
+                                {shop.shopName}
                                 <div className="shop-rating">
                                   <StarRoundedIcon fontSize="small" style={{ color: 'var(--rating-color)' }} />
                                   <span>{formatRating(shop.ratingAvg || 0)}</span>

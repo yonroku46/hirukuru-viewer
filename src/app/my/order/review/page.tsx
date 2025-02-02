@@ -56,7 +56,7 @@ export default function MyOrderReviewPage() {
   useEffect(() => {
     const dummyUser = {
       userId: 'U101',
-      name: 'テストユーザー',
+      userName: 'テストユーザー',
       profileImg: '/assets/img/no-user.jpg',
       point: 1000,
       shopOwner: false,
