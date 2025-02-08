@@ -3,11 +3,11 @@ import ApiRoutes from '@/api/module/ApiRoutes';
 
 export default function UserService() {
 
-  async function userInfo(): Promise<User | undefined> {
+  async function userInfo(): Promise<UserState | undefined> {
     try {
       const response: ApiResponse = await ApiInstance.get(ApiRoutes.USER_INFO, {});
       if (response && !response.hasErrors) {
-        return response.responseData;
+        return response.responseData as UserState;
       }
     } catch (error) {
       console.error(error);

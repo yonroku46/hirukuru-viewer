@@ -48,6 +48,10 @@ const dummyUserId = "001";
 const dummyUserPoint = 1000;
 const cartKey = `cart-${dummyUserId}`;
 
+interface PickupType {
+  type: 'pre' | 'today';
+}
+
 const pickupTypeOptions = [
   { label: "今から", value: 'now' },
   { label: "時間帯を指定", value: 'time' },

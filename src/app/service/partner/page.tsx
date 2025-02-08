@@ -33,6 +33,7 @@ export default function ServiceContactPage() {
   const [mail, setMail] = useState<string>('');
   const [phoneNum, setPhoneNum] = useState<string | undefined>(undefined);
   const [shopName, setShopName] = useState<string>('');
+  const [shopSize, setShopSize] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [firstName, setFirstName] = useState<string>('');
   const [contents, setContents] = useState<string>('');
@@ -87,13 +88,25 @@ export default function ServiceContactPage() {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="format">
-              <div>
-                <label>販売タイプ</label>
-                <Selector
-                  options={shopTypeList}
-                  defaultValue={shopType}
-                  onChange={(e) => setShopType(e.target.value)}
-                />
+              <div className='shop-group'>
+                <div className='shop-group-item'>
+                  <label>販売タイプ</label>
+                  <Selector
+                    options={shopTypeList}
+                    defaultValue={shopType}
+                    onChange={(e) => setShopType(e.target.value)}
+                  />
+                </div>
+                <div className='shop-group-item'>
+                  <label>規模（従業員数など）</label>
+                  <InputField
+                    type='text'
+                    value={shopSize}
+                    required
+                    placeholder='1~10名'
+                    onChange={(e) => setShopSize(e.target.value)}
+                  />
+                </div>
               </div>
               <div>
                 <label>会社・店舗名</label>

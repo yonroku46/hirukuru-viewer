@@ -83,7 +83,7 @@ export default function MuiTabs({ tabs }: MuiTabsProps) {
             sx={{
               alignItems: 'center',
               minHeight: 'unset',
-              padding: '1rem',
+              padding: '1rem 1.75rem',
               color: tab.active ? 'inherit' : 'var(--gray-alpha-400)',
               pointerEvents: tab.active ? 'auto' : 'none',
               '&.Mui-selected': {

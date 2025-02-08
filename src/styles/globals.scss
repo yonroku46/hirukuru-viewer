@@ -1457,13 +1457,17 @@ table {
       img {
         width: 100%;
       }
-      .close-btn {
+      .close-btn-wrapper {
         position: absolute;
-        top: 0.25rem;
-        right: 0.25rem;
-        background-color: rgba(255, 255, 255, 0.8);
-        border-radius: 50%;
+        top: 0;
+        right: 0;
         padding: 0.25rem;
+        cursor: pointer;
+        .close-btn {
+          background-color: rgba(255, 255, 255, 0.8);
+          border-radius: 50%;
+          padding: 0.25rem;
+        }
       }
     }
     .info-content {
@@ -3191,6 +3195,13 @@ table {
         font-weight: bold;
         font-size: 1rem;
         margin-bottom: 0.5rem;
+      }
+      .shop-group {
+        display: flex;
+        gap: 1rem;
+        .shop-group-item {
+          width: 100%;
+        }
       }
       .name-group {
         display: flex;

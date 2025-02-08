@@ -32,7 +32,7 @@ export default function MyPage() {
 
   const userService = UserService();
 
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserState | null>(null);
 
   const getUserInfo = useCallback(() => {
     userService.userInfo().then((user) => {
@@ -49,7 +49,7 @@ export default function MyPage() {
     } else if (!user) {
       getUserInfo();
     }
-  }, [router, authState.hasLogin, getUserInfo]);
+  }, [user, router, authState.hasLogin, getUserInfo]);
 
   const orderStatus: OrderStatus[] = [
     { type: 'booked', value: 0 },

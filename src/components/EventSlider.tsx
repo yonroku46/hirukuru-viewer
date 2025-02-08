@@ -48,15 +48,15 @@ export default function EventSlider({ events }: EventSliderProps) {
     <div className="event-slider">
       <Slider ref={sliderRef} {...settings}>
         {events.map((event) => (
-          <Link key={event.noticeId} href={event.href || `/service/notice/${event.noticeId}`} className="slider-item">
+          <Link key={event.noticeId} href={event.noticeHref || `/service/notice/${event.noticeId}`} className="slider-item">
             <Image
               src={event.thumbnailImg}
-              alt={event.title}
+              alt={event.noticeTitle}
               fill
             />
             <div className="event-title">
-              <h3>{event.title}</h3>
-              <p>{event.description}</p>
+              <h3>{event.noticeTitle}</h3>
+              <p>{event.noticeDetail}</p>
             </div>
           </Link>
         ))}

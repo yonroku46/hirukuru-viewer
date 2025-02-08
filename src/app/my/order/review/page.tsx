@@ -46,7 +46,7 @@ export default function MyOrderReviewPage() {
     return { id: reviewId, reviewId, userId, userName, userProfile, shopId, shopName, comment, rating, date };
   }
 
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserState | null>(null);
   const [year, setYear] = useState<number>(dateNow().year());
   const [month, setMonth] = useState<number>(dateNow().month() + 1);
   const [searchValue, setSearchValue] = useState<string>("");
@@ -54,12 +54,13 @@ export default function MyOrderReviewPage() {
   const [filteredRows, setFilteredRows] = useState<ShopReview[]>([]);
 
   useEffect(() => {
-    const dummyUser = {
+    const dummyUser: UserState = {
       userId: 'U101',
       userName: 'テストユーザー',
       profileImg: '/assets/img/no-user.jpg',
       point: 1000,
       shopOwner: false,
+      mail: 'test@test.com',
     }
     const dummyRows: ShopReview[] = [
       createData('R101', 'U101', 'テストユーザー', '/assets/img/no-user.jpg', 'S101', '唐揚げ一番', 'このショップはとてもよかったです。', 4, '2025-01-01'),

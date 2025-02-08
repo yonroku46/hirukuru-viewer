@@ -12,25 +12,25 @@ export default function NoticeCard({ data }: NoticeCardProps) {
         <Image
           className="image"
           src={data.thumbnailImg}
-          alt={data.title}
+          alt={data.noticeTitle}
           width={280}
           height={160}
         />
       </div>
       <div className="info-wrapper">
         <div className="type-date-wrapper">
-          <div className={`type ${data.type}`}>
-            {data.type === 'event' ? 'イベント' : 'お知らせ'}
+          <div className={`type ${data.noticeType}`}>
+            {data.noticeType === 'event' ? 'イベント' : 'お知らせ'}
           </div>
           <div className="date">
-            {data.date}
+            {data.createTime}
           </div>
         </div>
         <div className="title">
-          {data.title}
+          {data.noticeTitle}
         </div>
         <div className="description">
-          {data.description}
+          {data.noticeDetail}
         </div>
       </div>
     </Link>

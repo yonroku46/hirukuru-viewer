@@ -63,6 +63,17 @@ declare global {
     icon?: React.ReactNode;
     disabled?: boolean;
   }
+  interface SearchFilter {
+    type: 'text' | 'number' | 'radio' | 'date' | 'year' | 'month' | 'select';
+    key: string;
+    label: string;
+    value: string;
+    options?: { label: string; repeat?: number; value: string }[];
+  }
+  // Status
+  interface CartStatus {
+    type: 'ready' | 'pickup' | 'payment' | 'final' | 'done';
+  }
   interface OrderStatus {
     type: 'booked' | 'pickup' | 'done' | 'review' | 'cancel';
     value: number;
@@ -71,44 +82,72 @@ declare global {
     type: 'count' | 'avg';
     value: number;
   }
-  interface SearchFilter {
-    type: 'text' | 'number' | 'radio' | 'date' | 'year' | 'month' | 'select';
-    key: string;
-    label: string;
-    value: string;
-    options?: { label: string; repeat?: number; value: string }[];
-  }
-  interface User {
-    userId: string;
-    userName: string;
-    profileImg: string;
+  interface UserState extends User {
     point: number;
-    shopOwner: boolean;
-  }
-  interface UserState {
-    userId?: string;
-    userName?: string;
-    profileImg?: string;
-    mail?: string;
     token?: string;
     refreshToken?: string;
-    mailAuth?: boolean;
+    shopOwner: boolean;
   }
-  interface ServiceNotice {
-    noticeId: string;
-    type: ServiceNoticeType['type'];
-    title: string;
-    description: string;
-    thumbnailImg: string;
-    href?: string;
-    date: string;
+  // Type
+  interface PayType {
+    type: 'cash' | 'card' | 'apple' | 'google';
+  }
+  interface ShopType {
+    type: 'bento' | 'foodtruck';
   }
   interface ServiceNoticeType {
     type: 'notice' | 'event';
   }
-  interface HotKeywords {
-    label: string;
-    status?: 'up' | 'down';
+  interface ServiceInquiryType {
+    type: 'suggest' | 'bulk' | 'inquiry';
+  }
+  // DB
+  interface User {
+    userId: string;
+    userName: string;
+    profileImg: string;
+    mail: string;
+    userIntro?: string;
+    phoneNum?: string;
+    birthday?: string;
+    gender?: string;
+    postalCode?: string;
+    detailAddress?: string;
+  }
+  interface UserSpot {
+    spotId: string;
+    userId: string;
+    spotName: string;
+    latitude: number;
+    longitude: number;
+    accuracy: number;
+  }
+  interface ServiceNotice {
+    noticeId: string;
+    thumbnailImg: string;
+    noticeType: ServiceNoticeType['type'];
+    noticeTitle: string;
+    noticeDetail: string;
+    noticeHref?: string;
+    createTime: string;
+  }
+  interface ServiceInquiry {
+    inquiryId: string;
+    inquiryType: ServiceInquiryType['type'];
+    mail: string;
+    phoneNum?: string;
+    inquiryTitle: string;
+    inquiryDetail: string;
+    createTime: string;
+  }
+  interface ServiceApply {
+    applyId: string;
+    shopType: ShopType['type'];
+    mail: string;
+    phoneNum?: string;
+    shopName: string;
+    shopSize: string;
+    requestDetail?: string;
   }
   interface Place {
     placeId: string;
@@ -133,9 +172,6 @@ declare global {
     rating?: {
       [key: string]: number | undefined;
     };
-  }
-  interface ShopType {
-    type: 'bento' | 'foodtruck';
   }
   interface BusinessHour {
     day: 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun';
@@ -175,15 +211,6 @@ declare global {
     price: number;
     quantity: number;
     totalPrice: number;
-  }
-  interface CartStatus {
-    type: 'ready' | 'pickup' | 'payment' | 'final' | 'done';
-  }
-  interface PayType {
-    type: 'cash' | 'card' | 'apple' | 'google';
-  }
-  interface PickupType {
-    type: 'pre' | 'today';
   }
   interface Food {
     foodId: string;

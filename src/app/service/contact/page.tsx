@@ -8,20 +8,26 @@ import InputField from '@/components/input/InputField';
 
 import MuiBreadcrumbs from "@/components/mui/MuiBreadcrumbs";
 
+interface InquirySelecter {
+  value: ServiceInquiryType['type'];
+  label: string;
+  placeholder: string;
+}
+
 export default function ServiceContactPage() {
   const breadcrumbs: Breadcrumb[] = [
     { label: 'サービス', href: '/service' },
     { label: 'お問い合わせ', href: '/service/contact', active: true },
   ];
 
-  const categoryList = useMemo(() => [
+  const categoryList: InquirySelecter[] = useMemo(() => [
     { value: 'suggest', label: 'ご意見・ご要望', placeholder: 'ご意見内容を入力してください' },
     { value: 'bulk', label: '大量注文', placeholder: '注文(店舗名、商品名、数量、希望日等)を入力してください\nサービス担当者からのご案内の連絡をさせていただきます' },
     { value: 'inquiry', label: 'その他お問い合わせ', placeholder: 'お問い合わせ内容を入力してください' },
   ], []);
 
   const [submitted, setSubmitted] = useState<boolean>(false);
-  const [category, setCategory] = useState<string>(categoryList[0].value);
+  const [category, setCategory] = useState<ServiceInquiryType['type']>("suggest");
   const [mail, setMail] = useState<string>('');
   const [phoneNum, setPhoneNum] = useState<string | undefined>(undefined);
   const [contents, setContents] = useState<string>('');
@@ -74,7 +80,7 @@ export default function ServiceContactPage() {
                 <Selector
                   options={categoryList}
                   defaultValue={category}
-                  onChange={(e) => setCategory(e.target.value)}
+                  onChange={(e) => setCategory(e.target.value as ServiceInquiryType['type'])}
                 />
               </div>
               <div>

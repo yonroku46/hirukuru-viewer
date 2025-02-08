@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { GoogleMap, LoadScript, Marker, InfoWindow } from "@react-google-maps/api";
+import { GoogleMap, LoadScript, MarkerClusterer, Marker, InfoWindow } from "@react-google-maps/api";
 import { config } from "@/config";
 import Link from "next/link";
 import { useMediaQuery } from "react-responsive";
@@ -115,7 +115,7 @@ export default function SearchMapPage() {
     }
   };
 
-  const handleCloseInfoWindow = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleCloseInfoWindow = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
     setActiveMarker(null);
   };
@@ -208,10 +208,24 @@ export default function SearchMapPage() {
           { day: 'wed', open: '10:00', close: '20:00' },
         ]
       },
+      { shopId: '5', location: '福岡市中央区', shopName: 'チキンが一番', description: 'チキン専門店', type: 'foodtruck', thumbnailImg: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', ratingAvg: 4.0, businessHours: [
+          { day: 'mon', open: '10:00', close: '20:00' },
+          { day: 'wed', open: '10:00', close: '20:00' },
+        ]
+      },
+      { shopId: '6', location: '福岡市中央区', shopName: 'チキンが一番', description: 'チキン専門店', type: 'foodtruck', thumbnailImg: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', ratingAvg: 4.0, businessHours: [
+          { day: 'mon', open: '10:00', close: '20:00' },
+          { day: 'wed', open: '10:00', close: '20:00' },
+        ]
+      },
     ];
     const dummyPlaces = [
       { placeId: "P1", shopId: "1", position: { lat: 33.5902, lng: 130.4017 } },
       { placeId: "P2", shopId: "2", position: { lat: 33.5898, lng: 130.4100 } },
+      { placeId: "P3", shopId: "3", position: { lat: 33.5869, lng: 130.4100 } },
+      { placeId: "P4", shopId: "4", position: { lat: 33.5847, lng: 130.4102 } },
+      { placeId: "P5", shopId: "5", position: { lat: 33.5842, lng: 130.4102 } },
+      { placeId: "P6", shopId: "6", position: { lat: 33.5847, lng: 130.4105 } },
     ];
     setShops(dummyShops);
     const dummyFoods: Food[] = [
@@ -354,7 +368,13 @@ export default function SearchMapPage() {
           >
             <GoogleMap
               mapContainerStyle={{ width: "100%", height: "100%" }}
-              onLoad={(mapInstance) => setMap(mapInstance)}
+              onLoad={(mapInstance) => {
+                setMap(mapInstance);
+                // クリック時のデフォルトの情報ウィンドウを非表示にする
+                mapInstance.addListener("click", (e: google.maps.MapMouseEvent) => {
+                  e.stop();
+                });
+              }}
               onBoundsChanged={handleBoundsChanged}
               onZoomChanged={() => {
                 if (map) {
@@ -372,51 +392,101 @@ export default function SearchMapPage() {
                   icon={`/assets/icon/user-marker.svg`}
                 />
               )}
-              {markPlaces.map((place, index) => {
-                const shop = shops.find((s) => s.shopId === place.shopId);
-                if (!shop) return null;
-                return (
-                  <Marker
-                    key={index}
-                    position={place.position}
-                    icon={`/assets/icon/${shop.type}-marker.svg`}
-                    onClick={() => {
-                      setActiveMarker(place.placeId);
-                      setLastSelectedPosition(place.position);
-                    }}
-                    onMouseOver={() => {
-                      setActiveMarker(place.placeId);
-                    }}
-                  >
-                    {activeMarker === place.placeId && shop && (
-                      <InfoWindow>
-                        <Link href={`/shop/${shop.shopId}`} target="_blank">
-                          <div className="info-window">
-                            <div className="info-image">
-                              <Image src={shop.thumbnailImg} alt={shop.shopName} width={220} height={120} />
-                              <button className="close-btn" onClick={handleCloseInfoWindow}>
-                                <CloseIcon fontSize="small" />
-                              </button>
-                            </div>
-                            <div className="info-content">
-                              <div className="shop-title">
-                                {shop.shopName}
-                                <div className="shop-rating">
-                                  <StarRoundedIcon fontSize="small" style={{ color: 'var(--rating-color)' }} />
-                                  <span>{formatRating(shop.ratingAvg || 0)}</span>
+              <MarkerClusterer
+                options={{
+                  gridSize: 30,
+                  minimumClusterSize: 2,
+                  styles: [
+                    {
+                      url: '/assets/icon/marker-cluster.svg',
+                      height: 40,
+                      width: 40,
+                      textColor: 'var(--background)',
+                      textSize: 12,
+                    },
+                    {
+                      url: '/assets/icon/marker-cluster.svg',
+                      height: 50,
+                      width: 50,
+                      textColor: 'var(--background)',
+                      textSize: 14,
+                    },
+                    {
+                      url: '/assets/icon/marker-cluster.svg',
+                      height: 60,
+                      width: 60,
+                      textColor: 'var(--background)',
+                      textSize: 18,
+                    },
+                  ],
+                }}
+              >
+              {(clusterer) => (
+                <>
+                  {markPlaces.map((place, index) => {
+                    const shop = shops.find((s) => s.shopId === place.shopId);
+                    if (!shop) return null;
+                    return (
+                      <Marker
+                        key={index}
+                        position={place.position}
+                        icon={{
+                          url: `/assets/icon/${shop.type}-marker.svg`,
+                          scaledSize: new google.maps.Size(
+                            activeMarker === place.placeId ? 44 : 34,
+                            activeMarker === place.placeId ? 44 : 34
+                          )
+                        }}
+                        clusterer={clusterer}
+                        onClick={() => {
+                          setActiveMarker(place.placeId);
+                          setLastSelectedPosition(place.position);
+                        }}
+                        onMouseOver={() => {
+                          setActiveMarker(place.placeId);
+                        }}
+                      >
+                        {activeMarker === place.placeId && shop && (
+                          <InfoWindow
+                            onDomReady={() => {
+                              const infoWindowElement = document.querySelector('.info-window');
+                              if (infoWindowElement) {
+                                infoWindowElement.addEventListener('wheel', (e) => e.preventDefault());
+                              }
+                            }}
+                          >
+                            <Link href={`/shop/${shop.shopId}`} target="_blank">
+                              <div className="info-window">
+                                <div className="info-image">
+                                  <Image src={shop.thumbnailImg} alt={shop.shopName} width={220} height={120} />
+                                  <div className="close-btn-wrapper" onClick={handleCloseInfoWindow}>
+                                    <button className="close-btn">
+                                      <CloseIcon fontSize="small" />
+                                    </button>
+                                  </div>
+                                </div>
+                                <div className="info-content">
+                                  <div className="shop-title">
+                                    {shop.shopName}
+                                    <div className="shop-rating">
+                                      <StarRoundedIcon fontSize="small" style={{ color: 'var(--rating-color)' }} />
+                                      <span>{formatRating(shop.ratingAvg || 0)}</span>
+                                    </div>
+                                  </div>
+                                  <div className="shop-description">
+                                    {shop.description}
+                                  </div>
                                 </div>
                               </div>
-                              <div className="shop-description">
-                                {shop.description}
-                              </div>
-                            </div>
-                          </div>
-                        </Link>
-                      </InfoWindow>
-                    )}
-                  </Marker>
-                );
-              })}
+                            </Link>
+                          </InfoWindow>
+                        )}
+                      </Marker>
+                    );
+                  })}
+                </>
+              )}
+              </MarkerClusterer>
             </GoogleMap>
           </LoadScript>
         </div>

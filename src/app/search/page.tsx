@@ -9,6 +9,11 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import RemoveIcon from '@mui/icons-material/Remove';
 
+interface HotKeywords {
+  label: string;
+  status?: 'up' | 'down';
+}
+
 export default function SearchPage() {
   const router = useRouter();
 

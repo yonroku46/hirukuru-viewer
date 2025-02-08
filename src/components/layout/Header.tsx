@@ -75,6 +75,7 @@ export default function Header() {
   const [isTop, setIsTop] = useState<boolean>(true);
   const [address, setAddress] = useState<string | null>(null);
   const [searchValue, setSearchValue] = useState<string>("");
+  const [user, setUser] = useState<UserState | undefined>(undefined);
 
   const router = useRouter();
 
@@ -176,6 +177,20 @@ export default function Header() {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
+    // ログインユーザー取得
+    if (authState.hasLogin) {
+      const currentUser = authService.getCurrentUser();
+      if (currentUser) {
+        setUser(currentUser);
+      }
+    } else {
+      setUser(undefined);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authState.hasLogin]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
     // スクロールイベント
     window.addEventListener('scroll', handleScroll);
     // リダイレクトパス保存
@@ -233,19 +248,20 @@ export default function Header() {
                   marginRight: "1rem",
                 }}
               />
-              {authState.hasLogin ?
+              {authState.hasLogin && user ?
                 <>
                   <div className="menu-top">
                     <Image
                       className="user-profilie"
-                      src="/assets/img/no-user.jpg"
-                      alt={"TestUser"}
+                      src={user.profileImg}
+                      alt={user.userName}
                       width={50}
                       height={50}
+
                     />
                     <div className="user-wrapper">
                       <div className="user-name">
-                        {"TestUser"}
+                        {user.userName}
                       </div>
                       <div className="logout-btn" onClick={() => logoutHandle()}>
                         ログアウト
@@ -343,8 +359,8 @@ export default function Header() {
             <MenuIcon className="menu-icon" />
             <Image
               className="user-icon"
-              src="/assets/img/no-user.jpg"
-              alt="user"
+              src={user ? user.profileImg : "/assets/img/no-user.jpg"}
+              alt={user ? user.userName : "user"}
               width={28}
               height={28}
             />

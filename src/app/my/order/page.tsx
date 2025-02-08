@@ -60,7 +60,7 @@ export default function MyOrderPage() {
     return { id: orderId, status, orderId, userId, shopId, shopName, payType: payType as PayType['type'], totalPrice, pickupTime, orderTime, orderDetail };
   }
 
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserState | null>(null);
   const [year, setYear] = useState<number>(dateNow().year());
   const [month, setMonth] = useState<number>(dateNow().month() + 1);
   const [status, setStatus] = useState<string>('all');
@@ -69,12 +69,13 @@ export default function MyOrderPage() {
   const [filteredRows, setFilteredRows] = useState<Order[]>([]);
 
   useEffect(() => {
-    const dummyUser = {
+    const dummyUser: UserState = {
       userId: 'U101',
       userName: 'テストユーザー',
       profileImg: '/assets/img/no-user.jpg',
       point: 1000,
       shopOwner: false,
+      mail: 'test@test.com',
     }
     const dummyRows: Order[] = [
       createData('O101', 'booked', 'U101', 'S101', 'テスト店舗', 'cash', 2500, '2025-01-01 20:07', '2025-01-01 20:07', [

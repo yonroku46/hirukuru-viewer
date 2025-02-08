@@ -12,16 +12,17 @@ export default function MyCouponPage() {
     { label: 'クーポン', href: '/my/coupon', active: true },
   ];
 
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserState | null>(null);
   // const [searchValue, setSearchValue] = useState<string>("");
 
   useEffect(() => {
-    const dummyUser: User = {
+    const dummyUser: UserState = {
       userId: 'U101',
       userName: 'テストユーザー',
       profileImg: '/assets/img/no-user.jpg',
       point: 1000,
       shopOwner: false,
+      mail: 'test@test.com',
     }
     setUser(dummyUser);
   }, []);
