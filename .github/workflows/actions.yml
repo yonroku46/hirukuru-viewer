@@ -26,11 +26,7 @@ jobs:
         run: |
           ssh ubuntu@${{ secrets.SERVER_IP }} "
             cd $REPO_PATH &&
-            if grep -q 'NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=' .env.production; then
-              sed -i 's|NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=.*|NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}|' .env.production
-            else
-              echo 'NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}' >> .env.production
-            fi
+            sed -i 's|NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=.*|NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}|' .env.production
           "
 
       - name: Install dependencies
