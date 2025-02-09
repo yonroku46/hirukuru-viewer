@@ -34,6 +34,6 @@ jobs:
             cd $REPO_PATH &&
             export NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }} &&
             pm2 delete nextjs-app || true &&
-            pm2 start yarn --name nextjs-app -- start
+            pm2 start ecosystem.config.js
           "
           ssh ubuntu@${{ secrets.SERVER_IP }} "pm2 save"
