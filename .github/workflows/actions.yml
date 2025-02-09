@@ -9,6 +9,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: Production
     env:
       REPO_PATH: /home/app-service/hirukuru-viewer
     steps:
@@ -26,9 +27,6 @@ jobs:
 
       - name: Build
         run: ssh ubuntu@${{ secrets.SERVER_IP }} "cd $REPO_PATH && yarn build"
-
-      - name: Install PM2
-        run: ssh ubuntu@${{ secrets.SERVER_IP }} "npm install -g pm2"
 
       - name: Deploy with PM2
         env:
