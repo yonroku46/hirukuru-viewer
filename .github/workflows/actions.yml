@@ -20,7 +20,7 @@ jobs:
 
       - name: Pull latest code
         run: |
-          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.SERVER_IP }} "cd $REPO_PATH && git pull"
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.SERVER_IP }} "cd $REPO_PATH && git fetch && git reset --hard origin/TSK-001"
 
       - name: Install dependencies
         run: ssh ubuntu@${{ secrets.SERVER_IP }} "cd $REPO_PATH && yarn install"
