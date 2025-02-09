@@ -18,9 +18,16 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Pull latest code
+      - name: Fetch latest code
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.SERVER_IP }} "cd $REPO_PATH && git fetch && git reset --hard origin/TSK-001"
+
+      - name: Update environment variables
+        run: |
+          ssh ubuntu@${{ secrets.SERVER_IP }} "
+            cd $REPO_PATH &&
+            sed -i 's|NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=.*|NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}|' .env.production
+          "
 
       - name: Install dependencies
         run: ssh ubuntu@${{ secrets.SERVER_IP }} "cd $REPO_PATH && yarn install"
