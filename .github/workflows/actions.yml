@@ -29,9 +29,7 @@ jobs:
         run: ssh ubuntu@${{ secrets.SERVER_IP }} "cd $REPO_PATH && yarn build"
 
       - name: Deploy with PM2
-        env:
-          NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
         run: |
           ssh ubuntu@${{ secrets.SERVER_IP }} "pm2 delete nextjs-app || true"
-          ssh ubuntu@${{ secrets.SERVER_IP }} "cd $REPO_PATH && pm2 start yarn --name nextjs-app -- start"
+          ssh ubuntu@${{ secrets.SERVER_IP }} "cd $REPO_PATH && pm2 start yarn --name nextjs-app -- start --env NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}"
           ssh ubuntu@${{ secrets.SERVER_IP }} "pm2 save"
