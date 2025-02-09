@@ -1,0 +1,39 @@
+# .github/workflows/deploy.yml
+name: Deploy
+
+on:
+  push:
+    branches:
+      - TSK-001
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      REPO_PATH: /home/app-service/hirukuru-viewer
+    steps:
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Pull latest code
+        run: |
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.SERVER_IP }} "cd $REPO_PATH && git pull"
+
+      - name: Install dependencies
+        run: ssh ubuntu@${{ secrets.SERVER_IP }} "cd $REPO_PATH && yarn install"
+
+      - name: Build
+        run: ssh ubuntu@${{ secrets.SERVER_IP }} "cd $REPO_PATH && yarn build"
+
+      - name: Install PM2
+        run: ssh ubuntu@${{ secrets.SERVER_IP }} "npm install -g pm2"
+
+      - name: Deploy with PM2
+        env:
+          NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
+        run: |
+          ssh ubuntu@${{ secrets.SERVER_IP }} "pm2 delete nextjs-app || true"
+          ssh ubuntu@${{ secrets.SERVER_IP }} "cd $REPO_PATH && pm2 start yarn --name nextjs-app -- start"
+          ssh ubuntu@${{ secrets.SERVER_IP }} "pm2 save"
