@@ -16,8 +16,8 @@ export default function MyOrderReviewPage() {
     { label: 'レビュー', href: '/my/order/review', active: true },
   ];
   const reviewStatus: ReviewStatus[] = [
-    { type: 'count', value: 1100 },
-    { type: 'avg', value: 4.5 },
+    { status: 'count', value: 1100 },
+    { status: 'avg', value: 4.5 },
   ];
 
   const columns: Column<ShopReview>[] = [

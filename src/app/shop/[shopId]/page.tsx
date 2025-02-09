@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import dayjs from "dayjs";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -42,7 +42,6 @@ export default function ShopPage(
   const maxPrice = 2500;
   const [searchValue, setSearchValue] = useState<string>('');
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [favoriteItems, setFavoriteItems] = useState<string[]>([]);
   const [reviewFilter, setReviewFilter] = useState<string>('latest');
   const [items, setItems] = useState<Food[]>([]);
   const [foodInfoOpen, setFoodInfoOpen] = useState<boolean>(false);
@@ -163,15 +162,6 @@ export default function ShopPage(
     setReviewList(dummyReviewList as ShopReview[]);
   }, [shopId]);
 
-  const handleFavorite = useCallback((e: React.MouseEvent<HTMLButtonElement>, id: string) => {
-    e.stopPropagation();
-    if (favoriteItems.includes(id)) {
-      setFavoriteItems(favoriteItems.filter((item) => item !== id));
-    } else {
-      setFavoriteItems([...favoriteItems, id]);
-    }
-  }, [favoriteItems]);
-
   const handleClick = (item: Food) => {
     setSelectedItem(item);
     setFoodInfoOpen(true);
@@ -242,8 +232,6 @@ export default function ShopPage(
                   data={item}
                   soldOut={item.stock !== undefined && item.stock === 0}
                   onClick={() => handleClick(item)}
-                  isFavorite={favoriteItems.includes(item.foodId)}
-                  handleFavorite={handleFavorite}
                 />
               ))}
             </div>
@@ -272,8 +260,6 @@ export default function ShopPage(
                   key={item.foodId}
                   data={item}
                   onClick={() => handleClick(item)}
-                  isFavorite={favoriteItems.includes(item.foodId)}
-                  handleFavorite={handleFavorite}
                 />
               ))}
             </div>
@@ -304,8 +290,6 @@ export default function ShopPage(
                       key={item.foodId}
                       data={item}
                       onClick={() => handleClick(item)}
-                      isFavorite={favoriteItems.includes(item.foodId)}
-                      handleFavorite={handleFavorite}
                     />
                   ))}
                 </div>
@@ -316,7 +300,7 @@ export default function ShopPage(
       });
 
     return [allTab, specialTab, ...categoryTabs];
-  }, [items, favoriteItems, searchValue, priceRange, sort, handleFavorite]);
+  }, [items, searchValue, priceRange, sort]);
 
   const reviewFilterOptions = [
     {
@@ -413,8 +397,6 @@ export default function ShopPage(
         data={selectedItem}
         open={foodInfoOpen}
         setOpen={setFoodInfoOpen}
-        isFavorite={selectedItem ? favoriteItems.includes(selectedItem.foodId) : false}
-        handleFavorite={handleFavorite}
       />
       {/* Shop Header */}
       <section className="shop-header-wrapper">

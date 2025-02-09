@@ -10,9 +10,9 @@ interface ReviewStatusProps {
 }
 
 export default function ReviewStatus({ statusList }: ReviewStatusProps) {
-  const statusLabels = [
-    { type: 'count', label: '評価件数', icon: <TaskAltOutlinedIcon fontSize="inherit" /> },
-    { type: 'avg', label: '平均評価', icon: <StarBorderOutlinedIcon fontSize="inherit" /> },
+  const statusLabels: { status: ReviewStatus['status'], label: string, icon: React.ReactNode }[] = [
+    { status: 'count', label: '評価件数', icon: <TaskAltOutlinedIcon fontSize="inherit" /> },
+    { status: 'avg', label: '平均評価', icon: <StarBorderOutlinedIcon fontSize="inherit" /> },
   ];
 
   return (
@@ -21,13 +21,13 @@ export default function ReviewStatus({ statusList }: ReviewStatusProps) {
         マイレビュー
       </h2>
       <div className="status-items-wrapper two-columns">
-        {statusLabels.map(({ type, label, icon }) => {
-          const status = statusList.find((status) => status.type === type);
-          const isActive = status && status.value > 0;
+        {statusLabels.map(({ status, label, icon }) => {
+          const findStatus = statusList.find((s) => s.status === status);
+          const isActive = findStatus && findStatus.value > 0;
           return (
-            <div key={type} className={`status-item ${isActive ? 'active' : ''}`}>
+            <div key={status} className={`status-item ${isActive ? 'active' : ''}`}>
               <div className="status-item-title">
-                <div className={`icon ${type}`}>
+                <div className={`icon ${status}`}>
                   {icon}
                 </div>
                 <div className='label'>
@@ -35,7 +35,7 @@ export default function ReviewStatus({ statusList }: ReviewStatusProps) {
                 </div>
               </div>
               <div className='value'>
-                {currency(status?.value ?? 0)}
+                {currency(findStatus?.value ?? 0)}
               </div>
             </div>
           );

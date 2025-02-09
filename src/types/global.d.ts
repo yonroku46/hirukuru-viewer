@@ -70,23 +70,23 @@ declare global {
     value: string;
     options?: { label: string; repeat?: number; value: string }[];
   }
-  // Status
-  interface CartStatus {
-    type: 'ready' | 'pickup' | 'payment' | 'final' | 'done';
-  }
-  interface OrderStatus {
-    type: 'booked' | 'pickup' | 'done' | 'review' | 'cancel';
-    value: number;
-  }
-  interface ReviewStatus {
-    type: 'count' | 'avg';
-    value: number;
-  }
   interface UserState extends User {
     point: number;
     token?: string;
     refreshToken?: string;
     shopOwner: boolean;
+  }
+  // Status
+  interface CartStatus {
+    status: 'ready' | 'pickup' | 'payment' | 'final' | 'done';
+  }
+  interface OrderStatus {
+    status: 'booked' | 'pickup' | 'done' | 'review' | 'cancel';
+    value: number;
+  }
+  interface ReviewStatus {
+    status: 'count' | 'avg';
+    value: number;
   }
   // Type
   interface PayType {
@@ -136,17 +136,18 @@ declare global {
     inquiryType: ServiceInquiryType['type'];
     mail: string;
     phoneNum?: string;
-    inquiryTitle: string;
     inquiryDetail: string;
     createTime: string;
   }
   interface ServiceApply {
     applyId: string;
     shopType: ShopType['type'];
+    shopSize: string;
+    shopName: string;
+    lastName: string;
+    firstName: string;
     mail: string;
     phoneNum?: string;
-    shopName: string;
-    shopSize: string;
     requestDetail?: string;
   }
   interface Place {

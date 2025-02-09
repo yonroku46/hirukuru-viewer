@@ -8,12 +8,12 @@ import { useMediaQuery } from "react-responsive";
 import { enqueueSnackbar } from "notistack";
 import Loading from "@/app/loading";
 import Image from "@/components/Image";
+import { isBusinessOpen } from "@/common/utils/DateUtils";
 import { formatRating } from "@/common/utils/StringUtils";
 import ShopCard from "@/components/ShopCard";
 import Selector from "@/components/input/Selector";
 import SwitchButton from "@/components/button/SwitchButton";
 import MiniButton from "@/components/button/MiniButton";
-import FoodCard from "@/components/FoodCard";
 
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import StarRoundedIcon from '@mui/icons-material/StarRounded';
@@ -65,10 +65,11 @@ const googleMapOptions = {
 export default function SearchMapPage() {
   const isSp = useMediaQuery({ query: "(max-width: 1179px)" });
 
-  const [favoriteItems, setFavoriteItems] = useState<string[]>([]);
-  const [searchType, setSearchType] = useState<'shop' | 'food'>('shop');
+  const [favoriteShops, setFavoriteShops] = useState<string[]>([]);
+  const [openOnly, setOpenOnly] = useState<boolean>(false);
+  const [shopType, setShopType] = useState<"all" | ShopType["type"]>("all");
   const [shops, setShops] = useState<Shop[]>([]);
-  const [foods, setFoods] = useState<Food[]>([]);
+  const [filteredShops, setFilteredShops] = useState<Shop[]>([]);
   const [markPlaces, setMarkPlaces] = useState<Place[]>([]);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [currentPlace, setCurrentPlace] = useState<Place | null>(null);
@@ -80,12 +81,12 @@ export default function SearchMapPage() {
 
   const handleFavorite = useCallback((e: React.MouseEvent<HTMLButtonElement>, id: string) => {
     e.preventDefault();
-    if (favoriteItems.includes(id)) {
-      setFavoriteItems(favoriteItems.filter((item) => item !== id));
+    if (favoriteShops.includes(id)) {
+      setFavoriteShops(favoriteShops.filter((shopId) => shopId !== id));
     } else {
-      setFavoriteItems([...favoriteItems, id]);
+      setFavoriteShops([...favoriteShops, id]);
     }
-  }, [favoriteItems]);
+  }, [favoriteShops]);
 
   const toggleResultsVisibility = () => {
     setIsResultsVisible(!isResultsVisible);
@@ -193,27 +194,27 @@ export default function SearchMapPage() {
           { day: 'sun', open: '10:00', close: '23:50' },
         ]
       },
-      { shopId: '2', location: '福岡市中央区', shopName: 'チキンが一番', description: 'チキン専門店', type: 'foodtruck', thumbnailImg: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', ratingAvg: 4.0, businessHours: [
+      { shopId: '2', location: '福岡市中央区', shopName: 'チキンが一番', description: 'チキン専門店', type: 'bento', thumbnailImg: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', ratingAvg: 4.0, businessHours: [
           { day: 'mon', open: '10:00', close: '20:00' },
           { day: 'wed', open: '10:00', close: '20:00' },
         ]
       },
-      { shopId: '3', location: '福岡市中央区', shopName: 'チキンが一番', description: 'チキン専門店', type: 'foodtruck', thumbnailImg: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', ratingAvg: 4.0, businessHours: [
+      { shopId: '3', location: '福岡市中央区', shopName: 'Chiken Box', description: 'フードトラックで美味しいチキン', type: 'foodtruck', thumbnailImg: 'https://i.pinimg.com/736x/44/75/35/44753517c49efeff49e77071cc306041.jpg', ratingAvg: 4.0, businessHours: [
           { day: 'mon', open: '10:00', close: '20:00' },
           { day: 'wed', open: '10:00', close: '20:00' },
         ]
       },
-      { shopId: '4', location: '福岡市中央区', shopName: 'チキンが一番', description: 'チキン専門店', type: 'foodtruck', thumbnailImg: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', ratingAvg: 4.0, businessHours: [
+      { shopId: '4', location: '福岡市中央区', shopName: '天神トラック', description: '天神で自慢のランチ', type: 'foodtruck', thumbnailImg: 'https://i.pinimg.com/736x/64/70/a6/6470a637276c688063bb053c5c116507.jpg', ratingAvg: 4.0, businessHours: [
           { day: 'mon', open: '10:00', close: '20:00' },
           { day: 'wed', open: '10:00', close: '20:00' },
         ]
       },
-      { shopId: '5', location: '福岡市中央区', shopName: 'チキンが一番', description: 'チキン専門店', type: 'foodtruck', thumbnailImg: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', ratingAvg: 4.0, businessHours: [
+      { shopId: '5', location: '福岡市中央区', shopName: '田島春', description: 'カレー専門店', type: 'foodtruck', thumbnailImg: 'https://i.pinimg.com/736x/57/53/14/575314964f78cc3d80968427e55a4ebf.jpg', ratingAvg: 4.0, businessHours: [
           { day: 'mon', open: '10:00', close: '20:00' },
           { day: 'wed', open: '10:00', close: '20:00' },
         ]
       },
-      { shopId: '6', location: '福岡市中央区', shopName: 'チキンが一番', description: 'チキン専門店', type: 'foodtruck', thumbnailImg: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', ratingAvg: 4.0, businessHours: [
+      { shopId: '6', location: '福岡市中央区', shopName: '肉弁や', description: '肉が一番', type: 'bento', thumbnailImg: 'https://i.pinimg.com/736x/56/38/5d/56385dd21968602af62ce30156914743.jpg', ratingAvg: 4.0, businessHours: [
           { day: 'mon', open: '10:00', close: '20:00' },
           { day: 'wed', open: '10:00', close: '20:00' },
         ]
@@ -228,17 +229,19 @@ export default function SearchMapPage() {
       { placeId: "P6", shopId: "6", position: { lat: 33.5847, lng: 130.4105 } },
     ];
     setShops(dummyShops);
-    const dummyFoods: Food[] = [
-      { foodId: '1', shopId: '1', category: '日替わり弁当', name: '唐揚げ弁当', description: "国内産の鶏肉を使用した唐揚げ弁当です。", ingredients: ["唐揚げ", "ほうれん草ナムル", "白ごはん"], price: 2000, discountPrice: 500, rating: 4.3, stock: 9, thumbnailImg: 'https://i.pinimg.com/736x/f2/67/df/f267dfdd2b0cb8eac4b5e9674aa49e97.jpg', optionMultiple: true, options: [
-        { optionId: '1', foodId: '1', shopId: 'fuk001', name: 'お茶', price: 150 },
-        { optionId: '2', foodId: '1', shopId: 'fuk001', name: 'コーラ', price: 200 },
-        { optionId: '11', foodId: '1', shopId: 'fuk001', name: 'メガ盛り', price: 300 },
-      ]},
-    ];
-    setFoods(dummyFoods);
+    setFilteredShops(dummyShops);
     setMarkPlaces(dummyPlaces);
     getCurrentLocation();
   }, [getCurrentLocation]);
+
+  useEffect(() => {
+    setFilteredShops(
+      shops.filter(item => {
+        const isOpen = isBusinessOpen(item.businessHours || []);
+        return (!openOnly || isOpen) && (shopType === "all" || item.type === shopType);
+      })
+    );
+  }, [shops, openOnly, shopType]);
 
   useEffect(() => {
     if (isSp && isMapVisible) {
@@ -260,17 +263,21 @@ export default function SearchMapPage() {
         <div className="filter-container container">
           <div className="btn-wrapper">
             <SwitchButton
-              labels={[{ label: "店舗", value: "shop" }, { label: "弁当", value: "food" }]}
-              onChange={(value) => {
-                setSearchType(value as 'shop' | 'food');
+              labels={[{ label: "全て", value: "all" }, { label: "営業中", value: "open" }]}
+              onChange={(value: string) => {
+                setOpenOnly(value === "open");
               }}
             />
           </div>
           <div className="filter-wrapper">
             <Selector
-              options={[{ label: "全て", value: "all" }, { label: "営業中のみ", value: "open" }]}
-              onChange={(value) => {
-                console.log(value);
+              options={[
+                { label: "全て", value: "all" },
+                { label: "お弁当屋のみ", value: "bento" },
+                { label: "フードトラックのみ", value: "foodtruck" }
+              ]}
+              onChange={(event) => {
+                setShopType(event.target.value as "all" | ShopType["type"]);
               }}
             />
           </div>
@@ -284,7 +291,7 @@ export default function SearchMapPage() {
               <div>
                 検索結果
                 <span className="count">
-                  {shops.length}
+                  {filteredShops.length}
                 </span>
                 件
               </div>
@@ -298,7 +305,7 @@ export default function SearchMapPage() {
               )}
             </div>
             <div className="results-list">
-              {searchType === 'shop' ? shops.map((shop, index) => (
+              {filteredShops.map((shop, index) => (
                 <ShopCard
                   key={index}
                   data={shop}
@@ -306,18 +313,7 @@ export default function SearchMapPage() {
                   openNewTab
                   onHover={() => activateMarkerForShop(shop.shopId)}
                   onClick={() => activateMarkerForShop(shop.shopId)}
-                  isFavorite={favoriteItems.includes(shop.shopId)}
-                  handleFavorite={handleFavorite}
-                />
-              )) : foods.map((food, index) => (
-                <FoodCard
-                  key={index}
-                  data={food}
-                  href={`/shop/${food.shopId}?q=${food.name}`}
-                  openNewTab
-                  onHover={() => activateMarkerForShop(food.shopId)}
-                  onClick={() => activateMarkerForShop(food.shopId)}
-                  isFavorite={favoriteItems.includes(food.foodId)}
+                  isFavorite={favoriteShops.includes(shop.shopId)}
                   handleFavorite={handleFavorite}
                 />
               ))}
@@ -394,8 +390,8 @@ export default function SearchMapPage() {
               )}
               <MarkerClusterer
                 options={{
-                  gridSize: 30,
-                  minimumClusterSize: 2,
+                  gridSize: 50,
+                  minimumClusterSize: 3,
                   styles: [
                     {
                       url: '/assets/icon/marker-cluster.svg',

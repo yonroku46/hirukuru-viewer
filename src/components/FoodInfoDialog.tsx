@@ -8,14 +8,12 @@ import Image from "@/components/Image";
 import { addToCart } from "@/components/CartDialog";
 import QuantityButton from '@/components/button/QuantityButton';
 
-import FavoriteIcon from '@mui/icons-material/Favorite';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import ManageSearchOutlinedIcon from '@mui/icons-material/ManageSearchOutlined';
 import CloseIcon from "@mui/icons-material/Close";
 import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
@@ -26,11 +24,9 @@ interface FoodInfoDialogProps {
   data: Food | null;
   open: boolean;
   setOpen: (open: boolean) => void;
-  isFavorite?: boolean;
-  handleFavorite?: (e: React.MouseEvent<HTMLButtonElement>, id: string) => void;
 }
 
-export default function FoodInfoDialog({ data, open, setOpen, isFavorite, handleFavorite }: FoodInfoDialogProps) {
+export default function FoodInfoDialog({ data, open, setOpen }: FoodInfoDialogProps) {
   const dispatch = useAppDispatch();
   const isSp = useMediaQuery({ query: "(max-width: 1179px)" });
 
@@ -79,14 +75,6 @@ export default function FoodInfoDialog({ data, open, setOpen, isFavorite, handle
               width={280}
               height={160}
             />
-            {handleFavorite &&
-              <IconButton
-                className={`favorite-icon ${isFavorite ? "active" : ""}`}
-                onClick={(e) => handleFavorite(e, data.foodId)}
-              >
-                <FavoriteIcon fontSize="large" />
-              </IconButton>
-            }
           </div>
           <div className="food-detail-wrapper">
             <div className="food-name-rating">

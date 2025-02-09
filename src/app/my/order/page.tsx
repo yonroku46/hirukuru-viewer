@@ -16,11 +16,11 @@ export default function MyOrderPage() {
     { label: '注文管理', href: '/my/order', active: true },
   ];
   const orderStatus: OrderStatus[] = [
-    { type: 'booked', value: 0 },
-    { type: 'pickup', value: 1 },
-    { type: 'done', value: 1 },
-    { type: 'review', value: 1 },
-    { type: 'cancel', value: 0 }
+    { status: 'booked', value: 0 },
+    { status: 'pickup', value: 1 },
+    { status: 'done', value: 1 },
+    { status: 'review', value: 1 },
+    { status: 'cancel', value: 0 }
   ];
 
   const columns: Column<Order>[] = [
@@ -117,7 +117,7 @@ export default function MyOrderPage() {
     { type: 'month', key: 'month', label: '月', value: month.toString() },
     { type: 'select', key: 'status', label: '状況', value: status, options:
       [{ label: '全て', value: 'all' }, ...orderStatus.map(status => (
-        { label: orderStatusDict(status.type, 'label'), value: status.type }
+        { label: orderStatusDict(status.status, 'label'), value: status.status }
       ))]
     },
   ]

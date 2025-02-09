@@ -4,9 +4,6 @@ import Link from 'next/link';
 import { currency } from '@/common/utils/StringUtils';
 import Image from "@/components/Image";
 
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import IconButton from '@mui/material/IconButton';
-
 interface FoodCardProps {
   data: Food;
   onClick?: () => void;
@@ -14,11 +11,9 @@ interface FoodCardProps {
   href?: string;
   openNewTab?: boolean;
   soldOut?: boolean;
-  isFavorite?: boolean;
-  handleFavorite?: (e: React.MouseEvent<HTMLButtonElement>, id: string) => void;
 }
 
-export default function FoodCard({ data, onClick, onHover, href, openNewTab, soldOut, isFavorite, handleFavorite }: FoodCardProps) {
+export default function FoodCard({ data, onClick, onHover, href, openNewTab, soldOut }: FoodCardProps) {
   const handleClick = () => {
     if (onClick) onClick();
   };
@@ -46,14 +41,6 @@ export default function FoodCard({ data, onClick, onHover, href, openNewTab, sol
           <div className="sold-out-tag">
             在庫切れ
           </div>
-        }
-        {handleFavorite &&
-          <IconButton
-            className={`favorite-icon ${isFavorite ? "active" : ""}`}
-            onClick={(e) => handleFavorite(e, data.foodId)}
-          >
-            <FavoriteIcon />
-          </IconButton>
         }
       </div>
       <div className="info-wrapper">

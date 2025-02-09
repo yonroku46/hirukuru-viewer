@@ -25,6 +25,11 @@ const USER_ADMISSION_LOG = `${USER_ROOT}/admission/log`;
 const USER_FAVORITE = `${USER_ROOT}/favorite`;
 const USER_SIGNOUT = `${USER_ROOT}/signout`;
 
+// platform(service)
+const PLATFORM_ROOT = `${ROOT}/service`;
+const CONTACT_SUBMIT = `${PLATFORM_ROOT}/contact/submit`;
+const PARTNER_SUBMIT = `${PLATFORM_ROOT}/partner/submit`;
+
 const ApiRoutes = {
   HEALTH_CHECK,
   GOOGLE_ACCESS_TOKEN,
@@ -40,6 +45,9 @@ const ApiRoutes = {
   USER_ADMISSION_LOG,
   USER_FAVORITE,
   USER_SIGNOUT,
+  CONTACT_SUBMIT,
+  PARTNER_SUBMIT,
 };
+
 
 export default ApiRoutes;

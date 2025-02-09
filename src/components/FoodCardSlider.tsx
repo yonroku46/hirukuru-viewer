@@ -21,7 +21,6 @@ export default function FoodCardSlider({ title, data }: FoodCardSliderProps) {
   const sliderRef = useRef<Slider>(null);
   const isSp = useMediaQuery({ query: '(max-width: 1179px)' });
 
-  const [favoriteItems, setFavoriteItems] = useState<string[]>([]);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [itemsPerPage, setItemsPerPage] = useState<number>(1);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
@@ -43,15 +42,6 @@ export default function FoodCardSlider({ title, data }: FoodCardSliderProps) {
   useEffect(() => {
     setItemsPerPage(isSp ? 2 : 4);
   }, [isSp]);
-
-  const handleFavorite = (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
-    e.stopPropagation();
-    if (favoriteItems.includes(id)) {
-      setFavoriteItems(favoriteItems.filter((item) => item !== id));
-    } else {
-      setFavoriteItems([...favoriteItems, id]);
-    }
-  };
 
   const handlePrev = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (isAnimating) return;
@@ -113,8 +103,6 @@ export default function FoodCardSlider({ title, data }: FoodCardSliderProps) {
           <FoodCard
             key={item.foodId}
             data={item}
-            isFavorite={favoriteItems.includes(item.foodId)}
-            handleFavorite={handleFavorite}
             href={`/shop/${item.shopId}?q=${item.name}`}
           />
         ))}

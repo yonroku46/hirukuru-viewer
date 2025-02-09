@@ -123,7 +123,7 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
   const [availableTimeOptions, setAvailableTimeOptions] = useState<{ label: string, value: string }[]>([]);
 
   const [squarePayments, setSquarePayments] = useState<Payments | null>(null);
-  const [paymentStep, setPaymentStep] = useState<CartStatus['type']>('ready');
+  const [paymentStep, setPaymentStep] = useState<CartStatus['status']>('ready');
 
   const [pickupType, setPickupType] = useState<PickupType['type']>('today');
   const [pickupOption, setPickupOption] = useState<'now' | 'time'>('now');
@@ -695,7 +695,7 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
             :
             <ArrowBackRoundedIcon
               className={`back-icon active ${paymentStep === 'done' ? "disabled" : ""}`}
-              onClick={() => setPaymentStep(getPreviousStep(paymentStep) as CartStatus['type'] || 'ready')}
+              onClick={() => setPaymentStep(getPreviousStep(paymentStep) as CartStatus['status'] || 'ready')}
             />
           }
           {stepTitle[paymentStep]}

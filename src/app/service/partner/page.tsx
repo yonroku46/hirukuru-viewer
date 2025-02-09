@@ -7,6 +7,7 @@ import Selector from '@/components/input/Selector';
 import InputField from '@/components/input/InputField';
 import MuiBreadcrumbs from "@/components/mui/MuiBreadcrumbs";
 import NoticeBoard from '@/components/NoticeBoard';
+import PlatformService from '@/api/service/PlatformService';
 
 export default function ServiceContactPage() {
   const breadcrumbs: Breadcrumb[] = [
@@ -28,6 +29,9 @@ export default function ServiceContactPage() {
     { value: 'other', label: 'その他' },
   ], []);
 
+  const platformService = PlatformService();
+
+  const [loading, setLoading] = useState<boolean>(false);
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [shopType, setShopType] = useState<string>(shopTypeList[0].value);
   const [mail, setMail] = useState<string>('');
@@ -38,9 +42,25 @@ export default function ServiceContactPage() {
   const [firstName, setFirstName] = useState<string>('');
   const [contents, setContents] = useState<string>('');
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitted(true);
+    const apply: ServiceApply = {
+      shopType: shopType,
+      shopSize: shopSize,
+      shopName: shopName,
+      lastName: lastName,
+      firstName: firstName,
+      mail: mail,
+      phoneNum: phoneNum,
+      requestDetail: contents,
+    } as ServiceApply;
+    setLoading(true);
+    await platformService.partnerSubmit(apply).then((res) => {
+      if (res) {
+        setSubmitted(true);
+      }
+      setLoading(false);
+    });
   };
 
   return (
@@ -169,8 +189,8 @@ export default function ServiceContactPage() {
                   rows={4}
                 />
               </div>
-              <button type='submit' className='submit-btn'>
-                送信
+              <button type='submit' className='submit-btn' disabled={loading}>
+                {loading ? '送信中...' : '送信'}
               </button>
             </form>
           )}

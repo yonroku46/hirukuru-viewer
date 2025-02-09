@@ -315,6 +315,10 @@ button {
   &:focus-visible {
     outline: none;
   }
+  &:disabled {
+    opacity: 0.6;
+    pointer-events: none;
+  }
 }
 
 table {
@@ -417,6 +421,7 @@ table {
   position: relative;
   overflow: hidden;
   width: max-content;
+  min-width: 11rem;
   .switch-btn {
     z-index: 1;
     flex: 1;
@@ -1592,13 +1597,11 @@ table {
       justify-items: center;
       gap: 1rem;
       margin-bottom: 3rem;
-      &.shop, &.food {
-        grid-template-columns: repeat(4, 1fr);
-      }
+      grid-template-columns: repeat(4, 1fr);
       a {
         display: contents;
       }
-      .food-card, .shop-card {
+      .shop-card {
         width: 100%;
       }
     }
@@ -2113,19 +2116,6 @@ table {
         height: 100%;
         max-height: 400px;
       }
-      .favorite-icon {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-        color: var(--gray-alpha-400);
-        stroke: var(--icon-stroke-color);
-        padding: 0;
-        transition: color 0.2s ease-in-out;
-        &:hover, &.active {
-          color: var(--favorite-color);
-          animation: pulse 0.5s;
-        }
-      }
     }
     .food-detail-wrapper {
       z-index: 1;
@@ -2430,19 +2420,6 @@ table {
       &.sold-out {
         opacity: 0.8;
         filter: brightness(0.5);
-      }
-    }
-    .favorite-icon {
-      position: absolute;
-      top: 0.5rem;
-      right: 0.5rem;
-      color: var(--gray-alpha-400);
-      stroke: var(--icon-stroke-color);
-      padding: 0;
-      transition: color 0.2s ease-in-out;
-      &:hover, &.active {
-        color: var(--favorite-color);
-        animation: pulse 0.5s;
       }
     }
     .sold-out-tag {
@@ -3801,12 +3778,7 @@ table {
   .my {
     .favorite {
       .item-list {
-        &.shop {
-          grid-template-columns: repeat(1, 1fr);
-        }
-        &.food {
-          grid-template-columns: repeat(2, 1fr);
-        }
+        grid-template-columns: repeat(1, 1fr);
       }
     }
   }

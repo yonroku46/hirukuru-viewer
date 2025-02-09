@@ -5,8 +5,8 @@ import Link from 'next/link';
 import Image from "next/image";
 import Selector from '@/components/input/Selector';
 import InputField from '@/components/input/InputField';
-
 import MuiBreadcrumbs from "@/components/mui/MuiBreadcrumbs";
+import PlatformService from '@/api/service/PlatformService';
 
 interface InquirySelecter {
   value: ServiceInquiryType['type'];
@@ -26,6 +26,9 @@ export default function ServiceContactPage() {
     { value: 'inquiry', label: 'その他お問い合わせ', placeholder: 'お問い合わせ内容を入力してください' },
   ], []);
 
+  const platformService = PlatformService();
+
+  const [loading, setLoading] = useState<boolean>(false);
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [category, setCategory] = useState<ServiceInquiryType['type']>("suggest");
   const [mail, setMail] = useState<string>('');
@@ -35,8 +38,24 @@ export default function ServiceContactPage() {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitted(true);
+    const inquiry: ServiceInquiry = {
+      inquiryType: category,
+      mail: mail,
+      phoneNum: phoneNum,
+      inquiryDetail: contents,
+    } as ServiceInquiry;
+    setLoading(true);
+    platformService.contactSubmit(inquiry).then((res) => {
+      if (res) {
+        setSubmitted(true);
+      }
+      setLoading(false);
+    });
   };
+
+  useEffect(() => {
+    setLoading(false);
+  }, []);
 
   useEffect(() => {
     setPlaceholderText(categoryList.find(item => item.value === category)?.placeholder || '');
@@ -113,8 +132,8 @@ export default function ServiceContactPage() {
                   rows={8}
                 />
               </div>
-              <button type='submit' className='submit-btn'>
-                送信
+              <button type='submit' className='submit-btn' disabled={loading}>
+                {loading ? '送信中...' : '送信'}
               </button>
             </form>
           )}
