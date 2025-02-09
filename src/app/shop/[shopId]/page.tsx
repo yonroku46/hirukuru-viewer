@@ -14,8 +14,8 @@ import MuiTabs from "@/components/mui/MuiTabs";
 import Selector from "@/components/input/Selector";
 import FoodCard from "@/components/FoodCard";
 import FoodInfoDialog from "@/components/FoodInfoDialog";
-import ShopInfoDialog from "@/components/ShopInfoDialog";
 import MiniButton from "@/components/button/MiniButton";
+import ShopInfoDialog from "@/components/ShopInfoDialog";
 
 import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
