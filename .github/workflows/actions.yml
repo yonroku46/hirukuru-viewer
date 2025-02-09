@@ -22,18 +22,18 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.SERVER_IP }} "cd $REPO_PATH && git pull"
 
-      - name: Set environment variables
-        run: |
-          ssh ubuntu@${{ secrets.SERVER_IP }} "
-            cd $REPO_PATH &&
-            sed -i 's|NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=.*|NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}|' .env.production
-          "
-
       - name: Install dependencies
         run: ssh ubuntu@${{ secrets.SERVER_IP }} "cd $REPO_PATH && yarn install"
 
       - name: Build
         run: ssh ubuntu@${{ secrets.SERVER_IP }} "cd $REPO_PATH && yarn build"
+
+      - name: Update environment variables
+        run: |
+          ssh ubuntu@${{ secrets.SERVER_IP }} "
+            cd $REPO_PATH &&
+            sed -i 's|NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=.*|NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}|' .env.production
+          "
 
       - name: Deploy with PM2
         run: |
