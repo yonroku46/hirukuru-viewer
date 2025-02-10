@@ -5,6 +5,7 @@ import Image from "next/image";
 import dayjs from "dayjs";
 import { useSearchParams, useRouter } from "next/navigation";
 import { enqueueSnackbar } from "notistack";
+import UserService from "@/api/service/UserService";
 import { currency, formatDaysAgo, formatRating } from "@/common/utils/StringUtils";
 import { createKanaSearchRegex } from "@/common/utils/SearchUtils";
 import { isBusinessOpen } from "@/common/utils/DateUtils";
@@ -19,6 +20,7 @@ import ShopInfoDialog from "@/components/ShopInfoDialog";
 
 import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import Rating from '@mui/material/Rating';
 import StarRoundedIcon from '@mui/icons-material/StarRounded';
@@ -39,7 +41,10 @@ export default function ShopPage(
   const searchParams = useSearchParams();
   const q = searchParams.get('q');
 
+  const userService = UserService();
+
   const maxPrice = 2500;
+  const [isFavorite, setIsFavorite] = useState<boolean>(false);
   const [searchValue, setSearchValue] = useState<string>('');
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [reviewFilter, setReviewFilter] = useState<string>('latest');
@@ -165,6 +170,22 @@ export default function ShopPage(
   const handleClick = (item: Item) => {
     setSelectedItem(item);
     setItemInfoOpen(true);
+  }
+
+  async function handleFavorite() {
+    if (isFavorite) {
+      await userService.cancelFavorite(shop.shopId).then((res) => {
+        if (res?.success) {
+          setIsFavorite(false);
+        }
+      });
+    } else {
+      await userService.addFavorite(shop.shopId).then((res) => {
+        if (res?.success) {
+          setIsFavorite(true);
+        }
+      });
+    }
   }
 
   const tabs = useMemo(() => {
@@ -415,8 +436,8 @@ export default function ShopPage(
               gray
             />
             <MiniButton
-              icon={<FavoriteBorderIcon />}
-              onClick={() => {}}
+              icon={isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+              onClick={() => handleFavorite()}
               gray
             />
             <MiniButton

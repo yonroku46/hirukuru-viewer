@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import UserService from "@/api/service/UserService";
 import { createKanaSearchRegex } from "@/common/utils/SearchUtils";
 import { isBusinessOpen } from "@/common/utils/DateUtils";
 import SearchInput from "@/components/input/SearchInput";
@@ -16,10 +17,23 @@ export default function FavoritePage() {
     { label: 'お気に入り', href: '/my/favorite', active: true },
   ];
 
+  const userService = UserService();
+
   const [searchValue, setSearchValue] = useState<string>("");
   const [openOnly, setOpenOnly] = useState<boolean>(false);
   const [favoriteShops, setFavoriteShops] = useState<Shop[]>([]);
   const [filteredShops, setFilteredShops] = useState<(Shop)[]>([]);
+
+  async function handleFavorite(e: React.MouseEvent<HTMLButtonElement>, shopId: string) {
+    e.preventDefault();
+    if (favoriteShops.find(shop => shop.shopId === shopId)) {
+      await userService.cancelFavorite(shopId).then((res) => {
+        if (res?.success) {
+          setFavoriteShops(favoriteShops.filter(shop => shop.shopId !== shopId));
+        }
+      });
+    }
+  }
 
   useEffect(() => {
     const dummyShops: Shop[] = [
@@ -88,6 +102,8 @@ export default function FavoritePage() {
                   data={item as Shop}
                   href={`/shop/${item.shopId}`}
                   openNewTab
+                  isFavorite={favoriteShops.find(shop => shop.shopId === item.shopId) ? true : false}
+                  handleFavorite={(e, id) => handleFavorite(e, id)}
                 />
               ))}
             </div>

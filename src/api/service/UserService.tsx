@@ -42,9 +42,41 @@ export default function UserService() {
     }
   }
 
+  async function addFavorite(shopId: string): Promise<ActionRes | undefined> {
+    try {
+      const params = {
+        shopId: shopId
+      };
+      const response: ApiResponse = await ApiInstance.post(ApiRoutes.USER_FAVORITE, null, { params });
+      if (response && !response.hasErrors) {
+        return response.responseData;
+      }
+
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async function cancelFavorite(shopId: string): Promise<ActionRes | undefined> {
+    try {
+      const params = {
+        shopId: shopId
+      };
+      const response: ApiResponse = await ApiInstance.delete(ApiRoutes.USER_FAVORITE, { params });
+      if (response && !response.hasErrors) {
+        return response.responseData;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   return {
     userInfo,
     updateUserInfo,
-    signout
+    signout,
+    addFavorite,
+    cancelFavorite
   };
+
 }
