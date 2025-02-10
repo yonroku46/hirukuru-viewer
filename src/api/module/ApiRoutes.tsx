@@ -22,7 +22,8 @@ const USER_ROOT = `${ROOT}/user`;
 const USER_INFO = `${USER_ROOT}/info`;
 const USER_ADMISSION = `${USER_ROOT}/admission`;
 const USER_ADMISSION_LOG = `${USER_ROOT}/admission/log`;
-const USER_FAVORITE = `${USER_ROOT}/favorite`;
+const USER_ADD_FAVORITE = `${USER_ROOT}/addFavorite`;
+const USER_CANCEL_FAVORITE = `${USER_ROOT}/cancelFavorite`;
 const USER_SIGNOUT = `${USER_ROOT}/signout`;
 
 // platform(service)
@@ -43,7 +44,8 @@ const ApiRoutes = {
   USER_INFO,
   USER_ADMISSION,
   USER_ADMISSION_LOG,
-  USER_FAVORITE,
+  USER_ADD_FAVORITE,
+  USER_CANCEL_FAVORITE,
   USER_SIGNOUT,
   CONTACT_SUBMIT,
   PARTNER_SUBMIT,
