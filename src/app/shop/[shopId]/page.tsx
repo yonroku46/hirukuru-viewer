@@ -12,8 +12,8 @@ import SearchInput from "@/components/input/SearchInput";
 import MuiMenu from "@/components/mui/MuiMenu";
 import MuiTabs from "@/components/mui/MuiTabs";
 import Selector from "@/components/input/Selector";
-import FoodCard from "@/components/FoodCard";
-import FoodInfoDialog from "@/components/FoodInfoDialog";
+import ItemCard from "@/components/ItemCard";
+import ItemInfoDialog from "@/components/ItemInfoDialog";
 import MiniButton from "@/components/button/MiniButton";
 import ShopInfoDialog from "@/components/ShopInfoDialog";
 
@@ -43,10 +43,10 @@ export default function ShopPage(
   const [searchValue, setSearchValue] = useState<string>('');
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [reviewFilter, setReviewFilter] = useState<string>('latest');
-  const [items, setItems] = useState<Food[]>([]);
-  const [foodInfoOpen, setFoodInfoOpen] = useState<boolean>(false);
+  const [items, setItems] = useState<Item[]>([]);
+  const [itemInfoOpen, setItemInfoOpen] = useState<boolean>(false);
   const [shopInfoOpen, setShopInfoOpen] = useState<boolean>(false);
-  const [selectedItem, setSelectedItem] = useState<Food | null>(null);
+  const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const [reviewList, setReviewList] = useState<ShopReview[]>([]);
   const [priceRange, setPriceRange] = useState<number>(maxPrice);
   const [sort, setSort] = useState<string>('recommend');
@@ -130,26 +130,26 @@ export default function ShopPage(
 
   useEffect(() => {
     console.log(shopId);
-    const dummyItems: Food[] = [
-      { foodId: '1', shopId: 'fuk001', category: '日替わり弁当', name: '唐揚げ弁当', description: "国内産の鶏肉を使用した唐揚げ弁当です。", ingredients: ["唐揚げ", "ほうれん草ナムル", "白ごはん"], price: 2000, discountPrice: 500, rating: 4.3, stock: 9, thumbnailImg: 'https://i.pinimg.com/736x/f2/67/df/f267dfdd2b0cb8eac4b5e9674aa49e97.jpg', optionMultiple: true, options: [
-        { optionId: '1', foodId: '1', shopId: 'fuk001', name: 'お茶', price: 150 },
-        { optionId: '2', foodId: '1', shopId: 'fuk001', name: 'コーラ', price: 200 },
-        { optionId: '11', foodId: '1', shopId: 'fuk001', name: 'メガ盛り', price: 300 },
+    const dummyItems: Item[] = [
+      { itemId: '1', shopId: 'fuk001', category: '日替わり弁当', name: '唐揚げ弁当', description: "国内産の鶏肉を使用した唐揚げ弁当です。", allergens: "11000000", price: 2000, discountPrice: 500, rating: 4.3, stock: 9, thumbnailImg: 'https://i.pinimg.com/736x/f2/67/df/f267dfdd2b0cb8eac4b5e9674aa49e97.jpg', optionMultiple: true, options: [
+        { optionId: '1', itemId: '1', shopId: 'fuk001', name: 'お茶', price: 150 },
+        { optionId: '2', itemId: '1', shopId: 'fuk001', name: 'コーラ', price: 200 },
+        { optionId: '11', itemId: '1', shopId: 'fuk001', name: 'メガ盛り', price: 300 },
       ]},
-      { foodId: '2', shopId: 'fuk002', category: '特製弁当', name: '他店舗弁当', description: "特製のり弁です。", price: 500, discountPrice: 450, rating: 4.5, thumbnailImg: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', optionMultiple: false, options: [
-        { optionId: '3', foodId: '2', shopId: 'fuk001', name: '特盛', price: 1000 },
-        { optionId: '4', foodId: '2', shopId: 'fuk001', name: '大盛', price: 200 },
-        { optionId: '5', foodId: '2', shopId: 'fuk001', name: '中盛', price: 0 },
-        { optionId: '6', foodId: '2', shopId: 'fuk001', name: '小盛', price: -100 },
+      { itemId: '2', shopId: 'fuk002', category: '特製弁当', name: '他店舗弁当', description: "特製のり弁です。", allergens: "01010101", price: 500, discountPrice: 450, rating: 4.5, thumbnailImg: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', optionMultiple: false, options: [
+        { optionId: '3', itemId: '2', shopId: 'fuk001', name: '特盛', price: 1000 },
+        { optionId: '4', itemId: '2', shopId: 'fuk001', name: '大盛', price: 200 },
+        { optionId: '5', itemId: '2', shopId: 'fuk001', name: '中盛', price: 0 },
+        { optionId: '6', itemId: '2', shopId: 'fuk001', name: '小盛', price: -100 },
       ]},
-      { foodId: '3', shopId: 'fuk001', category: '特製弁当', name: 'チキン南蛮弁当', price: 750, rating: 3.9, stock: 2, thumbnailImg: 'https://i.pinimg.com/236x/42/d7/59/42d7590255cfd29e56db2b3d968419d4.jpg' },
-      { foodId: '4', shopId: 'fuk001', category: '特製弁当', name: 'カレー弁当', price: 550, rating: undefined, stock: 0,thumbnailImg: 'https://i.pinimg.com/236x/3b/4f/0a/3b4f0a758df2243b72d1d4985cda5437.jpg' },
-      { foodId: '5', shopId: 'fuk001', category: '定番弁当', name: '塩鮭弁当', price: 550, rating: undefined, thumbnailImg: 'https://i.pinimg.com/736x/53/c1/4c/53c14c49208435da8fca89f4dae85cb4.jpg' },
-      { foodId: '6', shopId: 'fuk001', category: '定番弁当', name: 'ナポリタン', price: 750, rating: 3.9, thumbnailImg: 'https://i.pinimg.com/736x/a0/44/3e/a0443eb63b9e4e56d4bdad82079d11be.jpg' },
-      { foodId: '7', shopId: 'fuk001', category: '定番弁当', name: 'ビビンバ', price: 500, rating: 4.5, thumbnailImg: 'https://i.pinimg.com/736x/15/fc/18/15fc1800352f40dc57aba529365dd6dd.jpg' },
-      { foodId: '8', shopId: 'fuk001', category: '定番弁当', name: '鶏そぼろ丼', price: 1000, rating: 4.3, thumbnailImg: 'https://i.pinimg.com/736x/a3/c0/44/a3c0445cb7ce8a623f9420a2aaa8332c.jpg' },
-      { foodId: '9', shopId: 'fuk001', category: '定番弁当', name: 'ソースカツ弁当', price: 1000, rating: 4.3, thumbnailImg: 'https://i.pinimg.com/736x/09/cc/18/09cc18f3ab7aeb70638f33170251bceb.jpg' },
-      { foodId: '10', shopId: 'fuk001', category: '定番弁当', name: 'カツカレー', price: 1000, rating: 4.3, thumbnailImg: 'https://i.pinimg.com/736x/7f/6f/55/7f6f5560ca41e1870c59b18f6f1f2360.jpg' },
+      { itemId: '3', shopId: 'fuk001', category: '特製弁当', name: 'チキン南蛮弁当', price: 750, rating: 3.9, stock: 2, thumbnailImg: 'https://i.pinimg.com/236x/42/d7/59/42d7590255cfd29e56db2b3d968419d4.jpg' },
+      { itemId: '4', shopId: 'fuk001', category: '特製弁当', name: 'カレー弁当', price: 550, rating: undefined, stock: 0,thumbnailImg: 'https://i.pinimg.com/236x/3b/4f/0a/3b4f0a758df2243b72d1d4985cda5437.jpg' },
+      { itemId: '5', shopId: 'fuk001', category: '定番弁当', name: '塩鮭弁当', price: 550, rating: undefined, thumbnailImg: 'https://i.pinimg.com/736x/53/c1/4c/53c14c49208435da8fca89f4dae85cb4.jpg' },
+      { itemId: '6', shopId: 'fuk001', category: '定番弁当', name: 'ナポリタン', price: 750, rating: 3.9, thumbnailImg: 'https://i.pinimg.com/736x/a0/44/3e/a0443eb63b9e4e56d4bdad82079d11be.jpg' },
+      { itemId: '7', shopId: 'fuk001', category: '定番弁当', name: 'ビビンバ', price: 500, rating: 4.5, thumbnailImg: 'https://i.pinimg.com/736x/15/fc/18/15fc1800352f40dc57aba529365dd6dd.jpg' },
+      { itemId: '8', shopId: 'fuk001', category: '定番弁当', name: '鶏そぼろ丼', price: 1000, rating: 4.3, thumbnailImg: 'https://i.pinimg.com/736x/a3/c0/44/a3c0445cb7ce8a623f9420a2aaa8332c.jpg' },
+      { itemId: '9', shopId: 'fuk001', category: '定番弁当', name: 'ソースカツ弁当', price: 1000, rating: 4.3, thumbnailImg: 'https://i.pinimg.com/736x/09/cc/18/09cc18f3ab7aeb70638f33170251bceb.jpg' },
+      { itemId: '10', shopId: 'fuk001', category: '定番弁当', name: 'カツカレー', price: 1000, rating: 4.3, thumbnailImg: 'https://i.pinimg.com/736x/7f/6f/55/7f6f5560ca41e1870c59b18f6f1f2360.jpg' },
     ];
     const dummyReviewList = [
       { reviewId: '1', userId: 'user1', shopId: 'fuk001', userName: "User1", userProfile: "/assets/img/no-user.jpg", userRatingCount: 1120, userRatingAvg: 4.6, rating: 4, date: "2024-11-29", comment: "Good!" },
@@ -158,13 +158,13 @@ export default function ShopPage(
       { reviewId: '4', userId: 'user4', shopId: 'fuk001', userName: "User4", userProfile: "/assets/img/no-user.jpg", userRatingCount: undefined, userRatingAvg: undefined, rating: 4, date: "2024-12-28", comment: "Good!" },
       { reviewId: '5', userId: 'user5', shopId: 'fuk001', userName: "User5", userProfile: "/assets/img/no-user.jpg", userRatingCount: undefined, userRatingAvg: undefined, rating: 4, date: "2025-01-24", comment: "Good!" },
     ]
-    setItems(dummyItems as Food[]);
+    setItems(dummyItems as Item[]);
     setReviewList(dummyReviewList as ShopReview[]);
   }, [shopId]);
 
-  const handleClick = (item: Food) => {
+  const handleClick = (item: Item) => {
     setSelectedItem(item);
-    setFoodInfoOpen(true);
+    setItemInfoOpen(true);
   }
 
   const tabs = useMemo(() => {
@@ -183,9 +183,9 @@ export default function ShopPage(
       }
 
       return acc;
-    }, {} as Record<string, Food[]>);
+    }, {} as Record<string, Item[]>);
 
-    const filterItems = (items: Food[]) => {
+    const filterItems = (items: Item[]) => {
       if (!searchValue && !priceRange && !sort) return items;
 
       const searchRegex = createKanaSearchRegex(searchValue);
@@ -227,8 +227,8 @@ export default function ShopPage(
           ) : (
             <div className="shop-item-body">
               {filteredItems.map((item) => (
-                <FoodCard
-                  key={item.foodId}
+                <ItemCard
+                  key={item.itemId}
                   data={item}
                   soldOut={item.stock !== undefined && item.stock === 0}
                   onClick={() => handleClick(item)}
@@ -256,8 +256,8 @@ export default function ShopPage(
           ) : (
             <div className="shop-item-body">
               {filteredSpecialTabItems.map((item) => (
-                <FoodCard
-                  key={item.foodId}
+                <ItemCard
+                  key={item.itemId}
                   data={item}
                   onClick={() => handleClick(item)}
                 />
@@ -286,8 +286,8 @@ export default function ShopPage(
               ) : (
                 <div className="shop-item-body">
                   {filteredCategoryItems.map((item) => (
-                    <FoodCard
-                      key={item.foodId}
+                    <ItemCard
+                      key={item.itemId}
                       data={item}
                       onClick={() => handleClick(item)}
                     />
@@ -393,10 +393,10 @@ export default function ShopPage(
         open={shopInfoOpen}
         setOpen={setShopInfoOpen}
       />
-      <FoodInfoDialog
+      <ItemInfoDialog
         data={selectedItem}
-        open={foodInfoOpen}
-        setOpen={setFoodInfoOpen}
+        open={itemInfoOpen}
+        setOpen={setItemInfoOpen}
       />
       {/* Shop Header */}
       <section className="shop-header-wrapper">

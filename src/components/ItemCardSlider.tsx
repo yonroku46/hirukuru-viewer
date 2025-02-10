@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Slider, { Settings } from 'react-slick';
 import { useMediaQuery } from 'react-responsive';
-import FoodCard from '@/components/FoodCard';
+import ItemCard from '@/components/ItemCard';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
@@ -12,12 +12,12 @@ import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 import Skeleton from '@mui/material/Skeleton';
 
-interface FoodCardSliderProps {
+interface ItemCardSliderProps {
   title: string;
-  data: Food[];
+  data: Item[];
 }
 
-export default function FoodCardSlider({ title, data }: FoodCardSliderProps) {
+export default function ItemCardSlider({ title, data }: ItemCardSliderProps) {
   const sliderRef = useRef<Slider>(null);
   const isSp = useMediaQuery({ query: '(max-width: 1179px)' });
 
@@ -64,8 +64,8 @@ export default function FoodCardSlider({ title, data }: FoodCardSliderProps) {
   };
 
   return (
-    <div className="food-card-slider">
-      <div className='food-card-slider-header'>
+    <div className="item-card-slider">
+      <div className='item-card-slider-header'>
         <div className='title-wrapper'>
           <h2 className="title">
             {title}
@@ -100,8 +100,8 @@ export default function FoodCardSlider({ title, data }: FoodCardSliderProps) {
       }
       <Slider ref={sliderRef} {...settings}>
         {data.map((item) => (
-          <FoodCard
-            key={item.foodId}
+          <ItemCard
+            key={item.itemId}
             data={item}
             href={`/shop/${item.shopId}?q=${item.name}`}
           />

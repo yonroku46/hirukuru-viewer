@@ -76,6 +76,9 @@ declare global {
     refreshToken?: string;
     shopOwner: boolean;
   }
+  interface ItemState extends Item {
+    quantity?: number;
+  }
   // Status
   interface CartStatus {
     status: 'ready' | 'pickup' | 'payment' | 'final' | 'done';
@@ -206,32 +209,31 @@ declare global {
   }
   interface OrderDetail {
     orderId: string;
-    foodId: string;
+    itemId: string;
     name: string;
-    options?: FoodOption[];
+    options?: ItemOption[];
     price: number;
     quantity: number;
     totalPrice: number;
   }
-  interface Food {
-    foodId: string;
+  interface Item {
+    itemId: string;
     shopId: string;
     category: string;
     name: string;
     description?: string;
-    ingredients?: string[];
+    allergens?: string;
     price: number;
     discountPrice?: number;
     rating?: number;
     thumbnailImg: string;
-    quantity?: number;
     stock?: number;
     optionMultiple?: boolean;
-    options?: FoodOption[];
+    options?: ItemOption[];
   }
-  interface FoodOption {
+  interface ItemOption {
     optionId: string;
-    foodId: string;
+    itemId: string;
     shopId: string;
     name: string;
     price: number;

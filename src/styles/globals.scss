@@ -364,6 +364,7 @@ table {
     }
     .user-profilie {
       border-radius: 50%;
+      border: 1px solid var(--gray-alpha-300);
     }
     .user-wrapper {
       display: flex;
@@ -2081,7 +2082,7 @@ table {
   }
 }
 
-.food-info-dialog {
+.item-info-dialog {
   .title-wrapper {
     display: flex;
     justify-content: space-between;
@@ -2118,7 +2119,7 @@ table {
         max-height: 400px;
       }
     }
-    .food-detail-wrapper {
+    .item-detail-wrapper {
       z-index: 1;
       flex: 1.5;
       display: flex;
@@ -2127,10 +2128,10 @@ table {
       margin-top: -1rem;
       border-radius: 0.5rem;
       background: var(--background);
-      .food-name-rating {
+      .item-name-rating {
         display: flex;
         justify-content: space-between;
-        .food-name {
+        .item-name {
           display: flex;
           align-items: center;
           font-size: 1.25rem;
@@ -2178,15 +2179,43 @@ table {
       .description {
         padding: 2rem 0.5rem;
       }
-      .ingredient-list {
+      .allergen-title {
+        margin-bottom: 1rem;
+      }
+      .allergen-list {
         display: flex;
         flex-wrap: wrap;
-        gap: 0.25rem;
-        margin-bottom: 1rem;
-        .ingredient {
-          border-radius: 0.25rem;
-          padding: 0.125rem 0.5rem;
-          background-color: var(--gray-alpha-200);
+        gap: 1px;
+        .allergen {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0.25rem;
+          opacity: 0.15;
+          &.active {
+            opacity: 1;
+          }
+          &:first-child {
+            .allergen-name {
+              border-top-left-radius: 0.25rem;
+              border-bottom-left-radius: 0.25rem;
+            }
+          }
+          &:last-child {
+            .allergen-name {
+              border-top-right-radius: 0.25rem;
+              border-bottom-right-radius: 0.25rem;
+            }
+          }
+          .allergen-name {
+            font-size: 0.875rem;
+            background: black;
+            color: white;
+            padding: 0.1rem;
+            width: 100%;
+            text-align: center;
+          }
         }
       }
       .option-wrapper {
@@ -2200,9 +2229,7 @@ table {
           }
         }
         .option-list {
-          background-color: var(--gray-alpha-200);
-          border-radius: 0.5rem;
-          padding: 0.5rem 1rem;
+          padding: 0 1rem;
           display: flex;
           flex-wrap: wrap;
           gap: 0.25rem;
@@ -2212,7 +2239,7 @@ table {
         }
       }
       .actions {
-        padding-top: 2rem;
+        padding-top: 1rem;
         margin-top: auto;
         .stock-alert {
           margin-right: 0.25rem;
@@ -2401,7 +2428,7 @@ table {
   }
 }
 
-.food-card {
+.item-card {
   transition: opacity 0.2s ease-in-out;
   &:hover {
     &.clickable {
@@ -2489,7 +2516,7 @@ table {
     }
   }
 }
-.food-card-slider {
+.item-card-slider {
   display: flex;
   flex-direction: column;
   padding: 2rem 0;
@@ -2497,7 +2524,7 @@ table {
   &:not(:last-child) {
     border-bottom: 1px solid var(--gray-alpha-300);
   }
-  .food-card-slider-header {
+  .item-card-slider-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -2542,7 +2569,7 @@ table {
       }
     }
   }
-  .food-card {
+  .item-card {
     margin-right: 0.5rem;
     padding-top: 1px;
   }
@@ -3651,7 +3678,7 @@ table {
       min-width: 500px;
     }
   }
-  .food-info-dialog {
+  .item-info-dialog {
     .title {
       min-width: 500px;
     }
@@ -3756,13 +3783,13 @@ table {
       }
     }
   }
-  .food-info-dialog {
+  .item-info-dialog {
     .content {
       .image-wrapper {
         flex: 1;
         max-height: 35vh;
       }
-      .food-detail-wrapper {
+      .item-detail-wrapper {
         flex: 5;
       }
     }

@@ -26,7 +26,7 @@ export default function MyOrderPage() {
   const columns: Column<Order>[] = [
     { key: 'orderDetail', type: 'list', label: '詳細', width: 60, listColumns: [
         { key: 'orderId', type: 'text', label: '注文ID', hide: true },
-        { key: 'foodId', type: 'text', label: '食品ID', hide: true },
+        { key: 'itemId', type: 'text', label: '食品ID', hide: true },
         { key: 'name', type: 'text', label: '食品名', minWidth: 120, maxWidth: 120 },
         { key: 'price', type: 'number', typeUnit: '円', label: '単価', minWidth: 80, maxWidth: 80, align: 'right' },
         { key: 'options', type: 'options', label: 'オプション', minWidth: 140, maxWidth: 140 },
@@ -79,16 +79,16 @@ export default function MyOrderPage() {
     }
     const dummyRows: Order[] = [
       createData('O101', 'booked', 'U101', 'S101', 'テスト店舗', 'cash', 2500, '2025-01-01 20:07', '2025-01-01 20:07', [
-        { orderId: 'O101', foodId: 'F101', name: '唐揚げ弁当', price: 500, quantity: 1, totalPrice: 900, options: [
-          { optionId: 'O101', foodId: 'F101', shopId: 'S101', name: 'コーラ', price: 100 },
-          { optionId: 'O102', foodId: 'F101', shopId: 'S101', name: 'メガ盛り', price: 300 },
+        { orderId: 'O101', itemId: 'F101', name: '唐揚げ弁当', price: 500, quantity: 1, totalPrice: 900, options: [
+          { optionId: 'O101', itemId: 'F101', shopId: 'S101', name: 'コーラ', price: 100 },
+          { optionId: 'O102', itemId: 'F101', shopId: 'S101', name: 'メガ盛り', price: 300 },
         ]},
-        { orderId: 'O101', foodId: 'F102', name: 'チキン南蛮弁当', price: 1000, quantity: 2, totalPrice: 2000, options: [
-          { optionId: 'O103', foodId: 'F102', shopId: 'S101', name: '特盛り', price: 1000 },
+        { orderId: 'O101', itemId: 'F102', name: 'チキン南蛮弁当', price: 1000, quantity: 2, totalPrice: 2000, options: [
+          { optionId: 'O103', itemId: 'F102', shopId: 'S101', name: '特盛り', price: 1000 },
         ] },
       ]),
       createData('O102', 'pickup', 'U101', 'S101', 'テスト店舗', 'card', 500, '2025-01-01 20:10', '2025-01-02 20:10', [
-        { orderId: 'O102', foodId: 'F102', name: 'チキン南蛮弁当', price: 500, quantity: 1, totalPrice: 500 },
+        { orderId: 'O102', itemId: 'F102', name: 'チキン南蛮弁当', price: 500, quantity: 1, totalPrice: 500 },
       ]),
       createData('O103', 'done', 'U101', 'S101', 'テスト店舗', 'google', 1000, '2025-01-15 20:10', '2025-01-15 20:10', []),
       createData('O104', 'review', 'U101', 'S101', 'テスト店舗', 'apple', 1000, '2025-01-15 20:10', '2025-01-14 20:10', []),

@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { currency } from '@/common/utils/StringUtils';
 import Image from "@/components/Image";
 
-interface FoodCardProps {
-  data: Food;
+interface ItemCardProps {
+  data: Item;
   onClick?: () => void;
   onHover?: () => void;
   href?: string;
@@ -13,7 +13,7 @@ interface FoodCardProps {
   soldOut?: boolean;
 }
 
-export default function FoodCard({ data, onClick, onHover, href, openNewTab, soldOut }: FoodCardProps) {
+export default function ItemCard({ data, onClick, onHover, href, openNewTab, soldOut }: ItemCardProps) {
   const handleClick = () => {
     if (onClick) onClick();
   };
@@ -23,7 +23,7 @@ export default function FoodCard({ data, onClick, onHover, href, openNewTab, sol
   };
 
   const content = (
-    <div key={data.foodId} className={`food-card ${onClick || href ? "clickable" : ""}`} onClick={handleClick} onMouseEnter={handleHover}>
+    <div key={data.itemId} className={`item-card ${onClick || href ? "clickable" : ""}`} onClick={handleClick} onMouseEnter={handleHover}>
       <div className="image-wrapper">
         <Image
           className={`image ${soldOut ? "sold-out" : ""}`}

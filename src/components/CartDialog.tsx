@@ -72,12 +72,12 @@ const Transition = forwardRef(function Transition(
 });
 
 // オプションチェック
-const optionsEqual = (opts1: FoodOption[], opts2: FoodOption[]) => {
+const optionsEqual = (opts1: ItemOption[], opts2: ItemOption[]) => {
   if (opts1.length !== opts2.length) return false;
   return opts1.every((opt1) => opts2.some((opt2) => opt1.optionId === opt2.optionId));
 };
 
-export const addToCart = (dispatch: AppDispatch, item: Food, quantity?: number, options?: FoodOption[]): boolean => {
+export const addToCart = (dispatch: AppDispatch, item: Item, quantity?: number, options?: ItemOption[]): boolean => {
   const existingCartItems = JSON.parse(localStorage.getItem(cartKey) || "[]");
 
   // 同じお店のものじゃない場合案内
@@ -88,8 +88,8 @@ export const addToCart = (dispatch: AppDispatch, item: Food, quantity?: number, 
 
   // 新しいアイテムは追加、既存のアイテムは数量を増やす
   let newCartItems;
-  const itemIndex = existingCartItems.findIndex((existingItem: Food) =>
-    existingItem.foodId === item.foodId && optionsEqual(existingItem.options || [], options || [])
+  const itemIndex = existingCartItems.findIndex((existingItem: Item) =>
+    existingItem.itemId === item.itemId && optionsEqual(existingItem.options || [], options || [])
   );
   if (itemIndex === -1) {
     newCartItems = [...existingCartItems, {...item, quantity: quantity || 1, options: options || [] }];
@@ -117,7 +117,7 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
 
   const [deleteMode, setDeleteMode] = useState<boolean>(false);
   const [currentDateTime, setCurrentDateTime] = useState<string>("");
-  const [cartItems, setCartItems] = useState<Food[]>([]);
+  const [cartItems, setCartItems] = useState<ItemState[]>([]);
 
   const [allTimeOptions, setAllTimeOptions] = useState<{ label: string, value: string }[]>([]);
   const [availableTimeOptions, setAvailableTimeOptions] = useState<{ label: string, value: string }[]>([]);
@@ -351,19 +351,19 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
     setOpen(open);
   };
 
-  const handleDeleteItem = (id: string, options: FoodOption[]) => {
+  const handleDeleteItem = (id: string, options: ItemOption[]) => {
     const updatedCartItems = cartItems.filter((item) =>
-      !(item.foodId === id && optionsEqual(item.options || [], options))
+      !(item.itemId === id && optionsEqual(item.options || [], options))
     );
     localStorage.setItem(cartKey, JSON.stringify(updatedCartItems));
     dispatch(setCartState({ cartItems: updatedCartItems }));
   };
 
-  const handleQuantity = (id: string, quantity: number, options: FoodOption[]) => {
+  const handleQuantity = (id: string, quantity: number, options: ItemOption[]) => {
     const updatedCartItems = quantity === 0
-      ? cartItems.filter(item => !(item.foodId === id && optionsEqual(item.options || [], options)))
+      ? cartItems.filter(item => !(item.itemId === id && optionsEqual(item.options || [], options)))
       : cartItems.map(item =>
-          item.foodId === id && optionsEqual(item.options || [], options)
+          item.itemId === id && optionsEqual(item.options || [], options)
             ? { ...item, quantity }
             : item
         );
@@ -457,7 +457,7 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
                 <div className="cart-item-img">
                   <Image className={deleteMode ? "delete-mode" : ""} src={item.thumbnailImg} alt={item.name} width={60} height={60} />
                   {deleteMode &&
-                    <IconButton className="delete-icon" onClick={() => handleDeleteItem(item.foodId, item.options || [])}>
+                    <IconButton className="delete-icon" onClick={() => handleDeleteItem(item.itemId, item.options || [])}>
                       <DeleteOutlineOutlinedIcon />
                     </IconButton>
                   }
@@ -497,8 +497,8 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
                 <QuantityButton
                   disabled={deleteMode}
                   quantity={item.quantity || 0}
-                  handleMinus={() => handleQuantity(item.foodId, item.quantity ? item.quantity - 1 : 0, item.options || [])}
-                  handlePlus={() => handleQuantity(item.foodId, item.quantity ? item.quantity + 1 : 1, item.options || [])}
+                  handleMinus={() => handleQuantity(item.itemId, item.quantity ? item.quantity - 1 : 0, item.options || [])}
+                  handlePlus={() => handleQuantity(item.itemId, item.quantity ? item.quantity + 1 : 1, item.options || [])}
                 />
               </div>
               <div className="cart-item-total-price">

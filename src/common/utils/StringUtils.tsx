@@ -70,10 +70,10 @@ export function extractDelimiter(target: string, delimiter = '/'): string {
   return result;
 }
 
-export function optionsToString(options: FoodOption | FoodOption[]): string {
+export function optionsToString(options: ItemOption | ItemOption[]): string {
   if (!options) return '';
 
-  const formatOption = (option: FoodOption) => {
+  const formatOption = (option: ItemOption) => {
     const priceString = option.price > 0
       ? `(+${currency(option.price)}円)`
       : option.price < 0

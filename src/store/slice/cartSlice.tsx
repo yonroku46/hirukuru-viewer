@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
 export interface ICartState {
-  cartItems: Food[];
+  cartItems: Item[];
 }
 
 const initialState: ICartState = {
@@ -10,7 +10,7 @@ const initialState: ICartState = {
 }
 
 interface CartPayload {
-  cartItems: Food[];
+  cartItems: Item[];
 }
 
 export const cartSlice = createSlice({

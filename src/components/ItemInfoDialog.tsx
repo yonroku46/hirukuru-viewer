@@ -20,18 +20,29 @@ import Radio from '@mui/material/Radio';
 import Checkbox from '@mui/material/Checkbox';
 import FormGroup from '@mui/material/FormGroup';
 
-interface FoodInfoDialogProps {
-  data: Food | null;
+interface ItemInfoDialogProps {
+  data: Item | null;
   open: boolean;
   setOpen: (open: boolean) => void;
 }
 
-export default function FoodInfoDialog({ data, open, setOpen }: FoodInfoDialogProps) {
+export default function ItemInfoDialog({ data, open, setOpen }: ItemInfoDialogProps) {
   const dispatch = useAppDispatch();
   const isSp = useMediaQuery({ query: "(max-width: 1179px)" });
 
   const [quantity, setQuantity] = useState<number>(1);
-  const [options, setOptions] = useState<FoodOption[]>([]);
+  const [options, setOptions] = useState<ItemOption[]>([]);
+
+  const allergensList = [
+    { allergen: '1', name: '卵', img: '/assets/img/allergen/egg.png' },
+    { allergen: '2', name: '乳', img: '/assets/img/allergen/milk.png' },
+    { allergen: '3', name: '小麦', img: '/assets/img/allergen/wheat.png' },
+    { allergen: '4', name: 'そば', img: '/assets/img/allergen/buckwheat.png' },
+    { allergen: '5', name: '落花生', img: '/assets/img/allergen/peanut.png' },
+    { allergen: '6', name: 'えび', img: '/assets/img/allergen/shrimp.png' },
+    { allergen: '7', name: 'かに', img: '/assets/img/allergen/crab.png' },
+    { allergen: '8', name: 'くるみ', img: '/assets/img/allergen/walnut.png' },
+  ]
 
   useEffect(() => {
     if (open) {
@@ -55,7 +66,7 @@ export default function FoodInfoDialog({ data, open, setOpen }: FoodInfoDialogPr
   return (
     <Fragment>
       <Dialog
-        className="food-info-dialog"
+        className="item-info-dialog"
         fullScreen={isSp}
         open={open}
         onClose={() => setOpen(false)}
@@ -76,9 +87,9 @@ export default function FoodInfoDialog({ data, open, setOpen }: FoodInfoDialogPr
               height={160}
             />
           </div>
-          <div className="food-detail-wrapper">
-            <div className="food-name-rating">
-              <div className="food-name">
+          <div className="item-detail-wrapper">
+            <div className="item-name-rating">
+              <div className="item-name">
                 {data.name}
                 {data.discountPrice && data.discountPrice < data.price &&
                   <div className="sale-tag">
@@ -114,14 +125,29 @@ export default function FoodInfoDialog({ data, open, setOpen }: FoodInfoDialogPr
                 {data.description}
               </p>
             }
-            {data.ingredients &&
-              <div className="ingredient-list">
-                {data.ingredients.map((ingredient, index) => (
-                  <span key={index} className="ingredient">
-                    {ingredient}
-                  </span>
-                ))}
-              </div>
+            {data.allergens &&
+              <>
+                <p className="allergen-title">
+                  アレルギー表示
+                </p>
+                <div className="allergen-list">
+                  {allergensList.map((allergen, index) => (
+                    <span
+                      key={allergen.allergen}
+                      className={`allergen ${data.allergens && data.allergens[index] === '1' ? 'active' : ''}`}>
+                      <Image
+                        src={allergen.img}
+                        alt={allergen.name}
+                        width={40}
+                        height={40}
+                      />
+                      <span className="allergen-name">
+                        {allergen.name}
+                      </span>
+                    </span>
+                  ))}
+                </div>
+              </>
             }
             {data.options && data.options.length > 0 &&
               <div className="option-wrapper">
