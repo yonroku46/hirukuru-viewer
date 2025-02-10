@@ -13,6 +13,8 @@ import LocalDiningOutlinedIcon from '@mui/icons-material/LocalDiningOutlined';
 import TaskAltOutlinedIcon from '@mui/icons-material/TaskAltOutlined';
 import AlarmOnRoundedIcon from '@mui/icons-material/AlarmOnRounded';
 import CloseIcon from '@mui/icons-material/Close';
+import ArrowRightIcon from '@mui/icons-material/ArrowRight';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 export default function ServicePage() {
   const router = useRouter();
@@ -65,6 +67,12 @@ export default function ServicePage() {
     { time: "12:50", prev: "食事終了\n&\n余裕時間", now: undefined },
     { time: "13:00", prev: "ランチタイム\n終了", now: "ランチタイム\n終了" },
     { time: "余裕時間", prev: "約15分", now: "約30分" },
+  ];
+
+  const usageCards = [
+    { title: "商品を選ぶ", description: "好みに合わせて商品を選ぶ", img: "/assets/img/usage-select.png" },
+    { title: "注文・決済", description: "アプリ内で商品の注文から決済まで完了", img: "/assets/img/usage-order.png" },
+    { title: "店頭で受け取り", description: "指定時間に店舗へ行き商品を受け取るだけ", img: "/assets/img/usage-takeout.png" },
   ];
 
   const serviceFunctions = [
@@ -121,7 +129,7 @@ export default function ServicePage() {
                 ヒルクルとは？
               </h3>
               <p className="description">
-                販売者との購入者を繋げて、食事時間をより充実させるサービスです
+                {`販売者との購入者を繋げて食事時間をより\n充実させるためのテイクアウト仲介サービスです`}
               </p>
             </div>
             <div className='service-benefit'>
@@ -185,15 +193,49 @@ export default function ServicePage() {
                     <tr key={index}>
                       <td>{step.time}</td>
                       <td className='prev'>
-                        {step.prev || '↓'}
+                        {step.prev || <KeyboardArrowDownIcon />}
                       </td>
                       <td className='now'>
-                        {step.now || '↓'}
+                        {step.now || <KeyboardArrowDownIcon />}
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
+            </div>
+            {/* Service Intro - Usage */}
+            <div className="service-title">
+              <h3 className="title">
+                ヒルクルの使い方
+              </h3>
+              <p className="description">
+                {`近いお店を探してカンタンに注文・決済\nあとはお店で受け取るだけ！`}
+              </p>
+            </div>
+            <div className="service-usage">
+              {usageCards.map((card, index) => (
+                <>
+                  <div key={index} className="usage-card">
+                    <div className="title-wrapper">
+                      <div className="title">
+                        {card.title}
+                      </div>
+                      <Image
+                        src={card.img}
+                        alt={card.title}
+                        width={110}
+                        height={110}
+                      />
+                    </div>
+                    <div className="description">
+                      {card.description}
+                    </div>
+                  </div>
+                  {index < usageCards.length - 1 && (
+                    <ArrowRightIcon className="usage-card-arrow" />
+                  )}
+                </>
+              ))}
             </div>
             {/* Service Intro - Function */}
             <div className="service-title">
@@ -229,7 +271,7 @@ export default function ServicePage() {
                 一緒に始めませんか？
               </h3>
               <p className="description">
-                サービス導入に必要なのはネット環境とスマホだけ
+                {`サービス導入に必要なのは\nネット環境とスマホだけ`}
               </p>
             </div>
             <div className="service-important">
