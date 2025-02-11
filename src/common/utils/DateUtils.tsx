@@ -17,11 +17,11 @@ export const dateNow = (): dayjs.Dayjs => {
 export function isBusinessOpen(businessHours: BusinessHour[]): boolean {
   const today = dayjs().format('ddd').toLowerCase();
   const currentTime = dayjs().hour() * 100 + dayjs().minute();
-  const todayHours = businessHours.find((hour) => hour.day === today);
+  const todayHours = businessHours.find((hour) => hour.dayOfWeek === today);
 
   if (todayHours) {
-    const openTime = parseInt(todayHours.open.replace(':', ''), 10);
-    const closeTime = parseInt(todayHours.close.replace(':', ''), 10);
+    const openTime = parseInt(todayHours.openTime.replace(':', ''), 10);
+    const closeTime = parseInt(todayHours.closeTime.replace(':', ''), 10);
     return currentTime >= openTime && currentTime <= closeTime;
   }
 
@@ -30,10 +30,10 @@ export function isBusinessOpen(businessHours: BusinessHour[]): boolean {
 
 export function formatTodayBusinessHours(businessHours: BusinessHour[]): string {
   const today = dayjs().format('ddd').toLowerCase();
-  const todayHours = businessHours.find((hour) => hour.day === today);
+  const todayHours = businessHours.find((hour) => hour.dayOfWeek === today);
 
   if (todayHours) {
-    return `${dayMap[today]} ${todayHours.open} - ${todayHours.close}`;
+    return `${dayMap[today]} ${todayHours.openTime} - ${todayHours.closeTime}`;
   }
 
   return `${dayMap[today]}曜日休み`;
@@ -41,9 +41,9 @@ export function formatTodayBusinessHours(businessHours: BusinessHour[]): string 
 
 export function formatWeeklyBusinessHours(businessHours: BusinessHour[]): string {
   return daysOrder.map(day => {
-    const dayHours = businessHours.find(hour => hour.day === day);
+    const dayHours = businessHours.find(hour => hour.dayOfWeek === day);
     if (dayHours) {
-      return `${dayMap[day]}：${dayHours.open} - ${dayHours.close}`;
+      return `${dayMap[day]}：${dayHours.openTime} - ${dayHours.closeTime}`;
     }
     return `${dayMap[day]}：休み`;
   }).join('\n');

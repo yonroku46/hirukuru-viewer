@@ -16,11 +16,11 @@ export default function MyOrderPage() {
     { label: '注文管理', href: '/my/order', active: true },
   ];
   const orderStatus: OrderStatus[] = [
-    { status: 'booked', value: 0 },
-    { status: 'pickup', value: 1 },
-    { status: 'done', value: 1 },
-    { status: 'review', value: 1 },
-    { status: 'cancel', value: 0 }
+    { status: 'BOOKED', value: 0 },
+    { status: 'PICKUP', value: 1 },
+    { status: 'DONE', value: 1 },
+    { status: 'REVIEW', value: 1 },
+    { status: 'CANCEL', value: 0 }
   ];
 
   const columns: Column<Order>[] = [
@@ -42,22 +42,22 @@ export default function MyOrderPage() {
     { key: 'payType', type: 'payType', label: '支払方法', minWidth: 100, maxWidth: 100, align: 'right' },
     { key: 'totalPrice', type: 'number', typeUnit: '円', label: '合計金額', minWidth: 100, align: 'right' },
     { key: 'pickupTime', type: 'time', label: '受取日時', minWidth: 100, maxWidth: 100, align: 'right' },
-    { key: 'orderTime', type: 'time', label: '注文日時', minWidth: 100, maxWidth: 100, align: 'right' },
+    { key: 'createTime', type: 'time', label: '注文日時', minWidth: 100, maxWidth: 100, align: 'right' },
   ];
 
   function createData(
     orderId: string,
-    status: string,
+    status: OrderStatus['status'],
     userId: string,
     shopId: string,
     shopName: string,
-    payType: string,
+    payType: PayType['type'],
     totalPrice: number,
     pickupTime: string,
-    orderTime: string,
+    createTime: string,
     orderDetail: OrderDetail[],
   ): Order {
-    return { id: orderId, status, orderId, userId, shopId, shopName, payType: payType as PayType['type'], totalPrice, pickupTime, orderTime, orderDetail };
+    return { id: orderId, status, orderId, userId, shopId, shopName, payType: payType as PayType['type'], totalPrice, pickupTime, createTime, orderDetail };
   }
 
   const [user, setUser] = useState<UserState | null>(null);
@@ -78,7 +78,7 @@ export default function MyOrderPage() {
       mail: 'test@test.com',
     }
     const dummyRows: Order[] = [
-      createData('O101', 'booked', 'U101', 'S101', 'テスト店舗', 'cash', 2500, '2025-01-01 20:07', '2025-01-01 20:07', [
+      createData('O101', 'BOOKED', 'U101', 'S101', 'テスト店舗', 'CASH', 2500, '2025-01-01 20:07', '2025-01-01 20:07', [
         { orderId: 'O101', itemId: 'F101', name: '唐揚げ弁当', price: 500, quantity: 1, totalPrice: 900, options: [
           { optionId: 'O101', itemId: 'F101', shopId: 'S101', name: 'コーラ', price: 100 },
           { optionId: 'O102', itemId: 'F101', shopId: 'S101', name: 'メガ盛り', price: 300 },
@@ -87,12 +87,12 @@ export default function MyOrderPage() {
           { optionId: 'O103', itemId: 'F102', shopId: 'S101', name: '特盛り', price: 1000 },
         ] },
       ]),
-      createData('O102', 'pickup', 'U101', 'S101', 'テスト店舗', 'card', 500, '2025-01-01 20:10', '2025-01-02 20:10', [
+      createData('O102', 'PICKUP', 'U101', 'S101', 'テスト店舗', 'CARD', 500, '2025-01-01 20:10', '2025-01-02 20:10', [
         { orderId: 'O102', itemId: 'F102', name: 'チキン南蛮弁当', price: 500, quantity: 1, totalPrice: 500 },
       ]),
-      createData('O103', 'done', 'U101', 'S101', 'テスト店舗', 'google', 1000, '2025-01-15 20:10', '2025-01-15 20:10', []),
-      createData('O104', 'review', 'U101', 'S101', 'テスト店舗', 'apple', 1000, '2025-01-15 20:10', '2025-01-14 20:10', []),
-      createData('O105', 'cancel', 'U101', 'S101', 'テスト店舗', 'cash', 1000, '', '2025-02-01 20:10', []),
+      createData('O103', 'DONE', 'U101', 'S101', 'テスト店舗', 'GOOGLE', 1000, '2025-01-15 20:10', '2025-01-15 20:10', []),
+      createData('O104', 'REVIEW', 'U101', 'S101', 'テスト店舗', 'APPLE', 1000, '2025-01-15 20:10', '2025-01-14 20:10', []),
+      createData('O105', 'CANCEL', 'U101', 'S101', 'テスト店舗', 'CASH', 1000, '', '2025-02-01 20:10', []),
     ];
     setUser(dummyUser);
     setRows(dummyRows);
@@ -103,12 +103,12 @@ export default function MyOrderPage() {
     const updatedFilteredRows = rows
       .filter(row => {
         if (status !== 'all' && row.status !== status) return false;
-        const orderDate = dayjs(row.orderTime);
+        const orderDate = dayjs(row.createTime);
         if (orderDate.year() !== year || orderDate.month() + 1 !== month) return false;
-        if (searchValue && !row.orderDetail.some(detail => searchRegex.test(detail.name))) return false;
+        if (searchValue && (!Array.isArray(row.orderDetail) || !row.orderDetail.some((detail: OrderDetail) => searchRegex.test(detail.name)))) return false;
         return true;
       })
-      .sort((a, b) => dayjs(b.orderTime).unix() - dayjs(a.orderTime).unix());
+      .sort((a, b) => dayjs(b.createTime).unix() - dayjs(a.createTime).unix());
     setFilteredRows(updatedFilteredRows);
   }, [rows, searchValue, status, year, month]);
 

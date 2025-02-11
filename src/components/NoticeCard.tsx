@@ -20,7 +20,7 @@ export default function NoticeCard({ data }: NoticeCardProps) {
       <div className="info-wrapper">
         <div className="type-date-wrapper">
           <div className={`type ${data.noticeType}`}>
-            {data.noticeType === 'event' ? 'イベント' : 'お知らせ'}
+            {data.noticeType === 'EVENT' ? 'イベント' : 'お知らせ'}
           </div>
           <div className="date">
             {data.createTime}

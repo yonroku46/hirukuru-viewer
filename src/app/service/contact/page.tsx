@@ -21,16 +21,16 @@ export default function ServiceContactPage() {
   ];
 
   const categoryList: InquirySelecter[] = useMemo(() => [
-    { value: 'suggest', label: 'ご意見・ご要望', placeholder: 'ご意見内容を入力してください' },
-    { value: 'bulk', label: '大量注文', placeholder: '注文(店舗名、商品名、数量、希望日等)を入力してください\nサービス担当者からのご案内の連絡をさせていただきます' },
-    { value: 'inquiry', label: 'その他お問い合わせ', placeholder: 'お問い合わせ内容を入力してください' },
+    { value: 'SUGGEST', label: 'ご意見・ご要望', placeholder: 'ご意見内容を入力してください' },
+    { value: 'BULK', label: '大量注文', placeholder: '注文(店舗名、商品名、数量、希望日等)を入力してください\nサービス担当者からのご案内の連絡をさせていただきます' },
+    { value: 'INQUIRY', label: 'その他お問い合わせ', placeholder: 'お問い合わせ内容を入力してください' },
   ], []);
 
   const platformService = PlatformService();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [submitted, setSubmitted] = useState<boolean>(false);
-  const [category, setCategory] = useState<ServiceInquiryType['type']>("suggest");
+  const [category, setCategory] = useState<ServiceInquiryType['type']>("SUGGEST");
   const [mail, setMail] = useState<string>('');
   const [phoneNum, setPhoneNum] = useState<string | undefined>(undefined);
   const [contents, setContents] = useState<string>('');

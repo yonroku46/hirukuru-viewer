@@ -21,28 +21,28 @@ export default function Home() {
   ];
   const shops: Shop[] = [
     { shopId: 'fuk001', shopName: 'ヒルクル 福岡店', location: '福岡市中央区',
-      description: 'ヒルクル福岡店は福岡市中央区天神2丁目1-1にあるお弁当屋さんです。',
+      shopIntro: 'ヒルクル福岡店は福岡市中央区天神2丁目1-1にあるお弁当屋さんです。',
       thumbnailImg: '/assets/img/new-open.png',
     } as Shop,
     { shopId: 'fuk002', shopName: 'ヒルクル 天神店', location: '福岡市中央区',
-      description: 'ヒルクル福岡店は福岡市中央区天神2丁目1-1にあるお弁当屋さんです。',
+      shopIntro: 'ヒルクル福岡店は福岡市中央区天神2丁目1-1にあるお弁当屋さんです。',
       thumbnailImg: '/assets/img/new-open2.png',
     } as Shop,
     { shopId: 'fuk003', shopName: '唐揚げ壱番屋', location: '福岡市中央区',
-      description: 'ヒルクル福岡店は福岡市中央区天神2丁目1-1にあるお弁当屋さんです。',
+      shopIntro: 'ヒルクル福岡店は福岡市中央区天神2丁目1-1にあるお弁当屋さんです。',
       thumbnailImg: '/assets/img/new-open.png',
     } as Shop,
     { shopId: 'fuk004', shopName: '弁当光', location: '福岡市中央区',
-      description: 'ヒルクル福岡店は福岡市中央区天神2丁目1-1にあるお弁当屋さんです。',
+      shopIntro: 'ヒルクル福岡店は福岡市中央区天神2丁目1-1にあるお弁当屋さんです。',
       thumbnailImg: '/assets/img/new-open2.png',
     } as Shop,
   ];
   const events: ServiceNotice[] = [
-    { noticeId: '1', noticeType: 'event', noticeTitle: '謹賀新年', noticeDetail: '2025年もよろしくお願いします', thumbnailImg: 'https://i.pinimg.com/736x/f6/eb/1e/f6eb1e567a5b4827a9afb5195dcab446.jpg', createTime: '2025-01-01' },
-    { noticeId: '2', noticeType: 'event', noticeTitle: 'いつでもBack!', noticeDetail: '会員はいつでもポイントバックします', thumbnailImg: 'https://i.pinimg.com/736x/8f/05/4d/8f054d66b37f59a34fd878fc2e783087.jpg', createTime: '2025-01-01' },
-    { noticeId: '3', noticeType: 'event', noticeTitle: '初めてのガイド', noticeHref: '/service/help', noticeDetail: 'ヒルクルの使い方をご紹介します', thumbnailImg: 'https://i.pinimg.com/736x/19/f1/97/19f197e170d66608885cecb06326b8a7.jpg', createTime: '2025-01-01' },
-    { noticeId: '4', noticeType: 'event', noticeTitle: 'パートナー募集', noticeHref: '/service/partner', noticeDetail: 'パートナーを募集しています', thumbnailImg: 'https://i.pinimg.com/736x/75/d7/5b/75d75b4a87ea4a45b3dc78e8a30de06d.jpg', createTime: '2025-01-01' },
-    { noticeId: '5', noticeType: 'event', noticeTitle: 'ランキング', noticeDetail: '今週のランキングは？', thumbnailImg: 'https://i.pinimg.com/736x/c1/90/a8/c190a833901cfa35fd456012cb9c0f6d.jpg', createTime: '2025-01-01' },
+    { noticeId: '1', noticeType: 'EVENT', noticeTitle: '謹賀新年', noticeDetail: '2025年もよろしくお願いします', thumbnailImg: 'https://i.pinimg.com/736x/f6/eb/1e/f6eb1e567a5b4827a9afb5195dcab446.jpg', createTime: '2025-01-01' },
+    { noticeId: '2', noticeType: 'EVENT', noticeTitle: 'いつでもBack!', noticeDetail: '会員はいつでもポイントバックします', thumbnailImg: 'https://i.pinimg.com/736x/8f/05/4d/8f054d66b37f59a34fd878fc2e783087.jpg', createTime: '2025-01-01' },
+    { noticeId: '3', noticeType: 'EVENT', noticeTitle: '初めてのガイド', noticeHref: '/service/help', noticeDetail: 'ヒルクルの使い方をご紹介します', thumbnailImg: 'https://i.pinimg.com/736x/19/f1/97/19f197e170d66608885cecb06326b8a7.jpg', createTime: '2025-01-01' },
+    { noticeId: '4', noticeType: 'EVENT', noticeTitle: 'パートナー募集', noticeHref: '/service/partner', noticeDetail: 'パートナーを募集しています', thumbnailImg: 'https://i.pinimg.com/736x/75/d7/5b/75d75b4a87ea4a45b3dc78e8a30de06d.jpg', createTime: '2025-01-01' },
+    { noticeId: '5', noticeType: 'EVENT', noticeTitle: 'ランキング', noticeDetail: '今週のランキングは？', thumbnailImg: 'https://i.pinimg.com/736x/c1/90/a8/c190a833901cfa35fd456012cb9c0f6d.jpg', createTime: '2025-01-01' },
   ];
   const quickList = [
     { id: '1', name: '揚物', imgIcon: '/assets/img/agemono.png' },

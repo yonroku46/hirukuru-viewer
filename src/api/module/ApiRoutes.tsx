@@ -25,6 +25,12 @@ const USER_ADMISSION_LOG = `${USER_ROOT}/admission/log`;
 const USER_FAVORITE = `${USER_ROOT}/favorite`;
 const USER_SIGNOUT = `${USER_ROOT}/signout`;
 
+// order
+const ORDER_ROOT = `${ROOT}/order`;
+const ORDER_INFO = `${ORDER_ROOT}`;
+const ORDER_INFO_USER = `${ORDER_ROOT}/user`;
+const ORDER_INFO_SHOP = `${ORDER_ROOT}/shop`;
+
 // platform(service)
 const PLATFORM_ROOT = `${ROOT}/service`;
 const CONTACT_SUBMIT = `${PLATFORM_ROOT}/contact/submit`;
@@ -45,6 +51,9 @@ const ApiRoutes = {
   USER_ADMISSION_LOG,
   USER_FAVORITE,
   USER_SIGNOUT,
+  ORDER_INFO,
+  ORDER_INFO_USER,
+  ORDER_INFO_SHOP,
   CONTACT_SUBMIT,
   PARTNER_SUBMIT,
 };

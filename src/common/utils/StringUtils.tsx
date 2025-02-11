@@ -89,21 +89,21 @@ export function optionsToString(options: ItemOption | ItemOption[]): string {
 
 export function orderStatusDict(orderStatusType: OrderStatus['status'], key: 'label' | 'color'): string {
   const orderStatus = [
-    { key: "done", label: "完了", color: "var(--done-color)" },
-    { key: "pickup", label: "受け取り予定", color: "var(--pickup-color)" },
-    { key: "booked", label: "予約", color: "var(--booked-color)" },
-    { key: "review", label: "レビュー待ち", color: "var(--review-color)" },
-    { key: "cancel", label: "キャンセル", color: "var(--cancel-color)" },
+    { key: "DONE", label: "完了", color: "var(--done-color)" },
+    { key: "PICKUP", label: "受け取り予定", color: "var(--pickup-color)" },
+    { key: "BOOKED", label: "予約", color: "var(--booked-color)" },
+    { key: "REVIEW", label: "レビュー待ち", color: "var(--review-color)" },
+    { key: "CANCEL", label: "キャンセル", color: "var(--cancel-color)" },
   ];
   return orderStatus.find((s) => s.key === orderStatusType)?.[key] || '';
 }
 
 export function payTypeDict(payTypeType: PayType['type'], key: 'label'): string {
   const payType = [
-    { key: "cash", label: "現金" },
-    { key: "card", label: "カード" },
-    { key: "apple", label: "Apple Pay" },
-    { key: "google", label: "Google Pay" },
+    { key: "CASH", label: "現金" },
+    { key: "CARD", label: "カード" },
+    { key: "APPLE", label: "Apple Pay" },
+    { key: "GOOGLE", label: "Google Pay" },
   ];
   return payType.find((s) => s.key === payTypeType)?.[key] || '';
 }

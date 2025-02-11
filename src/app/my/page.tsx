@@ -52,15 +52,15 @@ export default function MyPage() {
   }, [user, router, authState.hasLogin, getUserInfo]);
 
   const orderStatus: OrderStatus[] = [
-    { status: 'booked', value: 0 },
-    { status: 'pickup', value: 1 },
-    { status: 'done', value: 1 },
-    { status: 'review', value: 1 },
-    { status: 'cancel', value: 0 }
+    { status: 'BOOKED', value: 0 },
+    { status: 'PICKUP', value: 1 },
+    { status: 'DONE', value: 1 },
+    { status: 'REVIEW', value: 1 },
+    { status: 'CANCEL', value: 0 }
   ];
   const reviewStatus: ReviewStatus[] = [
-    { status: 'count', value: 1100 },
-    { status: 'avg', value: 4.5 },
+    { status: 'COUNT', value: 1100 },
+    { status: 'AVG', value: 4.5 },
   ];
   const quickLinkList = [
     { title: '注文管理', href: '/my/order', icon: <ShoppingBasketOutlinedIcon /> },

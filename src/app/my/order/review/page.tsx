@@ -16,8 +16,8 @@ export default function MyOrderReviewPage() {
     { label: 'レビュー', href: '/my/order/review', active: true },
   ];
   const reviewStatus: ReviewStatus[] = [
-    { status: 'count', value: 1100 },
-    { status: 'avg', value: 4.5 },
+    { status: 'COUNT', value: 1100 },
+    { status: 'AVG', value: 4.5 },
   ];
 
   const columns: Column<ShopReview>[] = [
@@ -28,7 +28,7 @@ export default function MyOrderReviewPage() {
     { key: 'shopId', type: 'text', label: '店舗ID', hide: true },
     { key: 'shopName', type: 'text', label: '店舗名', minWidth: 120, maxWidth: 120 },
     { key: 'comment', type: 'text', label: 'コメント', minWidth: 250, maxWidth: 250 },
-    { key: 'rating', type: 'rating', label: '評価', width: 120, align: 'center' },
+    { key: 'reviewRating', type: 'rating', label: '評価', width: 120, align: 'center' },
     { key: 'date', type: 'text', label: '日付', minWidth: 100, maxWidth: 100, align: 'right' },
   ];
 
@@ -39,11 +39,11 @@ export default function MyOrderReviewPage() {
     userProfile: string,
     shopId: string,
     shopName: string,
-    comment: string,
-    rating: number,
-    date: string,
+    reviewRating: number,
+    reviewContent: string,
+    createTime: string,
   ): ShopReview {
-    return { id: reviewId, reviewId, userId, userName, userProfile, shopId, shopName, comment, rating, date };
+    return { id: reviewId, reviewId, userId, userName, userProfile, shopId, shopName, reviewRating, reviewContent, createTime };
   }
 
   const [user, setUser] = useState<UserState | null>(null);
@@ -63,9 +63,9 @@ export default function MyOrderReviewPage() {
       mail: 'test@test.com',
     }
     const dummyRows: ShopReview[] = [
-      createData('R101', 'U101', 'テストユーザー', '/assets/img/no-user.jpg', 'S101', '唐揚げ一番', 'このショップはとてもよかったです。', 4, '2025-01-01'),
-      createData('R102', 'U102', 'テストユーザー', '/assets/img/no-user.jpg', 'S102', 'チキンが一番', 'うまい！また行きたいです。店員さんも親切でした。', 5, '2025-01-02'),
-      createData('R103', 'U102', 'テストユーザー', '/assets/img/no-user.jpg', 'S102', 'チキンが一番', 'Nice!', 5, '2025-02-01'),
+      createData('R101', 'U101', 'テストユーザー', '/assets/img/no-user.jpg', 'S101', '唐揚げ一番', 4, 'このショップはとてもよかったです。', '2025-01-01'),
+      createData('R102', 'U102', 'テストユーザー', '/assets/img/no-user.jpg', 'S102', 'チキンが一番', 5, 'うまい！また行きたいです。店員さんも親切でした。', '2025-01-02'),
+      createData('R103', 'U102', 'テストユーザー', '/assets/img/no-user.jpg', 'S102', 'チキンが一番', 5, 'Nice!', '2025-02-01'),
     ];
     setUser(dummyUser);
     setRows(dummyRows);
@@ -75,12 +75,12 @@ export default function MyOrderReviewPage() {
     const searchRegex = createKanaSearchRegex(searchValue);
     const updatedFilteredRows = rows
       .filter(row => {
-        const createDate = dayjs(row.date);
+        const createDate = dayjs(row.createTime);
         if (createDate.year() !== year || createDate.month() + 1 !== month) return false;
         if (searchValue && !searchRegex.test(row.shopName)) return false;
         return true;
       })
-      .sort((a, b) => dayjs(b.date).unix() - dayjs(a.date).unix());
+      .sort((a, b) => dayjs(b.createTime).unix() - dayjs(a.createTime).unix());
     setFilteredRows(updatedFilteredRows);
   }, [rows, searchValue, year, month]);
 

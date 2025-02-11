@@ -23,10 +23,10 @@ export default function ServiceContactPage() {
   ];
 
   const shopTypeList = useMemo(() => [
-    { value: 'bento', label: '弁当販売(路上)' },
-    { value: 'bento_shop', label: '弁当販売(店舗/納品)' },
-    { value: 'food_truck', label: 'フードトラック' },
-    { value: 'other', label: 'その他' },
+    { value: 'BENTO', label: '弁当販売(路上)' },
+    { value: 'BENTO_SHOP', label: '弁当販売(店舗/納品)' },
+    { value: 'FOOD_TRUCK', label: 'フードトラック' },
+    { value: 'OTHER', label: 'その他' },
   ], []);
 
   const platformService = PlatformService();

@@ -67,7 +67,7 @@ export default function SearchMapPage() {
 
   const [favoriteShops, setFavoriteShops] = useState<string[]>([]);
   const [openOnly, setOpenOnly] = useState<boolean>(false);
-  const [shopType, setShopType] = useState<"all" | ShopType["type"]>("all");
+  const [shopType, setShopType] = useState<"ALL" | ShopType["type"]>("ALL");
   const [shops, setShops] = useState<Shop[]>([]);
   const [filteredShops, setFilteredShops] = useState<Shop[]>([]);
   const [markPlaces, setMarkPlaces] = useState<Place[]>([]);
@@ -184,39 +184,51 @@ export default function SearchMapPage() {
 
   useEffect(() => {
     const dummyShops: Shop[] = [
-      { shopId: '1', location: '福岡市博多区', shopName: '唐揚げ壱番屋', description: '揚げ物専門店', type: 'bento', thumbnailImg: 'https://i.pinimg.com/236x/71/65/43/716543eb8e6907d7163b55000376e2be.jpg', ratingAvg: 4.5, businessHours: [
-          { day: 'mon', open: '10:00', close: '23:50' },
-          { day: 'tue', open: '10:00', close: '23:50' },
-          { day: 'wed', open: '10:00', close: '23:50' },
-          { day: 'thu', open: '10:00', close: '23:50' },
-          { day: 'fri', open: '10:00', close: '23:50' },
-          { day: 'sat', open: '10:00', close: '23:50' },
-          { day: 'sun', open: '10:00', close: '23:50' },
+      { shopId: '1', location: '福岡市博多区', shopName: '唐揚げ壱番屋', shopIntro: '揚げ物専門店', shopType: 'BENTO',
+        profileImg: 'https://i.pinimg.com/236x/71/65/43/716543eb8e6907d7163b55000376e2be.jpg',
+        thumbnailImg: 'https://i.pinimg.com/236x/71/65/43/716543eb8e6907d7163b55000376e2be.jpg', ratingAvg: 4.5, businessHours: [
+          { dayOfWeek: 'mon', openTime: '10:00', closeTime: '23:50', businessDay: true },
+          { dayOfWeek: 'tue', openTime: '10:00', closeTime: '23:50', businessDay: true },
+          { dayOfWeek: 'wed', openTime: '10:00', closeTime: '23:50', businessDay: true },
+          { dayOfWeek: 'thu', openTime: '10:00', closeTime: '23:50', businessDay: true },
+          { dayOfWeek: 'fri', openTime: '10:00', closeTime: '23:50', businessDay: true },
+          { dayOfWeek: 'sat', openTime: '10:00', closeTime: '23:50', businessDay: true },
+          { dayOfWeek: 'sun', openTime: '10:00', closeTime: '23:50', businessDay: true },
         ]
       },
-      { shopId: '2', location: '福岡市中央区', shopName: 'チキンが一番', description: 'チキン専門店', type: 'bento', thumbnailImg: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', ratingAvg: 4.0, businessHours: [
-          { day: 'mon', open: '10:00', close: '20:00' },
-          { day: 'wed', open: '10:00', close: '20:00' },
+      { shopId: '2', location: '福岡市中央区', shopName: 'チキンが一番', shopIntro: 'チキン専門店', shopType: 'BENTO',
+        profileImg: 'https://i.pinimg.com/236x/71/65/43/716543eb8e6907d7163b55000376e2be.jpg',
+        thumbnailImg: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', ratingAvg: 4.0, businessHours: [
+          { dayOfWeek: 'mon', openTime: '10:00', closeTime: '20:00', businessDay: true },
+          { dayOfWeek: 'wed', openTime: '10:00', closeTime: '20:00', businessDay: true },
         ]
       },
-      { shopId: '3', location: '福岡市中央区', shopName: 'Chiken Box', description: 'フードトラックで美味しいチキン', type: 'foodtruck', thumbnailImg: 'https://i.pinimg.com/736x/44/75/35/44753517c49efeff49e77071cc306041.jpg', ratingAvg: 4.0, businessHours: [
-          { day: 'mon', open: '10:00', close: '20:00' },
-          { day: 'wed', open: '10:00', close: '20:00' },
+      { shopId: '3', location: '福岡市中央区', shopName: 'Chiken Box', shopIntro: 'フードトラックで美味しいチキン', shopType: 'FOOD_TRUCK',
+        profileImg: 'https://i.pinimg.com/236x/71/65/43/716543eb8e6907d7163b55000376e2be.jpg',
+        thumbnailImg: 'https://i.pinimg.com/736x/44/75/35/44753517c49efeff49e77071cc306041.jpg', ratingAvg: 4.0, businessHours: [
+          { dayOfWeek: 'mon', openTime: '10:00', closeTime: '20:00', businessDay: true },
+          { dayOfWeek: 'wed', openTime: '10:00', closeTime: '20:00', businessDay: true },
         ]
       },
-      { shopId: '4', location: '福岡市中央区', shopName: '天神トラック', description: '天神で自慢のランチ', type: 'foodtruck', thumbnailImg: 'https://i.pinimg.com/736x/64/70/a6/6470a637276c688063bb053c5c116507.jpg', ratingAvg: 4.0, businessHours: [
-          { day: 'mon', open: '10:00', close: '20:00' },
-          { day: 'wed', open: '10:00', close: '20:00' },
+      { shopId: '4', location: '福岡市中央区', shopName: '天神トラック', shopIntro: '天神で自慢のランチ', shopType: 'FOOD_TRUCK',
+        profileImg: 'https://i.pinimg.com/236x/71/65/43/716543eb8e6907d7163b55000376e2be.jpg',
+        thumbnailImg: 'https://i.pinimg.com/736x/64/70/a6/6470a637276c688063bb053c5c116507.jpg', ratingAvg: 4.0, businessHours: [
+          { dayOfWeek: 'mon', openTime: '10:00', closeTime: '20:00', businessDay: true },
+          { dayOfWeek: 'wed', openTime: '10:00', closeTime: '20:00', businessDay: true },
         ]
       },
-      { shopId: '5', location: '福岡市中央区', shopName: '田島春', description: 'カレー専門店', type: 'foodtruck', thumbnailImg: 'https://i.pinimg.com/736x/57/53/14/575314964f78cc3d80968427e55a4ebf.jpg', ratingAvg: 4.0, businessHours: [
-          { day: 'mon', open: '10:00', close: '20:00' },
-          { day: 'wed', open: '10:00', close: '20:00' },
+      { shopId: '5', location: '福岡市中央区', shopName: '田島春', shopIntro: 'カレー専門店', shopType: 'FOOD_TRUCK',
+        profileImg: 'https://i.pinimg.com/236x/71/65/43/716543eb8e6907d7163b55000376e2be.jpg',
+        thumbnailImg: 'https://i.pinimg.com/736x/57/53/14/575314964f78cc3d80968427e55a4ebf.jpg', ratingAvg: 4.0, businessHours: [
+          { dayOfWeek: 'mon', openTime: '10:00', closeTime: '20:00', businessDay: true },
+          { dayOfWeek: 'wed', openTime: '10:00', closeTime: '20:00', businessDay: true },
         ]
       },
-      { shopId: '6', location: '福岡市中央区', shopName: '肉弁や', description: '肉が一番', type: 'bento', thumbnailImg: 'https://i.pinimg.com/736x/56/38/5d/56385dd21968602af62ce30156914743.jpg', ratingAvg: 4.0, businessHours: [
-          { day: 'mon', open: '10:00', close: '20:00' },
-          { day: 'wed', open: '10:00', close: '20:00' },
+      { shopId: '6', location: '福岡市中央区', shopName: '肉弁や', shopIntro: '肉が一番', shopType: 'BENTO',
+        profileImg: 'https://i.pinimg.com/236x/71/65/43/716543eb8e6907d7163b55000376e2be.jpg',
+        thumbnailImg: 'https://i.pinimg.com/736x/56/38/5d/56385dd21968602af62ce30156914743.jpg', ratingAvg: 4.0, businessHours: [
+          { dayOfWeek: 'mon', openTime: '10:00', closeTime: '20:00', businessDay: true },
+          { dayOfWeek: 'wed', openTime: '10:00', closeTime: '20:00', businessDay: true },
         ]
       },
     ];
@@ -238,7 +250,7 @@ export default function SearchMapPage() {
     setFilteredShops(
       shops.filter(item => {
         const isOpen = isBusinessOpen(item.businessHours || []);
-        return (!openOnly || isOpen) && (shopType === "all" || item.type === shopType);
+        return (!openOnly || isOpen) && (shopType === "ALL" || item.shopType === shopType);
       })
     );
   }, [shops, openOnly, shopType]);
@@ -272,12 +284,12 @@ export default function SearchMapPage() {
           <div className="filter-wrapper">
             <Selector
               options={[
-                { label: "全て", value: "all" },
-                { label: "お弁当屋のみ", value: "bento" },
-                { label: "フードトラックのみ", value: "foodtruck" }
+                { label: "全て", value: "ALL" },
+                { label: "お弁当屋のみ", value: "BENTO" },
+                { label: "フードトラックのみ", value: "FOOD_TRUCK" }
               ]}
               onChange={(event) => {
-                setShopType(event.target.value as "all" | ShopType["type"]);
+                setShopType(event.target.value as "ALL" | ShopType["type"]);
               }}
             />
           </div>
@@ -427,7 +439,7 @@ export default function SearchMapPage() {
                         key={index}
                         position={place.position}
                         icon={{
-                          url: `/assets/icon/${shop.type}-marker.svg`,
+                          url: `/assets/icon/${shop.shopType.toLowerCase()}-marker.svg`,
                           scaledSize: new google.maps.Size(
                             activeMarker === place.placeId ? 44 : 34,
                             activeMarker === place.placeId ? 44 : 34
@@ -470,7 +482,7 @@ export default function SearchMapPage() {
                                     </div>
                                   </div>
                                   <div className="shop-description">
-                                    {shop.description}
+                                    {shop.shopIntro}
                                   </div>
                                 </div>
                               </div>

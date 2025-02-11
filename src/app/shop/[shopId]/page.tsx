@@ -95,15 +95,16 @@ export default function ShopPage(
   const shop: Shop = {
     shopId: '1',
     shopName: '唐揚げ壱番屋',
-    description: '揚げ物専門店',
+    shopIntro: '揚げ物専門店',
     location: '福岡市博多区',
     detailAddress: '福岡市博多区',
-    type: 'bento',
+    shopType: 'BENTO',
+    profileImg: 'https://i.pinimg.com/236x/71/65/43/716543eb8e6907d7163b55000376e2be.jpg',
     thumbnailImg: 'https://i.pinimg.com/236x/71/65/43/716543eb8e6907d7163b55000376e2be.jpg',
     businessHours: [
-      { day: 'mon', open: '10:00', close: '23:50' },
-      { day: 'tue', open: '10:00', close: '23:50' },
-      { day: 'wed', open: '10:00', close: '23:50' },
+      { dayOfWeek: 'mon', openTime: '10:00', closeTime: '23:50', businessDay: true },
+      { dayOfWeek: 'tue', openTime: '10:00', closeTime: '23:50', businessDay: true },
+      { dayOfWeek: 'wed', openTime: '10:00', closeTime: '23:50', businessDay: true },
     ],
     reviewcount: 1120,
     ratingAvg: 4.5,
@@ -157,11 +158,11 @@ export default function ShopPage(
       { itemId: '10', shopId: 'fuk001', category: '定番弁当', name: 'カツカレー', price: 1000, rating: 4.3, thumbnailImg: 'https://i.pinimg.com/736x/7f/6f/55/7f6f5560ca41e1870c59b18f6f1f2360.jpg' },
     ];
     const dummyReviewList = [
-      { reviewId: '1', userId: 'user1', shopId: 'fuk001', userName: "User1", userProfile: "/assets/img/no-user.jpg", userRatingCount: 1120, userRatingAvg: 4.6, rating: 4, date: "2024-11-29", comment: "Good!" },
-      { reviewId: '2', userId: 'user2', shopId: 'fuk001', userName: "User2", userProfile: "/assets/img/no-user.jpg", userRatingCount: 320, userRatingAvg: 4.9, rating: 5, date: "2024-12-29", comment: "Nice!" },
-      { reviewId: '3', userId: 'user3', shopId: 'fuk001', userName: "User3", userProfile: "/assets/img/no-user.jpg", userRatingCount: undefined, userRatingAvg: undefined, rating: 4, date: "2024-12-28", comment: "Good!" },
-      { reviewId: '4', userId: 'user4', shopId: 'fuk001', userName: "User4", userProfile: "/assets/img/no-user.jpg", userRatingCount: undefined, userRatingAvg: undefined, rating: 4, date: "2024-12-28", comment: "Good!" },
-      { reviewId: '5', userId: 'user5', shopId: 'fuk001', userName: "User5", userProfile: "/assets/img/no-user.jpg", userRatingCount: undefined, userRatingAvg: undefined, rating: 4, date: "2025-01-24", comment: "Good!" },
+      { reviewId: '1', userId: 'user1', shopId: 'fuk001', userName: "User1", userProfile: "/assets/img/no-user.jpg", userRatingCount: 1120, userRatingAvg: 4.6, reviewRating: 4, reviewContent: "Good!", createTime: "2024-11-29", shopName: "唐揚げ壱番屋" },
+      { reviewId: '2', userId: 'user2', shopId: 'fuk001', userName: "User2", userProfile: "/assets/img/no-user.jpg", userRatingCount: 320, userRatingAvg: 4.9, reviewRating: 5, reviewContent: "Nice!", createTime: "2024-12-29", shopName: "唐揚げ壱番屋" },
+      { reviewId: '3', userId: 'user3', shopId: 'fuk001', userName: "User3", userProfile: "/assets/img/no-user.jpg", userRatingCount: undefined, userRatingAvg: undefined, reviewRating: 4, reviewContent: "Good!", createTime: "2024-12-28", shopName: "唐揚げ壱番屋" },
+      { reviewId: '4', userId: 'user4', shopId: 'fuk001', userName: "User4", userProfile: "/assets/img/no-user.jpg", userRatingCount: undefined, userRatingAvg: undefined, reviewRating: 4, reviewContent: "Good!", createTime: "2025-01-24", shopName: "唐揚げ壱番屋" },
+      { reviewId: '5', userId: 'user5', shopId: 'fuk001', userName: "User5", userProfile: "/assets/img/no-user.jpg", userRatingCount: undefined, userRatingAvg: undefined, reviewRating: 4, reviewContent: "Good!", createTime: "2025-01-24", shopName: "唐揚げ壱番屋" },
     ]
     setItems(dummyItems as Item[]);
     setReviewList(dummyReviewList as ShopReview[]);
@@ -388,19 +389,19 @@ export default function ShopPage(
 
   const sortedReviewList = useMemo(() => {
     return reviewList.sort((a, b) => {
-      const dateA = dayjs(a.date).unix();
-      const dateB = dayjs(b.date).unix();
+      const dateA = dayjs(a.createTime).unix();
+      const dateB = dayjs(b.createTime).unix();
       // 最新順
       if (reviewFilter === 'latest') {
         return dateB - dateA;
       }
       // 良い評価順 + 最新順
       if (reviewFilter === 'good') {
-        return b.rating - a.rating || dateB - dateA;
+        return b.reviewRating - a.reviewRating || dateB - dateA;
       }
       // 悪い評価順 + 最新順
       if (reviewFilter === 'worst') {
-        return a.rating - b.rating || dateB - dateA;
+        return a.reviewRating - b.reviewRating || dateB - dateA;
       }
       return 0;
     });
@@ -424,7 +425,7 @@ export default function ShopPage(
         <div className="shop-header container">
           <Image
             className={`profile-img ${isBusinessOpen(shop.businessHours || []) ? "open" : ""}`}
-            src={shop.thumbnailImg}
+            src={shop.profileImg}
             alt={shop.shopName}
             width={74}
             height={74}
@@ -542,18 +543,18 @@ export default function ShopPage(
                               <Rating
                                 readOnly
                                 size="small"
-                                value={review.rating}
+                                value={review.reviewRating}
                                 icon={<StarRoundedIcon fontSize="inherit" style={{ color: 'var(--rating-color)' }} />}
                                 emptyIcon={<StarRoundedIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
                               />
                             </div>
                           </div>
                           <div className="review-date">
-                            {formatDaysAgo(review.date)}
+                            {formatDaysAgo(review.createTime)}
                           </div>
                         </div>
                         <p>
-                          {review.comment}
+                          {review.reviewContent}
                         </p>
                       </div>
                     </li>

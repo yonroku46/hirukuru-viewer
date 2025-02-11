@@ -11,8 +11,8 @@ interface ReviewStatusProps {
 
 export default function ReviewStatus({ statusList }: ReviewStatusProps) {
   const statusLabels: { status: ReviewStatus['status'], label: string, icon: React.ReactNode }[] = [
-    { status: 'count', label: '評価件数', icon: <TaskAltOutlinedIcon fontSize="inherit" /> },
-    { status: 'avg', label: '平均評価', icon: <StarBorderOutlinedIcon fontSize="inherit" /> },
+    { status: 'COUNT', label: '評価件数', icon: <TaskAltOutlinedIcon fontSize="inherit" /> },
+    { status: 'AVG', label: '平均評価', icon: <StarBorderOutlinedIcon fontSize="inherit" /> },
   ];
 
   return (
@@ -27,7 +27,7 @@ export default function ReviewStatus({ statusList }: ReviewStatusProps) {
           return (
             <div key={status} className={`status-item ${isActive ? 'active' : ''}`}>
               <div className="status-item-title">
-                <div className={`icon ${status}`}>
+                <div className={`icon ${status.toLowerCase()}`}>
                   {icon}
                 </div>
                 <div className='label'>

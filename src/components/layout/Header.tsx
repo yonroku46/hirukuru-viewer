@@ -340,7 +340,7 @@ export default function Header() {
         </div>
         <div className="right-container">
           {!currentPath.startsWith("/search") &&
-            <CartDialog open={cartOpen} setOpen={setCartOpen} />
+            <CartDialog user={user} open={cartOpen} setOpen={setCartOpen} />
           }
           <SearchInput
             searchMode={currentPath.startsWith("/search")}

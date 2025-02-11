@@ -2,12 +2,14 @@
 
 import React, { forwardRef, Fragment, useEffect, useState } from "react";
 import { AppDispatch, useAppDispatch, useAppSelector } from "@/store";
+import { useRouter } from "next/navigation";
 import { setCartState } from "@/store/slice/cartSlice";
 import { config } from "@/config";
 import dayjs from "dayjs";
 import Link from "next/link";
 import Image from "@/components/Image";
 import { useMediaQuery } from "react-responsive";
+import OrderService from "@/api/service/OrderService";
 import { currency, optionsToString } from "@/common/utils/StringUtils";
 import { dateNow } from "@/common/utils/DateUtils";
 import QuantityButton from "@/components/button/QuantityButton";
@@ -44,23 +46,22 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 
-const dummyUserId = "001";
-const dummyUserPoint = 1000;
-const cartKey = `cart-${dummyUserId}`;
-
 interface PickupType {
-  type: 'pre' | 'today';
+  type: 'PRE' | 'TODAY';
 }
-
+interface PickupOption {
+  type: 'NOW' | 'TIME';
+}
 const pickupTypeOptions = [
-  { label: "今から", value: 'now' },
-  { label: "時間帯を指定", value: 'time' },
+  { label: "今から", value: 'NOW' },
+  { label: "時間帯を指定", value: 'TIME' },
 ];
 const pickupNowOptions = [
   { label: "10分以内に受け取り予定", value: "10分以内" },
   { label: "20分以内に受け取り予定", value: "20分以内" },
   { label: "30分以内に受け取り予定", value: "30分以内" },
 ];
+const cartKey = "cart-local";
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -106,14 +107,18 @@ export const addToCart = (dispatch: AppDispatch, item: Item, quantity?: number, 
 }
 
 interface CartDialogProps {
+  user?: UserState;
   open: boolean;
   setOpen: (open: boolean) => void;
 }
 
-export default function CartDialog({ open, setOpen }: CartDialogProps) {
+export default function CartDialog({ user, open, setOpen }: CartDialogProps) {
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const isSp = useMediaQuery({ query: "(max-width: 1179px)" });
   const cartState = useAppSelector((state) => state.cart);
+
+  const orderService = OrderService();
 
   const [deleteMode, setDeleteMode] = useState<boolean>(false);
   const [currentDateTime, setCurrentDateTime] = useState<string>("");
@@ -123,18 +128,20 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
   const [availableTimeOptions, setAvailableTimeOptions] = useState<{ label: string, value: string }[]>([]);
 
   const [squarePayments, setSquarePayments] = useState<Payments | null>(null);
-  const [paymentStep, setPaymentStep] = useState<CartStatus['status']>('ready');
+  const [paymentStep, setPaymentStep] = useState<CartStatus['status']>('READY');
 
-  const [pickupType, setPickupType] = useState<PickupType['type']>('today');
-  const [pickupOption, setPickupOption] = useState<'now' | 'time'>('now');
+  const [pickupType, setPickupType] = useState<PickupType['type']>('TODAY');
+  const [pickupOption, setPickupOption] = useState<PickupOption['type']>('NOW');
   const [pickupDate, setPickupDate] = useState<string | undefined>(undefined);
   const [pickupTime, setPickupTime] = useState<string | undefined>(pickupNowOptions[0]?.value);
 
-  const [payType, setPayType] = useState<PayType['type']>('card');
+  const [payType, setPayType] = useState<PayType['type']>('CARD');
 
   const [usedPoint, setUsedPoint] = useState<number | undefined>(undefined);
-  const [currentPoint, setCurrentPoint] = useState<number>(dummyUserPoint);
+  const [currentPoint, setCurrentPoint] = useState<number>(user?.point || 0);
   const [finalPrice, setFinalPrice] = useState<number>(0);
+
+  const [orderId, setOrderId] = useState<string | undefined>(undefined);
 
   const totalPrice = cartItems.reduce((total, item) => {
     const itemPrice = (item.discountPrice || item.price) * (item?.quantity || 1);
@@ -172,22 +179,23 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
     if (open) {
       setCurrentDateTime(dateNow().format('YYYY-MM-DD HH:mm'));
       setDeleteMode(false);
-      setPaymentStep('ready');
-      setPickupType('today');
-      setPickupOption('now');
+      setPaymentStep('READY');
+      setPickupType('TODAY');
+      setPickupOption('NOW');
       setPickupDate(undefined);
       setPickupTime(pickupNowOptions[0]?.value);
-      setPayType('card');
+      setPayType('CARD');
       setUsedPoint(undefined);
-      setCurrentPoint(dummyUserPoint);
+      setCurrentPoint(user?.point || 0);
+      setOrderId(undefined);
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }
-  }, [open]);
+  }, [open, user]);
 
   useEffect(() => {
     // 現在時刻の更新
     const interval = setInterval(() => {
-      if (open && paymentStep === 'final') {
+      if (open && paymentStep === 'FINAL') {
         const now = dateNow();
         setCurrentDateTime(now.format('YYYY-MM-DD HH:mm'));
       }
@@ -204,8 +212,8 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
 
   useEffect(() => {
     // 受け取り方法(事前予約)の初期化
-    if (pickupType === 'pre') {
-      setPickupOption('now');
+    if (pickupType === 'PRE') {
+      setPickupOption('NOW');
       setPickupDate(dateNow().add(1, 'day').format('YYYY-MM-DD'));
       setPickupTime(allTimeOptions[0].value);
     }
@@ -213,11 +221,11 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
 
   useEffect(() => {
     // 受け取り方法(当日注文)の初期化
-    if (pickupType === 'today') {
+    if (pickupType === 'TODAY') {
       setPickupDate(undefined);
-      if (pickupOption === 'now') {
+      if (pickupOption === 'NOW') {
         setPickupTime(pickupNowOptions[0]?.value);
-      } else if (pickupOption === 'time') {
+      } else if (pickupOption === 'TIME') {
         setPickupTime(availableTimeOptions[0]?.value);
       }
     }
@@ -247,22 +255,22 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
     }
   }, [open]);
 
-  const steps = ['ready', 'pickup', 'payment', 'final', 'done'];
+  const steps = ['READY', 'PICKUP', 'PAYMENT', 'FINAL', 'DONE'];
   const stepTitle = {
-    ready: '注文リスト',
-    pickup: '受け取り方法',
-    payment: 'お支払い方法',
-    final: '内容確認',
-    done: '注文完了'
+    READY: '注文リスト',
+    PICKUP: '受け取り方法',
+    PAYMENT: 'お支払い方法',
+    FINAL: '内容確認',
+    DONE: '注文完了'
   };
   const stepActions = {
-    pickup: '次へ',
-    payment: '次へ',
-    final: '注文確定',
-    done: '閉じる'
+    PICKUP: '次へ',
+    PAYMENT: '次へ',
+    FINAL: '注文確定',
+    DONE: '閉じる'
   };
   const pickupMethods = [
-    { type: 'pre', label: '事前予約（明日以降）', content:
+    { type: 'PRE', label: '事前予約（明日以降）', content:
       <div className="pickup-option-wrapper">
         <div className="pickup-option">
           <div className="pickup-option-title">
@@ -280,7 +288,7 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
           <div className="pickup-option-title">
             時間帯
           </div>
-          {pickupType === 'pre' &&
+          {pickupType === 'PRE' &&
             <Selector
               options={allTimeOptions}
               onChange={(e) => {
@@ -292,11 +300,11 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
         <NoticeBoard simple title="注意事項" contents={["お店によって予約申込の後、確定まで時間がかかる場合がございます。（最大1時間）", "注文して1時間を超えても確定されない場合は「自動でキャンセル」されますのでご了承ください。", "決済は確定したタイミングで行われます。"]} />
       </div>
     },
-    { type: 'today', label: '当日注文', content:
+    { type: 'TODAY', label: '当日注文', content:
       <div className="pickup-option-wrapper">
         <RadioGroup
           onChange={(e) => {
-            setPickupOption(e.target.value as 'now' | 'time');
+            setPickupOption(e.target.value as PickupOption['type']);
           }}
         >
           {pickupTypeOptions.map((option) => (
@@ -308,7 +316,7 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
             />
           ))}
         </RadioGroup>
-        {pickupOption === 'now' && (
+        {pickupOption === 'NOW' && (
           <div className="pickup-option">
             <Selector
               options={pickupNowOptions}
@@ -318,7 +326,7 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
             />
           </div>
         )}
-        {pickupOption === 'time' && (
+        {pickupOption === 'TIME' && (
           <div className="pickup-option">
             <Selector
               options={availableTimeOptions}
@@ -331,15 +339,15 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
       </div>
     },
   ];
-  const paymentMethods = [
-    { type: 'cash', icon: <CurrencyYenIcon fontSize="large" />, label: '現金（現地払い）', content:
+  const paymentMethods: { type: PayType['type'], icon: React.ReactNode, label: string, content?: React.ReactNode }[] = [
+    { type: 'CASH', icon: <CurrencyYenIcon fontSize="large" />, label: '現金（現地払い）', content:
       <NoticeBoard simple title="お客様へのお願い" contents={["受け取りの際には必ず「会員証のご提示」をお願い致します。", "注文後、お客様の事情によるキャンセルにつきましては「ペナルティ」が発生しますのでご注意ください。"]} />
     },
-    { type: 'card', icon: <CreditCardIcon fontSize="large" />, label: 'カード決済', content:
+    { type: 'CARD', icon: <CreditCardIcon fontSize="large" />, label: 'カード決済', content:
       <div id="card-container" />
     },
-    { type: 'apple', icon: <AppleIcon fontSize="large" />, label: 'Apple Pay' },
-    { type: 'google', icon: <GoogleIcon fontSize="large" />, label: 'Google Pay'  },
+    { type: 'APPLE', icon: <AppleIcon fontSize="large" />, label: 'Apple Pay' },
+    { type: 'GOOGLE', icon: <GoogleIcon fontSize="large" />, label: 'Google Pay'  },
   ];
 
   const getPreviousStep = (currentStep: string) => {
@@ -372,6 +380,11 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
     dispatch(setCartState({ cartItems: updatedCartItems }));
   };
 
+  const handleLogin = () => {
+    setOpen(false);
+    router.push('/login');
+  };
+
   const handlePayment = async () => {
     if (cartItems.length > 0 && totalPrice > 0) {
       if (!squarePayments) {
@@ -385,10 +398,10 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
         return;
       }
 
-      if (paymentStep === 'ready') {
+      if (paymentStep === 'READY') {
         // お支払い情報選択
         try {
-          setPaymentStep('pickup');
+          setPaymentStep('PICKUP');
           const card = await squarePayments.card();
           const cardContainer = document.querySelector('#card-container');
           if (cardContainer && cardContainer.children.length === 0) {
@@ -397,29 +410,52 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
         } catch (error) {
           console.error('Payment request error:', error);
         }
-      } else if (paymentStep === 'pickup') {
+      } else if (paymentStep === 'PICKUP') {
         // 受け取り方法選択
         if (pickupType) {
-          setPaymentStep('payment');
+          setPaymentStep('PAYMENT');
         }
-      } else if (paymentStep === 'payment') {
+      } else if (paymentStep === 'PAYMENT') {
         // 決済方法選択
         if (payType) {
-          setPaymentStep('final');
+          setPaymentStep('FINAL');
         }
-      } else if (paymentStep === 'final') {
+      } else if (paymentStep === 'FINAL') {
         // 内容確認、実行
         try {
           // TODO: 決済実行
           // const card = await squarePayments.card();
           // const result = await handleTokenizeCard(card);
           // if (result) {
-            setPaymentStep('done');
+            const order: OrderState = {
+              shopId: cartState.cartItems[0]?.shopId || '',
+              payType: payType,
+              totalPrice: totalPrice,
+              pickupTime: pickupTime,
+              orderDetail: cartItems.map((item) => {
+                if (item.quantity && item.quantity > 0) {
+                  return {
+                    itemId: item.itemId,
+                    name: item.name,
+                    options: item.options,
+                    price: item.price,
+                    quantity: item.quantity,
+                    totalPrice: (item.discountPrice ? item.discountPrice : item.price) * (item.quantity),
+                  }
+                }
+              })
+            } as OrderState;
+            await orderService.createOrder(order).then((res) => {
+              if (res?.success) {
+                setOrderId(res.id);
+                setPaymentStep('DONE');
+              }
+            });
           // }
         } catch (error) {
           console.error('Tokenization error:', error);
         }
-      } else if (paymentStep === 'done') {
+      } else if (paymentStep === 'DONE') {
         // 注文完了
         setOpen(false);
       }
@@ -448,7 +484,7 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
   // };
 
   const stepContents = [
-    { type: 'ready', content:
+    { type: 'READY', content:
       <>
         {cartItems.length > 0 ?
           cartItems.map((item, index) =>
@@ -518,7 +554,7 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
         }
       </>
     },
-    { type: 'pickup', content:
+    { type: 'PICKUP', content:
       <>
         {pickupMethods.map((method, index) => (
           <div
@@ -541,12 +577,12 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
         ))}
       </>
     },
-    { type: 'payment', content:
+    { type: 'PAYMENT', content:
       <>
         {paymentMethods.map((method, index) => (
           <div
             key={index}
-            className={`method-wrapper ${payType === method.type ? "active" : ""}`}
+            className={`method-wrapper ${payType.toLowerCase() === method.type.toLowerCase() ? "active" : ""}`}
             onClick={() => setPayType(method.type as PayType['type'])}
           >
             <div className="method-title">
@@ -562,7 +598,7 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
         ))}
       </>
     },
-    { type: 'final', content:
+    { type: 'FINAL', content:
       <>
         <div className="final-wrapper">
           <div className="final-title">
@@ -578,19 +614,19 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
             </div>
             <div className="detail-info">
               <label>受け取り予定</label>
-              {pickupType === 'pre' &&
+              {pickupType === 'PRE' &&
                 `${pickupDate} ${pickupTime}`
               }
-              {pickupType === 'today' &&
-                pickupOption === 'now' ?
+              {pickupType === 'TODAY' &&
+                pickupOption === 'NOW' ?
                 `${pickupTime}`
-                : pickupOption === 'time' &&
+                : pickupOption === 'TIME' &&
                 `本日 ${pickupTime}`
               }
             </div>
             <div className="detail-info">
               <label>区分</label>
-              {pickupType === 'pre' ? "事前予約" : "当日注文"}
+              {pickupType === 'PRE' ? "事前予約" : "当日注文"}
             </div>
             <div className="detail-info">
               <label>お支払い</label>
@@ -605,7 +641,14 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
                 <label>ポイント</label>
                 <div className="point-input">
                   {"-"}
-                  <input type="number" placeholder="0" value={usedPoint || ''} onChange={(e) => setUsedPoint(Number(e.target.value))} />
+                  <input type="number" placeholder="0" value={usedPoint || ''} onChange={(e) => {
+                      if (Number(e.target.value) > currentPoint) {
+                        setUsedPoint(currentPoint)
+                      } else {
+                        setUsedPoint(Number(e.target.value))
+                      }
+                    }}
+                  />
                   {"円"}
                 </div>
               </div>
@@ -631,7 +674,7 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
         </div>
       </>
     },
-    { type: 'done', content:
+    { type: 'DONE', content:
       <>
         <div className="done-wrapper">
           <Image
@@ -645,7 +688,7 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
             {`ご注文ありがとうございます！\n注文状況は下記の注文番号をクリックするとご確認できます。`}
           </p>
           <Link href="/my/order" className="done-order-number" onClick={handleOpen(false)}>
-            注文番号：{Math.floor(Math.random() * 100000)}
+            注文番号：{orderId}
           </Link>
         </div>
       </>
@@ -681,7 +724,7 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
         onClose={handleOpen(false)}
       >
         <DialogTitle className="cart-title">
-          {paymentStep === 'ready' ?
+          {paymentStep === 'READY' ?
             !deleteMode || cartItems.length === 0 ?
               <DeleteSweepOutlinedIcon
                 className={`delete-icon ${cartItems.length > 0 ? "active" : ""}`}
@@ -694,8 +737,8 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
               />
             :
             <ArrowBackRoundedIcon
-              className={`back-icon active ${paymentStep === 'done' ? "disabled" : ""}`}
-              onClick={() => setPaymentStep(getPreviousStep(paymentStep) as CartStatus['status'] || 'ready')}
+              className={`back-icon active ${paymentStep === 'DONE' ? "disabled" : ""}`}
+              onClick={() => setPaymentStep(getPreviousStep(paymentStep) as CartStatus['status'] || 'READY')}
             />
           }
           {stepTitle[paymentStep]}
@@ -705,12 +748,12 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
           />
         </DialogTitle>
         <DialogContent className="content">
-          <div className={`cart-status ${paymentStep === 'done' ? "hide" : ""}`}>
-            {paymentStep === 'ready' && `${currency(cartItems.length)}項目`}
-            {paymentStep !== 'ready' &&
+          <div className={`cart-status ${paymentStep === 'DONE' ? "hide" : ""}`}>
+            {paymentStep === 'READY' && `${currency(cartItems.length)}項目`}
+            {paymentStep !== 'READY' &&
               <MuiStepper
                 sx={{ position: 'absolute', '&.MuiStack-root': { position: 'unset' } }}
-                steps={['pickup', 'payment', 'final']}
+                steps={['PICKUP', 'PAYMENT', 'FINAL']}
                 activeStep={steps.indexOf(paymentStep) - 1}
               />
             }
@@ -718,7 +761,7 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
           {stepContents.map((content, index) => (
             <div
               key={index}
-              className={`step-content ${content.type} ${paymentStep === content.type ? "active" : ""} ${steps.indexOf(paymentStep) > steps.indexOf(content.type) ? "completed" : ""}`}
+              className={`step-content ${content.type.toLowerCase()} ${paymentStep === content.type ? "active" : ""} ${steps.indexOf(paymentStep) > steps.indexOf(content.type) ? "completed" : ""}`}
             >
               {content.content}
             </div>
@@ -728,16 +771,21 @@ export default function CartDialog({ open, setOpen }: CartDialogProps) {
           <Button
             variant="contained"
             className={`order-btn ${!deleteMode && cartItems.length !== 0 ? "active" : ""}`}
-            onClick={handlePayment}
+            onClick={user ? handlePayment : handleLogin}
           >
-            {paymentStep === 'ready' ?
-              <>
-                合計
-                <span className="total-price">{currency(totalPrice, "円")}</span>
-                注文する
-              </>
+            {user ?
+              paymentStep === 'READY' ?
+                <>
+                  合計
+                  <span className="total-price">{currency(totalPrice, "円")}</span>
+                  注文する
+                </>
+                :
+                stepActions[paymentStep]
               :
-              stepActions[paymentStep]
+              <>
+                ログインして注文する
+              </>
             }
           </Button>
         </DialogActions>

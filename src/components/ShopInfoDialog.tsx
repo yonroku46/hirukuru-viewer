@@ -87,7 +87,7 @@ export default function ShopInfoDialog({ data, position, open, setOpen }: ShopIn
               <div className="map-info-item">
                 <StorefrontOutlinedIcon className="item-icon" />
                 <div className="item-content">
-                  {data.description}
+                  {data.shopIntro}
                 </div>
               </div>
             </div>

@@ -79,30 +79,34 @@ declare global {
   interface ItemState extends Item {
     quantity?: number;
   }
+  interface OrderState extends Order {
+    status: OrderStatus['status'];
+    orderDetail: OrderDetail[];
+  }
   // Status
   interface CartStatus {
-    status: 'ready' | 'pickup' | 'payment' | 'final' | 'done';
+    status: 'READY' | 'PICKUP' | 'PAYMENT' | 'FINAL' | 'DONE';
   }
   interface OrderStatus {
-    status: 'booked' | 'pickup' | 'done' | 'review' | 'cancel';
+    status: 'PENDING' | 'BOOKED' | 'PICKUP' | 'DONE' | 'REVIEW' | 'CANCEL';
     value: number;
   }
   interface ReviewStatus {
-    status: 'count' | 'avg';
+    status: 'COUNT' | 'AVG';
     value: number;
   }
   // Type
   interface PayType {
-    type: 'cash' | 'card' | 'apple' | 'google';
+    type: 'CASH' | 'CARD' | 'APPLE' | 'GOOGLE';
   }
   interface ShopType {
-    type: 'bento' | 'foodtruck';
+    type: 'BENTO' | 'FOOD_TRUCK';
   }
   interface ServiceNoticeType {
-    type: 'notice' | 'event';
+    type: 'NOTICE' | 'EVENT';
   }
   interface ServiceInquiryType {
-    type: 'suggest' | 'bulk' | 'inquiry';
+    type: 'SUGGEST' | 'BULK' | 'INQUIRY';
   }
   // DB
   interface User {
@@ -164,12 +168,13 @@ declare global {
   }
   interface Shop {
     shopId: string;
+    profileImg: string;
+    thumbnailImg: string;
+    shopName: string;
+    shopIntro: string;
     location: string;
     detailAddress?: string;
-    shopName: string;
-    description: string;
-    type: ShopType['type'];
-    thumbnailImg: string;
+    shopType: ShopType['type'];
     businessHours?: BusinessHour[];
     reviewcount?: number;
     ratingAvg?: number;
@@ -178,9 +183,10 @@ declare global {
     };
   }
   interface BusinessHour {
-    day: 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun';
-    open: string;
-    close: string;
+    dayOfWeek: 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun';
+    openTime: string;
+    closeTime: string;
+    businessDay: boolean;
   }
   interface ShopReview extends Row {
     reviewId: string;
@@ -191,21 +197,18 @@ declare global {
     userRatingAvg?: number;
     shopId: string;
     shopName: string;
-    rating: number;
-    comment: string;
-    date: string;
+    reviewRating: number;
+    reviewContent: string;
+    createTime: string;
   }
   interface Order extends Row {
     orderId: string;
-    userId: string;
     shopId: string;
-    status: string;
-    shopName: string;
+    userId: string;
     payType: PayType['type'];
     totalPrice: number;
     pickupTime: string;
-    orderTime: string;
-    orderDetail: OrderDetail[];
+    createTime: string;
   }
   interface OrderDetail {
     orderId: string;

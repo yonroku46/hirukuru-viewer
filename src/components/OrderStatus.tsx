@@ -12,13 +12,13 @@ interface OrderStatusProps {
 
 export default function OrderStatus({ statusList }: OrderStatusProps) {
   const statusLabels: { status: OrderStatus['status'], label: string, icon: React.ReactNode }[] = [
-    { status: 'booked', label: orderStatusDict('booked', 'label'), icon: <AlarmOnOutlinedIcon fontSize="inherit" /> },
-    { status: 'pickup', label: orderStatusDict('pickup', 'label'), icon: <FmdGoodOutlinedIcon fontSize="inherit" /> },
-    { status: 'done', label: orderStatusDict('done', 'label'), icon: <ThumbUpAltOutlinedIcon fontSize="inherit" /> },
+    { status: 'BOOKED', label: orderStatusDict('BOOKED', 'label'), icon: <AlarmOnOutlinedIcon fontSize="inherit" /> },
+    { status: 'PICKUP', label: orderStatusDict('PICKUP', 'label'), icon: <FmdGoodOutlinedIcon fontSize="inherit" /> },
+    { status: 'DONE', label: orderStatusDict('DONE', 'label'), icon: <ThumbUpAltOutlinedIcon fontSize="inherit" /> },
   ];
   const statusOptionalLabels: { status: OrderStatus['status'], label: string }[] = [
-    { status: 'review', label: orderStatusDict('review', 'label') },
-    { status: 'cancel', label: orderStatusDict('cancel', 'label') },
+    { status: 'REVIEW', label: orderStatusDict('REVIEW', 'label') },
+    { status: 'CANCEL', label: orderStatusDict('CANCEL', 'label') },
   ];
 
   return (
@@ -33,7 +33,7 @@ export default function OrderStatus({ statusList }: OrderStatusProps) {
           return (
             <div key={status} className={`status-item ${isActive ? 'active' : ''}`}>
               <div className="status-item-title">
-                <div className={`icon ${status}`}>
+                <div className={`icon ${status.toLowerCase()}`}>
                   {icon}
                 </div>
                 <div className='label'>
