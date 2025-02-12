@@ -21,12 +21,13 @@ import Checkbox from '@mui/material/Checkbox';
 import FormGroup from '@mui/material/FormGroup';
 
 interface ItemInfoDialogProps {
+  shop: Shop;
   data: Item | null;
   open: boolean;
   setOpen: (open: boolean) => void;
 }
 
-export default function ItemInfoDialog({ data, open, setOpen }: ItemInfoDialogProps) {
+export default function ItemInfoDialog({ shop, data, open, setOpen }: ItemInfoDialogProps) {
   const dispatch = useAppDispatch();
   const isSp = useMediaQuery({ query: "(max-width: 1179px)" });
 
@@ -53,7 +54,7 @@ export default function ItemInfoDialog({ data, open, setOpen }: ItemInfoDialogPr
 
   const handleClick = () => {
     if (data) {
-      if (addToCart(dispatch, data, quantity, options)) {
+      if (addToCart(dispatch, shop, data, quantity, options)) {
         setOpen(false);
       }
     }
@@ -82,7 +83,7 @@ export default function ItemInfoDialog({ data, open, setOpen }: ItemInfoDialogPr
           <div className="image-wrapper">
             <Image
               src={data.thumbnailImg}
-              alt={data.name}
+              alt={data.itemName}
               width={280}
               height={160}
             />
@@ -90,39 +91,39 @@ export default function ItemInfoDialog({ data, open, setOpen }: ItemInfoDialogPr
           <div className="item-detail-wrapper">
             <div className="item-name-rating">
               <div className="item-name">
-                {data.name}
-                {data.discountPrice && data.discountPrice < data.price &&
+                {data.itemName}
+                {data.discountPrice && data.discountPrice < data.itemPrice &&
                   <div className="sale-tag">
-                    {`${Math.round((1 - data.discountPrice / data.price) * 100)}% OFF`}
+                    {`${Math.round((1 - data.discountPrice / data.itemPrice) * 100)}% OFF`}
                   </div>
                 }
               </div>
               <div className="rating">
-                {data.rating || "-"}
+                {data.ratingAvg || "-"}
               </div>
             </div>
-            {data.discountPrice && data.discountPrice < data.price ?
+            {data.discountPrice && data.discountPrice < data.itemPrice ?
               <div className="price">
                 <p className="current-price on-sale">
                   {currency(data.discountPrice)}
                   <span className="unit">円</span>
                 </p>
                 <p className="origin-price">
-                  {currency(data.price)}
+                  {currency(data.itemPrice)}
                   <span className="unit">円</span>
                 </p>
               </div>
               :
               <div className="price">
                 <p className="current-price">
-                  {currency(data.price)}
+                  {currency(data.itemPrice)}
                   <span className="unit">円</span>
                 </p>
               </div>
             }
-            {data.description &&
+            {data.itemDescription &&
               <p className="description">
-                {data.description}
+                {data.itemDescription}
               </p>
             }
             {data.allergens &&
@@ -162,15 +163,15 @@ export default function ItemInfoDialog({ data, open, setOpen }: ItemInfoDialogPr
                 <div className="option-list">
                   {data.optionMultiple ?
                     <FormGroup>
-                      {data.options.map((option) => (
+                      {data.options.map((option, index) => (
                         <FormControlLabel
-                          key={option.optionId}
-                          value={option.optionId}
+                          key={index}
+                          value={option}
                           control={
                             <Checkbox
                               onChange={(e) => {
                                 setOptions(e.target.checked ?
-                                  [...options, option] : options.filter(o => o.optionId !== option.optionId)
+                                  [...options, option] : options.filter(o => o.optionName !== option.optionName)
                                 );
                               }}
                             />}
@@ -181,16 +182,16 @@ export default function ItemInfoDialog({ data, open, setOpen }: ItemInfoDialogPr
                     :
                     <RadioGroup
                       onChange={(e) => {
-                        const selectedOption = data.options?.find(option => option.optionId === e.target.value);
+                        const selectedOption = data.options?.find(option => option.optionName === e.target.value);
                         if (selectedOption) {
                           setOptions([selectedOption]);
                         }
                       }}
                     >
-                      {data.options.map((option) => (
+                      {data.options.map((option, index) => (
                         <FormControlLabel
-                          key={option.optionId}
-                          value={option.optionId}
+                          key={index}
+                          value={option.optionName}
                           control={<Radio />}
                           label={optionsToString(option)}
                         />

@@ -28,13 +28,13 @@ export default function ItemCard({ data, onClick, onHover, href, openNewTab, sol
         <Image
           className={`image ${soldOut ? "sold-out" : ""}`}
           src={data.thumbnailImg}
-          alt={data.name}
+          alt={data.itemName}
           width={280}
           height={160}
         />
-        {data.discountPrice && data.discountPrice < data.price &&
+        {data.discountPrice && data.discountPrice < data.itemPrice &&
           <div className="sale-tag">
-            {`${Math.round((1 - data.discountPrice / data.price) * 100)}% OFF`}
+            {`${Math.round((1 - data.discountPrice / data.itemPrice) * 100)}% OFF`}
           </div>
         }
         {soldOut &&
@@ -46,27 +46,27 @@ export default function ItemCard({ data, onClick, onHover, href, openNewTab, sol
       <div className="info-wrapper">
         <div className="info">
           <div className="name">
-            {data.name}
+            {data.itemName}
           </div>
           <div className="rating">
-            {data.rating || "-"}
+            {data.ratingAvg || "-"}
           </div>
         </div>
-        {data.discountPrice && data.discountPrice < data.price ?
+        {data.discountPrice && data.discountPrice < data.itemPrice ?
           <div className="price">
             <p className="current-price on-sale">
               {currency(data.discountPrice)}
               <span className="unit">円</span>
             </p>
             <p className="origin-price">
-              {currency(data.price)}
+              {currency(data.itemPrice)}
               <span className="unit">円</span>
             </p>
           </div>
           :
           <div className="price">
             <p className="current-price">
-              {currency(data.price)}
+              {currency(data.itemPrice)}
               <span className="unit">円</span>
             </p>
           </div>

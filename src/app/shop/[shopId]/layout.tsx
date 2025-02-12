@@ -10,7 +10,7 @@ export async function generateMetadata() {
     shopIntro: '揚げ物専門店',
     profileImg: 'https://i.pinimg.com/236x/71/65/43/716543eb8e6907d7163b55000376e2be.jpg',
     thumbnailImg: 'https://i.pinimg.com/236x/71/65/43/716543eb8e6907d7163b55000376e2be.jpg',
-    reviewcount: 1120,
+    reviewCount: 1120,
     ratingAvg: 4.5,
     location: '東京都',
     shopType: 'BENTO',

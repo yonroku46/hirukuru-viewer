@@ -74,12 +74,12 @@ export function optionsToString(options: ItemOption | ItemOption[]): string {
   if (!options) return '';
 
   const formatOption = (option: ItemOption) => {
-    const priceString = option.price > 0
-      ? `(+${currency(option.price)}円)`
-      : option.price < 0
-        ? `(-${currency(Math.abs(option.price))}円)`
+    const priceString = option.optionPrice > 0
+      ? `(+${currency(option.optionPrice)}円)`
+      : option.optionPrice < 0
+        ? `(-${currency(Math.abs(option.optionPrice))}円)`
         : `(無料)`;
-    return `${option.name} ${priceString}`;
+    return `${option.optionName} ${priceString}`;
   };
 
   return Array.isArray(options)

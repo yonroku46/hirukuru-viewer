@@ -93,20 +93,22 @@ export default function ShopPage(
   }
 
   const shop: Shop = {
-    shopId: '1',
+    shopId: 'd554fe3e-384c-49c3-ba65-d2858ae92ec1',
     shopName: '唐揚げ壱番屋',
     shopIntro: '揚げ物専門店',
     location: '福岡市博多区',
     detailAddress: '福岡市博多区',
     shopType: 'BENTO',
+    servingMinutes: 15,
     profileImg: 'https://i.pinimg.com/236x/71/65/43/716543eb8e6907d7163b55000376e2be.jpg',
     thumbnailImg: 'https://i.pinimg.com/236x/71/65/43/716543eb8e6907d7163b55000376e2be.jpg',
     businessHours: [
-      { dayOfWeek: 'mon', openTime: '10:00', closeTime: '23:50', businessDay: true },
-      { dayOfWeek: 'tue', openTime: '10:00', closeTime: '23:50', businessDay: true },
-      { dayOfWeek: 'wed', openTime: '10:00', closeTime: '23:50', businessDay: true },
+      { dayOfWeek: 'mon', openTime: '10:10', closeTime: '23:50', businessDay: true },
+      { dayOfWeek: 'tue', openTime: '10:10', closeTime: '23:50', businessDay: true },
+      { dayOfWeek: 'wed', openTime: '10:10', closeTime: '23:50', businessDay: true },
+      { dayOfWeek: 'thu', openTime: '10:10', closeTime: '23:50', businessDay: true },
     ],
-    reviewcount: 1120,
+    reviewCount: 1120,
     ratingAvg: 4.5,
     rating: {
       "1": 2,
@@ -136,33 +138,34 @@ export default function ShopPage(
 
   useEffect(() => {
     console.log(shopId);
+    const dummyShopId = "d554fe3e-384c-49c3-ba65-d2858ae92ec1";
     const dummyItems: Item[] = [
-      { itemId: '1', shopId: 'fuk001', category: '日替わり弁当', name: '唐揚げ弁当', description: "国内産の鶏肉を使用した唐揚げ弁当です。", allergens: "11000000", price: 2000, discountPrice: 500, rating: 4.3, stock: 9, thumbnailImg: 'https://i.pinimg.com/736x/f2/67/df/f267dfdd2b0cb8eac4b5e9674aa49e97.jpg', optionMultiple: true, options: [
-        { optionId: '1', itemId: '1', shopId: 'fuk001', name: 'お茶', price: 150 },
-        { optionId: '2', itemId: '1', shopId: 'fuk001', name: 'コーラ', price: 200 },
-        { optionId: '11', itemId: '1', shopId: 'fuk001', name: 'メガ盛り', price: 300 },
+      { itemId: '1', shopId: dummyShopId, category: '日替わり弁当', itemName: '唐揚げ弁当', itemDescription: "国内産の鶏肉を使用した唐揚げ弁当です。", allergens: "11000000", itemPrice: 2000, discountPrice: 500, ratingAvg: 4.3, stock: 9, thumbnailImg: 'https://i.pinimg.com/736x/f2/67/df/f267dfdd2b0cb8eac4b5e9674aa49e97.jpg', optionMultiple: true, options: [
+        { optionName: 'お茶', optionPrice: 150 },
+        { optionName: 'コーラ', optionPrice: 200 },
+        { optionName: 'メガ盛り', optionPrice: 300 },
       ]},
-      { itemId: '2', shopId: 'fuk002', category: '特製弁当', name: '他店舗弁当', description: "特製のり弁です。", allergens: "01010101", price: 500, discountPrice: 450, rating: 4.5, thumbnailImg: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', optionMultiple: false, options: [
-        { optionId: '3', itemId: '2', shopId: 'fuk001', name: '特盛', price: 1000 },
-        { optionId: '4', itemId: '2', shopId: 'fuk001', name: '大盛', price: 200 },
-        { optionId: '5', itemId: '2', shopId: 'fuk001', name: '中盛', price: 0 },
-        { optionId: '6', itemId: '2', shopId: 'fuk001', name: '小盛', price: -100 },
+      { itemId: '2', shopId: dummyShopId, category: '特製弁当', itemName: '他店舗弁当', itemDescription: "特製のり弁です。", allergens: "01010101", itemPrice: 500, discountPrice: 450, ratingAvg: 4.5, thumbnailImg: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', optionMultiple: false, options: [
+        { optionName: '特盛', optionPrice: 1000 },
+        { optionName: '大盛', optionPrice: 200 },
+        { optionName: '中盛', optionPrice: 0 },
+        { optionName: '小盛', optionPrice: -100 },
       ]},
-      { itemId: '3', shopId: 'fuk001', category: '特製弁当', name: 'チキン南蛮弁当', price: 750, rating: 3.9, stock: 2, thumbnailImg: 'https://i.pinimg.com/236x/42/d7/59/42d7590255cfd29e56db2b3d968419d4.jpg' },
-      { itemId: '4', shopId: 'fuk001', category: '特製弁当', name: 'カレー弁当', price: 550, rating: undefined, stock: 0,thumbnailImg: 'https://i.pinimg.com/236x/3b/4f/0a/3b4f0a758df2243b72d1d4985cda5437.jpg' },
-      { itemId: '5', shopId: 'fuk001', category: '定番弁当', name: '塩鮭弁当', price: 550, rating: undefined, thumbnailImg: 'https://i.pinimg.com/736x/53/c1/4c/53c14c49208435da8fca89f4dae85cb4.jpg' },
-      { itemId: '6', shopId: 'fuk001', category: '定番弁当', name: 'ナポリタン', price: 750, rating: 3.9, thumbnailImg: 'https://i.pinimg.com/736x/a0/44/3e/a0443eb63b9e4e56d4bdad82079d11be.jpg' },
-      { itemId: '7', shopId: 'fuk001', category: '定番弁当', name: 'ビビンバ', price: 500, rating: 4.5, thumbnailImg: 'https://i.pinimg.com/736x/15/fc/18/15fc1800352f40dc57aba529365dd6dd.jpg' },
-      { itemId: '8', shopId: 'fuk001', category: '定番弁当', name: '鶏そぼろ丼', price: 1000, rating: 4.3, thumbnailImg: 'https://i.pinimg.com/736x/a3/c0/44/a3c0445cb7ce8a623f9420a2aaa8332c.jpg' },
-      { itemId: '9', shopId: 'fuk001', category: '定番弁当', name: 'ソースカツ弁当', price: 1000, rating: 4.3, thumbnailImg: 'https://i.pinimg.com/736x/09/cc/18/09cc18f3ab7aeb70638f33170251bceb.jpg' },
-      { itemId: '10', shopId: 'fuk001', category: '定番弁当', name: 'カツカレー', price: 1000, rating: 4.3, thumbnailImg: 'https://i.pinimg.com/736x/7f/6f/55/7f6f5560ca41e1870c59b18f6f1f2360.jpg' },
+      { itemId: '3', shopId: 'fuk002', category: '特製弁当', itemName: 'チキン南蛮弁当', itemPrice: 750, ratingAvg: 3.9, stock: 2, thumbnailImg: 'https://i.pinimg.com/236x/42/d7/59/42d7590255cfd29e56db2b3d968419d4.jpg' },
+      { itemId: '4', shopId: dummyShopId, category: '特製弁当', itemName: 'カレー弁当', itemPrice: 550, ratingAvg: undefined, stock: 0,thumbnailImg: 'https://i.pinimg.com/236x/3b/4f/0a/3b4f0a758df2243b72d1d4985cda5437.jpg' },
+      { itemId: '5', shopId: dummyShopId, category: '定番弁当', itemName: '塩鮭弁当', itemPrice: 550, ratingAvg: undefined, thumbnailImg: 'https://i.pinimg.com/736x/53/c1/4c/53c14c49208435da8fca89f4dae85cb4.jpg' },
+      { itemId: '6', shopId: dummyShopId, category: '定番弁当', itemName: 'ナポリタン', itemPrice: 750, ratingAvg: 3.9, thumbnailImg: 'https://i.pinimg.com/736x/a0/44/3e/a0443eb63b9e4e56d4bdad82079d11be.jpg' },
+      { itemId: '7', shopId: dummyShopId, category: '定番弁当', itemName: 'ビビンバ', itemPrice: 500, ratingAvg: 4.5, thumbnailImg: 'https://i.pinimg.com/736x/15/fc/18/15fc1800352f40dc57aba529365dd6dd.jpg' },
+      { itemId: '8', shopId: dummyShopId, category: '定番弁当', itemName: '鶏そぼろ丼', itemPrice: 1000, ratingAvg: 4.3, thumbnailImg: 'https://i.pinimg.com/736x/a3/c0/44/a3c0445cb7ce8a623f9420a2aaa8332c.jpg' },
+      { itemId: '9', shopId: dummyShopId, category: '定番弁当', itemName: 'ソースカツ弁当', itemPrice: 1000, ratingAvg: 4.3, thumbnailImg: 'https://i.pinimg.com/736x/09/cc/18/09cc18f3ab7aeb70638f33170251bceb.jpg' },
+      { itemId: '10', shopId: dummyShopId, category: '定番弁当', itemName: 'カツカレー', itemPrice: 1000, ratingAvg: 4.3, thumbnailImg: 'https://i.pinimg.com/736x/7f/6f/55/7f6f5560ca41e1870c59b18f6f1f2360.jpg' },
     ];
     const dummyReviewList = [
-      { reviewId: '1', userId: 'user1', shopId: 'fuk001', userName: "User1", userProfile: "/assets/img/no-user.jpg", userRatingCount: 1120, userRatingAvg: 4.6, reviewRating: 4, reviewContent: "Good!", createTime: "2024-11-29", shopName: "唐揚げ壱番屋" },
-      { reviewId: '2', userId: 'user2', shopId: 'fuk001', userName: "User2", userProfile: "/assets/img/no-user.jpg", userRatingCount: 320, userRatingAvg: 4.9, reviewRating: 5, reviewContent: "Nice!", createTime: "2024-12-29", shopName: "唐揚げ壱番屋" },
-      { reviewId: '3', userId: 'user3', shopId: 'fuk001', userName: "User3", userProfile: "/assets/img/no-user.jpg", userRatingCount: undefined, userRatingAvg: undefined, reviewRating: 4, reviewContent: "Good!", createTime: "2024-12-28", shopName: "唐揚げ壱番屋" },
-      { reviewId: '4', userId: 'user4', shopId: 'fuk001', userName: "User4", userProfile: "/assets/img/no-user.jpg", userRatingCount: undefined, userRatingAvg: undefined, reviewRating: 4, reviewContent: "Good!", createTime: "2025-01-24", shopName: "唐揚げ壱番屋" },
-      { reviewId: '5', userId: 'user5', shopId: 'fuk001', userName: "User5", userProfile: "/assets/img/no-user.jpg", userRatingCount: undefined, userRatingAvg: undefined, reviewRating: 4, reviewContent: "Good!", createTime: "2025-01-24", shopName: "唐揚げ壱番屋" },
+      { reviewId: '1', userId: 'user1', shopId: dummyShopId, userName: "User1", userProfile: "/assets/img/no-user.jpg", userRatingCount: 1120, userRatingAvg: 4.6, reviewRating: 4, reviewContent: "Good!", createTime: "2024-11-29", shopName: "唐揚げ壱番屋" },
+      { reviewId: '2', userId: 'user2', shopId: dummyShopId, userName: "User2", userProfile: "/assets/img/no-user.jpg", userRatingCount: 320, userRatingAvg: 4.9, reviewRating: 5, reviewContent: "Nice!", createTime: "2024-12-29", shopName: "唐揚げ壱番屋" },
+      { reviewId: '3', userId: 'user3', shopId: dummyShopId, userName: "User3", userProfile: "/assets/img/no-user.jpg", userRatingCount: undefined, userRatingAvg: undefined, reviewRating: 4, reviewContent: "Good!", createTime: "2024-12-28", shopName: "唐揚げ壱番屋" },
+      { reviewId: '4', userId: 'user4', shopId: dummyShopId, userName: "User4", userProfile: "/assets/img/no-user.jpg", userRatingCount: undefined, userRatingAvg: undefined, reviewRating: 4, reviewContent: "Good!", createTime: "2025-01-24", shopName: "唐揚げ壱番屋" },
+      { reviewId: '5', userId: 'user5', shopId: dummyShopId, userName: "User5", userProfile: "/assets/img/no-user.jpg", userRatingCount: undefined, userRatingAvg: undefined, reviewRating: 4, reviewContent: "Good!", createTime: "2025-01-24", shopName: "唐揚げ壱番屋" },
     ]
     setItems(dummyItems as Item[]);
     setReviewList(dummyReviewList as ShopReview[]);
@@ -212,8 +215,8 @@ export default function ShopPage(
 
       const searchRegex = createKanaSearchRegex(searchValue);
       const filteredItems = items.filter(item => {
-        const matchesSearch = searchValue ? searchRegex.test(item.name) : true;
-        const effectivePrice = item.discountPrice ?? item.price;
+        const matchesSearch = searchValue ? searchRegex.test(item.itemName) : true;
+        const effectivePrice = item.discountPrice ?? item.itemPrice;
         const matchesPrice = priceRange >= maxPrice || effectivePrice <= priceRange;
 
         return matchesSearch && matchesPrice;
@@ -224,11 +227,11 @@ export default function ShopPage(
         case 'recommend':
           return filteredItems;
         case 'rating':
-          return filteredItems.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
+          return filteredItems.sort((a, b) => (b.ratingAvg ?? 0) - (a.ratingAvg ?? 0));
         case 'expensive':
-          return filteredItems.sort((a, b) => (b.discountPrice ?? b.price) - (a.discountPrice ?? a.price));
+          return filteredItems.sort((a, b) => (b.discountPrice ?? b.itemPrice) - (a.discountPrice ?? a.itemPrice));
         case 'cheap':
-          return filteredItems.sort((a, b) => (a.discountPrice ?? a.price) - (b.discountPrice ?? b.price));
+          return filteredItems.sort((a, b) => (a.discountPrice ?? a.itemPrice) - (b.discountPrice ?? b.itemPrice));
         default:
           return filteredItems;
       }
@@ -416,6 +419,7 @@ export default function ShopPage(
         setOpen={setShopInfoOpen}
       />
       <ItemInfoDialog
+        shop={shop}
         data={selectedItem}
         open={itemInfoOpen}
         setOpen={setItemInfoOpen}
@@ -463,7 +467,7 @@ export default function ShopPage(
           </div>
           <button className="shop-rating" onClick={scrollToReviewSection}>
             <StarRoundedIcon fontSize="small" style={{ color: 'var(--rating-color)' }} />
-            {`${formatRating(shop.ratingAvg || 0)} (${currency(shop.reviewcount || 0)})`}
+            {`${formatRating(shop.ratingAvg || 0)} (${currency(shop.reviewCount || 0)})`}
           </button>
         </div>
         <div className="shop-item-search">
@@ -488,7 +492,7 @@ export default function ShopPage(
               <StarRoundedIcon style={{ color: 'var(--rating-color)' }} />
               {`${formatRating(shop.ratingAvg || 0)}`}
               <span className="review-count">
-                {`(${currency(shop.reviewcount || 0)}個の評価)`}
+                {`(${currency(shop.reviewCount || 0)}個の評価)`}
               </span>
             </h2>
             <div className="rating-distribution">
@@ -515,6 +519,7 @@ export default function ShopPage(
                 <div className="review-filter">
                   <Selector
                     options={reviewFilterOptions}
+                    value={reviewFilter}
                     onChange={(e) => setReviewFilter(e.target.value)}
                   />
                 </div>

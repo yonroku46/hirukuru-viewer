@@ -98,7 +98,7 @@ export default function ServiceContactPage() {
                 <label>お問い合わせ内容</label>
                 <Selector
                   options={categoryList}
-                  defaultValue={category}
+                  value={category}
                   onChange={(e) => setCategory(e.target.value as ServiceInquiryType['type'])}
                 />
               </div>

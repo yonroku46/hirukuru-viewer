@@ -27,11 +27,11 @@ export default function MyOrderPage() {
     { key: 'orderDetail', type: 'list', label: '詳細', width: 60, listColumns: [
         { key: 'orderId', type: 'text', label: '注文ID', hide: true },
         { key: 'itemId', type: 'text', label: '食品ID', hide: true },
-        { key: 'name', type: 'text', label: '食品名', minWidth: 120, maxWidth: 120 },
-        { key: 'price', type: 'number', typeUnit: '円', label: '単価', minWidth: 80, maxWidth: 80, align: 'right' },
+        { key: 'itemName', type: 'text', label: '食品名', minWidth: 120, maxWidth: 120 },
+        { key: 'itemPrice', type: 'number', typeUnit: '円', label: '単価', minWidth: 80, maxWidth: 80, align: 'right' },
         { key: 'options', type: 'options', label: 'オプション', minWidth: 140, maxWidth: 140 },
         { key: 'quantity', type: 'number', label: '数量', minWidth: 100, align: 'right' },
-        { key: 'totalPrice', type: 'number', typeUnit: '円', label: '金額', minWidth: 100, align: 'right' },
+        { key: 'itemTotalPrice', type: 'number', typeUnit: '円', label: '金額', minWidth: 100, align: 'right' },
       ]
     },
     { key: 'orderId', type: 'text', label: '注文ID', hide: true },
@@ -78,17 +78,17 @@ export default function MyOrderPage() {
       mail: 'test@test.com',
     }
     const dummyRows: Order[] = [
-      createData('O101', 'BOOKED', 'U101', 'S101', 'テスト店舗', 'CASH', 2500, '2025-01-01 20:07', '2025-01-01 20:07', [
-        { orderId: 'O101', itemId: 'F101', name: '唐揚げ弁当', price: 500, quantity: 1, totalPrice: 900, options: [
-          { optionId: 'O101', itemId: 'F101', shopId: 'S101', name: 'コーラ', price: 100 },
-          { optionId: 'O102', itemId: 'F101', shopId: 'S101', name: 'メガ盛り', price: 300 },
+      createData('O101', 'BOOKED', 'U101', 'S101', 'テスト店舗', 'CASH', 2900, '2025-01-01 20:07', '2025-01-01 20:07', [
+        { orderId: 'O101', itemId: 'F101', itemName: '唐揚げ弁当', itemPrice: 500, quantity: 1, itemTotalPrice: 900, options: [
+          { optionName: 'コーラ', optionPrice: 100 },
+          { optionName: 'メガ盛り', optionPrice: 300 },
         ]},
-        { orderId: 'O101', itemId: 'F102', name: 'チキン南蛮弁当', price: 1000, quantity: 2, totalPrice: 2000, options: [
-          { optionId: 'O103', itemId: 'F102', shopId: 'S101', name: '特盛り', price: 1000 },
+        { orderId: 'O101', itemId: 'F102', itemName: 'チキン南蛮弁当', itemPrice: 1000, quantity: 2, itemTotalPrice: 2000, options: [
+          { optionName: '特盛り', optionPrice: 1000 },
         ] },
       ]),
       createData('O102', 'PICKUP', 'U101', 'S101', 'テスト店舗', 'CARD', 500, '2025-01-01 20:10', '2025-01-02 20:10', [
-        { orderId: 'O102', itemId: 'F102', name: 'チキン南蛮弁当', price: 500, quantity: 1, totalPrice: 500 },
+        { orderId: 'O102', itemId: 'F102', itemName: 'チキン南蛮弁当', itemPrice: 500, quantity: 1, itemTotalPrice: 500 },
       ]),
       createData('O103', 'DONE', 'U101', 'S101', 'テスト店舗', 'GOOGLE', 1000, '2025-01-15 20:10', '2025-01-15 20:10', []),
       createData('O104', 'REVIEW', 'U101', 'S101', 'テスト店舗', 'APPLE', 1000, '2025-01-15 20:10', '2025-01-14 20:10', []),
@@ -105,7 +105,7 @@ export default function MyOrderPage() {
         if (status !== 'all' && row.status !== status) return false;
         const orderDate = dayjs(row.createTime);
         if (orderDate.year() !== year || orderDate.month() + 1 !== month) return false;
-        if (searchValue && (!Array.isArray(row.orderDetail) || !row.orderDetail.some((detail: OrderDetail) => searchRegex.test(detail.name)))) return false;
+        if (searchValue && (!Array.isArray(row.orderDetail) || !row.orderDetail.some((detail: OrderDetail) => searchRegex.test(detail.itemName)))) return false;
         return true;
       })
       .sort((a, b) => dayjs(b.createTime).unix() - dayjs(a.createTime).unix());

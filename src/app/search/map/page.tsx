@@ -288,6 +288,7 @@ export default function SearchMapPage() {
                 { label: "お弁当屋のみ", value: "BENTO" },
                 { label: "フードトラックのみ", value: "FOOD_TRUCK" }
               ]}
+              value={shopType}
               onChange={(event) => {
                 setShopType(event.target.value as "ALL" | ShopType["type"]);
               }}

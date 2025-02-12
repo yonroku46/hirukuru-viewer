@@ -118,7 +118,7 @@ export default function FilterDialog({ filters, onReset, onFilterApply, changed 
                   {item.type === "select" && item.options && (
                     <Selector
                       options={item.options}
-                      defaultValue={item.value}
+                      value={item.value}
                       onChange={(e) => handleFilterChange(item.key, e.target.value)}
                     />
                   )}
@@ -149,7 +149,7 @@ export default function FilterDialog({ filters, onReset, onFilterApply, changed 
                   {item.type === "year" && (
                     <Selector
                       options={yearOptions}
-                      defaultValue={item.value}
+                      value={item.value}
                       onChange={(e) => {
                         handleFilterChange(item.key, e.target.value);
                       }}
@@ -158,7 +158,7 @@ export default function FilterDialog({ filters, onReset, onFilterApply, changed 
                   {item.type === "month" && (
                     <Selector
                       options={monthOptions}
-                      defaultValue={item.value}
+                      value={item.value}
                       onChange={(e) => {
                         handleFilterChange(item.key, e.target.value);
                       }}

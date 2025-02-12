@@ -103,7 +103,7 @@ export default function ItemCardSlider({ title, data }: ItemCardSliderProps) {
           <ItemCard
             key={item.itemId}
             data={item}
-            href={`/shop/${item.shopId}?q=${item.name}`}
+            href={`/shop/${item.shopId}?q=${item.itemName}`}
           />
         ))}
       </Slider>

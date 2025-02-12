@@ -113,7 +113,7 @@ export default function ServiceContactPage() {
                   <label>販売タイプ</label>
                   <Selector
                     options={shopTypeList}
-                    defaultValue={shopType}
+                    value={shopType}
                     onChange={(e) => setShopType(e.target.value)}
                   />
                 </div>

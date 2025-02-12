@@ -33,7 +33,12 @@ export function formatTodayBusinessHours(businessHours: BusinessHour[]): string 
   const todayHours = businessHours.find((hour) => hour.dayOfWeek === today);
 
   if (todayHours) {
-    return `${dayMap[today]} ${todayHours.openTime} - ${todayHours.closeTime}`;
+    const currentTime = dayjs().hour() * 100 + dayjs().minute();
+    const openTime = parseInt(todayHours.openTime.replace(':', ''), 10);
+    const closeTime = parseInt(todayHours.closeTime.replace(':', ''), 10);
+    const isOutsideBusinessHours = currentTime < openTime || currentTime > closeTime;
+
+    return `${dayMap[today]} ${todayHours.openTime} - ${todayHours.closeTime}${isOutsideBusinessHours ? '\n(営業時間外)' : ''}`;
   }
 
   return `${dayMap[today]}曜日休み`;
@@ -47,4 +52,44 @@ export function formatWeeklyBusinessHours(businessHours: BusinessHour[]): string
     }
     return `${dayMap[day]}：休み`;
   }).join('\n');
+}
+
+export function getNextBusinessDay(businessHours: BusinessHour[]): dayjs.Dayjs {
+  // 日曜日(0)を6に変換
+  const todayIndex = (dayjs().day() + 6) % 7;
+  const sortedBusinessHours = daysOrder.map(day => businessHours.find(hour => hour.dayOfWeek === day)).filter(Boolean);
+
+  for (let i = 1; i <= 7; i++) {
+    const nextDayIndex = (todayIndex + i) % 7;
+    const nextDay = daysOrder[nextDayIndex];
+    const nextDayHours = sortedBusinessHours.find(hour => hour?.dayOfWeek === nextDay);
+
+    if (nextDayHours && nextDayHours.businessDay) {
+      return dayjs().add(i, 'day').startOf('day');
+    }
+  }
+
+  return dayjs().add(1, 'week').startOf('day');
+}
+
+export function timeUntil(targetTime: dayjs.Dayjs): string {
+  const now = dateNow();
+
+  if (targetTime.isBefore(now)) {
+    return '過去の時間です';
+  }
+
+  let hours = targetTime.hour() - now.hour();
+  let minutes = targetTime.minute() - now.minute();
+
+  if (minutes < 0) {
+    hours -= 1;
+    minutes += 60;
+  }
+
+  if (hours === 0 && minutes > 0) {
+    return `${minutes}分後`;
+  }
+
+  return `${hours}時間 ${minutes}分後`;
 }

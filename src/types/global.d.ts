@@ -176,7 +176,8 @@ declare global {
     detailAddress?: string;
     shopType: ShopType['type'];
     businessHours?: BusinessHour[];
-    reviewcount?: number;
+    servingMinutes?: number;
+    reviewCount?: number;
     ratingAvg?: number;
     rating?: {
       [key: string]: number | undefined;
@@ -213,33 +214,30 @@ declare global {
   interface OrderDetail {
     orderId: string;
     itemId: string;
-    name: string;
+    itemName: string;
+    itemPrice: number;
     options?: ItemOption[];
-    price: number;
     quantity: number;
-    totalPrice: number;
+    itemTotalPrice: number;
   }
   interface Item {
     itemId: string;
     shopId: string;
     category: string;
-    name: string;
-    description?: string;
+    itemName: string;
+    itemDescription?: string;
     allergens?: string;
-    price: number;
+    itemPrice: number;
     discountPrice?: number;
-    rating?: number;
+    ratingAvg?: number;
     thumbnailImg: string;
     stock?: number;
     optionMultiple?: boolean;
     options?: ItemOption[];
   }
   interface ItemOption {
-    optionId: string;
-    itemId: string;
-    shopId: string;
-    name: string;
-    price: number;
+    optionName: string;
+    optionPrice: number;
   }
 }
 
