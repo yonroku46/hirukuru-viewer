@@ -71,12 +71,24 @@ export default function UserService() {
     }
   }
 
+  async function orderList(): Promise<ListRes<OrderState> | undefined> {
+    try {
+      const response: ApiResponse = await ApiInstance.get(ApiRoutes.USER_ORDER_LIST, { });
+      if (response && !response.hasErrors) {
+        return response.responseData as ListRes<OrderState>;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   return {
     userInfo,
     updateUserInfo,
     signout,
     addFavorite,
-    cancelFavorite
+    cancelFavorite,
+    orderList
   };
 
 }

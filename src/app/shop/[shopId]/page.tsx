@@ -124,7 +124,7 @@ export default function ShopPage(
   };
 
   const shopGuideList = [
-    { icon: <ShoppingCartIcon />, title: "ご注文方法", description: "メニューから食品のラインナップを閲覧していただき、お気に入りの商品をカートに入れてご注文いただく事ができます。\n大量注文の場合は「お問い合わせ」ページからご連絡お願いします。" },
+    { icon: <ShoppingCartIcon />, title: "ご注文方法", description: "メニューから商品のラインナップを閲覧していただき、お気に入りの商品をカートに入れてご注文いただく事ができます。\n大量注文の場合は「お問い合わせ」ページからご連絡お願いします。" },
     { icon: <CachedIcon />, title: "変更・キャンセル", description: "納品日1日前：16:59まで\n → キャンセル料不要\n納品日1日前：17:00以降\n → ご注文金額の100%のキャンセル料がかかります。" },
     { icon: <CreditCardIcon />, title: "支払方法", description: "現金、クレジットカードがお選びいただけます。" },
     { icon: <MonetizationOnIcon />, title: "ポイント", description: "ログインしてご注文いただくと支払い金額の「1.5%」がポイントとして貯まります。\nポイントはご注文の際にご利用、またはギフト券などに交換できます。\n(※オフラインで購入する場合は会員証のご提示で同じくポイントが貯まります。)" },
@@ -141,15 +141,15 @@ export default function ShopPage(
     const dummyShopId = "d554fe3e-384c-49c3-ba65-d2858ae92ec1";
     const dummyItems: Item[] = [
       { itemId: '1', shopId: dummyShopId, category: '日替わり弁当', itemName: '唐揚げ弁当', itemDescription: "国内産の鶏肉を使用した唐揚げ弁当です。", allergens: "11000000", itemPrice: 2000, discountPrice: 500, ratingAvg: 4.3, stock: 9, thumbnailImg: 'https://i.pinimg.com/736x/f2/67/df/f267dfdd2b0cb8eac4b5e9674aa49e97.jpg', optionMultiple: true, options: [
-        { optionName: 'お茶', optionPrice: 150 },
-        { optionName: 'コーラ', optionPrice: 200 },
-        { optionName: 'メガ盛り', optionPrice: 300 },
+        { optionId: '1', optionName: 'お茶', optionPrice: 150 },
+        { optionId: '2', optionName: 'コーラ', optionPrice: 200 },
+        { optionId: '3', optionName: 'メガ盛り', optionPrice: 300 },
       ]},
       { itemId: '2', shopId: dummyShopId, category: '特製弁当', itemName: '他店舗弁当', itemDescription: "特製のり弁です。", allergens: "01010101", itemPrice: 500, discountPrice: 450, ratingAvg: 4.5, thumbnailImg: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', optionMultiple: false, options: [
-        { optionName: '特盛', optionPrice: 1000 },
-        { optionName: '大盛', optionPrice: 200 },
-        { optionName: '中盛', optionPrice: 0 },
-        { optionName: '小盛', optionPrice: -100 },
+        { optionId: '1', optionName: '特盛', optionPrice: 1000 },
+        { optionId: '2', optionName: '大盛', optionPrice: 200 },
+        { optionId: '3', optionName: '中盛', optionPrice: 0 },
+        { optionId: '4', optionName: '小盛', optionPrice: -100 },
       ]},
       { itemId: '3', shopId: 'fuk002', category: '特製弁当', itemName: 'チキン南蛮弁当', itemPrice: 750, ratingAvg: 3.9, stock: 2, thumbnailImg: 'https://i.pinimg.com/236x/42/d7/59/42d7590255cfd29e56db2b3d968419d4.jpg' },
       { itemId: '4', shopId: dummyShopId, category: '特製弁当', itemName: 'カレー弁当', itemPrice: 550, ratingAvg: undefined, stock: 0,thumbnailImg: 'https://i.pinimg.com/236x/3b/4f/0a/3b4f0a758df2243b72d1d4985cda5437.jpg' },

@@ -171,7 +171,7 @@ export default function ItemInfoDialog({ shop, data, open, setOpen }: ItemInfoDi
                             <Checkbox
                               onChange={(e) => {
                                 setOptions(e.target.checked ?
-                                  [...options, option] : options.filter(o => o.optionName !== option.optionName)
+                                  [...options, option] : options.filter(o => o.optionId !== option.optionId)
                                 );
                               }}
                             />}
@@ -182,7 +182,7 @@ export default function ItemInfoDialog({ shop, data, open, setOpen }: ItemInfoDi
                     :
                     <RadioGroup
                       onChange={(e) => {
-                        const selectedOption = data.options?.find(option => option.optionName === e.target.value);
+                        const selectedOption = data.options?.find(option => option.optionId === e.target.value);
                         if (selectedOption) {
                           setOptions([selectedOption]);
                         }
@@ -191,7 +191,7 @@ export default function ItemInfoDialog({ shop, data, open, setOpen }: ItemInfoDi
                       {data.options.map((option, index) => (
                         <FormControlLabel
                           key={index}
-                          value={option.optionName}
+                          value={option.optionId}
                           control={<Radio />}
                           label={optionsToString(option)}
                         />

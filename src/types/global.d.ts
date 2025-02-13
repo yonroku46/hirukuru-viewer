@@ -80,6 +80,7 @@ declare global {
     quantity?: number;
   }
   interface OrderState extends Order {
+    shopName: string;
     status: OrderStatus['status'];
     orderDetail: OrderDetail[];
   }
@@ -236,6 +237,7 @@ declare global {
     options?: ItemOption[];
   }
   interface ItemOption {
+    optionId: string;
     optionName: string;
     optionPrice: number;
   }

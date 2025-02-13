@@ -1,10 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import dayjs from "dayjs";
+import { useRouter } from "next/navigation";
+import { useAppSelector } from "@/store";
 import { orderStatusDict } from "@/common/utils/StringUtils";
 import { createKanaSearchRegex } from "@/common/utils/SearchUtils";
 import { dateNow } from "@/common/utils/DateUtils";
-import dayjs from "dayjs";
+import UserService from "@/api/service/UserService";
 import SearchInput from "@/components/input/SearchInput";
 import OrderStatus from "@/components/OrderStatus";
 import MuiBreadcrumbs from "@/components/mui/MuiBreadcrumbs";
@@ -23,11 +26,11 @@ export default function MyOrderPage() {
     { status: 'CANCEL', value: 0 }
   ];
 
-  const columns: Column<Order>[] = [
+  const columns: Column<OrderState>[] = [
     { key: 'orderDetail', type: 'list', label: '詳細', width: 60, listColumns: [
         { key: 'orderId', type: 'text', label: '注文ID', hide: true },
-        { key: 'itemId', type: 'text', label: '食品ID', hide: true },
-        { key: 'itemName', type: 'text', label: '食品名', minWidth: 120, maxWidth: 120 },
+        { key: 'itemId', type: 'text', label: '商品ID', hide: true },
+        { key: 'itemName', type: 'text', label: '商品名', minWidth: 120, maxWidth: 120 },
         { key: 'itemPrice', type: 'number', typeUnit: '円', label: '単価', minWidth: 80, maxWidth: 80, align: 'right' },
         { key: 'options', type: 'options', label: 'オプション', minWidth: 140, maxWidth: 140 },
         { key: 'quantity', type: 'number', label: '数量', minWidth: 100, align: 'right' },
@@ -41,68 +44,55 @@ export default function MyOrderPage() {
     { key: 'shopName', type: 'text', label: '店舗名', minWidth: 100, maxWidth: 200 },
     { key: 'payType', type: 'payType', label: '支払方法', minWidth: 100, maxWidth: 100, align: 'right' },
     { key: 'totalPrice', type: 'number', typeUnit: '円', label: '合計金額', minWidth: 100, align: 'right' },
-    { key: 'pickupTime', type: 'time', label: '受取日時', minWidth: 100, maxWidth: 100, align: 'right' },
+    { key: 'pickupTime', type: 'time', label: '受取予定', minWidth: 100, maxWidth: 100, align: 'right' },
     { key: 'createTime', type: 'time', label: '注文日時', minWidth: 100, maxWidth: 100, align: 'right' },
   ];
 
-  function createData(
-    orderId: string,
-    status: OrderStatus['status'],
-    userId: string,
-    shopId: string,
-    shopName: string,
-    payType: PayType['type'],
-    totalPrice: number,
-    pickupTime: string,
-    createTime: string,
-    orderDetail: OrderDetail[],
-  ): Order {
-    return { id: orderId, status, orderId, userId, shopId, shopName, payType: payType as PayType['type'], totalPrice, pickupTime, createTime, orderDetail };
-  }
+  const router = useRouter();
+  const authState = useAppSelector((state) => state.auth);
+
+  const userService = UserService();
 
   const [user, setUser] = useState<UserState | null>(null);
   const [year, setYear] = useState<number>(dateNow().year());
   const [month, setMonth] = useState<number>(dateNow().month() + 1);
-  const [status, setStatus] = useState<string>('all');
+  const [status, setStatus] = useState<OrderStatus['status'] | "ALL">("ALL");
   const [searchValue, setSearchValue] = useState<string>("");
-  const [rows, setRows] = useState<Order[]>([]);
-  const [filteredRows, setFilteredRows] = useState<Order[]>([]);
+  const [rows, setRows] = useState<OrderState[]>([]);
+  const [filteredRows, setFilteredRows] = useState<OrderState[]>([]);
+
+  const getUserInfo = useCallback(() => {
+    userService.userInfo().then((user) => {
+      if (user) {
+        setUser(user);
+      }
+    });
+  }, [userService]);
+
+  const getOrderList = useCallback(() => {
+    userService.orderList().then((res) => {
+      if (res?.list) {
+        setRows(res.list);
+      }
+    });
+  }, [userService]);
+
 
   useEffect(() => {
-    const dummyUser: UserState = {
-      userId: 'U101',
-      userName: 'テストユーザー',
-      profileImg: '/assets/img/no-user.jpg',
-      point: 1000,
-      shopOwner: false,
-      mail: 'test@test.com',
+    if (!authState.hasLogin) {
+      router.replace('/login');
+      return;
+    } else if (!user) {
+      getUserInfo();
+      getOrderList();
     }
-    const dummyRows: Order[] = [
-      createData('O101', 'BOOKED', 'U101', 'S101', 'テスト店舗', 'CASH', 2900, '2025-01-01 20:07', '2025-01-01 20:07', [
-        { orderId: 'O101', itemId: 'F101', itemName: '唐揚げ弁当', itemPrice: 500, quantity: 1, itemTotalPrice: 900, options: [
-          { optionName: 'コーラ', optionPrice: 100 },
-          { optionName: 'メガ盛り', optionPrice: 300 },
-        ]},
-        { orderId: 'O101', itemId: 'F102', itemName: 'チキン南蛮弁当', itemPrice: 1000, quantity: 2, itemTotalPrice: 2000, options: [
-          { optionName: '特盛り', optionPrice: 1000 },
-        ] },
-      ]),
-      createData('O102', 'PICKUP', 'U101', 'S101', 'テスト店舗', 'CARD', 500, '2025-01-01 20:10', '2025-01-02 20:10', [
-        { orderId: 'O102', itemId: 'F102', itemName: 'チキン南蛮弁当', itemPrice: 500, quantity: 1, itemTotalPrice: 500 },
-      ]),
-      createData('O103', 'DONE', 'U101', 'S101', 'テスト店舗', 'GOOGLE', 1000, '2025-01-15 20:10', '2025-01-15 20:10', []),
-      createData('O104', 'REVIEW', 'U101', 'S101', 'テスト店舗', 'APPLE', 1000, '2025-01-15 20:10', '2025-01-14 20:10', []),
-      createData('O105', 'CANCEL', 'U101', 'S101', 'テスト店舗', 'CASH', 1000, '', '2025-02-01 20:10', []),
-    ];
-    setUser(dummyUser);
-    setRows(dummyRows);
-  }, []);
+  }, [user, router, authState.hasLogin, getUserInfo]);
 
   useEffect(() => {
     const searchRegex = createKanaSearchRegex(searchValue);
     const updatedFilteredRows = rows
       .filter(row => {
-        if (status !== 'all' && row.status !== status) return false;
+        if (status !== 'ALL' && row.status !== status) return false;
         const orderDate = dayjs(row.createTime);
         if (orderDate.year() !== year || orderDate.month() + 1 !== month) return false;
         if (searchValue && (!Array.isArray(row.orderDetail) || !row.orderDetail.some((detail: OrderDetail) => searchRegex.test(detail.itemName)))) return false;
@@ -116,7 +106,7 @@ export default function MyOrderPage() {
     { type: 'year', key: 'year', label: '年度', value: year.toString() },
     { type: 'month', key: 'month', label: '月', value: month.toString() },
     { type: 'select', key: 'status', label: '状況', value: status, options:
-      [{ label: '全て', value: 'all' }, ...orderStatus.map(status => (
+      [{ label: '全て', value: 'ALL' }, ...orderStatus.map(status => (
         { label: orderStatusDict(status.status, 'label'), value: status.status }
       ))]
     },
@@ -129,7 +119,7 @@ export default function MyOrderPage() {
       } else if (filter.key === 'month') {
         setMonth(parseInt(filter.value, 10));
       } else if (filter.key === 'status') {
-        setStatus(filter.value);
+        setStatus(filter.value as OrderStatus['status'] | "ALL");
       }
     });
   }
@@ -152,7 +142,7 @@ export default function MyOrderPage() {
               </h2>
               <SearchInput
                 searchMode
-                placeholder="食品名で検索"
+                placeholder="商品・店舗名で検索"
                 value={searchValue}
                 onChange={(e) => {
                   setSearchValue(e.target.value);

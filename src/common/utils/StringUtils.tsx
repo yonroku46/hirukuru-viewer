@@ -89,6 +89,7 @@ export function optionsToString(options: ItemOption | ItemOption[]): string {
 
 export function orderStatusDict(orderStatusType: OrderStatus['status'], key: 'label' | 'color'): string {
   const orderStatus = [
+    { key: "PENDING", label: "対応待ち", color: "var(--gray-alpha-500)" },
     { key: "DONE", label: "完了", color: "var(--done-color)" },
     { key: "PICKUP", label: "受け取り予定", color: "var(--pickup-color)" },
     { key: "BOOKED", label: "予約", color: "var(--booked-color)" },

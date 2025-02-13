@@ -58,7 +58,7 @@ const Transition = forwardRef(function Transition(
 // オプションチェック
 const optionsEqual = (opts1: ItemOption[], opts2: ItemOption[]) => {
   if (opts1.length !== opts2.length) return false;
-  return opts1.every((opt1) => opts2.some((opt2) => opt1.optionName === opt2.optionName));
+  return opts1.every((opt1) => opts2.some((opt2) => opt1.optionId === opt2.optionId));
 };
 
 export const addToCart = (dispatch: AppDispatch, shop: Shop, item: Item, quantity?: number, options?: ItemOption[]): boolean => {
