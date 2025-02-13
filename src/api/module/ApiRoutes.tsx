@@ -24,6 +24,7 @@ const USER_ADMISSION = `${USER_ROOT}/admission`;
 const USER_ADMISSION_LOG = `${USER_ROOT}/admission/log`;
 const USER_FAVORITE = `${USER_ROOT}/favorite`;
 const USER_SIGNOUT = `${USER_ROOT}/signout`;
+const USER_ORDER_STATUS = `${USER_ROOT}/order/status`;
 const USER_ORDER_LIST = `${USER_ROOT}/order/list`;
 
 // order
@@ -52,6 +53,7 @@ const ApiRoutes = {
   USER_ADMISSION_LOG,
   USER_FAVORITE,
   USER_SIGNOUT,
+  USER_ORDER_STATUS,
   USER_ORDER_LIST,
   ORDER_INFO,
   ORDER_INFO_USER,

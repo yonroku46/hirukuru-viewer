@@ -80,9 +80,9 @@ export default function MuiTable<T extends Row>({ topSection, columns, rows }: M
                 dpValue = (
                   <Chip
                     size="small"
-                    label={orderStatusDict(value as OrderStatus['status'], 'label')}
+                    label={orderStatusDict(value as OrderStatusCount['status'], 'label')}
                     sx={{
-                      backgroundColor: orderStatusDict(value as OrderStatus['status'], 'color'),
+                      backgroundColor: orderStatusDict(value as OrderStatusCount['status'], 'color'),
                       color: 'var(--background)',
                       width: '100px',
                     }}

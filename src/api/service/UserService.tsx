@@ -71,9 +71,20 @@ export default function UserService() {
     }
   }
 
-  async function orderList(): Promise<ListRes<OrderState> | undefined> {
+  async function getOrderStatus(): Promise<ListRes<OrderStatusCount> | undefined> {
     try {
-      const response: ApiResponse = await ApiInstance.get(ApiRoutes.USER_ORDER_LIST, { });
+      const response: ApiResponse = await ApiInstance.get(ApiRoutes.USER_ORDER_STATUS, {});
+      if (response && !response.hasErrors) {
+        return response.responseData as ListRes<OrderStatusCount>;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async function getOrderHistory(): Promise<ListRes<OrderState> | undefined> {
+    try {
+      const response: ApiResponse = await ApiInstance.get(ApiRoutes.USER_ORDER_LIST, {});
       if (response && !response.hasErrors) {
         return response.responseData as ListRes<OrderState>;
       }
@@ -88,7 +99,8 @@ export default function UserService() {
     signout,
     addFavorite,
     cancelFavorite,
-    orderList
+    getOrderStatus,
+    getOrderHistory
   };
 
 }

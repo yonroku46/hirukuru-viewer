@@ -51,14 +51,14 @@ export default function MyPage() {
     }
   }, [user, router, authState.hasLogin, getUserInfo]);
 
-  const orderStatus: OrderStatus[] = [
+  const orderStatus: OrderStatusCount[] = [
     { status: 'BOOKED', value: 0 },
     { status: 'PICKUP', value: 1 },
     { status: 'DONE', value: 1 },
     { status: 'REVIEW', value: 1 },
     { status: 'CANCEL', value: 0 }
   ];
-  const reviewStatus: ReviewStatus[] = [
+  const reviewStatus: ReviewStatusCount[] = [
     { status: 'COUNT', value: 1100 },
     { status: 'AVG', value: 4.5 },
   ];

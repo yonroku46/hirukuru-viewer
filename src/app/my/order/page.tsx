@@ -18,13 +18,6 @@ export default function MyOrderPage() {
     { label: 'マイページ', href: '/my' },
     { label: '注文管理', href: '/my/order', active: true },
   ];
-  const orderStatus: OrderStatus[] = [
-    { status: 'BOOKED', value: 0 },
-    { status: 'PICKUP', value: 1 },
-    { status: 'DONE', value: 1 },
-    { status: 'REVIEW', value: 1 },
-    { status: 'CANCEL', value: 0 }
-  ];
 
   const columns: Column<OrderState>[] = [
     { key: 'orderDetail', type: 'list', label: '詳細', width: 60, listColumns: [
@@ -56,10 +49,11 @@ export default function MyOrderPage() {
   const [user, setUser] = useState<UserState | null>(null);
   const [year, setYear] = useState<number>(dateNow().year());
   const [month, setMonth] = useState<number>(dateNow().month() + 1);
-  const [status, setStatus] = useState<OrderStatus['status'] | "ALL">("ALL");
+  const [status, setStatus] = useState<OrderStatusCount['status'] | "ALL">("ALL");
   const [searchValue, setSearchValue] = useState<string>("");
   const [rows, setRows] = useState<OrderState[]>([]);
   const [filteredRows, setFilteredRows] = useState<OrderState[]>([]);
+  const [orderStatus, setOrderStatus] = useState<OrderStatusCount[]>([]);
 
   const getUserInfo = useCallback(() => {
     userService.userInfo().then((user) => {
@@ -69,8 +63,16 @@ export default function MyOrderPage() {
     });
   }, [userService]);
 
-  const getOrderList = useCallback(() => {
-    userService.orderList().then((res) => {
+  const getOrderStatus = useCallback(() => {
+    userService.getOrderStatus().then((res) => {
+      if (res?.list) {
+        setOrderStatus(res.list);
+      }
+    });
+  }, [userService]);
+
+  const getOrderHistory = useCallback(() => {
+    userService.getOrderHistory().then((res) => {
       if (res?.list) {
         setRows(res.list);
       }
@@ -84,9 +86,11 @@ export default function MyOrderPage() {
       return;
     } else if (!user) {
       getUserInfo();
-      getOrderList();
+      getOrderStatus();
+      getOrderHistory();
     }
-  }, [user, router, authState.hasLogin, getUserInfo]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const searchRegex = createKanaSearchRegex(searchValue);
@@ -119,7 +123,7 @@ export default function MyOrderPage() {
       } else if (filter.key === 'month') {
         setMonth(parseInt(filter.value, 10));
       } else if (filter.key === 'status') {
-        setStatus(filter.value as OrderStatus['status'] | "ALL");
+        setStatus(filter.value as OrderStatusCount['status'] | "ALL");
       }
     });
   }

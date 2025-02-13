@@ -6,11 +6,11 @@ import TaskAltOutlinedIcon from '@mui/icons-material/TaskAltOutlined';
 import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined';
 
 interface ReviewStatusProps {
-  statusList: ReviewStatus[];
+  statusList: ReviewStatusCount[];
 }
 
 export default function ReviewStatus({ statusList }: ReviewStatusProps) {
-  const statusLabels: { status: ReviewStatus['status'], label: string, icon: React.ReactNode }[] = [
+  const statusLabels: { status: ReviewStatusCount['status'], label: string, icon: React.ReactNode }[] = [
     { status: 'COUNT', label: '評価件数', icon: <TaskAltOutlinedIcon fontSize="inherit" /> },
     { status: 'AVG', label: '平均評価', icon: <StarBorderOutlinedIcon fontSize="inherit" /> },
   ];

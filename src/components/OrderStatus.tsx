@@ -7,16 +7,16 @@ import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined';
 import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
 
 interface OrderStatusProps {
-  statusList: OrderStatus[];
+  statusList: OrderStatusCount[];
 }
 
 export default function OrderStatus({ statusList }: OrderStatusProps) {
-  const statusLabels: { status: OrderStatus['status'], label: string, icon: React.ReactNode }[] = [
+  const statusLabels: { status: OrderStatusCount['status'], label: string, icon: React.ReactNode }[] = [
     { status: 'BOOKED', label: orderStatusDict('BOOKED', 'label'), icon: <AlarmOnOutlinedIcon fontSize="inherit" /> },
     { status: 'PICKUP', label: orderStatusDict('PICKUP', 'label'), icon: <FmdGoodOutlinedIcon fontSize="inherit" /> },
     { status: 'DONE', label: orderStatusDict('DONE', 'label'), icon: <ThumbUpAltOutlinedIcon fontSize="inherit" /> },
   ];
-  const statusOptionalLabels: { status: OrderStatus['status'], label: string }[] = [
+  const statusOptionalLabels: { status: OrderStatusCount['status'], label: string }[] = [
     { status: 'REVIEW', label: orderStatusDict('REVIEW', 'label') },
     { status: 'CANCEL', label: orderStatusDict('CANCEL', 'label') },
   ];

@@ -15,7 +15,7 @@ export default function MyOrderReviewPage() {
     { label: '注文管理', href: '/my/order' },
     { label: 'レビュー', href: '/my/order/review', active: true },
   ];
-  const reviewStatus: ReviewStatus[] = [
+  const reviewStatus: ReviewStatusCount[] = [
     { status: 'COUNT', value: 1100 },
     { status: 'AVG', value: 4.5 },
   ];

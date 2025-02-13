@@ -87,7 +87,7 @@ export function optionsToString(options: ItemOption | ItemOption[]): string {
     : formatOption(options);
 }
 
-export function orderStatusDict(orderStatusType: OrderStatus['status'], key: 'label' | 'color'): string {
+export function orderStatusDict(orderStatusType: OrderStatusCount['status'], key: 'label' | 'color'): string {
   const orderStatus = [
     { key: "PENDING", label: "対応待ち", color: "var(--gray-alpha-500)" },
     { key: "DONE", label: "完了", color: "var(--done-color)" },

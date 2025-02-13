@@ -81,18 +81,18 @@ declare global {
   }
   interface OrderState extends Order {
     shopName: string;
-    status: OrderStatus['status'];
+    status: OrderStatusCount['status'];
     orderDetail: OrderDetail[];
   }
   // Status
   interface CartStatus {
     status: 'READY' | 'PICKUP' | 'PAYMENT' | 'FINAL' | 'DONE';
   }
-  interface OrderStatus {
+  interface OrderStatusCount {
     status: 'PENDING' | 'BOOKED' | 'PICKUP' | 'DONE' | 'REVIEW' | 'CANCEL';
     value: number;
   }
-  interface ReviewStatus {
+  interface ReviewStatusCount {
     status: 'COUNT' | 'AVG';
     value: number;
   }
