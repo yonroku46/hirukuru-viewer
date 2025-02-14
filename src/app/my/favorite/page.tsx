@@ -8,6 +8,7 @@ import SearchInput from "@/components/input/SearchInput";
 import MuiBreadcrumbs from "@/components/mui/MuiBreadcrumbs";
 import ShopCard from "@/components/ShopCard";
 import SwitchButton from "@/components/button/SwitchButton";
+import Title from "@/components/layout/Title";
 
 import SearchOffIcon from '@mui/icons-material/SearchOff';
 
@@ -77,12 +78,11 @@ export default function FavoritePage() {
       <div className="my container">
         <MuiBreadcrumbs breadcrumbs={breadcrumbs} />
         <div className="favorite">
-          <h2 className="title">
-            お気に入りの店舗
-            <span className="count">
-              {favoriteShops.length}件
-            </span>
-          </h2>
+          <Title
+            title="お気に入りの店舗"
+            count={favoriteShops.length}
+            countUnit="件"
+          />
           <div className="search-wrapper">
             <SwitchButton
               labels={[{ label: "全て", value: "all" }, { label: "営業中", value: "open" }]}

@@ -4,10 +4,11 @@ import { useEffect, useRef, useState } from 'react';
 import Slider, { Settings } from 'react-slick';
 import { useMediaQuery } from 'react-responsive';
 import ItemCard from '@/components/ItemCard';
+import Title from '@/components/layout/Title';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-import { Box } from '@mui/material';
+import Box from '@mui/material/Box';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 import Skeleton from '@mui/material/Skeleton';
@@ -67,9 +68,9 @@ export default function ItemCardSlider({ title, data }: ItemCardSliderProps) {
     <div className="item-card-slider">
       <div className='item-card-slider-header'>
         <div className='title-wrapper'>
-          <h2 className="title">
-            {title}
-          </h2>
+          <Title
+            title={title}
+          />
         </div>
         <div className='btn-wrapper'>
           <button className='all-btn'>

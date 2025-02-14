@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { config } from "@/config";
 import { signOgImageUrl } from "@/common/lib/OgImage";
 
-type MetadataType = "home" | "login" | "signup" |
+type MetadataType = "home" | "login" | "signup" | "myshop" |
                     "my" | "my/order" | "my/favorite" | "my/point" | "my/coupon" | "my/order/review" |
                     "service" | "service/contact" | "service/partner" | "service/notice" | "service/help" |
                     "shop" | "search";
@@ -83,63 +83,67 @@ export async function generatePageMetadata(type: MetadataType, name?: string): P
     },
     "login": {
       ...baseMetadata,
-      title: `ログイン | ${config.service.name}`,
+      title: `ログイン - ${config.service.name}`,
     },
     "signup": {
       ...baseMetadata,
-      title: `新規登録 | ${config.service.name}`,
+      title: `新規登録 - ${config.service.name}`,
+    },
+    "myshop": {
+      ...baseMetadata,
+      title: `店舗管理 - ${config.service.name}`,
     },
     "my": {
       ...baseMetadata,
-      title: `マイページ | ${config.service.name}`,
+      title: `マイページ - ${config.service.name}`,
     },
     "my/order": {
       ...baseMetadata,
-      title: `注文管理 | ${config.service.name}`,
+      title: `注文管理 - ${config.service.name}`,
     },
     "my/order/review": {
       ...baseMetadata,
-      title: `レビュー | ${config.service.name}`,
+      title: `レビュー - ${config.service.name}`,
     },
     "my/favorite": {
       ...baseMetadata,
-      title: `お気に入り | ${config.service.name}`,
+      title: `お気に入り - ${config.service.name}`,
     },
     "my/point": {
       ...baseMetadata,
-      title: `ポイント | ${config.service.name}`,
+      title: `ポイント - ${config.service.name}`,
     },
     "my/coupon": {
       ...baseMetadata,
-      title: `クーポン | ${config.service.name}`,
+      title: `クーポン - ${config.service.name}`,
     },
     "search": {
       ...baseMetadata,
-      title: `検索 | ${config.service.name}`,
+      title: `検索 - ${config.service.name}`,
     },
     "shop": {
       ...baseMetadata,
-      title: `${name || '店舗'} | ${config.service.name}`,
+      title: `${name || '店舗'} - ${config.service.name}`,
     },
     "service": {
       ...baseMetadata,
-      title: `サービス | ${config.service.name}`,
+      title: `サービス - ${config.service.name}`,
     },
     "service/contact": {
       ...baseMetadata,
-      title: `お問い合わせ | ${config.service.name}`,
+      title: `お問い合わせ - ${config.service.name}`,
     },
     "service/partner": {
       ...baseMetadata,
-      title: `パートナー申請 | ${config.service.name}`,
+      title: `パートナー申請 - ${config.service.name}`,
     },
     "service/notice": {
       ...baseMetadata,
-      title: `お知らせ | ${config.service.name}`,
+      title: `お知らせ - ${config.service.name}`,
     },
     "service/help": {
       ...baseMetadata,
-      title: `利用ガイド | ${config.service.name}`,
+      title: `利用ガイド - ${config.service.name}`,
     },
   };
 

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import dynamic from 'next/dynamic';
+import { useMediaQuery } from "react-responsive";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Image from "@/components/Image";
 import SearchInput from "@/components/input/SearchInput";
@@ -60,6 +61,8 @@ const menuItems: GroupMenuItem[] = [
 ];
 
 export default function Header() {
+  const isSp = useMediaQuery({ query: "(max-width: 1179px)" });
+
   const currentPath: string = usePathname();
   const searchParams = useSearchParams();
   const q = searchParams.get('q');
@@ -69,6 +72,7 @@ export default function Header() {
 
   const authState = useAppSelector((state) => state.auth);
 
+  const [isSearchFocused, setIsSearchFocused] = useState<boolean>(false);
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const [noticeOpen, setNoticeOpen] = useState<boolean>(false);
   const [cartOpen, setCartOpen] = useState<boolean>(false);
@@ -194,7 +198,7 @@ export default function Header() {
     // スクロールイベント
     window.addEventListener('scroll', handleScroll);
     // リダイレクトパス保存
-    if (!currentPath.startsWith('/login')) {
+    if (!currentPath.startsWith('/login') && !currentPath.startsWith('/signup')) {
       sessionStorage.setItem('redirect', currentPath);
     }
     // 移動時メニューバーを閉じてスクロール位置をトップに戻す
@@ -270,15 +274,17 @@ export default function Header() {
                     </div>
                   </div>
                   {customMenuItems.map((item, index) => (
-                    <ListItem
-                      key={index}
+                    <ListItem key={index} disablePadding
                       sx={{
-                        pl: 1, pr: 1, pb: index === customMenuItems.length - 1 ? "1.5rem" : 0,
+                        pb: index === customMenuItems.length - 1 ? "1.5rem" : 0,
                         borderBottom: index === customMenuItems.length - 1 ? "1px solid var(--gray-alpha-300)" : "none",
                       }}
-                      disablePadding
                     >
-                      <ListItemButton href={item.href} onClick={toggleDrawer(false)}>
+                      <ListItemButton
+                        href={item.href}
+                        onClick={toggleDrawer(false)}
+                        sx={{ ml: 1, mr: 1, borderRadius: "0.5rem" }}
+                      >
                         <ListItemIcon sx={{ minWidth: "3rem"}}>
                           {item.icon}
                         </ListItemIcon>
@@ -286,7 +292,6 @@ export default function Header() {
                       </ListItemButton>
                     </ListItem>
                   ))}
-
                 </>
               :
                 <div className="menu-top">
@@ -309,8 +314,12 @@ export default function Header() {
                     </ListItemButton>
                   </ListItem>
                   {group.groupItems.map((item, index) => (
-                    <ListItem sx={{ pl: 1, pr: 1 }} key={index} disablePadding>
-                      <ListItemButton href={item.href} onClick={toggleDrawer(false)}>
+                    <ListItem key={index} disablePadding>
+                      <ListItemButton
+                        href={item.href}
+                        onClick={toggleDrawer(false)}
+                        sx={{ ml: 1, mr: 1, borderRadius: "0.5rem" }}
+                      >
                         <ListItemIcon sx={{ minWidth: "3rem"}}>
                           {item.icon}
                         </ListItemIcon>
@@ -329,9 +338,11 @@ export default function Header() {
         </Drawer>
         <div className="left-container">
           {currentPath.startsWith("/search") ? (
-            <button onClick={() => router.back()}>
-              <ArrowBackRoundedIcon />
-            </button>
+            !isSp || !isSearchFocused ? (
+              <button onClick={() => router.back()}>
+                <ArrowBackRoundedIcon sx={{ marginRight: "0.75rem" }} />
+              </button>
+            ) : null
           ) : (
             <Link href="/" className="logo">
               {config.service.name}
@@ -339,7 +350,7 @@ export default function Header() {
           )}
         </div>
         <div className="right-container">
-          {!currentPath.startsWith("/search") &&
+          {!currentPath.startsWith("/search") && !currentPath.startsWith("/myshop") &&
             <CartDialog user={user} open={cartOpen} setOpen={setCartOpen} />
           }
           <SearchInput
@@ -348,6 +359,8 @@ export default function Header() {
             autoFocus={currentPath.startsWith("/search")}
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
+            onFocus={() => setIsSearchFocused(true)}
+            onBlur={() => setIsSearchFocused(false)}
             onKeyDown={searchHandle}
           />
           <IconButton

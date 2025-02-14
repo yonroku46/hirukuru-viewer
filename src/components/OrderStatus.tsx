@@ -1,6 +1,7 @@
 "use client";
 
 import { currency, orderStatusDict } from '@/common/utils/StringUtils';
+import Title from '@/components/layout/Title';
 
 import AlarmOnOutlinedIcon from '@mui/icons-material/AlarmOnOutlined';
 import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined';
@@ -23,9 +24,9 @@ export default function OrderStatus({ statusList }: OrderStatusProps) {
 
   return (
     <div className="status">
-      <h2 className="title">
-        本日の注文状況
-      </h2>
+      <Title
+        title="本日の注文状況"
+      />
       <div className="status-items-wrapper">
         {statusLabels.map(({ status, label, icon }) => {
           const findStatus = statusList.find((s) => s.status === status);

@@ -270,236 +270,238 @@ export default function SearchMapPage() {
   }, [isSp]);
 
   return (
-    <div className="search-map-page">
-      <div className="content-header">
-        <div className="filter-container container">
-          <div className="btn-wrapper">
-            <SwitchButton
-              labels={[{ label: "全て", value: "all" }, { label: "営業中", value: "open" }]}
-              onChange={(value: string) => {
-                setOpenOnly(value === "open");
-              }}
-            />
-          </div>
-          <div className="filter-wrapper">
-            <Selector
-              options={[
-                { label: "全て", value: "ALL" },
-                { label: "お弁当屋のみ", value: "BENTO" },
-                { label: "フードトラックのみ", value: "FOOD_TRUCK" }
-              ]}
-              value={shopType}
-              onChange={(event) => {
-                setShopType(event.target.value as "ALL" | ShopType["type"]);
-              }}
-            />
+    <article>
+      <div className="search-map-page">
+        <div className="content-header">
+          <div className="filter-container container">
+            <div className="btn-wrapper">
+              <SwitchButton
+                labels={[{ label: "全て", value: "all" }, { label: "営業中", value: "open" }]}
+                onChange={(value: string) => {
+                  setOpenOnly(value === "open");
+                }}
+              />
+            </div>
+            <div className="filter-wrapper">
+              <Selector
+                options={[
+                  { label: "全て", value: "ALL" },
+                  { label: "お弁当屋のみ", value: "BENTO" },
+                  { label: "フードトラックのみ", value: "FOOD_TRUCK" }
+                ]}
+                value={shopType}
+                onChange={(event) => {
+                  setShopType(event.target.value as "ALL" | ShopType["type"]);
+                }}
+              />
+            </div>
           </div>
         </div>
-      </div>
-      <div className={`content ${isSp && isMapVisible ? "open" : "close"}`}>
-        {/* Search Results */}
-        {isResultsVisible && (
-          <div className={`results ${isSp && isMapVisible ? "open" : "close"}`}>
-            <div className="results-wrapper">
-              <div>
-                検索結果
-                <span className="count">
-                  {filteredShops.length}
-                </span>
-                件
+        <div className={`content-body ${isSp && isMapVisible ? "open" : "close"}`}>
+          {/* Search Results */}
+          {isResultsVisible && (
+            <div className={`results ${isSp && isMapVisible ? "open" : "close"}`}>
+              <div className="results-wrapper">
+                <div>
+                  検索結果
+                  <span className="count">
+                    {filteredShops.length}
+                  </span>
+                  件
+                </div>
+                {isSp && !isMapVisible && (
+                  <MiniButton
+                    className="sp-map-btn"
+                    icon={<MapOutlinedIcon />}
+                    onClick={toggleMapVisibility}
+                    label="マップ表示"
+                  />
+                )}
               </div>
-              {isSp && !isMapVisible && (
+              <div className="results-list">
+                {filteredShops.map((shop, index) => (
+                  <ShopCard
+                    key={index}
+                    data={shop}
+                    href={`/shop/${shop.shopId}`}
+                    openNewTab
+                    onHover={() => activateMarkerForShop(shop.shopId)}
+                    onClick={() => activateMarkerForShop(shop.shopId)}
+                    isFavorite={favoriteShops.includes(shop.shopId)}
+                    handleFavorite={handleFavorite}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+          {/* Google Map */}
+          <div className={`map ${isSp && isMapVisible ? "open" : "close"}`}>
+            <button className="toggle-results-btn" onClick={toggleResultsVisibility}>
+              <KeyboardArrowRightIcon className={`arrow-icon ${isResultsVisible ? "open" : "close"}`} />
+              {!isResultsVisible &&
+                <span className="text">
+                  リスト表示
+                </span>
+              }
+            </button>
+            {isSp && isMapVisible && (
+              <>
                 <MiniButton
-                  className="sp-map-btn"
-                  icon={<MapOutlinedIcon />}
+                  className="sp-current-btn"
+                  icon={<MyLocationOutlinedIcon />}
+                  onClick={handleCurrentLocation}
+                />
+                <MiniButton
+                  className="sp-list-btn"
+                  icon={<ListOutlinedIcon />}
                   onClick={toggleMapVisibility}
-                  label="マップ表示"
+                  label="リスト表示"
                 />
-              )}
-            </div>
-            <div className="results-list">
-              {filteredShops.map((shop, index) => (
-                <ShopCard
-                  key={index}
-                  data={shop}
-                  href={`/shop/${shop.shopId}`}
-                  openNewTab
-                  onHover={() => activateMarkerForShop(shop.shopId)}
-                  onClick={() => activateMarkerForShop(shop.shopId)}
-                  isFavorite={favoriteShops.includes(shop.shopId)}
-                  handleFavorite={handleFavorite}
-                />
-              ))}
-            </div>
-          </div>
-        )}
-        {/* Google Map */}
-        <div className={`map ${isSp && isMapVisible ? "open" : "close"}`}>
-          <button className="toggle-results-btn" onClick={toggleResultsVisibility}>
-            <KeyboardArrowRightIcon className={`arrow-icon ${isResultsVisible ? "open" : "close"}`} />
-            {!isResultsVisible &&
-              <span className="text">
-                リスト表示
-              </span>
-            }
-          </button>
-          {isSp && isMapVisible && (
-            <>
+              </>
+            )}
+            <div className="zoom-btn-group">
+              <button className={`zoom-btn zoom-in ${zoomLevel >= maxZoom ? 'over' : ''}`} onClick={zoomIn}>
+                <AddIcon />
+              </button>
+              <button className={`zoom-btn zoom-out ${zoomLevel <= minZoom ? 'over' : ''}`} onClick={zoomOut}>
+                <RemoveIcon />
+              </button>
               <MiniButton
-                className="sp-current-btn"
+                className="current-btn"
                 icon={<MyLocationOutlinedIcon />}
                 onClick={handleCurrentLocation}
               />
-              <MiniButton
-                className="sp-list-btn"
-                icon={<ListOutlinedIcon />}
-                onClick={toggleMapVisibility}
-                label="リスト表示"
-              />
-            </>
-          )}
-          <div className="zoom-btn-group">
-            <button className={`zoom-btn zoom-in ${zoomLevel >= maxZoom ? 'over' : ''}`} onClick={zoomIn}>
-              <AddIcon />
-            </button>
-            <button className={`zoom-btn zoom-out ${zoomLevel <= minZoom ? 'over' : ''}`} onClick={zoomOut}>
-              <RemoveIcon />
-            </button>
-            <MiniButton
-              className="current-btn"
-              icon={<MyLocationOutlinedIcon />}
-              onClick={handleCurrentLocation}
-            />
-          </div>
-          <LoadScript
-            googleMapsApiKey={config.googleMaps.apiKey}
-            loadingElement={<Loading />}
-          >
-            <GoogleMap
-              mapContainerStyle={{ width: "100%", height: "100%" }}
-              onLoad={(mapInstance) => {
-                setMap(mapInstance);
-                // クリック時のデフォルトの情報ウィンドウを非表示にする
-                mapInstance.addListener("click", (e: google.maps.MapMouseEvent) => {
-                  e.stop();
-                });
-              }}
-              onBoundsChanged={handleBoundsChanged}
-              onZoomChanged={() => {
-                if (map) {
-                  setZoomLevel(map.getZoom() ?? 15);
-                }
-              }}
-              onClick={() => setActiveMarker(null)}
-              center={lastSelectedPosition || currentPlace?.position}
-              zoom={zoomLevel}
-              options={googleMapOptions}
+            </div>
+            <LoadScript
+              googleMapsApiKey={config.googleMaps.apiKey}
+              loadingElement={<Loading />}
             >
-              {currentPlace?.position && (
-                <Marker
-                  position={currentPlace?.position}
-                  icon={`/assets/icon/user-marker.svg`}
-                />
-              )}
-              <MarkerClusterer
-                options={{
-                  gridSize: 50,
-                  minimumClusterSize: 3,
-                  styles: [
-                    {
-                      url: '/assets/icon/marker-cluster.svg',
-                      height: 40,
-                      width: 40,
-                      textColor: 'var(--background)',
-                      textSize: 12,
-                    },
-                    {
-                      url: '/assets/icon/marker-cluster.svg',
-                      height: 50,
-                      width: 50,
-                      textColor: 'var(--background)',
-                      textSize: 14,
-                    },
-                    {
-                      url: '/assets/icon/marker-cluster.svg',
-                      height: 60,
-                      width: 60,
-                      textColor: 'var(--background)',
-                      textSize: 18,
-                    },
-                  ],
+              <GoogleMap
+                mapContainerStyle={{ width: "100%", height: "100%" }}
+                onLoad={(mapInstance) => {
+                  setMap(mapInstance);
+                  // クリック時のデフォルトの情報ウィンドウを非表示にする
+                  mapInstance.addListener("click", (e: google.maps.MapMouseEvent) => {
+                    e.stop();
+                  });
                 }}
+                onBoundsChanged={handleBoundsChanged}
+                onZoomChanged={() => {
+                  if (map) {
+                    setZoomLevel(map.getZoom() ?? 15);
+                  }
+                }}
+                onClick={() => setActiveMarker(null)}
+                center={lastSelectedPosition || currentPlace?.position}
+                zoom={zoomLevel}
+                options={googleMapOptions}
               >
-              {(clusterer) => (
-                <>
-                  {markPlaces.map((place, index) => {
-                    const shop = shops.find((s) => s.shopId === place.shopId);
-                    if (!shop) return null;
-                    return (
-                      <Marker
-                        key={index}
-                        position={place.position}
-                        icon={{
-                          url: `/assets/icon/${shop.shopType.toLowerCase()}-marker.svg`,
-                          scaledSize: new google.maps.Size(
-                            activeMarker === place.placeId ? 44 : 34,
-                            activeMarker === place.placeId ? 44 : 34
-                          )
-                        }}
-                        clusterer={clusterer}
-                        onClick={() => {
-                          setActiveMarker(place.placeId);
-                          setLastSelectedPosition(place.position);
-                        }}
-                        onMouseOver={() => {
-                          setActiveMarker(place.placeId);
-                        }}
-                      >
-                        {activeMarker === place.placeId && shop && (
-                          <InfoWindow
-                            onDomReady={() => {
-                              const infoWindowElement = document.querySelector('.info-window');
-                              if (infoWindowElement) {
-                                infoWindowElement.addEventListener('wheel', (e) => e.preventDefault());
-                              }
-                            }}
-                          >
-                            <Link href={`/shop/${shop.shopId}`} target="_blank">
-                              <div className="info-window">
-                                <div className="info-image">
-                                  <Image src={shop.thumbnailImg} alt={shop.shopName} width={220} height={120} />
-                                  <div className="close-btn-wrapper" onClick={handleCloseInfoWindow}>
-                                    <button className="close-btn">
-                                      <CloseIcon fontSize="small" />
-                                    </button>
-                                  </div>
-                                </div>
-                                <div className="info-content">
-                                  <div className="shop-title">
-                                    {shop.shopName}
-                                    <div className="shop-rating">
-                                      <StarRoundedIcon fontSize="small" style={{ color: 'var(--rating-color)' }} />
-                                      <span>{formatRating(shop.ratingAvg || 0)}</span>
+                {currentPlace?.position && (
+                  <Marker
+                    position={currentPlace?.position}
+                    icon={`/assets/icon/user-marker.svg`}
+                  />
+                )}
+                <MarkerClusterer
+                  options={{
+                    gridSize: 50,
+                    minimumClusterSize: 3,
+                    styles: [
+                      {
+                        url: '/assets/icon/marker-cluster.svg',
+                        height: 40,
+                        width: 40,
+                        textColor: 'var(--background)',
+                        textSize: 12,
+                      },
+                      {
+                        url: '/assets/icon/marker-cluster.svg',
+                        height: 50,
+                        width: 50,
+                        textColor: 'var(--background)',
+                        textSize: 14,
+                      },
+                      {
+                        url: '/assets/icon/marker-cluster.svg',
+                        height: 60,
+                        width: 60,
+                        textColor: 'var(--background)',
+                        textSize: 18,
+                      },
+                    ],
+                  }}
+                >
+                {(clusterer) => (
+                  <>
+                    {markPlaces.map((place, index) => {
+                      const shop = shops.find((s) => s.shopId === place.shopId);
+                      if (!shop) return null;
+                      return (
+                        <Marker
+                          key={index}
+                          position={place.position}
+                          icon={{
+                            url: `/assets/icon/${shop.shopType.toLowerCase()}-marker.svg`,
+                            scaledSize: new google.maps.Size(
+                              activeMarker === place.placeId ? 44 : 34,
+                              activeMarker === place.placeId ? 44 : 34
+                            )
+                          }}
+                          clusterer={clusterer}
+                          onClick={() => {
+                            setActiveMarker(place.placeId);
+                            setLastSelectedPosition(place.position);
+                          }}
+                          onMouseOver={() => {
+                            setActiveMarker(place.placeId);
+                          }}
+                        >
+                          {activeMarker === place.placeId && shop && (
+                            <InfoWindow
+                              onDomReady={() => {
+                                const infoWindowElement = document.querySelector('.info-window');
+                                if (infoWindowElement) {
+                                  infoWindowElement.addEventListener('wheel', (e) => e.preventDefault());
+                                }
+                              }}
+                            >
+                              <Link href={`/shop/${shop.shopId}`} target="_blank">
+                                <div className="info-window">
+                                  <div className="info-image">
+                                    <Image src={shop.thumbnailImg} alt={shop.shopName} width={220} height={120} />
+                                    <div className="close-btn-wrapper" onClick={handleCloseInfoWindow}>
+                                      <button className="close-btn">
+                                        <CloseIcon fontSize="small" />
+                                      </button>
                                     </div>
                                   </div>
-                                  <div className="shop-description">
-                                    {shop.shopIntro}
+                                  <div className="info-content">
+                                    <div className="shop-title">
+                                      {shop.shopName}
+                                      <div className="shop-rating">
+                                        <StarRoundedIcon fontSize="small" style={{ color: 'var(--rating-color)' }} />
+                                        <span>{formatRating(shop.ratingAvg || 0)}</span>
+                                      </div>
+                                    </div>
+                                    <div className="shop-description">
+                                      {shop.shopIntro}
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                            </Link>
-                          </InfoWindow>
-                        )}
-                      </Marker>
-                    );
-                  })}
-                </>
-              )}
-              </MarkerClusterer>
-            </GoogleMap>
-          </LoadScript>
+                              </Link>
+                            </InfoWindow>
+                          )}
+                        </Marker>
+                      );
+                    })}
+                  </>
+                )}
+                </MarkerClusterer>
+              </GoogleMap>
+            </LoadScript>
+          </div>
         </div>
       </div>
-    </div>
+    </article>
   );
 }

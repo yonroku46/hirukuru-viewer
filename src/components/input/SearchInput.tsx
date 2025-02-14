@@ -8,7 +8,7 @@ import FilterDialog from "@/components/FilterDialog";
 import SearchIcon from "@mui/icons-material/Search";
 import ClearIcon from "@mui/icons-material/Clear";
 
-interface SearchInputProps {
+interface SearchInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   value: string;
   placeholder?: string;
   searchMode?: boolean;
@@ -19,7 +19,7 @@ interface SearchInputProps {
   onFilterApply?: (updatedFilters: SearchFilter[]) => void;
 }
 
-export default function SearchInput({ value, placeholder, searchMode, autoFocus, onChange, onKeyDown, filters, onFilterApply }: SearchInputProps) {
+export default function SearchInput({ value, placeholder, searchMode, autoFocus, onChange, onKeyDown, filters, onFilterApply, ...props }: SearchInputProps) {
   const router = useRouter();
 
   const [showClearIcon, setShowClearIcon] = useState<boolean>(false);
@@ -101,6 +101,7 @@ export default function SearchInput({ value, placeholder, searchMode, autoFocus,
           value={value}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
+          {...props}
         />
         <ClearIcon className={`clear-icon ${showClearIcon ? "active" : ""}`} onClick={handleClick}/>
       </div>

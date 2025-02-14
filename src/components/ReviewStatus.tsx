@@ -1,6 +1,7 @@
 "use client";
 
 import { currency } from '@/common/utils/StringUtils';
+import Title from '@/components/layout/Title';
 
 import TaskAltOutlinedIcon from '@mui/icons-material/TaskAltOutlined';
 import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined';
@@ -17,9 +18,9 @@ export default function ReviewStatus({ statusList }: ReviewStatusProps) {
 
   return (
     <div className="status">
-      <h2 className="title">
-        マイレビュー
-      </h2>
+      <Title
+        title="マイレビュー"
+      />
       <div className="status-items-wrapper two-columns">
         {statusLabels.map(({ status, label, icon }) => {
           const findStatus = statusList.find((s) => s.status === status);

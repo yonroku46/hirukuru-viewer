@@ -1,9 +1,9 @@
 const buildConfig = () => {
-  const name = process.env.NEXT_PUBLIC_APP_NAME || "Univus";
+  const name = process.env.NEXT_PUBLIC_APP_NAME || "Hirukuru";
   const copyright = process.env.NEXT_PUBLIC_COPYRIGHT || "Univus Inc.";
-  const defaultTitle = process.env.NEXT_DEFAULT_METADATA_TITLE || "Welcome to Univus";
-  const defaultDescription = process.env.NEXT_DEFAULT_METADATA_DESCRIPTION || "Welcome to Univus";
-  const defaultKeywords = process.env.NEXT_DEFAULT_METADATA_KEYWORDS || "Univus,Univus Inc.";
+  const defaultTitle = process.env.NEXT_DEFAULT_METADATA_TITLE || "Hirukuru";
+  const defaultDescription = process.env.NEXT_DEFAULT_METADATA_DESCRIPTION || "ランチをラクに、余裕のある時間へ";
+  const defaultKeywords = process.env.NEXT_DEFAULT_METADATA_KEYWORDS || "Hirukuru,ヒルクル";
   const s3Prefix = process.env.NEXT_PUBLIC_S3_PREFIX || '';
   const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '';
   const squareSandboxId = process.env.NEXT_PUBLIC_SQUARE_SANDBOX_ID || '';
@@ -18,7 +18,7 @@ const buildConfig = () => {
         title: {
           absolute: defaultTitle,
           default: defaultTitle,
-          template: `%s | ${name}`,
+          template: `%s - ${name}`,
         },
         description: defaultDescription,
         keywords: defaultKeywords,

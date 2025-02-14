@@ -77,6 +77,7 @@ declare global {
     shopOwner: boolean;
   }
   interface ItemState extends Item {
+    categoryName?: string;
     quantity?: number;
   }
   interface OrderState extends Order {
@@ -224,9 +225,10 @@ declare global {
   interface Item {
     itemId: string;
     shopId: string;
-    category: string;
+    categoryId?: string;
     itemName: string;
     itemDescription?: string;
+    itemOrder: number;
     allergens?: string;
     itemPrice: number;
     discountPrice?: number;
@@ -240,6 +242,13 @@ declare global {
     optionId: string;
     optionName: string;
     optionPrice: number;
+    optionOrder: number;
+  }
+  interface ItemCategory {
+    categoryId: string;
+    shopId: string;
+    categoryName: string;
+    categoryOrder: number;
   }
 }
 

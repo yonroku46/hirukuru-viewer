@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import SearchInput from "@/components/input/SearchInput";
 import MuiBreadcrumbs from "@/components/mui/MuiBreadcrumbs";
+import Title from "@/components/layout/Title";
 
 import { styled } from '@mui/material/styles';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
@@ -21,6 +22,7 @@ import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
 import SupportAgentOutlinedIcon from '@mui/icons-material/SupportAgentOutlined';
+import ContactSupportIcon from '@mui/icons-material/ContactSupport';
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -61,7 +63,7 @@ const AccordionSummary = styled((props: AccordionSummaryProps) => (
 const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
   padding: theme.spacing(2),
   borderTop: '1px solid var(--gray-alpha-500)',
-  backgroundColor: 'rgba(0, 0, 0, .03)',
+  backgroundColor: 'rgba(0, 0, 0, .02)',
 }));
 
 export default function ServiceHelpPage() {
@@ -89,12 +91,12 @@ export default function ServiceHelpPage() {
     { icon: <HelpOutlineIcon />, label: 'その他', href: '/other' },
   ];
 
-  const helpQuestionList = [
-    { question: 'Q : 質問', answer: '回答' },
-    { question: 'Q : 質問', answer: '回答' },
-    { question: 'Q : 質問', answer: '回答' },
-    { question: 'Q : 質問', answer: '回答' },
-    { question: 'Q : 質問', answer: '回答' },
+  const helpQuestionList: { question: string, answer: string }[] = [
+    { question: 'サービスの利用方法は？', answer: 'サービスの利用方法は、まずアカウントを作成し、ログインしてください。\nその後、メニューからご希望のサービスを選択できるようになり、好きな商品を選択してご注文頂けます。\n新規で登録されたい店舗の方は、パートナー申請からお問い合わせください。' },
+    { question: '支払い方法は何ですか？', answer: '支払い方法は、クレジットカード、デビットカード、Apple Pay、Google Payが利用可能です。' },
+    { question: '注文後のキャンセルは可能ですか？', answer: '注文後のキャンセルは、予約待機状態の場合は無料になります。\nそれ以降のキャンセルにつきましてはお店側の判断にお任せしています。' },
+    { question: 'ポイントはどのように貯まりますか？', answer: 'ポイントは、サービスを利用するたびに貯まります。\n貯まったポイントは次回の利用時に割引として使用できます。' },
+    { question: 'サポートに連絡するにはどうすればいいですか？', answer: 'サポートに連絡するには、サービスページの「お問い合わせ」セクションからフォームを送信してください。' },
   ];
 
   return (
@@ -131,10 +133,12 @@ export default function ServiceHelpPage() {
             </div>
             {/* Help Category */}
             <div className="help-category-wrapper">
-              <h3>カテゴリーから探す</h3>
+              <Title
+                title="カテゴリーから探す"
+              />
               <div className="category-list">
                 {helpCategoryList.map((category, index) => (
-                  <Link key={index} href={`/service/help${category.href}`} className="category-item">
+                  <Link key={index} className="category-item" href={`/service/help${category.href}`}>
                     {category.icon}
                     {category.label}
                   </Link>
@@ -143,7 +147,9 @@ export default function ServiceHelpPage() {
             </div>
             {/* Help Question */}
             <div className="help-question-wrapper">
-              <h3>よくあるご質問</h3>
+              <Title
+                title="よくあるご質問"
+              />
               <div className="question-list">
                 {helpQuestionList.map((question, index) => (
                   <Accordion
@@ -152,7 +158,23 @@ export default function ServiceHelpPage() {
                     onChange={() => handleExpandItem(index)}
                     >
                       <AccordionSummary>
-                        <Typography component="span">
+                        <Typography
+                          component="span"
+                          sx={{
+                            fontWeight: expandItem === index ? 'bold' : 'normal',
+                            color: expandItem === index ? 'var(--primary-color)' : 'var(--foreground)'
+                          }}
+                        >
+                          <ContactSupportIcon
+                            sx={{
+                              position: 'absolute',
+                              top: '0.25rem',
+                              left: '0.25rem',
+                              opacity: 0.1,
+                              fontSize: '2rem',
+                              color: expandItem === index ? 'var(--primary-color)' : 'var(--foreground)'
+                            }}
+                          />
                           {question.question}
                         </Typography>
                       </AccordionSummary>

@@ -85,7 +85,7 @@ export default function MyPage() {
           <Link className="shop-mode-btn" href="/myshop">
             <div className="title">
               <StoreTwoToneIcon />
-              ショップ管理へ移動
+              店舗管理へ移動
             </div>
             <KeyboardArrowRightIcon className="arrow-icon" />
           </Link>

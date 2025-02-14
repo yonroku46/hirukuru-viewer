@@ -8,6 +8,7 @@ import SearchInput from "@/components/input/SearchInput";
 import ReviewStatus from "@/components/ReviewStatus";
 import MuiBreadcrumbs from "@/components/mui/MuiBreadcrumbs";
 import MuiTable from "@/components/mui/MuiTable";
+import Title from "@/components/layout/Title";
 
 export default function MyOrderReviewPage() {
   const breadcrumbs: Breadcrumb[] = [
@@ -112,9 +113,9 @@ export default function MyOrderReviewPage() {
         <MuiTable
           topSection={
             <div className="order-history">
-              <h2 className="title">
-                {`レビュー履歴 (${year}年${month}月)`}
-              </h2>
+              <Title
+                title={`レビュー履歴 (${year}年${month}月)`}
+              />
               <SearchInput
                 searchMode
                 placeholder="店舗名で検索"

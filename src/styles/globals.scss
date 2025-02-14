@@ -128,9 +128,6 @@ header {
       justify-content: flex-end;
       gap: 0.5rem;
       width: 100%;
-      .search-input {
-        margin-left: 0.75rem;
-      }
       .menu-btn {
         background-color: var(--background);
         border: 1px solid var(--gray-alpha-300);
@@ -274,6 +271,9 @@ img {
 }
 
 input, textarea {
+  border: 1px solid var(--gray-alpha-300);
+  border-radius: 0.75rem;
+  padding: 0.65rem;
   &:focus-visible {
     outline: none;
   }
@@ -349,6 +349,24 @@ table {
   border-bottom: 1px solid var(--gray-alpha-300);
 }
 
+.title-layer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  .title {
+    font-size: 1.125rem;
+    font-weight: bold;
+  }
+  .title-count {
+    font-size: 0.875rem;
+    font-weight: normal;
+    background-color: var(--foreground);
+    color: var(--background);
+    padding: 0.125rem 0.5rem;
+    border-radius: 0.5rem;
+  }
+}
+
 .main-menu {
   .menu-top {
     display: flex;
@@ -370,7 +388,6 @@ table {
     .user-wrapper {
       display: flex;
       flex-direction: column;
-      gap: 0.25rem;
       .user-name {
         font-size: 1.25rem;
       }
@@ -582,6 +599,7 @@ table {
         align-items: center;
         justify-content: flex-start;
         gap: 0.5rem;
+        font-size: 1.1rem;
         font-weight: bold;
         .shop-info-img {
           border-radius: 50%;
@@ -1424,7 +1442,7 @@ table {
       gap: 0.5rem;
     }
   }
-  .content {
+  .content-body {
     display: flex;
     width: 100%;
     .results {
@@ -1613,6 +1631,186 @@ table {
   }
 }
 
+.myshop-page {
+  padding: 0;
+  .content-header {
+    z-index: 11;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    border-top: 1px solid var(--gray-alpha-300);
+    border-bottom: 1px solid var(--gray-alpha-300);
+    position: sticky;
+    margin-top: -1px;
+    top: calc(var(--header-height) - 1px);
+    background-color: var(--background);
+    height: var(--map-filter-height);
+    .shop-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      .shop-profile-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        img {
+          border-radius: 50%;
+          border: 1px solid var(--gray-alpha-300);
+        }
+        .shop-name-wrapper {
+          display: flex;
+          flex-direction: column;
+          gap: 0.125rem;
+          .shop-location {
+            font-size: 0.875rem;
+            font-weight: normal;
+            line-height: 1;
+          }
+          .shop-name {
+            font-size: 1.1rem;
+            font-weight: bold;
+            line-height: 1;
+          }
+        }
+      }
+    }
+  }
+  .content-body {
+    display: flex;
+    width: 100%;
+    .tab-menu {
+      z-index: 2;
+      position: sticky;
+      padding: 1.5rem 0rem;
+      background-color: var(--background);
+      height: calc(100vh - var(--header-height) - var(--map-filter-height) + 1px);
+      left: 0;
+      top: calc(var(--header-height) + var(--map-filter-height) - 1px);
+      border-right: 1px solid var(--gray-alpha-300);
+      width: fit-content;
+      width: 240px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+    .tab-view {
+      z-index: 1;
+      flex: 1;
+      overflow: visible;
+      padding: 1.5rem 1rem;
+      background-color: var(--gray-alpha-100);
+      .tab-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        height: 2.75rem;
+        .edit-btn-group {
+          display: flex;
+          align-items: center;
+          gap: 0.25rem;
+        }
+      }
+      .tab-contents {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        background-color: var(--background);
+        border: 1px solid var(--gray-alpha-300);
+        border-radius: 0.5rem;
+        padding: 1rem;
+        &.dashboard {
+        }
+        &.shop-setting {
+          .shop-info-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            .shop-info-item {
+              display: flex;
+              align-items: baseline;
+              gap: 0.5rem;
+              label {
+                width: 80px;
+                font-weight: bold;
+                padding: 0.65rem 0;
+              }
+              p {
+                white-space: pre-wrap;
+              }
+              input, select, .selector {
+                width: 100%;
+                max-width: 300px;
+              }
+            }
+          }
+        }
+        &.item-setting {
+          .item-list-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            .category-group {
+              display: flex;
+              flex-direction: column;
+              gap: 0.5rem;
+              .category-title {
+                font-size: 1rem;
+                font-weight: bold;
+                padding-bottom: 0.25rem;
+                border-left: 4px solid var(--dialog-color);
+                padding-left: 0.25rem;
+              }
+              .item-list {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 1rem;
+              }
+            }
+          }
+        }
+        &.category-setting {
+          .category-list-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            .category-info {
+              display: flex;
+              align-items: center;
+              align-items: stretch;
+              .category-btn-group {
+                display: flex;
+                align-items: center;
+                margin-right: 0.5rem;
+              }
+              .category-order {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+                background-color: var(--gray-alpha-500);
+                color: var(--background);
+                padding: 0.5rem;
+                border-radius: 0.5rem 0 0 0.5rem;
+                width: 4rem;
+              }
+              .category-name {
+                display: flex;
+                align-items: center;
+                font-size: 1rem;
+                width: 100%;
+                border: 1px solid var(--gray-alpha-300);
+                padding: 0.5rem 1rem;
+                border-radius: 0 0.5rem 0.5rem 0;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 .my {
   gap: 2rem;
   .shop-mode-btn {
@@ -1653,7 +1851,6 @@ table {
       .user-name-wrapper {
         display: flex;
         flex-direction: column;
-        gap: 0.25rem;
         .user-name {
           display: flex;
           align-items: baseline;
@@ -1683,19 +1880,6 @@ table {
     flex-direction: column;
     gap: 1rem;
     width: 100%;
-    .title {
-      font-size: 1rem;
-      font-weight: bold;
-      .count {
-        font-size: 0.875rem;
-        font-weight: normal;
-        background-color: var(--foreground);
-        color: var(--background);
-        padding: 0.125rem 0.5rem;
-        margin-left: 0.5rem;
-        border-radius: 0.5rem;
-      }
-    }
     .search-wrapper {
       display: flex;
       justify-content: flex-end;
@@ -1734,10 +1918,6 @@ table {
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    .title {
-      font-size: 1rem;
-      font-weight: bold;
-    }
   }
 }
 
@@ -1764,10 +1944,6 @@ table {
     flex-direction: column;
     gap: 1rem;
     width: 100%;
-    .title {
-      font-size: 1.25rem;
-      font-weight: bold;
-    }
     .quick-select-wrapper {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
@@ -1800,10 +1976,6 @@ table {
     flex-direction: column;
     width: 100%;
     padding: 2rem 0;
-    .title {
-      font-size: 1.25rem;
-      font-weight: bold;
-    }
     .description {
       font-size: 1rem;
       font-weight: 300;
@@ -1876,10 +2048,6 @@ table {
   flex-direction: column;
   width: 100%;
   gap: 1rem;
-  .title {
-    font-size: 1rem;
-    font-weight: bold;
-  }
   .status-items-wrapper {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -1980,10 +2148,6 @@ table {
   gap: 1rem;
   width: 100%;
   border-radius: 0.5rem;
-  .title {
-    font-size: 1rem;
-    font-weight: bold;
-  }
   .link-list-items {
     display: grid;
     border: 1px solid var(--gray-alpha-300);
@@ -2642,10 +2806,6 @@ table {
       display: flex;
       justify-content: flex-start;
       flex-direction: column;
-      .title {
-        font-size: 1.25rem;
-        font-weight: bold;
-      }
     }
     .btn-wrapper {
       flex: 1;
@@ -2907,34 +3067,34 @@ table {
     align-items: stretch;
     padding: 3rem 0rem;
     background-color: var(--gray-alpha-200);
-    .guide-list {
+    .shop-guide-info {
       display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      width: 100%;
-      .title {
-        font-size: 1.25rem;
-        font-weight: bold;
-        margin-bottom: 0.5rem;
-      }
-      .guide-item {
+      align-items: flex-start;
+      gap: 1rem;
+      .guide-list {
         display: flex;
-        align-items: flex-start;
-        gap: 1rem;
-        padding: 1.5rem 1rem;
-        border: 1px solid var(--gray-alpha-300);
-        background-color: var(--background);
-        border-radius: 0.5rem;
-        .guide-item-title {
-          flex: 1;
+        flex-direction: column;
+        gap: 0.5rem;
+        width: 100%;
+        .guide-item {
           display: flex;
-          font-weight: bold;
-          gap: 0.5rem;
-        }
-        .guide-item-description {
-          flex: 4;
-          font-size: 0.875rem;
-          white-space: break-spaces;
+          align-items: flex-start;
+          gap: 1rem;
+          padding: 1.5rem 1rem;
+          border: 1px solid var(--gray-alpha-300);
+          background-color: var(--background);
+          border-radius: 0.5rem;
+          .guide-item-title {
+            flex: 1;
+            display: flex;
+            font-weight: bold;
+            gap: 0.5rem;
+          }
+          .guide-item-description {
+            flex: 4;
+            font-size: 0.875rem;
+            white-space: break-spaces;
+          }
         }
       }
     }
@@ -3005,10 +3165,6 @@ table {
   flex-direction: column;
   gap: 2rem;
   padding-bottom: 2rem;
-  .title {
-    font-size: 1rem;
-    font-weight: bold;
-  }
   .service-page {
     width: 100%;
     .service-intro-wrapper {
@@ -3302,11 +3458,12 @@ table {
       padding: 0 2rem;
       .thanks {
         font-size: 0.9rem;
-        background-color: var(--gray-alpha-500);
+        background-color: var(--primary-color);
         color: var(--background);
         padding: 0.5rem 1.5rem;
         border-radius: 3rem;
         width: fit-content;
+        margin-left: -1rem;
         &.partner {
           background-color: var(--accent-color);
         }
@@ -3488,7 +3645,7 @@ table {
             padding: 1.5rem 1rem;
             cursor: pointer;
             svg {
-              font-size: 2rem;
+              font-size: 2.5rem;
             }
           }
         }
@@ -3837,7 +3994,7 @@ table {
         padding: 0;
       }
     }
-    .content {
+    .content-body {
       flex-direction: column-reverse;
       &.open {
         height: calc(100vh - var(--header-height) - var(--map-filter-height) + 1px);
@@ -3957,6 +4114,20 @@ table {
       .guide-list {
         .guide-item {
           flex-direction: column;
+        }
+      }
+    }
+  }
+  .myshop-page {
+    .content-body {
+      .tab-menu {
+        position: absolute;
+        transition: transform 0.2s;
+        &.open {
+          transform: translateX(0);
+        }
+        &.close {
+          transform: translateX(-100%);
         }
       }
     }

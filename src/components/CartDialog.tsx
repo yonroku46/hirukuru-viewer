@@ -103,6 +103,7 @@ export default function CartDialog({ user, open, setOpen }: CartDialogProps) {
 
   const orderService = OrderService();
 
+  const [now, setNow] = useState<Dayjs>(dateNow());
   const [deleteMode, setDeleteMode] = useState<boolean>(false);
   const [shopInfo, setShopInfo] = useState<Shop | null>(null);
   const [cartItems, setCartItems] = useState<ItemState[]>([]);
@@ -112,7 +113,7 @@ export default function CartDialog({ user, open, setOpen }: CartDialogProps) {
 
   const [availableHourOptions, setAvailableHourOptions] = useState<{ label: string, value: string }[]>([]);
   const [minDate, setMinDate] = useState<Dayjs | undefined>(undefined);
-  const [pickupDate, setPickupDate] = useState<string>(dateNow().format('YYYY-MM-DD'));
+  const [pickupDate, setPickupDate] = useState<string>(now.format('YYYY-MM-DD'));
   const [pickupPeriod, setPickupPeriod] = useState<"AM" | "PM">("AM");
   const [pickupTimeHour, setPickupTimeHour] = useState<string>("00");
   const [pickupTimeMinutes, setPickupTimeMinutes] = useState<string>("00");
@@ -165,6 +166,7 @@ export default function CartDialog({ user, open, setOpen }: CartDialogProps) {
       const isOpenToday = shopInfo?.businessHours?.some((hour) => hour.dayOfWeek === today);
       const initialPickupDate = isOpenToday ? now.format('YYYY-MM-DD') : getNextBusinessDay(shopInfo?.businessHours || []).format('YYYY-MM-DD');
 
+      setNow(now);
       setDeleteMode(false);
       setPaymentStep('READY');
       setMinDate(dayjs(initialPickupDate));
@@ -193,15 +195,18 @@ export default function CartDialog({ user, open, setOpen }: CartDialogProps) {
       // 営業時間を基に時間帯を生成
       const allOptions = [];
       const now = dateNow();
-      const todayHours = shopInfo?.businessHours?.find((hour) => hour.dayOfWeek === now.format('ddd').toLowerCase());
-      if (todayHours) {
-        const openHour = parseInt(todayHours.openTime.split(':')[0], 10);
-        const closeHour = parseInt(todayHours.closeTime.split(':')[0], 10);
-        for (let hour = openHour; hour <= closeHour; hour++) {
-          const formattedHour = hour.toString().padStart(2, '0');
-          const label = `${formattedHour}時`;
-          allOptions.push({ label, value: formattedHour });
-        }
+      const businessHours = shopInfo?.businessHours || [];
+      const todayHours = businessHours.find((hour) => hour.dayOfWeek === now.format('ddd').toLowerCase());
+      const nextBusinessDay = getNextBusinessDay(businessHours);
+      const targetHours = todayHours || businessHours.find((hour) => hour.dayOfWeek === nextBusinessDay.format('ddd').toLowerCase());
+
+      const openHour = targetHours ? parseInt(targetHours.openTime.split(':')[0], 10) : 0;
+      const closeHour = targetHours ? parseInt(targetHours.closeTime.split(':')[0], 10) : 23;
+
+      for (let hour = openHour; hour <= closeHour; hour++) {
+        const formattedHour = hour.toString().padStart(2, '0');
+        const label = `${formattedHour}時`;
+        allOptions.push({ label, value: formattedHour });
       }
 
       // 現在時刻とservingTimeを考慮して選択可能な時間帯を再設定
@@ -248,10 +253,14 @@ export default function CartDialog({ user, open, setOpen }: CartDialogProps) {
       // 現在時刻とservingTimeを考慮して選択可能な分を再設定
       const now = dateNow();
       const isToday = pickupDate === now.format('YYYY-MM-DD');
-      const todayHours = shopInfo?.businessHours?.find((hour) => hour.dayOfWeek === now.format('ddd').toLowerCase());
-      if (todayHours) {
-        const openTime = dayjs(`${pickupDate} ${todayHours.openTime}`);
-        const closeTime = dayjs(`${pickupDate} ${todayHours.closeTime}`);
+      const businessHours = shopInfo?.businessHours || [];
+      const todayHours = businessHours.find((hour) => hour.dayOfWeek === now.format('ddd').toLowerCase());
+      const nextBusinessDay = getNextBusinessDay(businessHours);
+      const targetHours = todayHours || businessHours.find((hour) => hour.dayOfWeek === nextBusinessDay.format('ddd').toLowerCase());
+
+      if (targetHours) {
+        const openTime = dayjs(`${pickupDate} ${targetHours.openTime}`);
+        const closeTime = dayjs(`${pickupDate} ${targetHours.closeTime}`);
         const servingMinutes = shopInfo?.servingMinutes || 0;
         const currentTimeWithServing = isToday ? now.add(servingMinutes, 'minute') : now;
 
@@ -570,7 +579,7 @@ export default function CartDialog({ user, open, setOpen }: CartDialogProps) {
               return shopInfo.businessHours.some((hour) => hour.dayOfWeek === dayOfWeek);
             }}
             onChange={(date) => {
-              setPickupDate(date ? date.format('YYYY-MM-DD') : dateNow().format('YYYY-MM-DD'));
+              setPickupDate(date ? date.format('YYYY-MM-DD') : now.format('YYYY-MM-DD'));
             }}
           />
         </div>
@@ -582,9 +591,8 @@ export default function CartDialog({ user, open, setOpen }: CartDialogProps) {
             <button
               className={`pickup-option ${pickupPeriod === "AM" ? "active" : ""}`}
               onClick={() => setPickupPeriod("AM")}
-              disabled={pickupDate === dateNow().format('YYYY-MM-DD') &&
-                dateNow().hour() >= 12 ||
-                dateNow().add((shopInfo?.servingMinutes || 0) + 5, 'minute').hour() >= 12
+              disabled={pickupDate === now.format('YYYY-MM-DD') &&
+                (now.hour() >= 12 || now.add((shopInfo?.servingMinutes || 0) + 5, 'minute').hour() >= 12)
               }
             >
               午前
@@ -640,7 +648,7 @@ export default function CartDialog({ user, open, setOpen }: CartDialogProps) {
             </div>
             <div className="detail-info">
               <label>受け取り予定</label>
-              {dateNow().day() === dayjs(pickupDate).day() ?
+              {now.day() === dayjs(pickupDate).day() ?
                 `${pickupTimeHour}:${pickupTimeMinutes}
                 (約${timeUntil(dayjs(`${pickupDate} ${pickupTimeHour}:${pickupTimeMinutes}`))})`
                 :
@@ -649,8 +657,8 @@ export default function CartDialog({ user, open, setOpen }: CartDialogProps) {
             </div>
             <div className="detail-info description">
               <label />
-              {dateNow().day() === dayjs(pickupDate).day() ?
-                `現在時刻${dateNow().format('HH:mm')}基準`
+              {now.day() === dayjs(pickupDate).day() ?
+                `現在時刻${now.format('HH:mm')}基準`
                 :
                 `明日以降の予約注文になります`
               }

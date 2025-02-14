@@ -3,6 +3,8 @@
 import React from "react";
 import { useMediaQuery } from 'react-responsive';
 import Link from "next/link";
+import Title from "@/components/layout/Title";
+
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 
 interface LinkListProps {
@@ -15,9 +17,9 @@ export default function LinkList({ title, linkList }: LinkListProps) {
 
   return (
     <div className="link-list">
-      <h2 className="title">
-        {title}
-      </h2>
+      <Title
+        title={title}
+      />
       <div className="link-list-items">
         {linkList.map((link, index) => (
           <Link

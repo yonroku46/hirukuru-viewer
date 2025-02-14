@@ -2,9 +2,10 @@
 
 export default function SearchRankingPage() {
   return (
-    <div className="search-ranking-page">
-      <div className="container">
-        <div className="content-header">
+    <article>
+      <div className="search-ranking-page">
+        <div className="container">
+          <div className="content-header">
           <div className="title-wrapper">
             <h1>地域別</h1>
             <h1>ランキング</h1>
@@ -22,9 +23,10 @@ export default function SearchRankingPage() {
                 <h1>1位</h1>
               </div>
             </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </article>
   );
 }
