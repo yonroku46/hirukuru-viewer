@@ -24,8 +24,8 @@ import ManageSearchIcon from '@mui/icons-material/ManageSearch';
 import FlatwareIcon from '@mui/icons-material/Flatware';
 import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
 import ContactSupportIcon from '@mui/icons-material/ContactSupport';
-import MenuIcon from '@mui/icons-material/Menu';
 import Backdrop from "@mui/material/Backdrop";
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 export default function MyShopPage() {
   const isSp = useMediaQuery({ query: "(max-width: 1179px)" });
@@ -117,12 +117,12 @@ export default function MyShopPage() {
       shopType: 'BENTO',
       servingMinutes: 15,
       profileImg: 'https://i.pinimg.com/236x/71/65/43/716543eb8e6907d7163b55000376e2be.jpg',
-      thumbnailImg: 'https://i.pinimg.com/236x/71/65/43/716543eb8e6907d7163b55000376e2be.jpg',
+      thumbnailImg: 'https://i.pinimg.com/736x/64/70/a6/6470a637276c688063bb053c5c116507.jpg',
       businessHours: [
-        { dayOfWeek: 'mon', openTime: '10:10', closeTime: '23:50', businessDay: true },
-        { dayOfWeek: 'tue', openTime: '10:10', closeTime: '23:50', businessDay: true },
-        { dayOfWeek: 'wed', openTime: '10:10', closeTime: '23:50', businessDay: true },
-        { dayOfWeek: 'thu', openTime: '10:10', closeTime: '23:50', businessDay: true },
+        { dayOfWeek: 'MON', openTime: '10:10', closeTime: '23:50', businessDay: true },
+        { dayOfWeek: 'TUE', openTime: '10:10', closeTime: '23:50', businessDay: true },
+        { dayOfWeek: 'WED', openTime: '10:10', closeTime: '23:50', businessDay: true },
+        { dayOfWeek: 'THU', openTime: '10:10', closeTime: '23:50', businessDay: true },
       ],
       reviewCount: 1120,
       ratingAvg: 4.5,
@@ -153,8 +153,11 @@ export default function MyShopPage() {
           <div className="shop-info">
             <div className="shop-profile-wrapper">
               {isSp && (
-                <button className="shop-menu-btn" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-                  <MenuIcon />
+                <button
+                  className={`shop-menu-btn ${isMenuOpen ? "open" : ""}`}
+                  onClick={() => setIsMenuOpen(!isMenuOpen)}
+                >
+                  <KeyboardArrowDownIcon />
                 </button>
               )}
               <Image

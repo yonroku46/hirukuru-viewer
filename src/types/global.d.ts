@@ -98,6 +98,9 @@ declare global {
     value: number;
   }
   // Type
+  interface DayType {
+    type: 'MON' | 'TUE' | 'WED' | 'THU' | 'FRI' | 'SAT' | 'SUN';
+  }
   interface PayType {
     type: 'CASH' | 'CARD' | 'APPLE' | 'GOOGLE';
   }
@@ -186,7 +189,7 @@ declare global {
     };
   }
   interface BusinessHour {
-    dayOfWeek: 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun';
+    dayOfWeek: DayType['type'];
     openTime: string;
     closeTime: string;
     businessDay: boolean;

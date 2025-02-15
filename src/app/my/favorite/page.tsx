@@ -41,20 +41,20 @@ export default function FavoritePage() {
       { shopId: '1', location: '福岡市博多区', shopName: '唐揚げ壱番屋', shopIntro: '揚げ物専門店', shopType: 'BENTO',
         profileImg: 'https://i.pinimg.com/236x/71/65/43/716543eb8e6907d7163b55000376e2be.jpg',
         thumbnailImg: 'https://i.pinimg.com/236x/71/65/43/716543eb8e6907d7163b55000376e2be.jpg', ratingAvg: 4.5, businessHours: [
-          { dayOfWeek: 'mon', openTime: '10:00', closeTime: '23:50', businessDay: true },
-          { dayOfWeek: 'tue', openTime: '10:00', closeTime: '23:50', businessDay: true },
-          { dayOfWeek: 'wed', openTime: '10:00', closeTime: '23:50', businessDay: true },
-          { dayOfWeek: 'thu', openTime: '10:00', closeTime: '23:50', businessDay: true },
-          { dayOfWeek: 'fri', openTime: '10:00', closeTime: '23:50', businessDay: true },
-          { dayOfWeek: 'sat', openTime: '10:00', closeTime: '23:50', businessDay: true },
-          { dayOfWeek: 'sun', openTime: '10:00', closeTime: '23:50', businessDay: true },
+          { dayOfWeek: 'MON', openTime: '10:00', closeTime: '23:50', businessDay: true },
+          { dayOfWeek: 'TUE', openTime: '10:00', closeTime: '23:50', businessDay: true },
+          { dayOfWeek: 'WED', openTime: '10:00', closeTime: '23:50', businessDay: true },
+          { dayOfWeek: 'THU', openTime: '10:00', closeTime: '23:50', businessDay: true },
+          { dayOfWeek: 'FRI', openTime: '10:00', closeTime: '23:50', businessDay: true },
+          { dayOfWeek: 'SAT', openTime: '10:00', closeTime: '23:50', businessDay: true },
+          { dayOfWeek: 'SUN', openTime: '10:00', closeTime: '23:50', businessDay: true },
         ]
       },
       { shopId: '2', location: '福岡市中央区', shopName: 'チキンが一番', shopIntro: 'チキン専門店', shopType: 'BENTO',
         profileImg: 'https://i.pinimg.com/236x/71/65/43/716543eb8e6907d7163b55000376e2be.jpg',
         thumbnailImg: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', ratingAvg: 4.0, businessHours: [
-          { dayOfWeek: 'mon', openTime: '10:00', closeTime: '20:00', businessDay: true },
-          { dayOfWeek: 'wed', openTime: '10:00', closeTime: '20:00', businessDay: true },
+          { dayOfWeek: 'MON', openTime: '10:00', closeTime: '20:00', businessDay: true },
+          { dayOfWeek: 'WED', openTime: '10:00', closeTime: '20:00', businessDay: true },
         ]
       },
     ];

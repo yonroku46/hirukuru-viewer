@@ -187,48 +187,48 @@ export default function SearchMapPage() {
       { shopId: '1', location: '福岡市博多区', shopName: '唐揚げ壱番屋', shopIntro: '揚げ物専門店', shopType: 'BENTO',
         profileImg: 'https://i.pinimg.com/236x/71/65/43/716543eb8e6907d7163b55000376e2be.jpg',
         thumbnailImg: 'https://i.pinimg.com/236x/71/65/43/716543eb8e6907d7163b55000376e2be.jpg', ratingAvg: 4.5, businessHours: [
-          { dayOfWeek: 'mon', openTime: '10:00', closeTime: '23:50', businessDay: true },
-          { dayOfWeek: 'tue', openTime: '10:00', closeTime: '23:50', businessDay: true },
-          { dayOfWeek: 'wed', openTime: '10:00', closeTime: '23:50', businessDay: true },
-          { dayOfWeek: 'thu', openTime: '10:00', closeTime: '23:50', businessDay: true },
-          { dayOfWeek: 'fri', openTime: '10:00', closeTime: '23:50', businessDay: true },
-          { dayOfWeek: 'sat', openTime: '10:00', closeTime: '23:50', businessDay: true },
-          { dayOfWeek: 'sun', openTime: '10:00', closeTime: '23:50', businessDay: true },
+          { dayOfWeek: 'MON', openTime: '10:00', closeTime: '23:50', businessDay: true },
+          { dayOfWeek: 'TUE', openTime: '10:00', closeTime: '23:50', businessDay: true },
+          { dayOfWeek: 'WED', openTime: '10:00', closeTime: '23:50', businessDay: true },
+          { dayOfWeek: 'THU', openTime: '10:00', closeTime: '23:50', businessDay: true },
+          { dayOfWeek: 'FRI', openTime: '10:00', closeTime: '23:50', businessDay: true },
+          { dayOfWeek: 'SAT', openTime: '10:00', closeTime: '23:50', businessDay: true },
+          { dayOfWeek: 'SUN', openTime: '10:00', closeTime: '23:50', businessDay: true },
         ]
       },
       { shopId: '2', location: '福岡市中央区', shopName: 'チキンが一番', shopIntro: 'チキン専門店', shopType: 'BENTO',
         profileImg: 'https://i.pinimg.com/236x/71/65/43/716543eb8e6907d7163b55000376e2be.jpg',
         thumbnailImg: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', ratingAvg: 4.0, businessHours: [
-          { dayOfWeek: 'mon', openTime: '10:00', closeTime: '20:00', businessDay: true },
-          { dayOfWeek: 'wed', openTime: '10:00', closeTime: '20:00', businessDay: true },
+          { dayOfWeek: 'MON', openTime: '10:00', closeTime: '20:00', businessDay: true },
+          { dayOfWeek: 'WED', openTime: '10:00', closeTime: '20:00', businessDay: true },
         ]
       },
       { shopId: '3', location: '福岡市中央区', shopName: 'Chiken Box', shopIntro: 'フードトラックで美味しいチキン', shopType: 'FOOD_TRUCK',
         profileImg: 'https://i.pinimg.com/236x/71/65/43/716543eb8e6907d7163b55000376e2be.jpg',
         thumbnailImg: 'https://i.pinimg.com/736x/44/75/35/44753517c49efeff49e77071cc306041.jpg', ratingAvg: 4.0, businessHours: [
-          { dayOfWeek: 'mon', openTime: '10:00', closeTime: '20:00', businessDay: true },
-          { dayOfWeek: 'wed', openTime: '10:00', closeTime: '20:00', businessDay: true },
+          { dayOfWeek: 'MON', openTime: '10:00', closeTime: '20:00', businessDay: true },
+          { dayOfWeek: 'WED', openTime: '10:00', closeTime: '20:00', businessDay: true },
         ]
       },
       { shopId: '4', location: '福岡市中央区', shopName: '天神トラック', shopIntro: '天神で自慢のランチ', shopType: 'FOOD_TRUCK',
         profileImg: 'https://i.pinimg.com/236x/71/65/43/716543eb8e6907d7163b55000376e2be.jpg',
         thumbnailImg: 'https://i.pinimg.com/736x/64/70/a6/6470a637276c688063bb053c5c116507.jpg', ratingAvg: 4.0, businessHours: [
-          { dayOfWeek: 'mon', openTime: '10:00', closeTime: '20:00', businessDay: true },
-          { dayOfWeek: 'wed', openTime: '10:00', closeTime: '20:00', businessDay: true },
+          { dayOfWeek: 'MON', openTime: '10:00', closeTime: '20:00', businessDay: true },
+          { dayOfWeek: 'WED', openTime: '10:00', closeTime: '20:00', businessDay: true },
         ]
       },
       { shopId: '5', location: '福岡市中央区', shopName: '田島春', shopIntro: 'カレー専門店', shopType: 'FOOD_TRUCK',
         profileImg: 'https://i.pinimg.com/236x/71/65/43/716543eb8e6907d7163b55000376e2be.jpg',
         thumbnailImg: 'https://i.pinimg.com/736x/57/53/14/575314964f78cc3d80968427e55a4ebf.jpg', ratingAvg: 4.0, businessHours: [
-          { dayOfWeek: 'mon', openTime: '10:00', closeTime: '20:00', businessDay: true },
-          { dayOfWeek: 'wed', openTime: '10:00', closeTime: '20:00', businessDay: true },
+          { dayOfWeek: 'MON', openTime: '10:00', closeTime: '20:00', businessDay: true },
+          { dayOfWeek: 'WED', openTime: '10:00', closeTime: '20:00', businessDay: true },
         ]
       },
       { shopId: '6', location: '福岡市中央区', shopName: '肉弁や', shopIntro: '肉が一番', shopType: 'BENTO',
         profileImg: 'https://i.pinimg.com/236x/71/65/43/716543eb8e6907d7163b55000376e2be.jpg',
         thumbnailImg: 'https://i.pinimg.com/736x/56/38/5d/56385dd21968602af62ce30156914743.jpg', ratingAvg: 4.0, businessHours: [
-          { dayOfWeek: 'mon', openTime: '10:00', closeTime: '20:00', businessDay: true },
-          { dayOfWeek: 'wed', openTime: '10:00', closeTime: '20:00', businessDay: true },
+          { dayOfWeek: 'MON', openTime: '10:00', closeTime: '20:00', businessDay: true },
+          { dayOfWeek: 'WED', openTime: '10:00', closeTime: '20:00', businessDay: true },
         ]
       },
     ];

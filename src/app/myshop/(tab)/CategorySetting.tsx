@@ -54,6 +54,7 @@ function ItemSetting({ isSp, shop }: SettingProps)  {
       { categoryId: '3', shopId: dummyShopId, categoryName: '定番弁当', categoryOrder: 3 },
     ];
     setCategories(dummyCategories);
+    setTempCategories(dummyCategories);
   }, []);
 
   useEffect(() => {
@@ -61,8 +62,9 @@ function ItemSetting({ isSp, shop }: SettingProps)  {
   }, [shop]);
 
   useEffect(() => {
-    setTempCategories(categories);
-  }, [categories]);
+    console.log(categories[0]);
+    console.log(tempCategories[0]);
+  }, [categories, tempCategories]);
 
   return (
     <Suspense fallback={<Loading circular />}>

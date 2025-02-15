@@ -5,9 +5,9 @@ import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-export const daysOrder = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
-export const dayMap: { [key: string]: string } = {
-  mon: '月',  tue: '火',  wed: '水',  thu: '木',  fri: '金',  sat: '土',  sun: '日',
+export const daysOrder: DayType['type'][] = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+export const dayMap: { [key in DayType['type']]: string } = {
+  MON: '月',  TUE: '火',  WED: '水',  THU: '木',  FRI: '金',  SAT: '土',  SUN: '日',
 };
 
 export const dateNow = (): dayjs.Dayjs => {
@@ -15,7 +15,7 @@ export const dateNow = (): dayjs.Dayjs => {
 };
 
 export function isBusinessOpen(businessHours: BusinessHour[]): boolean {
-  const today = dayjs().format('ddd').toLowerCase();
+  const today = dayjs().format('ddd').toUpperCase() as DayType['type'];
   const currentTime = dayjs().hour() * 100 + dayjs().minute();
   const todayHours = businessHours.find((hour) => hour.dayOfWeek === today);
 
@@ -29,7 +29,7 @@ export function isBusinessOpen(businessHours: BusinessHour[]): boolean {
 }
 
 export function formatTodayBusinessHours(businessHours: BusinessHour[]): string {
-  const today = dayjs().format('ddd').toLowerCase();
+  const today = dayjs().format('ddd').toUpperCase() as DayType['type'];
   const todayHours = businessHours.find((hour) => hour.dayOfWeek === today);
 
   if (todayHours) {

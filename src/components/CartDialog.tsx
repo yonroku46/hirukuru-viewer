@@ -162,7 +162,7 @@ export default function CartDialog({ user, open, setOpen }: CartDialogProps) {
     // 初期化
     if (open) {
       const now = dateNow();
-      const today = now.format('ddd').toLowerCase();
+      const today = now.format('ddd').toUpperCase() as DayType['type'];
       const isOpenToday = shopInfo?.businessHours?.some((hour) => hour.dayOfWeek === today);
       const initialPickupDate = isOpenToday ? now.format('YYYY-MM-DD') : getNextBusinessDay(shopInfo?.businessHours || []).format('YYYY-MM-DD');
 
@@ -196,9 +196,9 @@ export default function CartDialog({ user, open, setOpen }: CartDialogProps) {
       const allOptions = [];
       const now = dateNow();
       const businessHours = shopInfo?.businessHours || [];
-      const todayHours = businessHours.find((hour) => hour.dayOfWeek === now.format('ddd').toLowerCase());
+      const todayHours = businessHours.find((hour) => hour.dayOfWeek === now.format('ddd').toUpperCase() as DayType['type']);
       const nextBusinessDay = getNextBusinessDay(businessHours);
-      const targetHours = todayHours || businessHours.find((hour) => hour.dayOfWeek === nextBusinessDay.format('ddd').toLowerCase());
+      const targetHours = todayHours || businessHours.find((hour) => hour.dayOfWeek === nextBusinessDay.format('ddd').toUpperCase() as DayType['type']);
 
       const openHour = targetHours ? parseInt(targetHours.openTime.split(':')[0], 10) : 0;
       const closeHour = targetHours ? parseInt(targetHours.closeTime.split(':')[0], 10) : 23;
@@ -254,9 +254,9 @@ export default function CartDialog({ user, open, setOpen }: CartDialogProps) {
       const now = dateNow();
       const isToday = pickupDate === now.format('YYYY-MM-DD');
       const businessHours = shopInfo?.businessHours || [];
-      const todayHours = businessHours.find((hour) => hour.dayOfWeek === now.format('ddd').toLowerCase());
+      const todayHours = businessHours.find((hour) => hour.dayOfWeek === now.format('ddd').toUpperCase() as DayType['type']);
       const nextBusinessDay = getNextBusinessDay(businessHours);
-      const targetHours = todayHours || businessHours.find((hour) => hour.dayOfWeek === nextBusinessDay.format('ddd').toLowerCase());
+      const targetHours = todayHours || businessHours.find((hour) => hour.dayOfWeek === nextBusinessDay.format('ddd').toUpperCase() as DayType['type']);
 
       if (targetHours) {
         const openTime = dayjs(`${pickupDate} ${targetHours.openTime}`);
@@ -483,7 +483,7 @@ export default function CartDialog({ user, open, setOpen }: CartDialogProps) {
       return (
         <button
           key={minute}
-          className={`pickup-option ${pickupTimeMinutes === minuteString ? "active" : ""}`}
+          className={`minute-option ${pickupTimeMinutes === minuteString ? "active" : ""}`}
           onClick={() => setPickupTimeMinutes(minuteString)}
           disabled={disableMinutesList.includes(minuteString)}
         >
@@ -575,7 +575,7 @@ export default function CartDialog({ user, open, setOpen }: CartDialogProps) {
             minDate={minDate || undefined}
             filterDate={(date) => {
               if (!shopInfo || !shopInfo.businessHours) return false;
-              const dayOfWeek = date.format('ddd').toLowerCase();
+              const dayOfWeek = date.format('ddd').toUpperCase() as DayType['type'];
               return shopInfo.businessHours.some((hour) => hour.dayOfWeek === dayOfWeek);
             }}
             onChange={(date) => {
@@ -589,7 +589,7 @@ export default function CartDialog({ user, open, setOpen }: CartDialogProps) {
           </div>
           <div className="pickup-option-hour-wrapper">
             <button
-              className={`pickup-option ${pickupPeriod === "AM" ? "active" : ""}`}
+              className={`period-option ${pickupPeriod === "AM" ? "active" : ""}`}
               onClick={() => setPickupPeriod("AM")}
               disabled={pickupDate === now.format('YYYY-MM-DD') &&
                 (now.hour() >= 12 || now.add((shopInfo?.servingMinutes || 0) + 5, 'minute').hour() >= 12)
@@ -598,7 +598,7 @@ export default function CartDialog({ user, open, setOpen }: CartDialogProps) {
               午前
             </button>
             <button
-              className={`pickup-option ${pickupPeriod === "PM" ? "active" : ""}`}
+              className={`period-option ${pickupPeriod === "PM" ? "active" : ""}`}
               onClick={() => setPickupPeriod("PM")}
             >
               午後

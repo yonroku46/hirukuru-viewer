@@ -10,7 +10,7 @@ export default function Title({ title, count, countUnit }: TitleProps) {
       <h2 className="title">
         {title}
       </h2>
-      {count && countUnit && (
+      {count !== undefined && countUnit !== undefined && (
         <span className="title-count">
           {count}
           {countUnit}

@@ -20,6 +20,7 @@ function Dashboard({ shop }: SettingProps)  {
         />
       </div>
       <div className="tab-contents dashboard">
+        ダッシュボード機能は準備中です
       </div>
     </Suspense>
   );

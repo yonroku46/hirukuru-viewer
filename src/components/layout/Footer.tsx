@@ -8,7 +8,7 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 
 const menuItems: GroupMenuItem[] = [
   { groupName: "注文", groupHref: "/search", groupItems: [
-    { name: "弁当/店舗検索", href: "/search/map" },
+    { name: "店舗検索", href: "/search/map" },
     { name: "ランキング", href: "/search/ranking" },
   ]},
   { groupName: "サービス", groupHref: "/service", groupItems: [
