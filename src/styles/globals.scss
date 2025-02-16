@@ -1767,11 +1767,11 @@ table {
     padding: 1rem;
     border-top: 1px solid var(--gray-alpha-300);
     border-bottom: 1px solid var(--gray-alpha-300);
-    position: sticky;
-    margin-top: -1px;
+    position: fixed;
     top: calc(var(--header-height) - 1px);
     background-color: var(--background);
     height: var(--map-filter-height);
+    width: 100%;
     .shop-info {
       display: flex;
       align-items: center;
@@ -1815,12 +1815,13 @@ table {
   .content-body {
     display: flex;
     width: 100%;
+    padding-top: calc(var(--map-filter-height) - 2px);
     .tab-menu {
       z-index: 2;
       position: sticky;
       padding: 1.5rem 0rem;
       background-color: var(--background);
-      height: calc(100vh - var(--header-height) - var(--map-filter-height) + 2px);
+      height: calc(100vh - var(--header-height) - var(--map-filter-height) + 1px);
       left: 0;
       top: calc(var(--header-height) + var(--map-filter-height) - 1px);
       border-right: 1px solid var(--gray-alpha-300);
@@ -1861,7 +1862,7 @@ table {
         &.shop-setting {
           .shop-info-container {
             display: flex;
-            gap: 3rem;
+            gap: 2rem;
             .shop-info-img-wrapper {
               flex: 1;
               display: flex;
@@ -1931,7 +1932,7 @@ table {
                 gap: 0.5rem;
                 min-height: 2.5rem;
                 label {
-                  width: 125px;
+                  width: 130px;
                   font-weight: bold;
                   white-space: pre-wrap;
                   line-height: 1.2;
@@ -1961,6 +1962,13 @@ table {
                       margin-right: 0.5rem;
                     }
                   }
+                }
+                .serving-minutes-wrapper {
+                  display: flex;
+                  align-items: center;
+                  gap: 0.5rem;
+                  width: 100%;
+                  max-width: 400px;
                 }
               }
             }
@@ -4359,12 +4367,13 @@ table {
         margin-top: -1px;
         overflow-y: auto;
         width: 100%;
-        transition: transform 0.3s ease-in-out;
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
         &.open {
           transform: translateY(0);
         }
         &.close {
           transform: translateY(-100%);
+          box-shadow: unset;
         }
       }
       .tab-view {
@@ -4380,9 +4389,9 @@ table {
               flex-direction: column;
               gap: 2rem;
               .shop-info-wrapper {
+                gap: 2rem;
                 .shop-info-item {
                   flex-direction: column;
-                  gap: 0;
                 }
               }
             }

@@ -7,7 +7,6 @@ import Selector from '@/components/input/Selector';
 import Title from '@/components/layout/Title';
 import Image from '@/components/Image';
 import TimeInput from '@/components/input/TimeInput';
-import TimeSelectDialog from '@/components/TimeSelectDialog';
 
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
@@ -25,9 +24,6 @@ function ShopSetting({ isSp, shop, setShop }: SettingProps)  {
 
   const [editMode, setEditMode] = useState<boolean>(false);
   const [tempShop, setTempShop] = useState<Shop>(shop);
-  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
-  const [selectedDayIndex, setSelectedDayIndex] = useState<number | null>(null);
-  const [selectedTimeType, setSelectedTimeType] = useState<'open' | 'close' | null>(null);
 
   const locationOptions = [
     { label: '福岡市博多区', value: '福岡市博多区' },
@@ -80,12 +76,6 @@ function ShopSetting({ isSp, shop, setShop }: SettingProps)  {
     setTempShop({ ...tempShop, businessHours: updatedHours as BusinessHour[] });
   };
 
-  const openTimeSelectDialog = (index: number, timeType: 'open' | 'close') => {
-    setSelectedDayIndex(index);
-    setSelectedTimeType(timeType);
-    setDialogOpen(true);
-  };
-
   const handleEditToggle = (isCancel: boolean = false) => {
     if (editMode && !isCancel) {
       setShop(tempShop);
@@ -123,24 +113,6 @@ function ShopSetting({ isSp, shop, setShop }: SettingProps)  {
 
   return (
     <Suspense fallback={<Loading circular />}>
-      {selectedDayIndex !== null && (
-        <TimeSelectDialog
-          value={selectedTimeType === 'open' ?
-            tempShop.businessHours?.[selectedDayIndex].openTime || ''
-            :
-            tempShop.businessHours?.[selectedDayIndex].closeTime || ''
-          }
-          setValue={(value) => {
-            if (selectedTimeType === 'open') {
-              handleBusinessHoursChange(selectedDayIndex, true, value as string, tempShop.businessHours?.[selectedDayIndex].closeTime || '');
-            } else {
-              handleBusinessHoursChange(selectedDayIndex, true, tempShop.businessHours?.[selectedDayIndex].openTime || '', value as string);
-            }
-          }}
-          open={dialogOpen}
-          setOpen={setDialogOpen}
-        />
-      )}
       <div className="tab-title">
         <Title
           title="店舗情報"
@@ -164,7 +136,7 @@ function ShopSetting({ isSp, shop, setShop }: SettingProps)  {
         <div className="shop-info-container">
           <div className="shop-info-img-wrapper">
             <label>
-              プロフィール・サムネイル
+              プロフィール
             </label>
             <div className={`thumbnail-img ${editMode ? 'edit' : ''}`}>
               <Image
@@ -245,7 +217,7 @@ function ShopSetting({ isSp, shop, setShop }: SettingProps)  {
                             <TimeInput
                               className='business-hours-time-input'
                               value={dayHours.openTime || ''}
-                              onClick={() => openTimeSelectDialog(index, 'open')}
+                              setValue={(value) => handleBusinessHoursChange(index, true, value as string, dayHours.closeTime || '')}
                               placeholder="開始時間"
                               disabled={!dayHours.businessDay}
                               style={{ maxWidth: '200px' }}
@@ -253,7 +225,7 @@ function ShopSetting({ isSp, shop, setShop }: SettingProps)  {
                             <TimeInput
                               className='business-hours-time-input'
                               value={dayHours.closeTime || ''}
-                              onClick={() => openTimeSelectDialog(index, 'close')}
+                              setValue={(value) => handleBusinessHoursChange(index, true, dayHours.openTime || '', value as string)}
                               placeholder="終了時間"
                               disabled={!dayHours.businessDay}
                               style={{ maxWidth: '200px' }}
@@ -267,7 +239,7 @@ function ShopSetting({ isSp, shop, setShop }: SettingProps)  {
                       const min = shopInfoItems.find((item) => item.key === key)?.min || 0;
                       const max = shopInfoItems.find((item) => item.key === key)?.max || 60;
                       return (
-                        <>
+                        <div className='serving-minutes-wrapper'>
                           <input
                             type="text"
                             value={tempShop[key] as number}
@@ -288,7 +260,7 @@ function ShopSetting({ isSp, shop, setShop }: SettingProps)  {
                           <span className='unit'>
                             {shopInfoItems.find((item) => item.key === key)?.unit}
                           </span>
-                        </>
+                        </div>
                       );
                     })()
                   ) : (
