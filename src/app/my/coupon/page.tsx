@@ -31,8 +31,8 @@ export default function MyCouponPage() {
 
   return (
     <article>
+      <MuiBreadcrumbs breadcrumbs={breadcrumbs} />
       <div className="my container">
-        <MuiBreadcrumbs breadcrumbs={breadcrumbs} />
       </div>
     </article>
   );

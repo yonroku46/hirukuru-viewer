@@ -10,7 +10,7 @@ import DialogContent from '@mui/material/DialogContent';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import CloseIcon from "@mui/icons-material/Close";
 
-const minutesPerOption = 5;
+const MINUTES_PER_OPTION = 5;
 
 interface TimeInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   value: string;
@@ -90,7 +90,7 @@ function TimeSelectDialog({ value, setValue, open, setOpen }: TimeSelectDialogPr
   }, [setValue, setOpen]);
 
   const minuteOptions = React.useMemo(() => {
-    return Array.from({ length: 60 / minutesPerOption }, (_, i) => i * minutesPerOption).map((minute) => {
+    return Array.from({ length: 60 / MINUTES_PER_OPTION }, (_, i) => i * MINUTES_PER_OPTION).map((minute) => {
       const minuteString = minute.toString().padStart(2, '0');
       return (
         <button

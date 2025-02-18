@@ -43,8 +43,8 @@ import GoogleIcon from '@mui/icons-material/Google';
 import CurrencyYenIcon from '@mui/icons-material/CurrencyYen';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 
-const minutesPerOption = 5;
-const cartKey = "cart-local";
+const MINUTES_PER_OPTION = 5;
+const CART_KEY = "cart-local";
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -62,7 +62,7 @@ const optionsEqual = (opts1: ItemOption[], opts2: ItemOption[]) => {
 };
 
 export const addToCart = (dispatch: AppDispatch, shop: Shop, item: Item, quantity?: number, options?: ItemOption[]): boolean => {
-  const existingCartItems = JSON.parse(localStorage.getItem(cartKey) || "[]");
+  const existingCartItems = JSON.parse(localStorage.getItem(CART_KEY) || "[]");
 
   // 同じお店のものじゃない場合案内
   if (existingCartItems.length > 0 && existingCartItems[0].shopId !== item.shopId) {
@@ -83,7 +83,7 @@ export const addToCart = (dispatch: AppDispatch, shop: Shop, item: Item, quantit
   }
 
   // ローカルストレージとストアに反映
-  localStorage.setItem(cartKey, JSON.stringify(newCartItems));
+  localStorage.setItem(CART_KEY, JSON.stringify(newCartItems));
   dispatch(setCartState({ cartItems: newCartItems, shopInfo: shop }));
   enqueueSnackbar("カートに追加しました", { variant: 'success' });
   return true;
@@ -220,13 +220,13 @@ export default function CartDialog({ user, open, setOpen }: CartDialogProps) {
 
         const currentTimeWithServing = isToday ? now.add(servingMinutes, 'minute') : now;
         const isAfterCurrentTimeWithServing = pickupTime.isAfter(currentTimeWithServing) ||
-          (pickupTime.isSame(currentTimeWithServing, 'hour') && currentTimeWithServing.minute() < (60 - minutesPerOption));
+          (pickupTime.isSame(currentTimeWithServing, 'hour') && currentTimeWithServing.minute() < (60 - MINUTES_PER_OPTION));
 
-        const openTimeWithBuffer = dayjs(`${pickupDate} ${todayHours?.openTime}`).add(minutesPerOption, 'minute');
+        const openTimeWithBuffer = dayjs(`${pickupDate} ${todayHours?.openTime}`).add(MINUTES_PER_OPTION, 'minute');
         const isNotOnTheHourBeforeOpen = !(pickupTime.isSame(openTimeWithBuffer.subtract(1, 'hour'), 'hour') && pickupTime.minute() === 0);
 
         return isAfterCurrentTimeWithServing && (isAM || isPM) &&
-          (isToday ? (pickupTime.isAfter(now) || (pickupTime.isSame(now, 'hour') && now.minute() < (60 - minutesPerOption))) : true) &&
+          (isToday ? (pickupTime.isAfter(now) || (pickupTime.isSame(now, 'hour') && now.minute() < (60 - MINUTES_PER_OPTION))) : true) &&
           isNotOnTheHourBeforeOpen;
       });
 
@@ -245,7 +245,7 @@ export default function CartDialog({ user, open, setOpen }: CartDialogProps) {
     const generateMinute = () => {
       // 指定分単位を基に選択可能な分を生成
       const allMinutesOptions: string[] = [];
-      Array.from({ length: 60 / minutesPerOption }, (_, i) => i * minutesPerOption).filter((minute) => {
+      Array.from({ length: 60 / MINUTES_PER_OPTION }, (_, i) => i * MINUTES_PER_OPTION).filter((minute) => {
         const minuteString = minute.toString().padStart(2, '0');
         allMinutesOptions.push(minuteString);
       });
@@ -343,7 +343,7 @@ export default function CartDialog({ user, open, setOpen }: CartDialogProps) {
     const updatedCartItems = cartItems.filter((item) =>
       !(item.itemId === id && optionsEqual(item.options || [], options))
     );
-    localStorage.setItem(cartKey, JSON.stringify(updatedCartItems));
+    localStorage.setItem(CART_KEY, JSON.stringify(updatedCartItems));
     if (updatedCartItems.length > 0) {
       dispatch(setCartState({ cartItems: updatedCartItems, shopInfo }));
     } else {
@@ -360,7 +360,7 @@ export default function CartDialog({ user, open, setOpen }: CartDialogProps) {
             : item
         );
 
-    localStorage.setItem(cartKey, JSON.stringify(updatedCartItems));
+    localStorage.setItem(CART_KEY, JSON.stringify(updatedCartItems));
     if (updatedCartItems.length > 0) {
       dispatch(setCartState({ cartItems: updatedCartItems, shopInfo }));
     } else {
@@ -439,7 +439,7 @@ export default function CartDialog({ user, open, setOpen }: CartDialogProps) {
                 setOrderId(res.id);
                 setPaymentStep('DONE');
                 // カートを空にする
-                localStorage.setItem(cartKey, JSON.stringify([]));
+                localStorage.setItem(CART_KEY, JSON.stringify([]));
                 dispatch(setCartState({ cartItems: [] }));
               } else {
                 enqueueSnackbar('注文に失敗しました。', { variant: 'error' });
@@ -478,7 +478,7 @@ export default function CartDialog({ user, open, setOpen }: CartDialogProps) {
   // };
 
   const minuteOptions = useMemo(() => {
-    return Array.from({ length: 60 / minutesPerOption }, (_, i) => i * minutesPerOption).map((minute) => {
+    return Array.from({ length: 60 / MINUTES_PER_OPTION }, (_, i) => i * MINUTES_PER_OPTION).map((minute) => {
       const minuteString = minute.toString().padStart(2, '0');
       return (
         <button

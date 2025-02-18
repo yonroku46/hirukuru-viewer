@@ -63,8 +63,8 @@ export default function ServiceContactPage() {
 
   return (
     <article>
+      <MuiBreadcrumbs breadcrumbs={breadcrumbs} />
       <div className="service container">
-        <MuiBreadcrumbs breadcrumbs={breadcrumbs} />
         <div className='contact-page'>
           <div className='main-message'>
             <div className='thanks'>

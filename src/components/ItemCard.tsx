@@ -11,9 +11,10 @@ interface ItemCardProps {
   href?: string;
   openNewTab?: boolean;
   soldOut?: boolean;
+  originView?: boolean;
 }
 
-export default function ItemCard({ data, onClick, onHover, href, openNewTab, soldOut }: ItemCardProps) {
+export default function ItemCard({ data, onClick, onHover, href, openNewTab, soldOut, originView }: ItemCardProps) {
   const handleClick = () => {
     if (onClick) onClick();
   };
@@ -32,7 +33,7 @@ export default function ItemCard({ data, onClick, onHover, href, openNewTab, sol
           width={280}
           height={160}
         />
-        {data.discountPrice && data.discountPrice < data.itemPrice &&
+        {!originView && data.discountPrice && data.discountPrice < data.itemPrice &&
           <div className="sale-tag">
             {`${Math.round((1 - data.discountPrice / data.itemPrice) * 100)}% OFF`}
           </div>
@@ -52,7 +53,7 @@ export default function ItemCard({ data, onClick, onHover, href, openNewTab, sol
             {data.ratingAvg || "-"}
           </div>
         </div>
-        {data.discountPrice && data.discountPrice < data.itemPrice ?
+        {!originView && data.discountPrice && data.discountPrice < data.itemPrice ?
           <div className="price">
             <p className="current-price on-sale">
               {currency(data.discountPrice)}

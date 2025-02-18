@@ -42,7 +42,7 @@ export default function NoticeDialog({ icon, title, description, href, hrefText,
           {description}
         </p>
         {href && hrefText && (
-          <Link href={href} className="action-btn">
+          <Link href={href} className="action-btn" onClick={handleClose}>
             {hrefText}
           </Link>
         )}

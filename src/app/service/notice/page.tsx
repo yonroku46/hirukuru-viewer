@@ -36,9 +36,9 @@ export default function ServiceNoticePage() {
 
   return (
     <article>
+      <MuiBreadcrumbs breadcrumbs={breadcrumbs} />
       <div className="background" />
       <div className="service container">
-        <MuiBreadcrumbs breadcrumbs={breadcrumbs} />
         <div className="notice-page">
           <div className="title-wrapper">
             <h1 className="title">

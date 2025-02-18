@@ -133,8 +133,8 @@ export default function MyOrderPage() {
 
   return (
     <article>
+      <MuiBreadcrumbs breadcrumbs={breadcrumbs} />
       <div className="myorder container">
-        <MuiBreadcrumbs breadcrumbs={breadcrumbs} />
         <OrderStatus
           statusList={orderStatus}
         />

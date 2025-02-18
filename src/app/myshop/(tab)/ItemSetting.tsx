@@ -4,22 +4,112 @@ import MiniButton from '@/components/button/MiniButton';
 import ItemCard from '@/components/ItemCard';
 import SearchInput from '@/components/input/SearchInput';
 import Title from '@/components/layout/Title';
+import { DndContext, DragEndEvent, closestCenter } from '@dnd-kit/core';
+import { SortableContext, useSortable, rectSortingStrategy } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
-import AddCircleIcon from '@mui/icons-material/AddCircle';
+import EditIcon from '@mui/icons-material/Edit';
+import SaveIcon from '@mui/icons-material/Save';
+import CancelIcon from '@mui/icons-material/Cancel';
+import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
 
 interface SettingProps {
   isSp: boolean;
   shop: Shop;
 }
 
-function ItemSetting({ isSp, shop }: SettingProps)  {
+interface SortableItemProps {
+  isSp: boolean;
+  editMode: boolean;
+  item: Item;
+  handleItemClick: (item: Item) => void;
+}
 
+function SortableItem({ isSp, editMode, item, handleItemClick }: SortableItemProps) {
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: item.itemId });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    touchAction: isSp ? 'none' : 'auto',
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} {...attributes}>
+      {editMode && (
+        <span className="item-order" {...listeners} style={{ touchAction: 'none' }}>
+          {item.itemOrder}
+        </span>
+      )}
+      <ItemCard originView data={item} onClick={() => handleItemClick(item)} />
+    </div>
+  );
+}
+
+function ItemSetting({ isSp, shop }: SettingProps)  {
   const [searchValue, setSearchValue] = useState<string>("");
+  const [editMode, setEditMode] = useState<boolean>(false);
   const [items, setItems] = useState<ItemState[]>([]);
+  const [tempItems, setTempItems] = useState<ItemState[]>([]);
   const [groupedItems, setGroupedItems] = useState<Record<string, ItemState[]>>({});
+  const [categories, setCategories] = useState<ItemCategory[]>([]);
+
+  const handleEditToggle = (isCancel: boolean = false) => {
+    if (editMode && !isCancel) {
+      setItems(tempItems);
+    }
+    if (isCancel) {
+      setTempItems(items);
+    }
+    setEditMode(!editMode);
+  };
 
   const handleItemClick = (item: Item) => {
     console.log(item);
+  };
+
+  const handleAddItem = () => {
+    const itemNumber = items.length + 1;
+    const newItem = {
+      itemId: `new-${itemNumber}`, shopId: shop.shopId, itemName: `新規商品${itemNumber}`, itemOrder: itemNumber, itemPrice: 0
+    } as ItemState;
+    setGroupedItems((prevGroupedItems) => ({
+      ...prevGroupedItems,
+      '未分類': [...(prevGroupedItems['未分類'] || []), newItem]
+    }));
+    setTempItems([...items, newItem]);
+  };
+
+  const onItemDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (over && active.id !== over.id) {
+      setGroupedItems((prevGroupedItems) => {
+        const category = Object.keys(prevGroupedItems).find(categoryName =>
+          prevGroupedItems[categoryName].some(item => item.itemId === active.id)
+        );
+        if (!category) return prevGroupedItems;
+
+        const items = prevGroupedItems[category];
+        const activeIndex = items.findIndex((item) => item.itemId === active.id);
+        const overIndex = items.findIndex((item) => item.itemId === over.id);
+
+        const updatedItems = [...items];
+        const [movedItem] = updatedItems.splice(activeIndex, 1);
+        updatedItems.splice(overIndex, 0, movedItem);
+
+        const reorderedItems = updatedItems.map((item, index) => {
+          return {
+            ...item,
+            itemOrder: index + 1,
+          };
+        });
+
+        return {
+          ...prevGroupedItems,
+          [category]: reorderedItems
+        };
+      });
+    }
   };
 
   useEffect(() => {
@@ -42,10 +132,16 @@ function ItemSetting({ isSp, shop }: SettingProps)  {
       { itemId: '6', shopId: dummyShopId, categoryName: '定番弁当', itemName: 'ナポリタン', itemOrder: 6, itemPrice: 750, ratingAvg: 3.9, thumbnailImg: 'https://i.pinimg.com/736x/a0/44/3e/a0443eb63b9e4e56d4bdad82079d11be.jpg' },
       { itemId: '7', shopId: dummyShopId, categoryName: '定番弁当', itemName: 'ビビンバ', itemOrder: 7, itemPrice: 500, ratingAvg: 4.5, thumbnailImg: 'https://i.pinimg.com/736x/15/fc/18/15fc1800352f40dc57aba529365dd6dd.jpg' },
       { itemId: '8', shopId: dummyShopId, categoryName: '定番弁当', itemName: '鶏そぼろ丼', itemOrder: 8, itemPrice: 1000, ratingAvg: 4.3, thumbnailImg: 'https://i.pinimg.com/736x/a3/c0/44/a3c0445cb7ce8a623f9420a2aaa8332c.jpg' },
-      { itemId: '9', shopId: dummyShopId, categoryName: '定番弁当', itemName: 'ソースカツ弁当', itemOrder: 9, itemPrice: 1000, ratingAvg: 4.3, thumbnailImg: 'https://i.pinimg.com/736x/09/cc/18/09cc18f3ab7aeb70638f33170251bceb.jpg' },
-      { itemId: '10', shopId: dummyShopId, categoryName: '定番弁当', itemName: 'カツカレー', itemOrder: 10, itemPrice: 1000, ratingAvg: 4.3, thumbnailImg: 'https://i.pinimg.com/736x/7f/6f/55/7f6f5560ca41e1870c59b18f6f1f2360.jpg' },
+      { itemId: '9', shopId: dummyShopId, itemName: 'ソースカツ弁当', itemOrder: 9, itemPrice: 1000, ratingAvg: 4.3, thumbnailImg: 'https://i.pinimg.com/736x/09/cc/18/09cc18f3ab7aeb70638f33170251bceb.jpg' },
+      { itemId: '10', shopId: dummyShopId, itemName: 'カツカレー', itemOrder: 10, itemPrice: 1000, ratingAvg: 4.3, thumbnailImg: 'https://i.pinimg.com/736x/7f/6f/55/7f6f5560ca41e1870c59b18f6f1f2360.jpg' },
+    ];
+    const dummyCategories: ItemCategory[] = [
+      { categoryId: '2', shopId: dummyShopId, categoryName: '日替わり弁当', categoryOrder: 1 },
+      { categoryId: '1', shopId: dummyShopId, categoryName: '特製弁当', categoryOrder: 2 },
+      { categoryId: '3', shopId: dummyShopId, categoryName: '定番弁当', categoryOrder: 3 },
     ];
     setItems(dummyItems as Item[]);
+    setCategories(dummyCategories);
   }, []);
 
   useEffect(() => {
@@ -74,10 +170,25 @@ function ItemSetting({ isSp, shop }: SettingProps)  {
           countUnit="件"
         />
         <div className="edit-btn-group">
+          {editMode &&
+            <MiniButton
+              icon={<LibraryAddIcon />}
+              onClick={handleAddItem}
+              label={isSp ? undefined : "新規追加"}
+              sx={{ marginRight: '0.5rem' }}
+            />
+          }
+          {editMode && (
+            <MiniButton
+              icon={<CancelIcon />}
+              onClick={() => handleEditToggle(true)}
+              label={isSp ? undefined : "取り消し"}
+            />
+          )}
           <MiniButton
-            icon={<AddCircleIcon />}
-            onClick={() => {}}
-            label={isSp ? undefined : "新規追加"}
+            icon={editMode ? <SaveIcon /> : <EditIcon />}
+            onClick={() => handleEditToggle()}
+            label={isSp ? undefined : editMode ? '保存' : '編集'}
           />
         </div>
       </div>
@@ -91,20 +202,61 @@ function ItemSetting({ isSp, shop }: SettingProps)  {
           />
         </div>
         <div className="item-list-wrapper">
-          {Object.entries(groupedItems).map(([category, items]) => (
-            <div key={category} className="category-group">
-              <h3 className="category-title">{category}</h3>
-              <div className="item-list">
-                {items.sort((a, b) => a.itemOrder - b.itemOrder).map((item, index) => (
-                  <ItemCard
-                    key={index}
-                    data={item}
-                    onClick={() => handleItemClick(item)}
-                  />
-                ))}
-              </div>
-            </div>
-          ))}
+          {groupedItems['未分類'] && (
+            <DndContext collisionDetection={closestCenter} onDragEnd={onItemDragEnd}>
+              <SortableContext
+                items={groupedItems['未分類'].map(item => item.itemId)}
+                strategy={rectSortingStrategy}
+              >
+                <div className="category-group unclassified">
+                  <h3 className="category-title">未分類</h3>
+                  <div className="item-list">
+                    {groupedItems['未分類']
+                      .sort((a, b) => a.itemOrder - b.itemOrder)
+                      .map((item) => (
+                        <SortableItem
+                          key={item.itemId}
+                          isSp={isSp}
+                          editMode={editMode}
+                          item={item}
+                          handleItemClick={handleItemClick}
+                        />
+                      ))
+                    }
+                  </div>
+                </div>
+              </SortableContext>
+            </DndContext>
+          )}
+          {categories.map((category, index) => (
+            <DndContext key={index} collisionDetection={closestCenter} onDragEnd={onItemDragEnd}>
+              <SortableContext
+                items={(groupedItems[category.categoryName] || []).map(item => item.itemId)}
+                strategy={rectSortingStrategy}
+              >
+                <div className="category-group">
+                  <h3 className="category-title">
+                    {category.categoryName}
+                  </h3>
+                  <div className="item-list">
+                    {(groupedItems[category.categoryName] || [])
+                      .sort((a, b) => a.itemOrder - b.itemOrder)
+                      .map((item) => (
+                        <SortableItem
+                          key={item.itemId}
+                          isSp={isSp}
+                          editMode={editMode}
+                          item={item}
+                          handleItemClick={handleItemClick}
+                        />
+                      ))
+                    }
+                  </div>
+                </div>
+              </SortableContext>
+            </DndContext>
+            ))
+          }
         </div>
       </div>
     </Suspense>

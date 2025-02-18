@@ -28,11 +28,11 @@ const defaultPosition = {
   lat: 33.5902,
   lng: 130.4017
 };
-const maxZoom = 20;
-const minZoom = 5;
-const googleMapOptions = {
-  maxZoom: maxZoom,
-  minZoom: minZoom,
+const MAX_ZOOM = 20;
+const MIN_ZOOM = 5;
+const GOOGLE_MAP_OPTIONS = {
+  maxZoom: MAX_ZOOM,
+  minZoom: MIN_ZOOM,
   scrollwheel: true,
   mapTypeControl: false,
   fullscreenControl: false,
@@ -102,7 +102,7 @@ export default function SearchMapPage() {
 
   const zoomIn = () => {
     if (map) {
-      const newZoom = Math.min((map.getZoom() ?? 0) + 1, maxZoom);
+      const newZoom = Math.min((map.getZoom() ?? 0) + 1, MAX_ZOOM);
       map.setZoom(newZoom);
       setZoomLevel(newZoom);
     }
@@ -110,7 +110,7 @@ export default function SearchMapPage() {
 
   const zoomOut = () => {
     if (map) {
-      const newZoom = Math.max((map.getZoom() ?? 0) - 1, minZoom);
+      const newZoom = Math.max((map.getZoom() ?? 0) - 1, MIN_ZOOM);
       map.setZoom(newZoom);
       setZoomLevel(newZoom);
     }
@@ -360,10 +360,10 @@ export default function SearchMapPage() {
               </>
             )}
             <div className="zoom-btn-group">
-              <button className={`zoom-btn zoom-in ${zoomLevel >= maxZoom ? 'over' : ''}`} onClick={zoomIn}>
+              <button className={`zoom-btn zoom-in ${zoomLevel >= MAX_ZOOM ? 'over' : ''}`} onClick={zoomIn}>
                 <AddIcon />
               </button>
-              <button className={`zoom-btn zoom-out ${zoomLevel <= minZoom ? 'over' : ''}`} onClick={zoomOut}>
+              <button className={`zoom-btn zoom-out ${zoomLevel <= MIN_ZOOM ? 'over' : ''}`} onClick={zoomOut}>
                 <RemoveIcon />
               </button>
               <MiniButton
@@ -394,7 +394,7 @@ export default function SearchMapPage() {
                 onClick={() => setActiveMarker(null)}
                 center={lastSelectedPosition || currentPlace?.position}
                 zoom={zoomLevel}
-                options={googleMapOptions}
+                options={GOOGLE_MAP_OPTIONS}
               >
                 {currentPlace?.position && (
                   <Marker

@@ -3,17 +3,65 @@ import Loading from '@/app/loading';
 import MiniButton from '@/components/button/MiniButton';
 import SearchInput from '@/components/input/SearchInput';
 import Title from '@/components/layout/Title';
+import { DndContext, DragEndEvent, closestCenter } from '@dnd-kit/core';
+import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
+
+const MAX_CATEGORY_NAME_LENGTH = 100;
 
 interface SettingProps {
   isSp: boolean;
   shop: Shop;
+}
+
+interface SortableCategoryProps {
+  editMode: boolean;
+  category: ItemCategory;
+}
+
+function SortableCategory({ editMode, category }: SortableCategoryProps) {
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: category.categoryId });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  const [categoryName, setCategoryName] = useState<string>(category.categoryName);
+
+  return (
+    <div ref={setNodeRef} style={style} {...attributes}>
+      <div className="category-info">
+        <span className="category-order" {...(editMode ? listeners : {})} style={{ touchAction: 'none', cursor: editMode ? 'grab' : 'default' }}>
+          {category.categoryOrder}
+        </span>
+        <div className="category-name">
+          {editMode ? (
+            <div className="category-name-input-wrapper">
+              <input
+                className="category-name-input"
+                value={categoryName}
+                placeholder="カテゴリ名を入力"
+                onChange={(e) => setCategoryName(e.target.value)}
+              />
+              <div className={`category-name-input-length ${categoryName.length > MAX_CATEGORY_NAME_LENGTH || categoryName.length === 0 ? 'error' : ''}`}>
+                {`${categoryName.length} / ${MAX_CATEGORY_NAME_LENGTH}`}
+              </div>
+            </div>
+          ) : (
+            <span>
+              {categoryName}
+            </span>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function ItemSetting({ isSp, shop }: SettingProps)  {
@@ -22,28 +70,43 @@ function ItemSetting({ isSp, shop }: SettingProps)  {
   const [editMode, setEditMode] = useState<boolean>(false);
   const [tempCategories, setTempCategories] = useState<ItemCategory[]>([]);
 
-  const handleEditToggle = (isCancel: boolean = false) => {
-    if (editMode && !isCancel) {
-      setCategories(tempCategories);
-    }
-    if (isCancel) {
-      setTempCategories(categories);
-    }
+  const handleEditToggle = () => {
     setEditMode(!editMode);
   };
 
-  const moveCategory = (index: number, direction: 'up' | 'down') => {
-    if (!editMode) return;
-    setTempCategories((prev) => {
-      const newCategories = [...prev];
-      const targetIndex = direction === 'up' ? index - 1 : index + 1;
-      if (targetIndex < 0 || targetIndex >= newCategories.length) return newCategories;
-      [newCategories[index], newCategories[targetIndex]] = [newCategories[targetIndex], newCategories[index]];
-      newCategories[index].categoryOrder = index + 1;
-      newCategories[targetIndex].categoryOrder = targetIndex + 1;
+  const handleSave = () => {
+    setCategories(tempCategories);
+    setEditMode(false);
+  };
 
-      return newCategories;
-    });
+  const handleCancel = () => {
+    setTempCategories(categories);
+    setEditMode(false);
+  };
+
+  const handleAddCategory = () => {
+    const categoryNumber = tempCategories.length + 1;
+    setTempCategories([...tempCategories, {
+      categoryId: `new-${categoryNumber}`, shopId: shop.shopId, categoryName: `新規カテゴリー${categoryNumber}`, categoryOrder: categoryNumber
+    } as ItemCategory]);
+  };
+
+  const onCategoryDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (over && active.id !== over.id) {
+      setTempCategories((items) => {
+        const oldIndex = items.findIndex((item) => item.categoryId === active.id);
+        const newIndex = items.findIndex((item) => item.categoryId === over.id);
+        if (oldIndex !== -1 && newIndex !== -1) {
+          const newItems = arrayMove(items, oldIndex, newIndex);
+          return newItems.map((item, index) => ({
+            ...item,
+            categoryOrder: index + 1,
+          }));
+        }
+        return items;
+      });
+    }
   };
 
   useEffect(() => {
@@ -61,11 +124,6 @@ function ItemSetting({ isSp, shop }: SettingProps)  {
     console.log(shop);
   }, [shop]);
 
-  useEffect(() => {
-    console.log(categories[0]);
-    console.log(tempCategories[0]);
-  }, [categories, tempCategories]);
-
   return (
     <Suspense fallback={<Loading circular />}>
       <div className="tab-title">
@@ -75,22 +133,25 @@ function ItemSetting({ isSp, shop }: SettingProps)  {
           countUnit="件"
         />
         <div className="edit-btn-group">
+          {editMode &&
+            <MiniButton
+              icon={<LibraryAddIcon />}
+              onClick={handleAddCategory}
+              label={isSp ? undefined : "新規追加"}
+              sx={{ marginRight: '0.5rem' }}
+            />
+          }
           {editMode && (
             <MiniButton
               icon={<CancelIcon />}
-              onClick={() => handleEditToggle(true)}
+              onClick={handleCancel}
               label={isSp ? undefined : "取り消し"}
             />
           )}
           <MiniButton
             icon={editMode ? <SaveIcon /> : <EditIcon />}
-            onClick={() => handleEditToggle()}
+            onClick={editMode ? handleSave : handleEditToggle}
             label={isSp ? undefined : editMode ? '保存' : '編集'}
-          />
-          <MiniButton
-            icon={<AddCircleIcon />}
-            onClick={() => {}}
-            label={isSp ? undefined : "新規追加"}
           />
         </div>
       </div>
@@ -104,41 +165,22 @@ function ItemSetting({ isSp, shop }: SettingProps)  {
           />
         </div>
         <div className="category-list-wrapper">
-          {categories.sort((a, b) => a.categoryOrder - b.categoryOrder).map((category, index) => (
-            <div key={index} className="category-info">
-              <div className="category-btn-group">
-                {editMode && (
-                  <>
-                    <MiniButton
-                      icon={<ArrowUpwardIcon />}
-                      onClick={() => moveCategory(index, 'up')}
-                      sx={{
-                        opacity: index === 0 ? 0.15 : 1,
-                        pointerEvents: index === 0 ? 'none' : 'auto',
-                        borderRadius: '0.5rem 0 0 0.5rem',
-                      }}
-                    />
-                    <MiniButton
-                      icon={<ArrowDownwardIcon />}
-                      onClick={() => moveCategory(index, 'down')}
-                      sx={{
-                        opacity: index === categories.length - 1 ? 0.15 : 1,
-                        pointerEvents: index === categories.length - 1 ? 'none' : 'auto',
-                        borderRadius: '0 0.5rem 0.5rem 0',
-                        marginLeft: '-1px',
-                      }}
-                    />
-                  </>
-                )}
-              </div>
-              <div className="category-order">
-                {category.categoryOrder}
-              </div>
-              <div className="category-name">
-                {category.categoryName}
-              </div>
-            </div>
-          ))}
+          <DndContext collisionDetection={closestCenter} onDragEnd={onCategoryDragEnd}>
+            <SortableContext
+              items={tempCategories.map(item => item.categoryId)}
+              strategy={verticalListSortingStrategy}
+            >
+              {tempCategories
+                .sort((a, b) => a.categoryOrder - b.categoryOrder)
+                .map((category) => (
+                  <SortableCategory
+                    key={category.categoryId}
+                    editMode={editMode}
+                    category={category}
+                  />
+                ))}
+            </SortableContext>
+          </DndContext>
         </div>
       </div>
     </Suspense>

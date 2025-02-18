@@ -101,16 +101,16 @@ export default function ServiceHelpPage() {
 
   return (
     <article>
+      <MuiBreadcrumbs breadcrumbs={breadcrumbs} />
       <div className="background" />
       <div className="service container">
-        <MuiBreadcrumbs breadcrumbs={breadcrumbs} />
         <div className="help-page">
           <div className="title-wrapper">
             <h1 className="title">
               利用ガイド
             </h1>
             <p className="description">
-              サービスの利用でお困りごとがあればこちらからご確認ください
+              サービス利用でお困りの際はこちらをご確認ください
             </p>
           </div>
           <div className="search-wrapper">

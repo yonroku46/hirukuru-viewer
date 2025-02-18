@@ -104,8 +104,8 @@ export default function MyOrderReviewPage() {
 
   return (
     <article>
+      <MuiBreadcrumbs breadcrumbs={breadcrumbs} />
       <div className="myorder container">
-        <MuiBreadcrumbs breadcrumbs={breadcrumbs} />
         <ReviewStatus
           statusList={reviewStatus}
         />

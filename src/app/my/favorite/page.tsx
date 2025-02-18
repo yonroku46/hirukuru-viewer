@@ -75,8 +75,8 @@ export default function FavoritePage() {
 
   return (
     <article>
+      <MuiBreadcrumbs breadcrumbs={breadcrumbs} />
       <div className="my container">
-        <MuiBreadcrumbs breadcrumbs={breadcrumbs} />
         <div className="favorite">
           <Title
             title="お気に入りの店舗"

@@ -257,7 +257,7 @@ export default function Header() {
                   <div className="menu-top">
                     <Image
                       className="user-profilie"
-                      src={user.profileImg}
+                      src={user.profileImg || "/assets/img/no-user.jpg"}
                       alt={user.userName}
                       width={50}
                       height={50}
@@ -372,7 +372,7 @@ export default function Header() {
             <MenuIcon className="menu-icon" />
             <Image
               className="user-icon"
-              src={user ? user.profileImg : "/assets/img/no-user.jpg"}
+              src={user ? user.profileImg || "/assets/img/no-user.jpg" : "/assets/img/no-user.jpg"}
               alt={user ? user.userName : "user"}
               width={28}
               height={28}
