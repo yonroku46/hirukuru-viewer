@@ -3,7 +3,7 @@
 import { Fragment, useEffect, useState } from 'react';
 import { useMediaQuery } from "react-responsive";
 import { useAppDispatch } from "@/store";
-import { currency, optionsToString } from '@/common/utils/StringUtils';
+import { allergensList, currency, optionsToString } from '@/common/utils/StringUtils';
 import Image from "@/components/Image";
 import { addToCart } from "@/components/CartDialog";
 import QuantityButton from '@/components/button/QuantityButton';
@@ -34,17 +34,6 @@ export default function ItemInfoDialog({ shop, data, open, setOpen }: ItemInfoDi
   const [quantity, setQuantity] = useState<number>(1);
   const [options, setOptions] = useState<ItemOption[]>([]);
 
-  const allergensList = [
-    { allergen: '1', name: '卵', img: '/assets/img/allergen/egg.png' },
-    { allergen: '2', name: '乳', img: '/assets/img/allergen/milk.png' },
-    { allergen: '3', name: '小麦', img: '/assets/img/allergen/wheat.png' },
-    { allergen: '4', name: 'そば', img: '/assets/img/allergen/buckwheat.png' },
-    { allergen: '5', name: '落花生', img: '/assets/img/allergen/peanut.png' },
-    { allergen: '6', name: 'えび', img: '/assets/img/allergen/shrimp.png' },
-    { allergen: '7', name: 'かに', img: '/assets/img/allergen/crab.png' },
-    { allergen: '8', name: 'くるみ', img: '/assets/img/allergen/walnut.png' },
-  ]
-
   useEffect(() => {
     if (open) {
       setQuantity(1);
@@ -67,7 +56,7 @@ export default function ItemInfoDialog({ shop, data, open, setOpen }: ItemInfoDi
   return (
     <Fragment>
       <Dialog
-        className="item-info-dialog"
+        className="item-dialog"
         fullScreen={isSp}
         open={open}
         onClose={() => setOpen(false)}
@@ -103,7 +92,7 @@ export default function ItemInfoDialog({ shop, data, open, setOpen }: ItemInfoDi
               </div>
             </div>
             {data.discountPrice && data.discountPrice < data.itemPrice ?
-              <div className="price">
+              <div className="price-wrapper">
                 <p className="current-price on-sale">
                   {currency(data.discountPrice)}
                   <span className="unit">円</span>
@@ -114,7 +103,7 @@ export default function ItemInfoDialog({ shop, data, open, setOpen }: ItemInfoDi
                 </p>
               </div>
               :
-              <div className="price">
+              <div className="price-wrapper">
                 <p className="current-price">
                   {currency(data.itemPrice)}
                   <span className="unit">円</span>
@@ -122,9 +111,11 @@ export default function ItemInfoDialog({ shop, data, open, setOpen }: ItemInfoDi
               </div>
             }
             {data.itemDescription &&
-              <p className="description">
-                {data.itemDescription}
-              </p>
+              <div className="description-wrapper">
+                <p className="description">
+                  {data.itemDescription}
+                </p>
+              </div>
             }
             {data.allergens &&
               <>
@@ -135,7 +126,8 @@ export default function ItemInfoDialog({ shop, data, open, setOpen }: ItemInfoDi
                   {allergensList.map((allergen, index) => (
                     <span
                       key={allergen.allergen}
-                      className={`allergen ${data.allergens && data.allergens[index] === '1' ? 'active' : ''}`}>
+                      className={`allergen ${data.allergens && data.allergens[index] === '1' ? 'active' : ''}`}
+                    >
                       <Image
                         src={allergen.img}
                         alt={allergen.name}
@@ -154,11 +146,9 @@ export default function ItemInfoDialog({ shop, data, open, setOpen }: ItemInfoDi
               <div className="option-wrapper">
                 <p className="option-title">
                   オプション
-                  {data.optionMultiple &&
-                    <span className="option-multiple">
-                      {`(複数選択可)`}
-                    </span>
-                  }
+                  <span className="option-multiple">
+                    {data.optionMultiple ? "複数選択可" : "1つ選択可"}
+                  </span>
                 </p>
                 <div className="option-list">
                   {data.optionMultiple ?

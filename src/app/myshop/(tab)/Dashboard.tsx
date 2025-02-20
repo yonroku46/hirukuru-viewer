@@ -14,12 +14,12 @@ function Dashboard({ shop }: SettingProps)  {
 
   return (
     <Suspense fallback={<Loading circular />}>
-      <div className="tab-title">
-        <Title
-          title="ダッシュボード"
-        />
-      </div>
       <div className="tab-contents dashboard">
+        <div className="tab-title">
+          <Title
+            title="ダッシュボード"
+          />
+        </div>
         ダッシュボード機能は準備中です
       </div>
     </Suspense>

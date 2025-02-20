@@ -126,7 +126,7 @@ export default function ShopPage(
 
   const shopGuideList = [
     { icon: <ShoppingCartIcon />, title: "ご注文方法", description: "メニューから商品のラインナップを閲覧していただき、お気に入りの商品をカートに入れてご注文いただく事ができます。\n大量注文の場合は「お問い合わせ」ページからご連絡お願いします。" },
-    { icon: <CachedIcon />, title: "変更・キャンセル", description: "納品日1日前：16:59まで\n → キャンセル料不要\n納品日1日前：17:00以降\n → ご注文金額の100%のキャンセル料がかかります。" },
+    { icon: <CachedIcon />, title: "変更・キャンセル", description: "受け取り予定1日前：16:59まで\n → キャンセル料不要\n受け取り予定1日前：17:00以降\n → ご注文金額の100%のキャンセル料がかかります。" },
     { icon: <CreditCardIcon />, title: "支払方法", description: "現金、クレジットカードがお選びいただけます。" },
     { icon: <MonetizationOnIcon />, title: "ポイント", description: "ログインしてご注文いただくと支払い金額の「1.5%」がポイントとして貯まります。\nポイントはご注文の際にご利用、またはギフト券などに交換できます。\n(※オフラインで購入する場合は会員証のご提示で同じくポイントが貯まります。)" },
   ]

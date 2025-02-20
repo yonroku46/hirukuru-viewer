@@ -49,9 +49,11 @@ export default function ItemCard({ data, onClick, onHover, href, openNewTab, sol
           <div className="name">
             {data.itemName}
           </div>
-          <div className="rating">
-            {data.ratingAvg || "-"}
-          </div>
+          {!originView &&
+            <div className="rating">
+              {data.ratingAvg || "-"}
+            </div>
+          }
         </div>
         {!originView && data.discountPrice && data.discountPrice < data.itemPrice ?
           <div className="price">

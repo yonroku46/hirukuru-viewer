@@ -113,26 +113,26 @@ function ShopSetting({ isSp, shop, setShop }: SettingProps)  {
 
   return (
     <Suspense fallback={<Loading circular />}>
-      <div className="tab-title">
-        <Title
-          title="店舗情報"
-        />
-        <div className="edit-btn-group">
-          {editMode && (
-            <MiniButton
-              icon={<CancelIcon />}
-              onClick={() => handleEditToggle(true)}
-              label={isSp ? undefined : "取り消し"}
-            />
-          )}
-          <MiniButton
-            icon={editMode ? <SaveIcon /> : <EditIcon />}
-            onClick={() => handleEditToggle()}
-            label={isSp ? undefined : editMode ? '保存' : '編集'}
-          />
-        </div>
-      </div>
       <div className="tab-contents shop-setting">
+        <div className="tab-title">
+          <Title
+            title="店舗情報"
+          />
+          <div className="edit-btn-group">
+            {editMode && (
+              <MiniButton
+                icon={<CancelIcon />}
+                onClick={() => handleEditToggle(true)}
+                label={isSp ? undefined : "取り消し"}
+              />
+            )}
+            <MiniButton
+              icon={editMode ? <SaveIcon /> : <EditIcon />}
+              onClick={() => handleEditToggle()}
+              label={isSp ? undefined : editMode ? '保存' : '編集'}
+            />
+          </div>
+        </div>
         <div className="shop-info-container">
           <div className="shop-info-img-wrapper">
             <label>

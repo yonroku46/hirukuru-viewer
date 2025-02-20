@@ -1,9 +1,12 @@
-import React, { Suspense, useState, useEffect } from 'react';
+import React, { Suspense, useState, useEffect, SetStateAction, Dispatch, useRef } from 'react';
 import Loading from '@/app/loading';
+import { createKanaSearchRegex } from '@/common/utils/SearchUtils';
 import MiniButton from '@/components/button/MiniButton';
 import ItemCard from '@/components/ItemCard';
 import SearchInput from '@/components/input/SearchInput';
 import Title from '@/components/layout/Title';
+import ItemEditDialog from '@/components/ItemEditDialog';
+import ConfirmDialog from '@/components/ConfirmDialog';
 import { DndContext, DragEndEvent, closestCenter } from '@dnd-kit/core';
 import { SortableContext, useSortable, rectSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -12,6 +15,9 @@ import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
+import SearchOffIcon from '@mui/icons-material/SearchOff';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import WarningIcon from '@mui/icons-material/Warning';
 
 interface SettingProps {
   isSp: boolean;
@@ -21,11 +27,12 @@ interface SettingProps {
 interface SortableItemProps {
   isSp: boolean;
   editMode: boolean;
+  shop: Shop;
   item: Item;
-  handleItemClick: (item: Item) => void;
+  setItems: Dispatch<SetStateAction<ItemState[]>>;
 }
 
-function SortableItem({ isSp, editMode, item, handleItemClick }: SortableItemProps) {
+function SortableItem({ isSp, editMode, item, setItems }: SortableItemProps) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: item.itemId });
 
   const style = {
@@ -34,15 +41,57 @@ function SortableItem({ isSp, editMode, item, handleItemClick }: SortableItemPro
     touchAction: isSp ? 'none' : 'auto',
   };
 
+  const [openInfo, setOpenInfo] = useState<boolean>(false);
+  const [openConfirm, setOpenConfirm] = useState<boolean>(false);
+
+  const handleItemClick = () => {
+    setOpenInfo(true);
+  };
+
+  const handleDeleteItem = (itemId: string) => {
+    setItems((prevItems) => {
+      const updatedItems = prevItems.filter((i) => i.itemId !== itemId);
+      return updatedItems.map((item, index) => ({
+        ...item,
+        itemOrder: index + 1,
+      }));
+    });
+  };
+
   return (
-    <div ref={setNodeRef} style={style} {...attributes}>
-      {editMode && (
-        <span className="item-order" {...listeners} style={{ touchAction: 'none' }}>
+    <>
+      <div ref={setNodeRef} style={{ ...style, position: 'relative' }} {...attributes}>
+        <span className="item-order" {...(editMode ? listeners : {})} style={{ touchAction: 'none', cursor: editMode ? 'grab' : 'default' }}>
           {item.itemOrder}
         </span>
-      )}
-      <ItemCard originView data={item} onClick={() => handleItemClick(item)} />
-    </div>
+        {editMode && (
+          <span className="delete-icon" onClick={() => setOpenConfirm(true)}>
+            <DeleteOutlineOutlinedIcon />
+          </span>
+        )}
+        <ItemCard originView data={item} onClick={handleItemClick} />
+      </div>
+      <ItemEditDialog
+        editMode={editMode}
+        data={item}
+        open={openInfo}
+        setOpen={setOpenInfo}
+        saveData={(data) => {
+          setItems((prevItems) =>
+            prevItems.map((i) => i.itemId === data.itemId ? data : i)
+          );
+        }}
+      />
+      <ConfirmDialog
+        icon={<WarningIcon />}
+        title="商品を削除しますか？"
+        description={`商品を削除すると、\n紐づく統計データにも反映されます。`}
+        open={openConfirm}
+        setOpen={setOpenConfirm}
+        onConfirm={() => handleDeleteItem(item.itemId)}
+        onCancel={() => setOpenConfirm(false)}
+      />
+    </>
   );
 }
 
@@ -51,8 +100,7 @@ function ItemSetting({ isSp, shop }: SettingProps)  {
   const [editMode, setEditMode] = useState<boolean>(false);
   const [items, setItems] = useState<ItemState[]>([]);
   const [tempItems, setTempItems] = useState<ItemState[]>([]);
-  const [groupedItems, setGroupedItems] = useState<Record<string, ItemState[]>>({});
-  const [categories, setCategories] = useState<ItemCategory[]>([]);
+  const endOfListRef = useRef<HTMLDivElement | null>(null);
 
   const handleEditToggle = (isCancel: boolean = false) => {
     if (editMode && !isCancel) {
@@ -64,51 +112,34 @@ function ItemSetting({ isSp, shop }: SettingProps)  {
     setEditMode(!editMode);
   };
 
-  const handleItemClick = (item: Item) => {
-    console.log(item);
-  };
-
   const handleAddItem = () => {
-    const itemNumber = items.length + 1;
+    const itemNumber = tempItems.length + 1;
     const newItem = {
       itemId: `new-${itemNumber}`, shopId: shop.shopId, itemName: `新規商品${itemNumber}`, itemOrder: itemNumber, itemPrice: 0
     } as ItemState;
-    setGroupedItems((prevGroupedItems) => ({
-      ...prevGroupedItems,
-      '未分類': [...(prevGroupedItems['未分類'] || []), newItem]
-    }));
-    setTempItems([...items, newItem]);
+    setTempItems((prevItems) => [...prevItems, newItem]);
+    setTimeout(() => {
+      endOfListRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, 0);
   };
 
   const onItemDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (over && active.id !== over.id) {
-      setGroupedItems((prevGroupedItems) => {
-        const category = Object.keys(prevGroupedItems).find(categoryName =>
-          prevGroupedItems[categoryName].some(item => item.itemId === active.id)
-        );
-        if (!category) return prevGroupedItems;
+      const activeIndex = tempItems.findIndex((item) => item.itemId === active.id);
+      const overIndex = tempItems.findIndex((item) => item.itemId === over.id);
 
-        const items = prevGroupedItems[category];
-        const activeIndex = items.findIndex((item) => item.itemId === active.id);
-        const overIndex = items.findIndex((item) => item.itemId === over.id);
+      const updatedItems = [...tempItems];
+      const [movedItem] = updatedItems.splice(activeIndex, 1);
+      updatedItems.splice(overIndex, 0, movedItem);
 
-        const updatedItems = [...items];
-        const [movedItem] = updatedItems.splice(activeIndex, 1);
-        updatedItems.splice(overIndex, 0, movedItem);
-
-        const reorderedItems = updatedItems.map((item, index) => {
-          return {
-            ...item,
-            itemOrder: index + 1,
-          };
-        });
-
+      const reorderedItems = updatedItems.map((item, index) => {
         return {
-          ...prevGroupedItems,
-          [category]: reorderedItems
+          ...item,
+          itemOrder: index + 1,
         };
       });
+      setTempItems(reorderedItems);
     }
   };
 
@@ -135,13 +166,7 @@ function ItemSetting({ isSp, shop }: SettingProps)  {
       { itemId: '9', shopId: dummyShopId, itemName: 'ソースカツ弁当', itemOrder: 9, itemPrice: 1000, ratingAvg: 4.3, thumbnailImg: 'https://i.pinimg.com/736x/09/cc/18/09cc18f3ab7aeb70638f33170251bceb.jpg' },
       { itemId: '10', shopId: dummyShopId, itemName: 'カツカレー', itemOrder: 10, itemPrice: 1000, ratingAvg: 4.3, thumbnailImg: 'https://i.pinimg.com/736x/7f/6f/55/7f6f5560ca41e1870c59b18f6f1f2360.jpg' },
     ];
-    const dummyCategories: ItemCategory[] = [
-      { categoryId: '2', shopId: dummyShopId, categoryName: '日替わり弁当', categoryOrder: 1 },
-      { categoryId: '1', shopId: dummyShopId, categoryName: '特製弁当', categoryOrder: 2 },
-      { categoryId: '3', shopId: dummyShopId, categoryName: '定番弁当', categoryOrder: 3 },
-    ];
     setItems(dummyItems as Item[]);
-    setCategories(dummyCategories);
   }, []);
 
   useEffect(() => {
@@ -149,114 +174,99 @@ function ItemSetting({ isSp, shop }: SettingProps)  {
   }, [shop]);
 
   useEffect(() => {
-    const grouped = items.reduce((acc, item) => {
-      const category = item.categoryName || '未分類';
-      if (!acc[category]) {
-        acc[category] = [];
-      }
-      acc[category].push(item);
-      return acc;
-    }, {} as Record<string, Item[]>);
-
-    setGroupedItems(grouped);
+    if (items.length > 0) {
+      setTempItems(items);
+    }
   }, [items]);
+
+  useEffect(() => {
+    if (editMode) return;
+    if (searchValue) {
+      const searchRegex = createKanaSearchRegex(searchValue);
+      setTempItems(items.filter((item) => searchRegex.test(item.itemName)));
+    } else {
+      setTempItems(items);
+    }
+  }, [searchValue, editMode, items]);
+
+  useEffect(() => {
+    if (editMode) {
+      setSearchValue("");
+      setTempItems(items);
+    }
+  }, [editMode, items]);
 
   return (
     <Suspense fallback={<Loading circular />}>
-      <div className="tab-title">
-        <Title
-          title="商品設定"
-          count={items.length}
-          countUnit="件"
-        />
-        <div className="edit-btn-group">
-          {editMode &&
-            <MiniButton
-              icon={<LibraryAddIcon />}
-              onClick={handleAddItem}
-              label={isSp ? undefined : "新規追加"}
-              sx={{ marginRight: '0.5rem' }}
-            />
-          }
-          {editMode && (
-            <MiniButton
-              icon={<CancelIcon />}
-              onClick={() => handleEditToggle(true)}
-              label={isSp ? undefined : "取り消し"}
-            />
-          )}
-          <MiniButton
-            icon={editMode ? <SaveIcon /> : <EditIcon />}
-            onClick={() => handleEditToggle()}
-            label={isSp ? undefined : editMode ? '保存' : '編集'}
-          />
-        </div>
-      </div>
       <div className="tab-contents item-setting">
+        <div className="tab-title">
+          <Title
+            title="商品設定"
+            count={items.length}
+            countUnit="件"
+          />
+          <div className="edit-btn-group">
+            {editMode &&
+              <MiniButton
+                icon={<LibraryAddIcon />}
+                onClick={handleAddItem}
+                label={isSp ? undefined : "新規追加"}
+                sx={{ marginRight: '0.5rem' }}
+              />
+            }
+            {editMode && (
+              <MiniButton
+                icon={<CancelIcon />}
+                onClick={() => handleEditToggle(true)}
+                label={isSp ? undefined : "取り消し"}
+              />
+            )}
+            <MiniButton
+              icon={editMode ? <SaveIcon /> : <EditIcon />}
+              onClick={() => handleEditToggle()}
+              label={isSp ? undefined : editMode ? '保存' : '編集'}
+            />
+          </div>
+        </div>
         <div className="item-list-filter">
           <SearchInput
             searchMode
             placeholder="商品名を検索"
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
+            disabled={editMode}
           />
         </div>
         <div className="item-list-wrapper">
-          {groupedItems['未分類'] && (
-            <DndContext collisionDetection={closestCenter} onDragEnd={onItemDragEnd}>
-              <SortableContext
-                items={groupedItems['未分類'].map(item => item.itemId)}
-                strategy={rectSortingStrategy}
-              >
-                <div className="category-group unclassified">
-                  <h3 className="category-title">未分類</h3>
-                  <div className="item-list">
-                    {groupedItems['未分類']
-                      .sort((a, b) => a.itemOrder - b.itemOrder)
-                      .map((item) => (
-                        <SortableItem
-                          key={item.itemId}
-                          isSp={isSp}
-                          editMode={editMode}
-                          item={item}
-                          handleItemClick={handleItemClick}
-                        />
-                      ))
-                    }
-                  </div>
+          <DndContext collisionDetection={closestCenter} onDragEnd={onItemDragEnd}>
+            <SortableContext
+              items={tempItems.map(item => item.itemId)}
+              strategy={rectSortingStrategy}
+            >
+              {tempItems.length > 0 ?
+                <div className="item-list">
+                  {tempItems
+                    .sort((a, b) => a.itemOrder - b.itemOrder)
+                    .map((item) => (
+                      <SortableItem
+                        key={item.itemId}
+                        isSp={isSp}
+                        editMode={editMode}
+                        shop={shop}
+                        item={item}
+                        setItems={setTempItems}
+                      />
+                  ))}
+                  <div ref={endOfListRef} />
                 </div>
-              </SortableContext>
-            </DndContext>
-          )}
-          {categories.map((category, index) => (
-            <DndContext key={index} collisionDetection={closestCenter} onDragEnd={onItemDragEnd}>
-              <SortableContext
-                items={(groupedItems[category.categoryName] || []).map(item => item.itemId)}
-                strategy={rectSortingStrategy}
-              >
-                <div className="category-group">
-                  <h3 className="category-title">
-                    {category.categoryName}
-                  </h3>
-                  <div className="item-list">
-                    {(groupedItems[category.categoryName] || [])
-                      .sort((a, b) => a.itemOrder - b.itemOrder)
-                      .map((item) => (
-                        <SortableItem
-                          key={item.itemId}
-                          isSp={isSp}
-                          editMode={editMode}
-                          item={item}
-                          handleItemClick={handleItemClick}
-                        />
-                      ))
-                    }
-                  </div>
+                :
+                <div className="item-list no-items">
+                  <SearchOffIcon fontSize="large" />
+                  <p>表示する商品がありません</p>
                 </div>
-              </SortableContext>
-            </DndContext>
-            ))
-          }
+              }
+            </SortableContext>
+          </DndContext>
         </div>
       </div>
     </Suspense>

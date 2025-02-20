@@ -28,14 +28,28 @@ export default function MuiMenu({ anchorEl, setAnchorEl, menuList }: MuiMenuProp
         open={open}
         onClose={handleClose}
         MenuListProps={{
-          'aria-labelledby': 'basic-button',
+          sx: {
+            pt: "0.25rem",
+            pb: "0.25rem",
+          },
+        }}
+        slotProps={{
+          paper: {
+            style: {
+              minWidth: "200px",
+              marginTop: "0.25rem",
+              border: "1px solid var(--gray-alpha-300)",
+              borderRadius: "0.75rem",
+              boxShadow: "0 2px 6px rgba(0, 0, 0, 0.2)",
+            },
+          },
         }}
       >
         {menuList.map((menu, index) => (
           <div key={index}>
-            {index !== 0 && <Divider sx={{ margin: '8px 0' }} />}
+            {index !== 0 && <Divider sx={{ margin: '0.25rem 0' }} />}
             {menu.map((item, subIndex) => (
-              <MenuItem key={subIndex} onClick={() => handleClick(item.onClick)}>
+              <MenuItem key={subIndex} onClick={() => handleClick(item.onClick)} sx={{ padding: "0.5rem 1rem" }}>
                 <ListItemIcon>
                   {item.icon}
                 </ListItemIcon>

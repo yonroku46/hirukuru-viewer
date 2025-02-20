@@ -107,6 +107,9 @@ declare global {
   interface ShopType {
     type: 'BENTO' | 'FOOD_TRUCK';
   }
+  interface ReceiverType {
+    type: 'SHOP' | 'USER';
+  }
   interface ServiceNoticeType {
     type: 'NOTICE' | 'EVENT';
   }
@@ -252,6 +255,15 @@ declare global {
     shopId: string;
     categoryName: string;
     categoryOrder: number;
+  }
+  interface NotificationInfo {
+    notificationId: string;
+    receiverId: string;
+    receiverType: ReceiverType['type'];
+    title: string;
+    message: string;
+    readFlg: boolean;
+    createTime: string;
   }
 }
 

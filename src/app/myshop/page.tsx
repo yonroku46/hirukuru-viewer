@@ -5,10 +5,12 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useMediaQuery } from "react-responsive";
 import { useAppSelector } from "@/store";
 import Image from "@/components/Image";
+import Notifications from "@/components/layout/Notifications";
 import Dashboard from "./(tab)/Dashboard";
 import ShopSetting from "./(tab)/ShopSetting";
 import ItemSetting from "./(tab)/ItemSetting";
 import CategorySetting from "./(tab)/CategorySetting";
+import Operate from "./(tab)/Operate";
 
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -59,6 +61,8 @@ export default function MyShopPage() {
   const [tabValue, setTabValue] = useState<string>(tab || initialTab);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [shop, setShop] = useState<Shop | null>(null);
+  const [notifications, setNotifications] = useState<NotificationInfo[]>([]);
+  const [notReadCount, setNotReadCount] = useState<number>(0);
 
   // const getShopInfo = useCallback(() => {
   //   userService.userInfo().then((shop) => {
@@ -91,9 +95,10 @@ export default function MyShopPage() {
 
   useEffect(() => {
     if (!authState.hasLogin) {
+      router.replace('/login');
       return;
     }
-    if (isSp && isMenuOpen) {
+    if (isMenuOpen) {
       setIsMenuOpen(false);
     }
     if (tab) {
@@ -106,7 +111,7 @@ export default function MyShopPage() {
       router.replace(`${tabBaseUrl}${initialTab}`);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tab, isSp]);
+  }, [tab]);
 
   useEffect(() => {
     const shop: Shop = {
@@ -136,7 +141,34 @@ export default function MyShopPage() {
       }
     };
     setShop(shop);
+    const dummyNotifications: NotificationInfo[] = [
+      {
+        notificationId: '1',
+        receiverId: '1',
+        receiverType: 'SHOP',
+        title: '通知1',
+        message: '通知1のメッセージ',
+        readFlg: false,
+        createTime: '2024-01-01 10:00:00'
+      },
+      {
+        notificationId: '2',
+        receiverId: '1',
+        receiverType: 'SHOP',
+        title: '通知2',
+        message: '通知2のメッセージ',
+        readFlg: false,
+        createTime: '2024-01-01 10:40:00'
+      },
+    ];
+    setNotifications(dummyNotifications);
   }, []);
+
+  useEffect(() => {
+    if (notifications.length > 0) {
+      setNotReadCount(notifications.filter((notification) => !notification.readFlg).length);
+    }
+  }, [notifications]);
 
   if (!shop) return null;
 
@@ -145,6 +177,7 @@ export default function MyShopPage() {
     "shop": <ShopSetting isSp={isSp} shop={shop} setShop={setShop} />,
     "item": <ItemSetting isSp={isSp} shop={shop} />,
     "category": <CategorySetting isSp={isSp} shop={shop} />,
+    "operate": <Operate isSp={isSp} shop={shop} />,
   };
 
   return (
@@ -153,19 +186,17 @@ export default function MyShopPage() {
         <div className="content-header">
           <div className="shop-info">
             <div className="shop-profile-wrapper">
-              {isSp && (
-                <button
-                  className={`shop-menu-btn ${isMenuOpen ? "open" : ""}`}
-                  onClick={() => setIsMenuOpen(!isMenuOpen)}
-                >
-                  <KeyboardArrowDownIcon />
-                </button>
-              )}
+              <button
+                className={`shop-menu-btn ${isMenuOpen ? "open" : ""}`}
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+              >
+                <KeyboardArrowDownIcon />
+              </button>
               <Image
                 src={shop.profileImg}
                 alt={shop.shopName}
-                width={40}
-                height={40}
+                width={36}
+                height={36}
               />
               <div className="shop-name-wrapper">
                 <p className="shop-location">
@@ -176,39 +207,60 @@ export default function MyShopPage() {
                 </p>
               </div>
             </div>
+            <Notifications
+              count={notReadCount}
+              notifications={notifications}
+              setNotifications={setNotifications}
+              onClick={(notificationId) => {
+                console.log(notificationId);
+              }}
+            />
           </div>
         </div>
         <div className="content-body">
           {/* Tab Menu */}
-          <div className={`tab-menu ${isSp && isMenuOpen ? "open" : "close"}`}>
+          <div className={`tab-menu ${isMenuOpen ? "open" : "close"}`}>
               <List sx={{ p: 0 }}>
                 {menuItems.map((group) => (
-                  <div key={group.groupName}>
+                  <div key={group.groupName} className="tab-menu-group">
                     <ListItem disablePadding>
-                      <ListItemButton disabled sx={{ opacity: "0.75 !important" }}>
-                        <ListItemText primary={group.groupName} />
+                      <ListItemButton disabled sx={{ opacity: "0.75 !important", height: "3rem" }}>
+                        <ListItemText
+                          primary={(isSp || isMenuOpen) ? group.groupName : ""}
+                          sx={{
+                            border: (isSp || isMenuOpen) ? "none" : "1px solid var(--gray-alpha-400)",
+                            whiteSpace: "nowrap",
+                            overflow: "hidden"
+                          }}
+                        />
                       </ListItemButton>
                     </ListItem>
                     {group.groupItems.map((item, index) => (
-                      <ListItem disablePadding key={index}>
+                      <ListItem disablePadding key={index} sx={{ width: (isSp || isMenuOpen) ? "100%" : "fit-content" }}>
                         <ListItemButton
                           onClick={() => router.replace(`${tabBaseUrl}${item.href}`)}
                           sx={{
                             ml: 1, mr: 1,
                             borderRadius: "0.5rem",
                             boxShadow: tabValue === item.href ? "inset 0 0 0 0.125rem var(--primary-color)" : "none",
-                            color: tabValue === item.href ? "var(--primary-color)" : "var(--foreground)"
+                            color: tabValue === item.href ? "var(--primary-color)" : "var(--foreground)",
+                            height: "3rem"
                           }}
                         >
                           <ListItemIcon
                             sx={{
-                              minWidth: "3rem",
+                              minWidth: (isSp || isMenuOpen) ? "3rem" : "fit-content",
                               color: tabValue === item.href ? "var(--primary-color)" : "var(--foreground)"
                             }}
                           >
                             {item.icon}
                           </ListItemIcon>
-                          <ListItemText primary={item.name} />
+                          {(isSp || isMenuOpen) &&
+                            <ListItemText
+                              primary={item.name}
+                              sx={{ whiteSpace: "nowrap", overflow: "hidden" }}
+                            />
+                          }
                         </ListItemButton>
                       </ListItem>
                     ))}
@@ -220,12 +272,14 @@ export default function MyShopPage() {
             </List>
           </div>
           {/* Tab View */}
-          <div className="tab-view">
-            <Backdrop
-              sx={{ backgroundColor: 'rgba(255, 255, 255, 0.5)', zIndex: 1300 }}
-              open={isSp && isMenuOpen}
-              onClick={() => setIsMenuOpen(false)}
-            />
+          <div className={`tab-view ${isMenuOpen ? "open" : "close"}`}>
+            {isSp &&
+              <Backdrop
+                sx={{ backgroundColor: 'rgba(238, 238, 238, 0.7)', zIndex: 1300 }}
+                open={isMenuOpen}
+                onClick={() => setIsMenuOpen(false)}
+              />
+            }
             {tabViewerMap[tabValue]}
           </div>
         </div>

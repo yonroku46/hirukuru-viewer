@@ -1,5 +1,16 @@
 import dayjs from "dayjs";
 
+export const allergensList: { allergen: string, name: string, img: string }[] = [
+  { allergen: '1', name: '卵', img: '/assets/img/allergen/egg.png' },
+  { allergen: '2', name: '乳', img: '/assets/img/allergen/milk.png' },
+  { allergen: '3', name: '小麦', img: '/assets/img/allergen/wheat.png' },
+  { allergen: '4', name: 'そば', img: '/assets/img/allergen/buckwheat.png' },
+  { allergen: '5', name: '落花生', img: '/assets/img/allergen/peanut.png' },
+  { allergen: '6', name: 'えび', img: '/assets/img/allergen/shrimp.png' },
+  { allergen: '7', name: 'かに', img: '/assets/img/allergen/crab.png' },
+  { allergen: '8', name: 'くるみ', img: '/assets/img/allergen/walnut.png' },
+];
+
 export function createState(len: number) {
   const characters = '0123456789abcdefghijklmnopqrstuvwxyz';
   let result = '';
@@ -99,12 +110,12 @@ export function orderStatusDict(orderStatusType: OrderStatusCount['status'], key
   return orderStatus.find((s) => s.key === orderStatusType)?.[key] || '';
 }
 
-export function payTypeDict(payTypeType: PayType['type'], key: 'label'): string {
+export function payTypeDict(payTypeType: PayType['type'], key: 'label' | 'status'): string {
   const payType = [
-    { key: "CASH", label: "現金" },
-    { key: "CARD", label: "カード" },
-    { key: "APPLE", label: "Apple Pay" },
-    { key: "GOOGLE", label: "Google Pay" },
+    { key: "CASH", label: "現金", status: "現金払い" },
+    { key: "CARD", label: "カード", status: "支払い済み" },
+    { key: "APPLE", label: "Apple Pay", status: "支払い済み" },
+    { key: "GOOGLE", label: "Google Pay", status: "支払い済み" },
   ];
   return payType.find((s) => s.key === payTypeType)?.[key] || '';
 }

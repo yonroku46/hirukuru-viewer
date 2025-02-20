@@ -38,6 +38,10 @@ const PLATFORM_ROOT = `${ROOT}/service`;
 const CONTACT_SUBMIT = `${PLATFORM_ROOT}/contact/submit`;
 const PARTNER_SUBMIT = `${PLATFORM_ROOT}/partner/submit`;
 
+// partner
+const PARTNER_ROOT = `${ROOT}/partner`;
+const PARTNER_ORDER_LIST = `${PARTNER_ROOT}/order/list`;
+
 const ApiRoutes = {
   HEALTH_CHECK,
   GOOGLE_ACCESS_TOKEN,
@@ -60,6 +64,7 @@ const ApiRoutes = {
   ORDER_INFO_SHOP,
   CONTACT_SUBMIT,
   PARTNER_SUBMIT,
+  PARTNER_ORDER_LIST
 };
 
 
