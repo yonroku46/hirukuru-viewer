@@ -78,6 +78,7 @@ export default function SearchInput({ value, placeholder, searchMode, autoFocus,
       <MiniButton
         icon={<SearchIcon />}
         onClick={handleSearchClick}
+        sx={{ border: 'none' }}
       />
     );
   }

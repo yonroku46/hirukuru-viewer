@@ -741,6 +741,7 @@ export default function CartDialog({ user, open, setOpen }: CartDialogProps) {
           </Badge>
         }
         onClick={handleOpen(true)}
+        sx={{ border: 'none' }}
       />
       <Dialog
         className="cart-dialog"

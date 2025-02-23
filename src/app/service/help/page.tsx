@@ -61,8 +61,8 @@ const AccordionSummary = styled((props: AccordionSummaryProps) => (
 }));
 
 const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
-  padding: theme.spacing(2),
-  borderTop: '1px solid var(--gray-alpha-500)',
+  padding: theme.spacing(3),
+  paddingLeft: theme.spacing(4),
   backgroundColor: 'rgba(0, 0, 0, .02)',
 }));
 
@@ -162,17 +162,18 @@ export default function ServiceHelpPage() {
                           component="span"
                           sx={{
                             fontWeight: expandItem === index ? 'bold' : 'normal',
-                            color: expandItem === index ? 'var(--primary-color)' : 'var(--foreground)'
+                            color: expandItem === index ? 'var(--primary-color)' : 'var(--foreground)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.5rem',
                           }}
                         >
                           <ContactSupportIcon
                             sx={{
-                              position: 'absolute',
-                              top: '0.25rem',
-                              left: '0.25rem',
                               opacity: 0.1,
                               fontSize: '2rem',
-                              color: expandItem === index ? 'var(--primary-color)' : 'var(--foreground)'
+                              color: expandItem === index ? 'var(--primary-color)' : 'var(--foreground)',
+                              marginLeft: '-0.5rem',
                             }}
                           />
                           {question.question}
