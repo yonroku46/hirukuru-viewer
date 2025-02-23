@@ -18,7 +18,7 @@ import Chip from '@mui/material/Chip';
 import Rating from '@mui/material/Rating';
 import StarRoundedIcon from '@mui/icons-material/StarRounded';
 import IconButton from '@mui/material/IconButton';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import Collapse from '@mui/material/Collapse';
 
@@ -80,11 +80,18 @@ export default function MuiTable<T extends Row>({ topSection, columns, rows }: M
                 dpValue = (
                   <Chip
                     size="small"
-                    label={orderStatusDict(value as OrderStatusCount['status'], 'label')}
+                    label={
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                        {orderStatusDict(value as OrderStatusCount['status'], 'icon')}
+                        {orderStatusDict(value as OrderStatusCount['status'], 'label') as string}
+                      </div>
+                    }
                     sx={{
-                      backgroundColor: orderStatusDict(value as OrderStatusCount['status'], 'color'),
+                      backgroundColor: orderStatusDict(value as OrderStatusCount['status'], 'color') as string,
                       color: 'var(--background)',
-                      width: '100px',
+                      width: '110px',
+                      height: '28px',
+                      fontSize: '0.95rem',
                     }}
                   />
                 );
@@ -99,7 +106,7 @@ export default function MuiTable<T extends Row>({ topSection, columns, rows }: M
               case 'list':
                 dpValue = (
                   <IconButton size="small" onClick={() => setOpen(!open)}>
-                    {open ? <KeyboardArrowRightIcon /> : <KeyboardArrowDownIcon />}
+                    {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                   </IconButton>
                 );
                 break;
@@ -109,13 +116,14 @@ export default function MuiTable<T extends Row>({ topSection, columns, rows }: M
                 : currency(value as number, column.typeUnit);
                 break;
               case 'date':
-                dpValue = dayjs(value as string).format('YYYY-MM-DD');
+                dpValue = column.dateFormat && typeof value === 'string'
+                ? column.dateFormat(value)
+                : dayjs(value as string).format('YYYY-MM-DD');
                 break;
               case 'time':
-                const date = dayjs(value as string);
-                if (date.isValid()) {
-                  dpValue = `${date.format('YYYY-MM-DD')}\n${date.format('HH:mm')}`;
-                }
+                dpValue = column.dateFormat && typeof value === 'string'
+                ? column.dateFormat(value)
+                : dayjs(value as string).isValid() && `${dayjs(value as string).format('YYYY-MM-DD')}\n${dayjs(value as string).format('HH:mm')}`
                 break;
               default:
                 dpValue = value;
@@ -132,6 +140,7 @@ export default function MuiTable<T extends Row>({ topSection, columns, rows }: M
                   width: column.width,
                   minWidth: column.minWidth,
                   maxWidth: column.maxWidth,
+                  fontSize: '1rem',
                 }}
               >
                 {dpValue}
@@ -159,6 +168,7 @@ export default function MuiTable<T extends Row>({ topSection, columns, rows }: M
                             sx={{
                               backgroundColor: 'var(--gray-alpha-500)',
                               color: 'var(--background)',
+                              fontSize: '1rem',
                               width: listColumn.width,
                               minWidth: listColumn.minWidth,
                               maxWidth: listColumn.maxWidth,
@@ -184,10 +194,10 @@ export default function MuiTable<T extends Row>({ topSection, columns, rows }: M
                                   textOverflow: 'ellipsis',
                                   overflow: 'hidden',
                                   whiteSpace: 'normal',
-                                  backgroundColor: 'var(--gray-alpha-100)',
                                   width: listColumn.width,
                                   minWidth: listColumn.minWidth,
                                   maxWidth: listColumn.maxWidth,
+                                  fontSize: '1rem',
                                   borderBottom: index === listRowChild.length - 1 ? 'unset' : '',
                                 }}
                               >
@@ -238,11 +248,13 @@ export default function MuiTable<T extends Row>({ topSection, columns, rows }: M
                     key={column.key as string}
                     align={column.align}
                     sx={{
-                      backgroundColor: 'var(--foreground)',
-                      color: 'var(--background)',
+                      borderTop: '1px solid var(--gray-alpha-300)',
+                      backgroundColor: 'var(--gray-alpha-100)',
+                      fontSize: '1rem',
                       width: column.width,
                       minWidth: column.minWidth,
                       maxWidth: column.maxWidth,
+                      padding: '0.5rem 1rem',
                     }}
                   >
                     {column.label}

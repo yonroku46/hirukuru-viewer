@@ -29,6 +29,7 @@ declare global {
     align?: 'right' | 'center';
     hide?: boolean;
     format?: (value: number) => string;
+    dateFormat?: (value: string) => string;
     listColumns?: Column<T>[];
   }
   interface Row {
@@ -90,7 +91,7 @@ declare global {
     status: 'READY' | 'PICKUP' | 'PAYMENT' | 'FINAL' | 'DONE';
   }
   interface OrderStatusCount {
-    status: 'PENDING' | 'BOOKED' | 'PICKUP' | 'DONE' | 'REVIEW' | 'CANCEL';
+    status: 'PENDING' | 'BOOKED' | 'PICKUP' | 'DONE' | 'CANCEL';
     value: number;
   }
   interface ReviewStatusCount {

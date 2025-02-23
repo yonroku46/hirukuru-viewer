@@ -112,7 +112,7 @@ export default function MyOrderPage() {
     { type: 'month', key: 'month', label: '月', value: month.toString() },
     { type: 'select', key: 'status', label: '状況', value: status, options:
       [{ label: '全て', value: 'ALL' }, ...orderStatus.map(status => (
-        { label: orderStatusDict(status.status, 'label'), value: status.status }
+        { label: orderStatusDict(status.status, 'label') as string, value: status.status }
       ))]
     },
   ]
@@ -136,9 +136,10 @@ export default function MyOrderPage() {
       <MuiBreadcrumbs breadcrumbs={breadcrumbs} />
       <div className="myorder container">
         <OrderStatus
+          title="本日の注文状況"
           statusList={orderStatus}
         />
-        <hr className="container" style={{ margin: '2rem 0' }} />
+        <hr className="container" style={{ margin: '1rem 0' }} />
         <MuiTable
           topSection={
             <div className="order-history">

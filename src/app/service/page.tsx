@@ -100,12 +100,12 @@ export default function ServicePage() {
         <div className="container">
           <div className="service-main-wrapper">
               <div className="left-wrapper">
-                <h1 className="service-name">
-                  ヒルクル
-                </h1>
                 <p className="service-description">
-                  ランチをラクに、余裕のある時間へ
+                  ランチをスマートに
                 </p>
+                <h1 className="service-name">
+                  Hirukuru
+                </h1>
                 <div className="service-btn-wrapper">
                   <button className="service-btn" onClick={handleServiceClick}>
                     無料ではじめる
@@ -126,7 +126,7 @@ export default function ServicePage() {
             {/* Service Intro - Title */}
             <div className="service-title">
               <h3 className="title">
-                ヒルクルとは？
+                Hirukuru(ヒルクル)とは？
               </h3>
               <p className="description">
                 {`販売者との購入者を繋げて食事時間をより\n充実させるためのテイクアウト仲介サービスです`}

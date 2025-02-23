@@ -3,30 +3,29 @@
 import { currency, orderStatusDict } from '@/common/utils/StringUtils';
 import Title from '@/components/layout/Title';
 
-import AlarmOnOutlinedIcon from '@mui/icons-material/AlarmOnOutlined';
-import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined';
-import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
-
 interface OrderStatusProps {
+  title?: string;
   statusList: OrderStatusCount[];
 }
 
-export default function OrderStatus({ statusList }: OrderStatusProps) {
+export default function OrderStatus({ title, statusList }: OrderStatusProps) {
   const statusLabels: { status: OrderStatusCount['status'], label: string, icon: React.ReactNode }[] = [
-    { status: 'BOOKED', label: orderStatusDict('BOOKED', 'label'), icon: <AlarmOnOutlinedIcon fontSize="inherit" /> },
-    { status: 'PICKUP', label: orderStatusDict('PICKUP', 'label'), icon: <FmdGoodOutlinedIcon fontSize="inherit" /> },
-    { status: 'DONE', label: orderStatusDict('DONE', 'label'), icon: <ThumbUpAltOutlinedIcon fontSize="inherit" /> },
+    { status: 'BOOKED', label: orderStatusDict('BOOKED', 'label') as string, icon: orderStatusDict('BOOKED', 'icon') },
+    { status: 'PICKUP', label: orderStatusDict('PICKUP', 'label') as string, icon: orderStatusDict('PICKUP', 'icon') },
+    { status: 'DONE', label: orderStatusDict('DONE', 'label') as string, icon: orderStatusDict('DONE', 'icon') },
   ];
   const statusOptionalLabels: { status: OrderStatusCount['status'], label: string }[] = [
-    { status: 'REVIEW', label: orderStatusDict('REVIEW', 'label') },
-    { status: 'CANCEL', label: orderStatusDict('CANCEL', 'label') },
+    { status: 'PENDING', label: orderStatusDict('PENDING', 'label') as string },
+    { status: 'CANCEL', label: orderStatusDict('CANCEL', 'label') as string },
   ];
 
   return (
     <div className="status">
-      <Title
-        title="本日の注文状況"
-      />
+      {title && (
+        <Title
+          title={title}
+        />
+      )}
       <div className="status-items-wrapper">
         {statusLabels.map(({ status, label, icon }) => {
           const findStatus = statusList.find((s) => s.status === status);

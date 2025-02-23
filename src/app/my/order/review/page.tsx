@@ -28,9 +28,9 @@ export default function MyOrderReviewPage() {
     { key: 'userName', type: 'text', label: 'ユーザー名', hide: true },
     { key: 'shopId', type: 'text', label: '店舗ID', hide: true },
     { key: 'shopName', type: 'text', label: '店舗名', minWidth: 120, maxWidth: 120 },
-    { key: 'comment', type: 'text', label: 'コメント', minWidth: 250, maxWidth: 250 },
+    { key: 'reviewContent', type: 'text', label: 'コメント', minWidth: 250, maxWidth: 250 },
     { key: 'reviewRating', type: 'rating', label: '評価', width: 120, align: 'center' },
-    { key: 'date', type: 'text', label: '日付', minWidth: 100, maxWidth: 100, align: 'right' },
+    { key: 'date', type: 'date', label: '日付', minWidth: 100, maxWidth: 100, align: 'right' },
   ];
 
   function createData(
@@ -107,9 +107,10 @@ export default function MyOrderReviewPage() {
       <MuiBreadcrumbs breadcrumbs={breadcrumbs} />
       <div className="myorder container">
         <ReviewStatus
+          title="マイレビュー"
           statusList={reviewStatus}
         />
-        <hr className="container" style={{ margin: '2rem 0' }} />
+        <hr className="container" style={{ margin: '1rem 0' }} />
         <MuiTable
           topSection={
             <div className="order-history">

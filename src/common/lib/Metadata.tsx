@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { config } from "@/config";
-import { signOgImageUrl } from "@/common/lib/OgImage";
+// import { signOgImageUrl } from "@/common/lib/OgImage";
 
 type MetadataType = "home" | "login" | "signup" | "myshop" |
                     "my" | "my/order" | "my/favorite" | "my/point" | "my/coupon" | "my/order/review" |
@@ -34,9 +34,10 @@ export async function generatePageMetadata(type: MetadataType, name?: string): P
       description: config.service.metadata.description,
       locale: "ja",
       images: [
-        signOgImageUrl({
-          title: config.service.name,
-        }),
+        `${config.baseUrl}/assets/img/og-image-1200x630.png`,
+        // signOgImageUrl({
+        //   title: config.service.name,
+        // }),
       ]
     },
     twitter: {
@@ -47,9 +48,10 @@ export async function generatePageMetadata(type: MetadataType, name?: string): P
       },
       description: config.service.metadata.description,
       images: [
-        signOgImageUrl({
-          title: config.service.name,
-        }),
+        `${config.baseUrl}/assets/img/twitter-card-1200x600.png`,
+        // signOgImageUrl({
+        //   title: config.service.name,
+        // }),
       ],
       creator: "@univus",
     },
@@ -66,12 +68,20 @@ export async function generatePageMetadata(type: MetadataType, name?: string): P
     },
     icons: {
       icon: [
-        { url: "/assets/icon/favicon.ico" },
-        { url: "/assets/icon/favicon.svg", type: "image/svg+xml" }
+        { url: "/assets/icon/app/favicon.ico" },
+        { url: "/assets/icon/app/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+        { url: "/assets/icon/app/favicon-32x32.png", sizes: "32x32", type: "image/png" },
       ],
       apple: [
-        { url: "/assets/icon/apple-touch-icon.png" }
+        { url: "/assets/icon/app/apple-touch-icon-120x120.png", sizes: "120x120" },
+        { url: "/assets/icon/app/apple-touch-icon-152x152.png", sizes: "152x152" },
+        { url: "/assets/icon/app/apple-touch-icon-167x167.png", sizes: "167x167" },
+        { url: "/assets/icon/app/apple-touch-icon-180x180.png", sizes: "180x180" }
       ],
+      other: [
+        { url: "/assets/icon/app/icon-192x192.png", sizes: "192x192", type: "image/png" },
+        { url: "/assets/icon/app/icon-512x512.png", sizes: "512x512", type: "image/png" }
+      ]
     },
     manifest: "/manifest.json"
   };

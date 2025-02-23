@@ -25,12 +25,13 @@ interface SettingProps {
 }
 
 interface SortableCategoryProps {
+  isSp: boolean;
   editMode: boolean;
   category: ItemCategory;
   setCategory: Dispatch<SetStateAction<ItemCategory[]>>;
 }
 
-function SortableCategory({ editMode, category, setCategory }: SortableCategoryProps) {
+function SortableCategory({ isSp, editMode, category, setCategory }: SortableCategoryProps) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: category.categoryId });
 
   const style = {
@@ -63,10 +64,10 @@ function SortableCategory({ editMode, category, setCategory }: SortableCategoryP
     <>
       <div ref={setNodeRef} style={style} {...attributes}>
         <div className="category-info">
-          <span className="category-order" {...(editMode ? listeners : {})} style={{ touchAction: 'none', cursor: editMode ? 'grab' : 'default' }}>
-            {category.categoryOrder}
-          </span>
           <div className="category-name">
+            <span className="category-order" {...(editMode ? listeners : {})} style={{ touchAction: isSp ? 'none' : 'auto', cursor: editMode ? 'grab' : 'default' }}>
+              {category.categoryOrder}
+            </span>
             {editMode ? (
               <div className="category-name-input-wrapper">
                 <input
@@ -239,6 +240,7 @@ function ItemSetting({ isSp, shop }: SettingProps)  {
                   .map((category) => (
                   <SortableCategory
                     key={category.categoryId}
+                    isSp={isSp}
                     editMode={editMode}
                     category={category}
                     setCategory={setTempCategories}

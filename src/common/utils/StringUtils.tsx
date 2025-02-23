@@ -1,14 +1,20 @@
 import dayjs from "dayjs";
 
+import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
+import AccessAlarmOutlinedIcon from '@mui/icons-material/AccessAlarmOutlined';
+import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
+
 export const allergensList: { allergen: string, name: string, img: string }[] = [
-  { allergen: '1', name: '卵', img: '/assets/img/allergen/egg.png' },
-  { allergen: '2', name: '乳', img: '/assets/img/allergen/milk.png' },
-  { allergen: '3', name: '小麦', img: '/assets/img/allergen/wheat.png' },
-  { allergen: '4', name: 'そば', img: '/assets/img/allergen/buckwheat.png' },
-  { allergen: '5', name: '落花生', img: '/assets/img/allergen/peanut.png' },
-  { allergen: '6', name: 'えび', img: '/assets/img/allergen/shrimp.png' },
-  { allergen: '7', name: 'かに', img: '/assets/img/allergen/crab.png' },
-  { allergen: '8', name: 'くるみ', img: '/assets/img/allergen/walnut.png' },
+  { allergen: '1', name: '卵', img: '/assets/icon/allergen/egg.svg' },
+  { allergen: '2', name: '乳', img: '/assets/icon/allergen/milk.svg' },
+  { allergen: '3', name: '小麦', img: '/assets/icon/allergen/wheat.svg' },
+  { allergen: '4', name: 'そば', img: '/assets/icon/allergen/buckwheat.svg' },
+  { allergen: '5', name: '落花生', img: '/assets/icon/allergen/peanut.svg' },
+  { allergen: '6', name: 'えび', img: '/assets/icon/allergen/shrimp.svg' },
+  { allergen: '7', name: 'かに', img: '/assets/icon/allergen/crab.svg' },
+  { allergen: '8', name: 'くるみ', img: '/assets/icon/allergen/walnut.svg' },
 ];
 
 export function createState(len: number) {
@@ -98,14 +104,13 @@ export function optionsToString(options: ItemOption | ItemOption[]): string {
     : formatOption(options);
 }
 
-export function orderStatusDict(orderStatusType: OrderStatusCount['status'], key: 'label' | 'color'): string {
+export function orderStatusDict(orderStatusType: OrderStatusCount['status'], key: 'label' | 'color' | 'icon'): string | React.ReactNode {
   const orderStatus = [
-    { key: "PENDING", label: "対応待ち", color: "var(--gray-alpha-500)" },
-    { key: "DONE", label: "完了", color: "var(--done-color)" },
-    { key: "PICKUP", label: "受け取り予定", color: "var(--pickup-color)" },
-    { key: "BOOKED", label: "予約", color: "var(--booked-color)" },
-    { key: "REVIEW", label: "レビュー待ち", color: "var(--review-color)" },
-    { key: "CANCEL", label: "キャンセル", color: "var(--cancel-color)" },
+    { key: "PENDING", label: "対応待ち", color: "var(--icon-color)", icon: <HourglassEmptyIcon fontSize="inherit" /> },
+    { key: "DONE", label: "受取済み", color: "var(--done-color)", icon: <CheckIcon fontSize="inherit" /> },
+    { key: "PICKUP", label: "準備完了", color: "var(--pickup-color)", icon: <PlaceOutlinedIcon fontSize="inherit" /> },
+    { key: "BOOKED", label: "予約", color: "var(--booked-color)", icon: <AccessAlarmOutlinedIcon fontSize="inherit" /> },
+    { key: "CANCEL", label: "キャンセル", color: "var(--cancel-color)", icon: <CloseIcon fontSize="inherit" /> },
   ];
   return orderStatus.find((s) => s.key === orderStatusType)?.[key] || '';
 }

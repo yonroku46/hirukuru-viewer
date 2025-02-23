@@ -38,7 +38,6 @@ function SortableItem({ isSp, editMode, item, setItems }: SortableItemProps) {
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    touchAction: isSp ? 'none' : 'auto',
   };
 
   const [openInfo, setOpenInfo] = useState<boolean>(false);
@@ -61,7 +60,7 @@ function SortableItem({ isSp, editMode, item, setItems }: SortableItemProps) {
   return (
     <>
       <div ref={setNodeRef} style={{ ...style, position: 'relative' }} {...attributes}>
-        <span className="item-order" {...(editMode ? listeners : {})} style={{ touchAction: 'none', cursor: editMode ? 'grab' : 'default' }}>
+        <span className="item-order" {...(editMode ? listeners : {})} style={{ touchAction: isSp ? 'none' : 'auto', cursor: editMode ? 'grab' : 'default' }}>
           {item.itemOrder}
         </span>
         {editMode && (

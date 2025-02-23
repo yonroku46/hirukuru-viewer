@@ -2,7 +2,7 @@ const buildConfig = () => {
   const name = process.env.NEXT_PUBLIC_APP_NAME || "Hirukuru";
   const copyright = process.env.NEXT_PUBLIC_COPYRIGHT || "Univus Inc.";
   const defaultTitle = process.env.NEXT_DEFAULT_METADATA_TITLE || "Hirukuru";
-  const defaultDescription = process.env.NEXT_DEFAULT_METADATA_DESCRIPTION || "ランチをラクに、余裕のある時間へ";
+  const defaultDescription = process.env.NEXT_DEFAULT_METADATA_DESCRIPTION || "ランチをスマートに";
   const defaultKeywords = process.env.NEXT_DEFAULT_METADATA_KEYWORDS || "Hirukuru,ヒルクル";
   const s3Prefix = process.env.NEXT_PUBLIC_S3_PREFIX || '';
   const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '';
@@ -10,7 +10,7 @@ const buildConfig = () => {
   const squareSandboxLocationId = process.env.NEXT_PUBLIC_SQUARE_SANDBOX_LOCATION_ID || '';
 
   return {
-    baseUrl: process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000",
+    baseUrl: process.env.NEXT_PUBLIC_BASE_URL || "https://hirukuru.com",
     service: {
       name,
       copyright,

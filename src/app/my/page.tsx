@@ -55,7 +55,7 @@ export default function MyPage() {
     { status: 'BOOKED', value: 0 },
     { status: 'PICKUP', value: 1 },
     { status: 'DONE', value: 1 },
-    { status: 'REVIEW', value: 1 },
+    { status: 'PENDING', value: 1 },
     { status: 'CANCEL', value: 0 }
   ];
   const reviewStatus: ReviewStatusCount[] = [
@@ -122,9 +122,11 @@ export default function MyPage() {
         </div>
         {/* Status */}
         <OrderStatus
+          title="本日の注文状況"
           statusList={orderStatus}
         />
         <ReviewStatus
+          title="マイレビュー"
           statusList={reviewStatus}
         />
         {/* Link List */}
@@ -141,7 +143,7 @@ export default function MyPage() {
           title={"ご確認お願いします！"}
           contents={[
             "マイページに登録されている個人情報（名前、メールアドレスなど）に不正が確認された場合、事前の通知なしにアカウントを停止する場合があります。",
-            "現在の予約状況、受け取り予定、完了したサービスを必ずご確認ください。",
+            "注文後は現在の予約状況、準備完了、受け取り状況を必ずご確認ください。",
             "保有ポイントや利用可能なクーポンの残高を確認し、期限切れに注意してください。",
             "重要な情報を見逃さないよう、通知設定（メールやプッシュ通知など）が有効になっているかご確認ください。",
           ]}

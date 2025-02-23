@@ -11,6 +11,7 @@ import ShopSetting from "./(tab)/ShopSetting";
 import ItemSetting from "./(tab)/ItemSetting";
 import CategorySetting from "./(tab)/CategorySetting";
 import Operate from "./(tab)/Operate";
+import Marketing from "./(tab)/Marketing";
 
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -178,6 +179,7 @@ export default function MyShopPage() {
     "item": <ItemSetting isSp={isSp} shop={shop} />,
     "category": <CategorySetting isSp={isSp} shop={shop} />,
     "operate": <Operate isSp={isSp} shop={shop} />,
+    "marketing": <Marketing isSp={isSp} shop={shop} />,
   };
 
   return (
@@ -186,12 +188,6 @@ export default function MyShopPage() {
         <div className="content-header">
           <div className="shop-info">
             <div className="shop-profile-wrapper">
-              <button
-                className={`shop-menu-btn ${isMenuOpen ? "open" : ""}`}
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-              >
-                <KeyboardArrowDownIcon />
-              </button>
               <Image
                 src={shop.profileImg}
                 alt={shop.shopName}
@@ -206,6 +202,12 @@ export default function MyShopPage() {
                   {shop.shopName}
                 </p>
               </div>
+              <button
+                className={`shop-menu-btn ${isMenuOpen ? "open" : ""}`}
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+              >
+                <KeyboardArrowDownIcon />
+              </button>
             </div>
             <Notifications
               count={notReadCount}
@@ -228,7 +230,7 @@ export default function MyShopPage() {
                         <ListItemText
                           primary={(isSp || isMenuOpen) ? group.groupName : ""}
                           sx={{
-                            border: (isSp || isMenuOpen) ? "none" : "1px solid var(--gray-alpha-400)",
+                            borderBottom: (isSp || isMenuOpen) ? "none" : "1px solid var(--gray-alpha-400)",
                             whiteSpace: "nowrap",
                             overflow: "hidden"
                           }}

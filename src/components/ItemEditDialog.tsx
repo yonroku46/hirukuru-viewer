@@ -233,8 +233,8 @@ export default function ItemEditDialog({ editMode, data, open, setOpen, saveData
                       <Image
                         src={allergen.img}
                         alt={allergen.name}
-                        width={40}
-                        height={40}
+                        width={isSp ? 26 : 34}
+                        height={isSp ? 26 : 34}
                       />
                       <span className="allergen-name">
                         {allergen.name}

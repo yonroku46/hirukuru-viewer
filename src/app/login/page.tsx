@@ -138,7 +138,7 @@ export default function LoginPage() {
               Hirukuru
             </h1>
             <p className="description">
-              ランチをラクに、余裕のある時間へ
+              ランチをスマートに
             </p>
           </div>
           <div className="body-wrapper">
