@@ -187,7 +187,7 @@ export default function MyShopPage() {
       <div className="myshop-page">
         <div className="content-header">
           <div className="shop-info">
-            <div className="shop-profile-wrapper">
+            <div className="shop-profile-wrapper" onClick={() => setIsMenuOpen(!isMenuOpen)}>
               <Image
                 src={shop.profileImg}
                 alt={shop.shopName}
@@ -204,7 +204,6 @@ export default function MyShopPage() {
               </div>
               <button
                 className={`shop-menu-btn ${isMenuOpen ? "open" : ""}`}
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
               >
                 <KeyboardArrowDownIcon />
               </button>

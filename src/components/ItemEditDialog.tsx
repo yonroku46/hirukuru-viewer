@@ -20,7 +20,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import Checkbox from '@mui/material/Checkbox';
 import FormGroup from '@mui/material/FormGroup';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 
 interface ItemEditDialogProps {
@@ -144,7 +144,7 @@ export default function ItemEditDialog({ editMode, data, open, setOpen, saveData
               <>
                 <MiniButton
                   className="edit-btn"
-                  icon={<CloudUploadIcon />}
+                  icon={<PhotoLibraryIcon />}
                   onClick={() => document.getElementById('thumbnail-upload')?.click()}
                 />
                 <input

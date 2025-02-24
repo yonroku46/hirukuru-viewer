@@ -12,7 +12,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
 import Checkbox from '@mui/material/Checkbox';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 
 interface SettingProps {
   isSp: boolean;
@@ -149,7 +149,7 @@ function ShopSetting({ isSp, shop, setShop }: SettingProps)  {
                 <>
                   <MiniButton
                     className="edit-btn"
-                    icon={<CloudUploadIcon />}
+                    icon={<PhotoLibraryIcon />}
                     onClick={() => document.getElementById('thumbnail-upload')?.click()}
                   />
                   <input
@@ -173,7 +173,7 @@ function ShopSetting({ isSp, shop, setShop }: SettingProps)  {
                 <>
                   <MiniButton
                     className="edit-btn"
-                    icon={<CloudUploadIcon />}
+                    icon={<PhotoLibraryIcon />}
                     onClick={() => document.getElementById('profile-upload')?.click()}
                   />
                   <input

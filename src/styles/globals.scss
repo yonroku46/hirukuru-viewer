@@ -135,9 +135,6 @@ header {
         gap: 0.5rem;
         padding-right: calc(28px + 16px - 1px);
         position: relative;
-        &:hover {
-          background-color: var(--icon-hover-color);
-        }
         .menu-icon {
           color: var(--icon-color);
         }
@@ -313,11 +310,8 @@ button {
   border-radius: 0.5rem;
   cursor: pointer;
   background-color: unset;
-  transition: opacity 0.2s ease-in-out;
   color: inherit;
-  &:hover {
-    opacity: 0.9;
-  }
+  transition: opacity 0.2s ease-in-out;
   &:focus-visible {
     outline: none;
   }
@@ -576,10 +570,6 @@ table {
         border-radius: 0;
         height: 3.25rem;
         transition: opacity 0.2s, background-color 0.2s;
-        &:hover {
-          background-color: var(--gray-alpha-100);
-          opacity: 1;
-        }
         &:first-child {
           border-right: 1px solid var(--gray-alpha-300);
         }
@@ -625,10 +615,6 @@ table {
       border-radius: 0;
       height: 3.25rem;
       transition: opacity 0.2s, background-color 0.2s;
-      &:hover {
-        background-color: var(--gray-alpha-100);
-        opacity: 1;
-      }
     }
   }
 }
@@ -1607,9 +1593,6 @@ table {
           font-size: 1rem;
           cursor: pointer;
           transition: background-color 0.2s;
-          &:hover {
-            background-color: var(--gray-alpha-200);
-          }
           .item-title {
             display: flex;
             align-items: center;
@@ -1756,9 +1739,6 @@ table {
     cursor: pointer;
     color: var(--icon-color);
     transition: transform 0.2s, background-color 0.4s;
-    &:hover {
-      background-color: var(--icon-hover-color);
-    }
     .arrow-icon {
       font-size: 1.5rem;
       transform: rotate(0deg);
@@ -1789,9 +1769,6 @@ table {
       cursor: pointer;
       color: var(--icon-color);
       transition: transform 0.2s, background-color 0.4s;
-      &:hover {
-        background-color: var(--icon-hover-color);
-      }
       &.zoom-in {
         border-radius: 0.5rem 0.5rem 0 0;
       }
@@ -1895,6 +1872,7 @@ table {
         display: flex;
         align-items: center;
         gap: 1rem;
+        cursor: pointer;
         img {
           border-radius: 50%;
           border: 1px solid var(--gray-alpha-300);
@@ -2308,10 +2286,6 @@ table {
                 padding: 1rem;
                 cursor: pointer;
                 transition: opacity 0.2s, border-color 0.2s;
-                &:hover {
-                  opacity: 0.8;
-                  border-color: var(--gray-alpha-500);
-                }
                 .order-header {
                   display: flex;
                   flex-direction: column;
@@ -2413,9 +2387,6 @@ table {
       display: flex;
       align-items: center;
       gap: 0.5rem;
-    }
-    &:hover {
-      opacity: 0.8;
     }
   }
   .user-info {
@@ -2542,9 +2513,6 @@ table {
         height: fit-content;
         background-color: transparent;
         transition: background-color 0.2s;
-        &:hover {
-          background-color: var(--gray-alpha-200);
-        }
         .quick-select-image {
           object-fit: contain;
           padding: 1rem;
@@ -2575,9 +2543,6 @@ table {
         align-items: center;
         gap: 0.25rem;
         transition: transform 0.3s;
-        &:hover {
-          transform: translateX(6px);
-        }
       }
     }
   }
@@ -2745,9 +2710,6 @@ table {
       padding: 1.25rem 1rem;
       border-bottom: 1px solid var(--gray-alpha-300);
       transition: opacity 0.2s;
-      &:hover {
-        opacity: 0.8;
-      }
       &:nth-child(odd) {
         border-right: 1px solid var(--gray-alpha-300);
       }
@@ -2819,9 +2781,6 @@ table {
         pointer-events: auto;
         cursor: pointer;
         opacity: 0.75;
-        &:hover {
-          opacity: 1;
-        }
       }
     }
     .filter-item {
@@ -2882,7 +2841,6 @@ table {
       display: flex;
       flex-direction: column;
       border-radius: 0.5rem;
-      border: 1px solid var(--gray-alpha-300);
       .map-image-wrapper {
         flex: 2;
         object-fit: cover;
@@ -2957,7 +2915,7 @@ table {
       .item-detail-wrapper {
         .input-label {
           font-weight: bold;
-          width: 100px;
+          min-width: 100px;
           align-content: center;
         }
         .item-name-rating {
@@ -2984,11 +2942,7 @@ table {
         }
         .allergen-list {
           .allergen {
-            transition: opacity 0.2s;
-            &:hover {
-              cursor: pointer;
-              opacity: 0.8;
-            }
+            cursor: pointer;
           }
         }
       }
@@ -3115,6 +3069,7 @@ table {
           background-color: var(--foreground);
           border-radius: 0.5rem;
           padding: 0.125rem;
+          transition: opacity 0.2s;
           &.active {
             opacity: 1;
           }
@@ -3162,9 +3117,10 @@ table {
             gap: 0.5rem;
             .option-name {
               margin-left: auto;
+              width: inherit;
             }
             .option-price {
-              width: 140px;
+              width: inherit;
               text-align: left;
             }
           }
@@ -3220,10 +3176,7 @@ table {
 
 .notice-card {
   transition: opacity 0.2s ease-in-out;
-  &:hover {
-    cursor: pointer;
-    opacity: 0.8;
-  }
+  cursor: pointer;
   .image-wrapper {
     display: flex;
     position: relative;
@@ -3282,12 +3235,6 @@ table {
 
 .shop-card {
   transition: opacity 0.2s ease-in-out;
-  &:hover {
-    &.clickable {
-      cursor: pointer;
-      opacity: 0.8;
-    }
-  }
   .image-wrapper {
     display: flex;
     position: relative;
@@ -3306,7 +3253,7 @@ table {
       stroke: var(--icon-stroke-color);
       padding: 0;
       transition: color 0.2s ease-in-out;
-      &:hover, &.active {
+      &.active {
         color: var(--favorite-color);
         animation: pulse 0.5s;
       }
@@ -3377,12 +3324,6 @@ table {
 
 .item-card {
   transition: opacity 0.2s ease-in-out;
-  &:hover {
-    &.clickable {
-      cursor: pointer;
-      opacity: 0.8;
-    }
-  }
   .image-wrapper {
     display: flex;
     position: relative;
@@ -3493,9 +3434,6 @@ table {
         background-color: unset;
         opacity: 0.75;
         transition: opacity 0.2s;
-        &:hover {
-          opacity: 1;
-        }
       }
       .prev-btn, .next-btn {
         background-color: var(--gray-alpha-200);
@@ -3503,7 +3441,7 @@ table {
         padding: 0.25rem;
         color: var(--gray-alpha-400);
         transition: color 0.2s;
-        &:not(:disabled):hover, &.active {
+        &:not(:disabled), &.active {
           color: var(--foreground);
         }
         &:disabled {
@@ -4446,11 +4384,6 @@ table {
       height: 100%;
       overflow: hidden;
       cursor: pointer;
-      &:hover {
-        .newshop-image {
-          transform: scale(1.05);
-        }
-      }
       &:after {
         content: "";
         position: absolute;
@@ -4980,6 +4913,201 @@ table {
   }
   .shop-card {
     height: 220px;
+  }
+}
+
+// for Web hover
+@media (hover: hover) and (pointer: fine) {
+  header {
+    .main-header {
+      .right-container {
+        .menu-btn {
+          &:hover {
+            background-color: var(--icon-hover-color);
+          }
+        }
+      }
+    }
+  }
+  button {
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+  .confirm-dialog {
+    .content-wrapper {
+      .action-btn-group {
+        .action-btn {
+          &:hover {
+            background-color: var(--gray-alpha-100);
+            opacity: 1;
+          }
+        }
+      }
+    }
+  }
+  .notice-dialog {
+    .content-wrapper {
+      .action-btn, .link-btn {
+        &:hover {
+          background-color: var(--gray-alpha-100);
+          opacity: 1;
+        }
+      }
+    }
+  }
+  .search-page {
+    .suggested-wrapper {
+      .suggested-list {
+        .left-column, .right-column {
+          .suggested-item {
+            &:hover {
+              background-color: var(--gray-alpha-200);
+            }
+          }
+        }
+      }
+    }
+  }
+  .search-map-page {
+    .toggle-results-btn {
+      &:hover {
+        background-color: var(--icon-hover-color);
+      }
+    }
+    .zoom-btn-group {
+      .zoom-btn {
+        &:hover {
+          background-color: var(--icon-hover-color);
+        }
+      }
+    }
+  }
+  .myshop-page {
+    .content-body {
+      .tab-view {
+        .tab-contents {
+          &.operate {
+            .order-list-wrapper {
+              .order-list {
+                .order-item {
+                  &:hover {
+                    opacity: 0.8;
+                    border-color: var(--gray-alpha-500);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .home {
+    .quick-select {
+      .quick-select-wrapper {
+        .quick-select-btn {
+          &:hover {
+            background-color: var(--gray-alpha-200);
+          }
+        }
+      }
+    }
+    .introduction {
+      .link-wrapper {
+        a {
+          &:hover {
+            transform: translateX(6px);
+          }
+        }
+      }
+    }
+  }
+  .link-list {
+    .link-list-items {
+      .link-list-item {
+        &:hover {
+          opacity: 0.8;
+        }
+      }
+    }
+  }
+  .filter-dialog {
+    .content {
+      .reset-action {
+        &.active {
+          &:hover {
+            opacity: 1;
+          }
+        }
+      }
+    }
+  }
+  .item-dialog {
+    &.edit {
+      .content {
+        .item-detail-wrapper {
+          .allergen-list {
+            .allergen {
+              &:hover {
+                opacity: 0.8;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .notice-card {
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+  .shop-card {
+    &:hover {
+      &.clickable {
+        cursor: pointer;
+        opacity: 0.8;
+      }
+    }
+    .image-wrapper {
+      .favorite-icon {
+        &:hover {
+          color: var(--favorite-color);
+          animation: pulse 0.5s;
+        }
+      }
+    }
+  }
+  .item-card {
+    &:hover {
+      &.clickable {
+        cursor: pointer;
+        opacity: 0.8;
+      }
+    }
+  }
+  .item-card-slider {
+    .item-card-slider-header {
+      .btn-wrapper {
+        .all-btn {
+          &:hover {
+            opacity: 1;
+          }
+        }
+      }
+    }
+  }
+  .newshop-slider {
+    .newshop-link {
+      .newshop-item {
+        &:hover {
+          .newshop-image {
+            transform: scale(1.05);
+          }
+        }
+      }
+    }
   }
 }
 

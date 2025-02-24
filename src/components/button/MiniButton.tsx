@@ -21,8 +21,18 @@ export default function MiniButton({ className, icon, label, onClick, gray, sx }
         backgroundColor: gray ? "var(--gray-alpha-300)" : "var(--background)",
         color: gray ? "var(--background)" : "var(--icon-color)",
         gap: "0.25rem",
-        "&:hover": {
-          backgroundColor: gray ? "var(--gray-alpha-200)" : "var(--icon-hover-color)",
+        "@media (hover: hover) and (pointer: fine)": {
+          "&:hover": {
+            backgroundColor: gray ? "var(--gray-alpha-200)" : "var(--icon-hover-color)",
+          },
+        },
+        "@media (hover: none) and (pointer: coarse)": {
+          "&:hover": {
+            backgroundColor: "var(--background)",
+          },
+          "&:active": {
+            backgroundColor: gray ? "var(--gray-alpha-200)" : "var(--icon-hover-color)",
+          },
         },
         ...sx,
       }}
