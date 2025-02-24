@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect, useState } from 'react';
 import Loading from '@/app/loading';
-import Title from '@/components/layout/Title';
+import ViewTitle from '@/components/layout/ViewTitle';
 import { currency } from '@/common/utils/StringUtils';
 // import PartnerService from '@/api/service/PartnerService';
 import MiniButton from '@/components/button/MiniButton';
@@ -8,6 +8,14 @@ import Image from "@/components/Image";
 
 import LockIcon from '@mui/icons-material/Lock';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
+
+interface ActionsStatus {
+  itemId: string;
+  isDiscontinued: boolean;
+  isOutOfStock: boolean;
+  isDiscounted: boolean;
+  recommendFlg: boolean;
+}
 
 interface SettingProps {
   isSp: boolean;
@@ -20,10 +28,74 @@ function Marketing({ isSp, shop }: SettingProps)  {
 
   const [editMode, setEditMode] = useState(false);
   const [items, setItems] = useState<ItemState[]>([]);
+  const [marketingText, setMarketingText] = useState('');
+  const [activeOption, setActiveOption] = useState<ActionsStatus[]>([]);
+
+  useEffect(() => {
+    setActiveOption(items.map((item) => ({
+      itemId: item.itemId,
+      isDiscontinued: false,
+      isOutOfStock: false,
+      isDiscounted: false,
+      recommendFlg: false,
+    })));
+  }, [items]);
+
+  const actionList = [
+    { label: '販売中止', icon: <LockIcon />, onClick: (itemId: string) => {
+      setActiveOption(activeOption.map((option) =>
+        option.itemId === itemId
+          ? { ...option, isDiscontinued: !option.isDiscontinued }
+          : option
+      ));
+      },
+    },
+    { label: '品切れ', icon: <LockIcon />, onClick: (itemId: string) => {
+      setActiveOption(activeOption.map((option) =>
+        option.itemId === itemId
+          ? { ...option, isOutOfStock: !option.isOutOfStock }
+          : option
+      ));
+      },
+    },
+    { label: '値下げ', icon: <LockIcon />, onClick: (itemId: string) => {
+      setActiveOption(activeOption.map((option) =>
+        option.itemId === itemId
+          ? { ...option, isDiscounted: !option.isDiscounted }
+          : option
+      ));
+      },
+    },
+    { label: 'おすすめ', icon: <LockIcon />, onClick: (itemId: string) => {
+      setActiveOption(activeOption.map((option) =>
+        option.itemId === itemId
+          ? { ...option, recommendFlg: !option.recommendFlg }
+          : option
+      ));
+      },
+    },
+  ];
 
   const handleEditToggle = () => {
     setEditMode(!editMode);
   };
+
+  const activeItemFlg = (itemId: string): string => {
+    const targetItem = activeOption.find((option) => option.itemId === itemId);
+    return targetItem && (targetItem.isDiscontinued || targetItem.isOutOfStock || targetItem.isDiscounted || targetItem.recommendFlg) ? "active" : "";
+  }
+
+  const activeActionFlg = (itemId: string, label: string): string => {
+    const labelToKeyMap: Record<string, keyof ActionsStatus> = {
+      '販売中止': 'isDiscontinued',
+      '品切れ': 'isOutOfStock',
+      '値下げ': 'isDiscounted',
+      'おすすめ': 'recommendFlg',
+    };
+    const key = labelToKeyMap[label];
+    const activeFlg = activeOption.find((option) => option.itemId === itemId)?.[key];
+    return activeFlg ? "active" : "";
+  }
 
   useEffect(() => {
     console.log(shop);
@@ -59,8 +131,9 @@ function Marketing({ isSp, shop }: SettingProps)  {
     <Suspense fallback={<Loading circular />}>
       <div className="tab-contents marketing">
         <div className="tab-title">
-          <Title
-            title="マーケティング"
+          <ViewTitle
+            title="設定画面"
+            description="マーケティング"
           />
           <div className="edit-btn-group">
             <MiniButton
@@ -71,14 +144,27 @@ function Marketing({ isSp, shop }: SettingProps)  {
           </div>
         </div>
         <div className="marketing-filter-wrapper">
-          <label>今日の一言</label>
-          <div>本日から新メニュー登場しました！是非食べてみてください！</div>
+          <label className="marketing-label">
+            宣伝
+          </label>
+          {editMode ? (
+            <textarea
+              className="marketing-text input"
+              placeholder="宣伝文を入力してください"
+              value={marketingText}
+              onChange={(e) => setMarketingText(e.target.value)}
+            />
+          ) : (
+            <p className="marketing-text">
+              {marketingText}
+            </p>
+          )}
         </div>
         <div className="marketing-list-wrapper">
           <div className="marketing-list">
             {items.map((item) => (
               <div key={item.itemId} className="marketing-item">
-                <div className="item-info">
+                <div className={`item-info ${activeItemFlg(item.itemId)}`}>
                   <Image
                     className="item-img"
                     src={item.thumbnailImg}
@@ -87,23 +173,20 @@ function Marketing({ isSp, shop }: SettingProps)  {
                     height={68}
                   />
                   <div className="item-info-text">
-                    <div>{item.itemName}</div>
+                    <div className="item-name">{item.itemName}</div>
                     <div>{currency(item.itemPrice, "円")}</div>
                   </div>
                 </div>
                 <div className="action-group">
-                  <button className="action-btn">
-                    販売中止
-                  </button>
-                  <button className="action-btn">
-                    品切れ
-                  </button>
-                  <button className="action-btn">
-                    値下げ
-                  </button>
-                  <button className="action-btn">
-                    おすすめ
-                  </button>
+                  {actionList.map((action) => (
+                    <button
+                      key={action.label}
+                      className={`action-btn ${editMode ? "edit" : ""} ${activeActionFlg(item.itemId, action.label)}` }
+                      onClick={() => action.onClick(item.itemId)}
+                    >
+                      {action.label}
+                    </button>
+                  ))}
                 </div>
               </div>
             ))}

@@ -3,7 +3,7 @@ import Loading from '@/app/loading';
 import { createKanaSearchRegex } from '@/common/utils/SearchUtils';
 import MiniButton from '@/components/button/MiniButton';
 import SearchInput from '@/components/input/SearchInput';
-import Title from '@/components/layout/Title';
+import ViewTitle from '@/components/layout/ViewTitle';
 import ConfirmDialog from '@/components/ConfirmDialog';
 import { DndContext, DragEndEvent, closestCenter } from '@dnd-kit/core';
 import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
@@ -191,10 +191,9 @@ function ItemSetting({ isSp, shop }: SettingProps)  {
     <Suspense fallback={<Loading circular />}>
       <div className="tab-contents category-setting">
         <div className="tab-title">
-          <Title
-            title="カテゴリー設定"
-            count={categories.length}
-            countUnit="件"
+          <ViewTitle
+            title={`カテゴリー一覧 / ${categories.length}件`}
+            description="カテゴリー設定"
           />
           <div className="edit-btn-group">
             {editMode &&

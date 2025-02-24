@@ -90,8 +90,11 @@ declare global {
   interface CartStatus {
     status: 'READY' | 'PICKUP' | 'PAYMENT' | 'FINAL' | 'DONE';
   }
-  interface OrderStatusCount {
+  interface OrderStatus {
     status: 'PENDING' | 'BOOKED' | 'PICKUP' | 'DONE' | 'CANCEL';
+  }
+  interface OrderStatusCount {
+    status: OrderStatus['status'];
     value: number;
   }
   interface ReviewStatusCount {

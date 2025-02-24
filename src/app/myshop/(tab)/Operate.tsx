@@ -1,7 +1,7 @@
 import React, { Suspense, useEffect, useState } from 'react';
 import Loading from '@/app/loading';
-import Title from '@/components/layout/Title';
-import { currency, orderStatusDict, payTypeDict } from '@/common/utils/StringUtils';
+import ViewTitle from '@/components/layout/ViewTitle';
+import { currency, payTypeDict } from '@/common/utils/StringUtils';
 import { dateNow } from '@/common/utils/DateUtils';
 // import PartnerService from '@/api/service/PartnerService';
 import dayjs from 'dayjs';
@@ -10,7 +10,8 @@ import OrderStatus from '@/components/OrderStatus';
 
 import TuneIcon from '@mui/icons-material/Tune';
 import QrCodeScannerOutlinedIcon from '@mui/icons-material/QrCodeScannerOutlined';
-import Chip from '@mui/material/Chip';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import OrderStepper from '@/components/OrderStepper';
 
 interface SettingProps {
   isSp: boolean;
@@ -21,8 +22,8 @@ function Operate({ isSp, shop }: SettingProps)  {
 
   // const partnerService = PartnerService();
 
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [orderList, setOrderList] = useState<OrderState[]>([]);
-  const [selectedOrder, setSelectedOrder] = useState<OrderState | null>(null);
   const [orderStatus, setOrderStatus] = useState<OrderStatusCount[]>([]);
   const [currentTime, setCurrentTime] = useState<string>(dateNow().format('HH:mm'));
 
@@ -56,13 +57,13 @@ function Operate({ isSp, shop }: SettingProps)  {
     // getOrderList();
     setOrderList([
       {
-        orderId: '1',
+        orderId: '101',
         pickupTime: '2024-01-01 10:00',
         status: 'PENDING',
         payType: 'CASH',
         orderDetail: [
           {
-            orderId: '1',
+            orderId: '101',
             itemId: '1',
             itemName: '商品1',
             itemPrice: 1000,
@@ -79,13 +80,13 @@ function Operate({ isSp, shop }: SettingProps)  {
         id: '1',
       },
       {
-        orderId: '2',
+        orderId: '102',
         pickupTime: '2024-01-01 10:00',
         status: 'DONE',
         payType: 'CASH',
         orderDetail: [
           {
-            orderId: '1',
+            orderId: '102',
             itemId: '1',
             itemName: '商品2',
             itemPrice: 1000,
@@ -116,15 +117,19 @@ function Operate({ isSp, shop }: SettingProps)  {
         value: 0,
       },
     ]);
+    setIsOpen(true);
   }, [shop]);
 
   return (
     <Suspense fallback={<Loading circular />}>
       <div className="tab-contents operate">
         <div className="tab-title">
-          <Title
-            title="営業状況"
-          />
+          <div className="title-wrapper">
+            <ViewTitle
+              title={isOpen ? "現在営業中" : "営業終了"}
+              description="営業状況"
+            />
+          </div>
           <div className="edit-btn-group">
             <MiniButton
               icon={<QrCodeScannerOutlinedIcon />}
@@ -136,7 +141,7 @@ function Operate({ isSp, shop }: SettingProps)  {
               onClick={() => {}}
               label={isSp ? undefined : "営業設定"}
             />
-            {/* 現在地公開（営業開始・終了）、自動予約承認、お渡し時間設定、受取済み表示・非表示 */}
+            {/* 現在地公開（営業開始・終了）、自動予約承認、お渡し時間設定、受取済み表示・非表示、予約注文受け取る・受け取らない */}
           </div>
         </div>
         <div className="order-filter-wrapper">
@@ -154,76 +159,54 @@ function Operate({ isSp, shop }: SettingProps)  {
           {/* 注文履歴 */}
           <div className="order-list">
             {orderList.map((order) => (
-              <div key={order.orderId} className="order-item" onClick={() => setSelectedOrder(order)}>
-                <div className="order-header">
-                  <Chip
-                    size="small"
-                    label={
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                        {orderStatusDict(order.status, 'icon')}
-                        {orderStatusDict(order.status, 'label') as string}
-                      </div>
-                    }
-                    sx={{
-                      backgroundColor: orderStatusDict(order.status, 'color') as string,
-                      color: 'var(--background)',
-                      width: '110px',
-                      height: '28px',
-                      fontSize: '0.95rem',
-                    }}
-                  />
-                  <div className="order-id">
-                    {order.orderId}
+              <div key={order.orderId} className="order-item" onClick={() => {}}>
+                <div className="order-header-wrapper">
+                  <div className="order-header">
+                    <OrderStepper
+                      minimal
+                      currentStatus={order.status}
+                    />
+                    <div className="order-id">
+                      {`注文番号 #${order.orderId}`}
+                    </div>
                   </div>
-                  <div className="order-time">{dayjs(order.pickupTime).format('HH:mm')}</div>
+                  <div className="action-group">
+                    <button>
+                      <ArrowDropDownIcon />
+                    </button>
+                  </div>
                 </div>
                 <div className="order-detail">
-                  {order.orderDetail.length > 1
-                    ? `${order.orderDetail[0].itemName}外${order.orderDetail.length}点`
-                    : order.orderDetail[0].itemName
-                  }
-                  <div>{payTypeDict(order.payType, 'status')}</div>
+                  <div className="order-time">
+                    <label>受け取り時間</label>
+                    <p className="value">
+                      {dayjs(order.pickupTime).format('HH:mm')}
+                    </p>
+                  </div>
+                  <div className="order-content">
+                    <label>注文内容</label>
+                    <p className="value">
+                      {order.orderDetail.length > 1
+                        ? `${order.orderDetail[0].itemName}外${order.orderDetail.length}点`
+                        : order.orderDetail[0].itemName
+                      }
+                    </p>
+                  </div>
+                  <div className="order-pay-type">
+                    <label>支払い状況</label>
+                    <p className="value">
+                      {payTypeDict(order.payType, 'status')}
+                    </p>
+                  </div>
+                  <div className="order-total-price">
+                    <label>支払い金額</label>
+                    <p className="value">
+                      {currency(order.totalPrice, "円")}
+                    </p>
+                  </div>
                 </div>
               </div>
             ))}
-          </div>
-          {/* 注文詳細 */}
-          <div className="order-view">
-            {selectedOrder ?
-              <div>
-                <div className="pickup-time">
-                  <label>受け取り時間</label>
-                  <div>{dayjs(selectedOrder.pickupTime).format('HH:mm')}</div>
-                </div>
-                <div className="status">
-                  <label>ステータス</label>
-                  <div>{orderStatusDict(selectedOrder.status, 'label')}</div>
-                </div>
-                <div className="pay-type">
-                  <label>支払い状況</label>
-                  <div>{payTypeDict(selectedOrder.payType, 'status')}</div>
-                </div>
-                <div className="order-detail">
-                  <label>注文内容</label>
-                  {selectedOrder.orderDetail.length > 1
-                    ? `${selectedOrder.orderDetail[0].itemName}外${selectedOrder.orderDetail.length}点`
-                    : selectedOrder.orderDetail[0].itemName
-                  }
-                </div>
-                <div className="total-price">
-                  <label>注文金額</label>
-                  <div>{currency(selectedOrder.totalPrice)}</div>
-                </div>
-                <div className="order-detail-actions">
-                  <button>受け取り</button>
-                  <button>キャンセル</button>
-                </div>
-              </div>
-              :
-              <>
-                注文を選択してください
-              </>
-            }
           </div>
         </div>
       </div>

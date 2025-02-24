@@ -1,6 +1,8 @@
 import React, { Suspense, useEffect } from 'react';
 import Loading from '@/app/loading';
-import Title from '@/components/layout/Title';
+import ViewTitle from '@/components/layout/ViewTitle';
+
+import TroubleshootIcon from '@mui/icons-material/Troubleshoot';
 
 interface SettingProps {
   shop: Shop;
@@ -16,11 +18,17 @@ function Dashboard({ shop }: SettingProps)  {
     <Suspense fallback={<Loading circular />}>
       <div className="tab-contents dashboard">
         <div className="tab-title">
-          <Title
-            title="ダッシュボード"
+          <ViewTitle
+            title={`${shop.shopName}様、こんにちは🙂`}
+            description="ダッシュボード"
           />
         </div>
-        ダッシュボード機能は準備中です
+        <div className="dashboard-content-wrapper">
+          <TroubleshootIcon className="content-icon" />
+          <p className="dashboard-content-text">
+            {`ダッシュボード表示をするためのデータが\nまだ十分に集まっていません`}
+          </p>
+        </div>
       </div>
     </Suspense>
   );

@@ -4,7 +4,7 @@ import { createKanaSearchRegex } from '@/common/utils/SearchUtils';
 import MiniButton from '@/components/button/MiniButton';
 import ItemCard from '@/components/ItemCard';
 import SearchInput from '@/components/input/SearchInput';
-import Title from '@/components/layout/Title';
+import ViewTitle from '@/components/layout/ViewTitle';
 import ItemEditDialog from '@/components/ItemEditDialog';
 import ConfirmDialog from '@/components/ConfirmDialog';
 import { DndContext, DragEndEvent, closestCenter } from '@dnd-kit/core';
@@ -199,10 +199,9 @@ function ItemSetting({ isSp, shop }: SettingProps)  {
     <Suspense fallback={<Loading circular />}>
       <div className="tab-contents item-setting">
         <div className="tab-title">
-          <Title
-            title="商品設定"
-            count={items.length}
-            countUnit="件"
+          <ViewTitle
+            title={`商品一覧 / ${items.length}件`}
+            description="商品設定"
           />
           <div className="edit-btn-group">
             {editMode &&

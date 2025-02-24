@@ -18,7 +18,7 @@ export default function SnackbarProvider({ children }: { children: React.ReactNo
   return (
     <NotistackSnackbarProvider
       maxSnack={3}
-      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       autoHideDuration={4500}
       preventDuplicate={true}
       action={(key) => <SnackbarAction id={key} />}

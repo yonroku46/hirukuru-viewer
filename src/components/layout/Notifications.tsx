@@ -27,6 +27,16 @@ export default function Notifications({ count, notifications, setNotifications, 
     setOpen(false);
   };
 
+  const handleRead = (notification: NotificationInfo) => {
+    if (!notification.readFlg) {
+      setNotifications(notifications.map((n) =>
+        n.notificationId === notification.notificationId
+          ? { ...n, readFlg: true }
+          : n
+      ));
+    }
+  };
+
   return (
     <>
       <MiniButton
@@ -73,15 +83,8 @@ export default function Notifications({ count, notifications, setNotifications, 
             key={index}
             className={`notification-item ${notification.readFlg ? "" : "unread"}`}
             onClick={() => handleClick(notification.notificationId)}
-            onMouseOver={() => {
-              if (!notification.readFlg) {
-                setNotifications(notifications.map((n) =>
-                  n.notificationId === notification.notificationId
-                    ? { ...n, readFlg: true }
-                    : n
-                ));
-              }
-            }}
+            onTouchStart={() => handleRead(notification)}
+            onMouseOver={() => handleRead(notification)}
           >
             <div className="notification-title-wrapper">
               <div className="notification-title">

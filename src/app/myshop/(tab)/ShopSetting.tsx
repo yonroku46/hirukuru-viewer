@@ -4,7 +4,7 @@ import { dayMap, daysOrder, formatWeeklyBusinessHours } from '@/common/utils/Dat
 import Loading from '@/app/loading';
 import MiniButton from '@/components/button/MiniButton';
 import Selector from '@/components/input/Selector';
-import Title from '@/components/layout/Title';
+import ViewTitle from '@/components/layout/ViewTitle';
 import Image from '@/components/Image';
 import TimeInput from '@/components/input/TimeInput';
 
@@ -115,8 +115,9 @@ function ShopSetting({ isSp, shop, setShop }: SettingProps)  {
     <Suspense fallback={<Loading circular />}>
       <div className="tab-contents shop-setting">
         <div className="tab-title">
-          <Title
-            title="店舗情報"
+          <ViewTitle
+            title="基本情報設定"
+            description="店舗情報"
           />
           <div className="edit-btn-group">
             {editMode && (
