@@ -192,7 +192,11 @@ declare global {
     reviewCount?: number;
     ratingAvg?: number;
     rating?: {
-      [key: string]: number | undefined;
+      "5": number | undefined;
+      "4": number | undefined;
+      "3": number | undefined;
+      "2": number | undefined;
+      "1": number | undefined;
     };
   }
   interface BusinessHour {

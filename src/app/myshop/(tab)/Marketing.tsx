@@ -5,9 +5,12 @@ import { currency } from '@/common/utils/StringUtils';
 // import PartnerService from '@/api/service/PartnerService';
 import MiniButton from '@/components/button/MiniButton';
 import Image from "@/components/Image";
+import SearchInput from '@/components/input/SearchInput';
+import { createKanaSearchRegex } from '@/common/utils/SearchUtils';
 
 import LockIcon from '@mui/icons-material/Lock';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
+import SearchOffIcon from '@mui/icons-material/SearchOff';
 
 interface ActionsStatus {
   itemId: string;
@@ -26,10 +29,26 @@ function Marketing({ isSp, shop }: SettingProps)  {
 
   // const partnerService = PartnerService();
 
+  const [searchValue, setSearchValue] = useState("");
   const [editMode, setEditMode] = useState(false);
   const [items, setItems] = useState<ItemState[]>([]);
-  const [marketingText, setMarketingText] = useState('');
+  const [tempItems, setTempItems] = useState<ItemState[]>([]);
   const [activeOption, setActiveOption] = useState<ActionsStatus[]>([]);
+
+  useEffect(() => {
+    if (items.length > 0) {
+      setTempItems(items);
+    }
+  }, [items]);
+
+  useEffect(() => {
+    if (searchValue) {
+      const searchRegex = createKanaSearchRegex(searchValue);
+      setTempItems(items.filter((item) => searchRegex.test(item.itemName)));
+    } else {
+      setTempItems(items);
+    }
+  }, [searchValue, editMode, items]);
 
   useEffect(() => {
     setActiveOption(items.map((item) => ({
@@ -144,52 +163,51 @@ function Marketing({ isSp, shop }: SettingProps)  {
           </div>
         </div>
         <div className="marketing-filter-wrapper">
-          <label className="marketing-label">
-            宣伝
-          </label>
-          {editMode ? (
-            <textarea
-              className="marketing-text input"
-              placeholder="宣伝文を入力してください"
-              value={marketingText}
-              onChange={(e) => setMarketingText(e.target.value)}
-            />
-          ) : (
-            <p className="marketing-text">
-              {marketingText}
-            </p>
-          )}
+          <SearchInput
+            searchMode
+            placeholder="商品名を検索"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            disabled={editMode}
+          />
         </div>
         <div className="marketing-list-wrapper">
           <div className="marketing-list">
-            {items.map((item) => (
-              <div key={item.itemId} className="marketing-item">
-                <div className={`item-info ${activeItemFlg(item.itemId)}`}>
-                  <Image
-                    className="item-img"
-                    src={item.thumbnailImg}
-                    alt={item.itemName}
-                    width={68}
-                    height={68}
-                  />
-                  <div className="item-info-text">
-                    <div className="item-name">{item.itemName}</div>
-                    <div>{currency(item.itemPrice, "円")}</div>
+            {tempItems.length > 0 ?
+              tempItems.map((item) => (
+                <div key={item.itemId} className="marketing-item">
+                  <div className={`item-info ${activeItemFlg(item.itemId)}`}>
+                    <Image
+                      className="item-img"
+                      src={item.thumbnailImg}
+                      alt={item.itemName}
+                      width={68}
+                      height={68}
+                    />
+                    <div className="item-info-text">
+                      <div className="item-name">{item.itemName}</div>
+                      <div>{currency(item.itemPrice, "円")}</div>
+                    </div>
+                  </div>
+                  <div className="action-group">
+                    {actionList.map((action) => (
+                      <button
+                        key={action.label}
+                        className={`action-btn ${editMode ? "edit" : ""} ${activeActionFlg(item.itemId, action.label)}` }
+                        onClick={() => action.onClick(item.itemId)}
+                      >
+                        {action.label}
+                      </button>
+                    ))}
                   </div>
                 </div>
-                <div className="action-group">
-                  {actionList.map((action) => (
-                    <button
-                      key={action.label}
-                      className={`action-btn ${editMode ? "edit" : ""} ${activeActionFlg(item.itemId, action.label)}` }
-                      onClick={() => action.onClick(item.itemId)}
-                    >
-                      {action.label}
-                    </button>
-                  ))}
-                </div>
+              ))
+            :
+              <div className="marketing-item no-items">
+                <SearchOffIcon fontSize="large" />
+                <p>表示する商品がありません</p>
               </div>
-            ))}
+            }
           </div>
         </div>
       </div>

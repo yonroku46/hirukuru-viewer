@@ -107,7 +107,7 @@ export default function FilterDialog({ filters, onReset, onFilterApply, changed 
             <RestartAltIcon />
             フィルター初期化
           </div>
-          {filters.map((item, index) => {
+          {tempFilters.map((item, index) => {
             const targetFilter = tempFilters.find(filter => filter.key === item.key);
             return (
               <div key={index} className="filter-item">

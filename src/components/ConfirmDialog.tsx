@@ -6,13 +6,14 @@ interface ConfirmDialogProps {
   icon: React.ReactNode;
   title: string;
   description: string;
+  optional?: React.ReactNode;
   open: boolean;
   setOpen: (open: boolean) => void;
   onConfirm: () => void;
   onCancel: () => void;
 }
 
-export default function ConfirmDialog({ icon, title, description, open, setOpen, onConfirm, onCancel }: ConfirmDialogProps) {
+export default function ConfirmDialog({ icon, title, description, optional, open, setOpen, onConfirm, onCancel }: ConfirmDialogProps) {
 
   const handleClose = () => {
     setOpen(false);
@@ -39,6 +40,11 @@ export default function ConfirmDialog({ icon, title, description, open, setOpen,
         <p className="description">
           {description}
         </p>
+        {optional && (
+          <div className="optional">
+            {optional}
+          </div>
+        )}
         <div className="action-btn-group">
           <button onClick={onCancel} className="action-btn">
             キャンセル

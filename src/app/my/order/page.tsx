@@ -21,7 +21,7 @@ export default function MyOrderPage() {
   ];
 
   const columns: Column<OrderState>[] = [
-    { key: 'orderDetail', type: 'list', label: '詳細', width: 60, listColumns: [
+    { key: 'orderDetail', type: 'list', label: '詳細', minWidth: 64, maxWidth: 64, listColumns: [
         { key: 'orderId', type: 'text', label: '注文ID', hide: true },
         { key: 'itemId', type: 'text', label: '商品ID', hide: true },
         { key: 'itemName', type: 'text', label: '商品名', minWidth: 120, maxWidth: 120 },
@@ -33,7 +33,7 @@ export default function MyOrderPage() {
     },
     { key: 'orderId', type: 'text', label: '注文ID', hide: true },
     { key: 'userId', type: 'text', label: 'ユーザーID', hide: true },
-    { key: 'status', type: 'status', label: '状況', width: 140, align: 'center' },
+    { key: 'status', type: 'status', label: '状況', minWidth: 140, maxWidth: 140 },
     { key: 'shopId', type: 'text', label: '店舗ID', hide: true },
     { key: 'shopName', type: 'text', label: '店舗名', minWidth: 100, maxWidth: 200 },
     { key: 'payType', type: 'payType', label: '支払方法', minWidth: 100, maxWidth: 100, align: 'right' },
@@ -111,9 +111,10 @@ export default function MyOrderPage() {
     { type: 'year', key: 'year', label: '年度', value: year.toString() },
     { type: 'month', key: 'month', label: '月', value: month.toString() },
     { type: 'select', key: 'status', label: '状況', value: status, options:
-      [{ label: '全て', value: 'ALL' }, ...orderStatus.map(status => (
-        { label: orderStatusDict(status.status, 'label') as string, value: status.status }
-      ))]
+      [{ label: '全て', value: 'ALL' }, ...(Object.values<OrderStatus['status']>({ PENDING: 'PENDING', BOOKED: 'BOOKED', PICKUP: 'PICKUP', DONE: 'DONE', CANCEL: 'CANCEL' }) as OrderStatus['status'][]).map(status => ({
+        label: orderStatusDict(status, 'label') as string,
+        value: orderStatusDict(status, 'key') as string
+      }))]
     },
   ]
 
@@ -148,7 +149,7 @@ export default function MyOrderPage() {
               />
               <SearchInput
                 searchMode
-                placeholder="商品・店舗名で検索"
+                placeholder="商品名で検索"
                 value={searchValue}
                 onChange={(e) => {
                   setSearchValue(e.target.value);

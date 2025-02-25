@@ -1,32 +1,29 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import dayjs from "dayjs";
 import { useSearchParams, useRouter } from "next/navigation";
 import { enqueueSnackbar } from "notistack";
 import UserService from "@/api/service/UserService";
-import { currency, formatDaysAgo, formatRating } from "@/common/utils/StringUtils";
+import { currency, formatRating } from "@/common/utils/StringUtils";
 import { createKanaSearchRegex } from "@/common/utils/SearchUtils";
 import { isBusinessOpen } from "@/common/utils/DateUtils";
 import Image from "@/components/Image";
 import SearchInput from "@/components/input/SearchInput";
 import MuiMenu from "@/components/mui/MuiMenu";
 import MuiTabs from "@/components/mui/MuiTabs";
-import Selector from "@/components/input/Selector";
 import ItemCard from "@/components/ItemCard";
 import ItemInfoDialog from "@/components/ItemInfoDialog";
 import MiniButton from "@/components/button/MiniButton";
 import ShopInfoDialog from "@/components/ShopInfoDialog";
 import Title from "@/components/layout/Title";
+import ReviewContents from "@/components/ReviewContents";
 
 import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import Rating from '@mui/material/Rating';
 import StarRoundedIcon from '@mui/icons-material/StarRounded';
 import SearchOffIcon from '@mui/icons-material/SearchOff';
-import MarkChatReadOutlinedIcon from '@mui/icons-material/MarkChatReadOutlined';
 import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import CachedIcon from '@mui/icons-material/Cached';
@@ -44,15 +41,21 @@ export default function ShopPage(
 
   const userService = UserService();
 
+  const reviewFilterOptions = [
+    { label: "最新順", value: "latest" },
+    { label: "良い評価順", value: "good" },
+    { label: "悪い評価順", value: "worst" }
+  ]
+
   const maxPrice = 2500;
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
   const [searchValue, setSearchValue] = useState<string>('');
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [reviewFilter, setReviewFilter] = useState<string>('latest');
   const [items, setItems] = useState<ItemState[]>([]);
   const [itemInfoOpen, setItemInfoOpen] = useState<boolean>(false);
   const [shopInfoOpen, setShopInfoOpen] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+  const [reviewFilter, setReviewFilter] = useState<string>(reviewFilterOptions[0].value);
   const [reviewList, setReviewList] = useState<ShopReview[]>([]);
   const [priceRange, setPriceRange] = useState<number>(maxPrice);
   const [sort, setSort] = useState<string>('recommend');
@@ -330,21 +333,6 @@ export default function ShopPage(
     return [allTab, specialTab, ...categoryTabs];
   }, [items, searchValue, priceRange, sort]);
 
-  const reviewFilterOptions = [
-    {
-      label: "最新順",
-      value: "latest"
-    },
-    {
-      label: "良い評価順",
-      value: "good"
-    },
-    {
-      label: "悪い評価順",
-      value: "worst"
-    }
-  ]
-
   const handleMore = (e: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(e.currentTarget);
   };
@@ -392,26 +380,6 @@ export default function ShopPage(
       enqueueSnackbar('クリップボードにコピーしました！', { variant: 'success' });
     }
   }
-
-  const sortedReviewList = useMemo(() => {
-    return reviewList.sort((a, b) => {
-      const dateA = dayjs(a.createTime).unix();
-      const dateB = dayjs(b.createTime).unix();
-      // 最新順
-      if (reviewFilter === 'latest') {
-        return dateB - dateA;
-      }
-      // 良い評価順 + 最新順
-      if (reviewFilter === 'good') {
-        return b.reviewRating - a.reviewRating || dateB - dateA;
-      }
-      // 悪い評価順 + 最新順
-      if (reviewFilter === 'worst') {
-        return a.reviewRating - b.reviewRating || dateB - dateA;
-      }
-      return 0;
-    });
-  }, [reviewFilter, reviewList]);
 
   return (
     <article className="shop">
@@ -487,97 +455,16 @@ export default function ShopPage(
       </section>
       <hr className="container" />
       {/* Review */}
-      <section className="shop-review container">
-        <div className="shop-review-content">
-          {/* Review Summary */}
-          <div className="review-summary">
-            <h2 className="total-rating">
-              <StarRoundedIcon style={{ color: 'var(--rating-color)' }} />
-              {`${formatRating(shop.ratingAvg || 0)}`}
-              <span className="review-count">
-                {`(${currency(shop.reviewCount || 0)}個の評価)`}
-              </span>
-            </h2>
-            <div className="rating-distribution">
-              {Array.from({ length: 5 }, (_, index) => {
-                const star: string = (5 - index).toString();
-                const rating = shop.rating?.[star as keyof typeof shop.rating];
-                const percentage = rating ? rating.toFixed(0) : "0";
-                return (
-                  <div className="rating-bar" key={star}>
-                    <span>{star}</span>
-                    <div className="bar-background">
-                      <div className="bar" style={{ width: `${percentage}%` }} />
-                    </div>
-                    <span className="percentage">{`${percentage}%`}</span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-          {/* Review List */}
-          <div className="review-list">
-            {sortedReviewList.length > 0 ?
-              <>
-                <div className="review-filter">
-                  <Selector
-                    options={reviewFilterOptions}
-                    value={reviewFilter}
-                    onChange={(e) => setReviewFilter(e.target.value)}
-                  />
-                </div>
-                <ul>
-                  {sortedReviewList.map((review, index) => (
-                    <li key={index} className="review-item">
-                      <div className="review-content">
-                        <div className="review-title">
-                          <div className="review-user">
-                            <Image
-                              className="review-profile"
-                              src={review.userProfile}
-                              alt={review.userName}
-                              width={36}
-                              height={36}
-                            />
-                            <div className="review-user-info">
-                              <div className="review-user-name-rating">
-                                <div className="user-name">
-                                  {review.userName}
-                                </div>
-                                <div className="user-rating">
-                                  {`評価 ${currency(review.userRatingCount || 0)} ・ 平均 ${review.userRatingAvg || 0}`}
-                                </div>
-                              </div>
-                              <Rating
-                                readOnly
-                                size="small"
-                                value={review.reviewRating}
-                                icon={<StarRoundedIcon fontSize="inherit" style={{ color: 'var(--rating-color)' }} />}
-                                emptyIcon={<StarRoundedIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
-                              />
-                            </div>
-                          </div>
-                          <div className="review-date">
-                            {formatDaysAgo(review.createTime)}
-                          </div>
-                        </div>
-                        <p>
-                          {review.reviewContent}
-                        </p>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </>
-              :
-              <div className="no-review">
-                <MarkChatReadOutlinedIcon fontSize="large" />
-                皆さんの評価をお待ちしております
-              </div>
-            }
-          </div>
-        </div>
-      </section>
+      <ReviewContents
+        className="container"
+        ratingAvg={shop.ratingAvg || 0}
+        reviewCount={shop.reviewCount || 0}
+        rating={shop.rating}
+        reviewFilter={reviewFilter}
+        reviewList={reviewList}
+        setReviewFilter={setReviewFilter}
+        filterOptions={reviewFilterOptions}
+      />
       {/* Shop Guide */}
       <section className="shop-guide">
         <div className="shop-guide-info container">

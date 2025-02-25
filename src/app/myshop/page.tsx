@@ -12,6 +12,9 @@ import ItemSetting from "./(tab)/ItemSetting";
 import CategorySetting from "./(tab)/CategorySetting";
 import Operate from "./(tab)/Operate";
 import Marketing from "./(tab)/Marketing";
+import Review from "./(tab)/Review";
+import History from "./(tab)/History";
+import Settlement from "./(tab)/Settlement";
 
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -27,7 +30,6 @@ import TextsmsIcon from '@mui/icons-material/Textsms';
 import ManageSearchIcon from '@mui/icons-material/ManageSearch';
 import FlatwareIcon from '@mui/icons-material/Flatware';
 import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
-import ContactSupportIcon from '@mui/icons-material/ContactSupport';
 import Backdrop from "@mui/material/Backdrop";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
@@ -48,11 +50,10 @@ export default function MyShopPage() {
       { name: "営業状況", href: "operate", icon: <FmdGoodIcon /> },
       { name: "マーケティング", href: "marketing", icon: <DiscountIcon /> },
       { name: "レビュー管理", href: "review", icon: <TextsmsIcon /> },
-      { name: "注文履歴", href: "orders", icon: <ManageSearchIcon /> },
+      { name: "注文履歴", href: "history", icon: <ManageSearchIcon /> },
     ]},
     { groupName: "サービス", groupHref: "service", groupItems: [
       { name: "精算管理", href: "settlement", icon: <PointOfSaleIcon /> },
-      { name: "利用ガイド", href: "help", icon: <ContactSupportIcon /> },
     ]},
   ];
 
@@ -60,7 +61,7 @@ export default function MyShopPage() {
   const tabBaseUrl = `/myshop?tab=`;
   const initialTab = menuItems[0].groupItems[0].href;
   const [tabValue, setTabValue] = useState<string>(tab || initialTab);
-  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(true);
   const [shop, setShop] = useState<Shop | null>(null);
   const [notifications, setNotifications] = useState<NotificationInfo[]>([]);
   const [notReadCount, setNotReadCount] = useState<number>(0);
@@ -99,7 +100,7 @@ export default function MyShopPage() {
       router.replace('/login');
       return;
     }
-    if (isMenuOpen) {
+    if (isSp && isMenuOpen) {
       setIsMenuOpen(false);
     }
     if (tab) {
@@ -112,7 +113,7 @@ export default function MyShopPage() {
       router.replace(`${tabBaseUrl}${initialTab}`);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tab]);
+  }, [tab, isSp]);
 
   useEffect(() => {
     const shop: Shop = {
@@ -180,6 +181,9 @@ export default function MyShopPage() {
     "category": <CategorySetting isSp={isSp} shop={shop} />,
     "operate": <Operate isSp={isSp} shop={shop} />,
     "marketing": <Marketing isSp={isSp} shop={shop} />,
+    "review": <Review shop={shop} />,
+    "history": <History shop={shop} />,
+    "settlement": <Settlement shop={shop} />,
   };
 
   return (
