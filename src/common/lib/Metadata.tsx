@@ -4,7 +4,7 @@ import { config } from "@/config";
 
 type MetadataType = "home" | "login" | "signup" | "myshop" |
                     "my" | "my/order" | "my/favorite" | "my/point" | "my/coupon" | "my/order/review" |
-                    "service" | "service/contact" | "service/partner" | "service/notice" | "service/help" |
+                    "service" | "service/contact" | "service/partner" | "service/notice" | "service/help" | "service/privacy" | "service/terms" |
                     "shop" | "search";
 
 export async function generatePageMetadata(type: MetadataType, name?: string): Promise<Metadata> {
@@ -154,6 +154,14 @@ export async function generatePageMetadata(type: MetadataType, name?: string): P
     "service/help": {
       ...baseMetadata,
       title: `利用ガイド - ${config.service.name}`,
+    },
+    "service/privacy": {
+      ...baseMetadata,
+      title: `プライバシーポリシー - ${config.service.name}`,
+    },
+    "service/terms": {
+      ...baseMetadata,
+      title: `利用規約 - ${config.service.name}`,
     },
   };
 

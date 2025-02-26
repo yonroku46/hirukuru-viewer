@@ -134,12 +134,18 @@ export default function LoginPage() {
       <div className="container login">
         <div className="login-container">
           <div className="header-wrapper">
-            <h1 className="title">
-              Hirukuru
-            </h1>
-            <p className="description">
-              ランチをスマートに
-            </p>
+            <div className="service-logo-wrapper">
+              <Image
+                className="service-logo"
+                src="/assets/icon/app/icon-192x192.png"
+                alt="Hirukuru"
+                width={100}
+                height={100}
+              />
+              <h1 className="service-title">
+                Hirukuru
+              </h1>
+            </div>
           </div>
           <div className="body-wrapper">
             <form className="format" onSubmit={handleEmailLogin}>

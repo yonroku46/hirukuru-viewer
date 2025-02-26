@@ -1419,6 +1419,20 @@ table {
       align-items: flex-start;
       margin-bottom: auto;
       color: var(--foreground);
+      .service-logo-wrapper {
+        display: flex;
+        margin: 0 auto;
+        .service-logo {
+          border-radius: 0.75rem;
+          margin-left: -50px;
+        }
+        .service-title {
+          color: var(--primary-color);
+          font-size: 2.5rem;
+          font-weight: 900;
+          margin: auto;
+        }
+      }
       .title {
         font-size: 2.25rem;
         font-weight: 900;
@@ -4496,6 +4510,59 @@ table {
           color: var(--background);
           padding: 0.65rem 2rem;
           border-radius: 0.5rem;
+        }
+      }
+    }
+  }
+  .terms-page, .privacy-page {
+    width: 100%;
+    .title-wrapper {
+      display: flex;
+      flex-direction: column;
+      .title {
+        font-size: 1.75rem;
+        font-weight: bold;
+      }
+      .description {
+        font-size: 1rem;
+        font-weight: normal;
+      }
+    }
+    .icon-wrapper {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-top: 2rem;
+      margin-bottom: 3rem;
+      opacity: 0.2;
+      font-size: 3rem;
+    }
+    .terms-wrapper, .privacy-wrapper {
+      display: flex;
+      flex-direction: column;
+      .description {
+        font-size: 1rem;
+        padding: 1.5rem 1rem;
+        border-radius: 0.5rem;
+        background-color: var(--gray-alpha-100);
+        margin-bottom: 2rem;
+        white-space: pre-line;
+      }
+      p {
+        white-space: pre-line;
+        padding: 1rem;
+      }
+      ul {
+        white-space: pre-line;
+        padding: 1rem;
+        padding-inline-start: 2.5rem;
+        &.inner {
+          padding-top: 0;
+          padding-inline-start: 3.5rem;
+        }
+        li {
+          list-style-type: decimal-leading-zero;
+          padding-inline-start: 0.5rem;
         }
       }
     }
