@@ -86,6 +86,13 @@ declare global {
     status: OrderStatusCount['status'];
     orderDetail: OrderDetail[];
   }
+  interface ReviewState extends ShopReview {
+    userName: string;
+    userProfile: string;
+    userRatingCount?: number;
+    userRatingAvg?: number;
+    shopName: string;
+  }
   // Status
   interface CartStatus {
     status: 'READY' | 'PICKUP' | 'PAYMENT' | 'FINAL' | 'DONE';
@@ -208,12 +215,8 @@ declare global {
   interface ShopReview extends Row {
     reviewId: string;
     userId: string;
-    userName: string;
-    userProfile: string;
-    userRatingCount?: number;
-    userRatingAvg?: number;
     shopId: string;
-    shopName: string;
+    orderSummary: string;
     reviewRating: number;
     reviewContent: string;
     createTime: string;

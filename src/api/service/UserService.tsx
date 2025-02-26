@@ -93,6 +93,28 @@ export default function UserService() {
     }
   }
 
+  async function getReviewStatus(): Promise<ListRes<ReviewStatusCount> | undefined> {
+    try {
+      const response: ApiResponse = await ApiInstance.get(ApiRoutes.USER_REVIEW_STATUS, {});
+      if (response && !response.hasErrors) {
+        return response.responseData as ListRes<ReviewStatusCount>;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async function getReviewHistory(): Promise<ListRes<ReviewState> | undefined> {
+    try {
+      const response: ApiResponse = await ApiInstance.get(ApiRoutes.USER_REVIEW_LIST, {});
+      if (response && !response.hasErrors) {
+        return response.responseData as ListRes<ReviewState>;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   return {
     userInfo,
     updateUserInfo,
@@ -100,7 +122,9 @@ export default function UserService() {
     addFavorite,
     cancelFavorite,
     getOrderStatus,
-    getOrderHistory
+    getOrderHistory,
+    getReviewStatus,
+    getReviewHistory
   };
 
 }

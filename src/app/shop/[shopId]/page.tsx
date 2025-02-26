@@ -56,7 +56,7 @@ export default function ShopPage(
   const [shopInfoOpen, setShopInfoOpen] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const [reviewFilter, setReviewFilter] = useState<string>(reviewFilterOptions[0].value);
-  const [reviewList, setReviewList] = useState<ShopReview[]>([]);
+  const [reviewList, setReviewList] = useState<ReviewState[]>([]);
   const [priceRange, setPriceRange] = useState<number>(maxPrice);
   const [sort, setSort] = useState<string>('recommend');
 
@@ -172,7 +172,7 @@ export default function ShopPage(
       { reviewId: '5', userId: 'user5', shopId: dummyShopId, userName: "User5", userProfile: "/assets/img/no-user.jpg", userRatingCount: undefined, userRatingAvg: undefined, reviewRating: 4, reviewContent: "Good!", createTime: "2025-01-24", shopName: "唐揚げ壱番屋" },
     ]
     setItems(dummyItems as Item[]);
-    setReviewList(dummyReviewList as ShopReview[]);
+    setReviewList(dummyReviewList as ReviewState[]);
   }, [shopId]);
 
   const handleClick = (item: Item) => {

@@ -64,7 +64,7 @@ export default function MyPage() {
   ];
   const quickLinkList = [
     { title: '注文管理', href: '/my/order', icon: <ShoppingBasketOutlinedIcon /> },
-    { title: 'レビュー', href: '/my/order/review', icon: <SmsOutlinedIcon /> },
+    { title: 'レビュー', href: '/my/review', icon: <SmsOutlinedIcon /> },
     { title: 'お気に入り', href: '/my/favorite', icon: <FavoriteBorderOutlinedIcon /> },
     { title: 'ポイント管理', href: '/my/point', icon: <MonetizationOnOutlinedIcon />, disabled: true },
     { title: 'クーポン', href: '/my/coupon', icon: <LocalOfferOutlinedIcon />, disabled: true },

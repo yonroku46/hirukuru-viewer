@@ -16,7 +16,7 @@ interface ReviewContentsProps {
   reviewCount: number;
   rating: Shop['rating'];
   reviewFilter: string;
-  reviewList: ShopReview[];
+  reviewList: ReviewState[];
   setReviewFilter: (filter: string) => void;
   filterOptions: { label: string; value: string }[];
 }

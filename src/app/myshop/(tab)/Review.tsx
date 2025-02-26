@@ -19,7 +19,7 @@ function Review({ shop }: SettingProps)  {
   ]
 
   const [reviewFilter, setReviewFilter] = useState<string>(reviewFilterOptions[0].value);
-  const [reviewList, setReviewList] = useState<ShopReview[]>([]);
+  const [reviewList, setReviewList] = useState<ReviewState[]>([]);
 
   useEffect(() => {
     console.log(shop);
@@ -31,7 +31,7 @@ function Review({ shop }: SettingProps)  {
       { reviewId: '4', userId: 'user4', shopId: dummyShopId, userName: "User4", userProfile: "/assets/img/no-user.jpg", userRatingCount: undefined, userRatingAvg: undefined, reviewRating: 4, reviewContent: "Good!", createTime: "2025-01-24", shopName: "唐揚げ壱番屋" },
       { reviewId: '5', userId: 'user5', shopId: dummyShopId, userName: "User5", userProfile: "/assets/img/no-user.jpg", userRatingCount: undefined, userRatingAvg: undefined, reviewRating: 4, reviewContent: "Good!", createTime: "2025-01-24", shopName: "唐揚げ壱番屋" },
     ]
-    setReviewList(dummyReviewList as ShopReview[]);
+    setReviewList(dummyReviewList as ReviewState[]);
   }, [shop]);
 
   return (

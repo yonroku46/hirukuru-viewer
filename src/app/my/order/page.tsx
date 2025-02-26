@@ -143,7 +143,7 @@ export default function MyOrderPage() {
         <hr className="container" style={{ margin: '1rem 0' }} />
         <MuiTable
           topSection={
-            <div className="order-history">
+            <div className="history-wrapper">
               <Title
                 title={`注文履歴 (${year}年${month}月)`}
               />

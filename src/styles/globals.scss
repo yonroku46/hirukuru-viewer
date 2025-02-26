@@ -57,7 +57,6 @@ html,
 body {
   color: var(--foreground);
   background: var(--background);
-  scrollbar-color: var(--gray-alpha-300) transparent;
   &::-webkit-scrollbar {
     scrollbar-width: none;
     display: none;
@@ -2685,10 +2684,10 @@ table {
     }
   }
 }
-.myorder {
+.myorder, .myreview {
   padding-top: 2rem;
   gap: 2rem;
-  .order-history {
+  .history-wrapper {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -3169,6 +3168,7 @@ table {
 }
 
 .shop-info-dialog {
+  scrollbar-color: var(--gray-alpha-300) transparent;
   .title-wrapper {
     display: flex;
     justify-content: space-between;
@@ -3255,6 +3255,7 @@ table {
 }
 
 .item-dialog {
+  scrollbar-color: var(--gray-alpha-300) transparent;
   &.edit {
     .content {
       .image-wrapper {
@@ -4553,6 +4554,9 @@ table {
         padding: 1rem;
       }
       ul {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
         white-space: pre-line;
         padding: 1rem;
         padding-inline-start: 2.5rem;
@@ -4957,8 +4961,8 @@ table {
       }
     }
   }
-  .myorder {
-    .order-history {
+  .myorder, .myreview {
+    .history-wrapper {
       flex-direction: column;
       align-items: stretch;
       gap: 1rem;

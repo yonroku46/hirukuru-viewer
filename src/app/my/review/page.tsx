@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { createKanaSearchRegex } from "@/common/utils/SearchUtils";
 import { dateNow } from "@/common/utils/DateUtils";
 import dayjs from "dayjs";
@@ -9,67 +9,72 @@ import ReviewStatus from "@/components/ReviewStatus";
 import MuiBreadcrumbs from "@/components/mui/MuiBreadcrumbs";
 import MuiTable from "@/components/mui/MuiTable";
 import Title from "@/components/layout/Title";
+import { useAppSelector } from "@/store";
+import UserService from "@/api/service/UserService";
+import { useRouter } from "next/navigation";
 
-export default function MyOrderReviewPage() {
+export default function MyReviewPage() {
   const breadcrumbs: Breadcrumb[] = [
     { label: 'マイページ', href: '/my' },
-    { label: '注文管理', href: '/my/order' },
-    { label: 'レビュー', href: '/my/order/review', active: true },
-  ];
-  const reviewStatus: ReviewStatusCount[] = [
-    { status: 'COUNT', value: 1100 },
-    { status: 'AVG', value: 4.5 },
+    { label: 'レビュー', href: '/my/review', active: true },
   ];
 
-  const columns: Column<ShopReview>[] = [
+  const columns: Column<ReviewState>[] = [
     { key: 'reviewId', type: 'text', label: 'レビューID', hide: true },
-    { key: 'userId', type: 'text', label: 'ユーザーID', hide: true },
-    { key: 'userProfile', type: 'image', label: 'プロフィール', hide: true },
-    { key: 'userName', type: 'text', label: 'ユーザー名', hide: true },
-    { key: 'shopId', type: 'text', label: '店舗ID', hide: true },
     { key: 'shopName', type: 'text', label: '店舗名', minWidth: 120, maxWidth: 120 },
+    { key: 'orderSummary', type: 'text', label: '注文概要', minWidth: 250, maxWidth: 250 },
     { key: 'reviewContent', type: 'text', label: 'コメント', minWidth: 250, maxWidth: 250 },
     { key: 'reviewRating', type: 'rating', label: '評価', width: 120, align: 'center' },
-    { key: 'date', type: 'date', label: '日付', minWidth: 100, maxWidth: 100, align: 'right' },
+    { key: 'createTime', type: 'date', label: '日付', minWidth: 100, maxWidth: 100, align: 'right' },
   ];
 
-  function createData(
-    reviewId: string,
-    userId: string,
-    userName: string,
-    userProfile: string,
-    shopId: string,
-    shopName: string,
-    reviewRating: number,
-    reviewContent: string,
-    createTime: string,
-  ): ShopReview {
-    return { id: reviewId, reviewId, userId, userName, userProfile, shopId, shopName, reviewRating, reviewContent, createTime };
-  }
+  const router = useRouter();
+  const authState = useAppSelector((state) => state.auth);
+
+  const userService = UserService();
 
   const [user, setUser] = useState<UserState | null>(null);
   const [year, setYear] = useState<number>(dateNow().year());
   const [month, setMonth] = useState<number>(dateNow().month() + 1);
   const [searchValue, setSearchValue] = useState<string>("");
-  const [rows, setRows] = useState<ShopReview[]>([]);
-  const [filteredRows, setFilteredRows] = useState<ShopReview[]>([]);
+  const [rows, setRows] = useState<ReviewState[]>([]);
+  const [filteredRows, setFilteredRows] = useState<ReviewState[]>([]);
+  const [reviewStatus, setReviewStatus] = useState<ReviewStatusCount[]>([]);
+
+  const getUserInfo = useCallback(() => {
+    userService.userInfo().then((user) => {
+      if (user) {
+        setUser(user);
+      }
+    });
+  }, [userService]);
+
+  const getReviewStatus = useCallback(() => {
+    userService.getReviewStatus().then((res) => {
+      if (res?.list) {
+        setReviewStatus(res.list);
+      }
+    });
+  }, [userService]);
+
+  const getReviewHistory = useCallback(() => {
+    userService.getReviewHistory().then((res) => {
+      if (res?.list) {
+        setRows(res.list);
+      }
+    });
+  }, [userService]);
 
   useEffect(() => {
-    const dummyUser: UserState = {
-      userId: 'U101',
-      userName: 'テストユーザー',
-      profileImg: '/assets/img/no-user.jpg',
-      point: 1000,
-      shopOwner: false,
-      mail: 'test@test.com',
+    if (!authState.hasLogin) {
+      router.replace('/login');
+      return;
+    } else if (!user) {
+      getUserInfo();
+      getReviewStatus();
+      getReviewHistory();
     }
-    const dummyRows: ShopReview[] = [
-      createData('R101', 'U101', 'テストユーザー', '/assets/img/no-user.jpg', 'S101', '唐揚げ一番', 4, 'このショップはとてもよかったです。', '2025-01-01'),
-      createData('R102', 'U102', 'テストユーザー', '/assets/img/no-user.jpg', 'S102', 'チキンが一番', 5, 'うまい！また行きたいです。店員さんも親切でした。', '2025-01-02'),
-      createData('R103', 'U102', 'テストユーザー', '/assets/img/no-user.jpg', 'S102', 'チキンが一番', 5, 'Nice!', '2025-02-01'),
-    ];
-    setUser(dummyUser);
-    setRows(dummyRows);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -105,7 +110,7 @@ export default function MyOrderReviewPage() {
   return (
     <article>
       <MuiBreadcrumbs breadcrumbs={breadcrumbs} />
-      <div className="myorder container">
+      <div className="myreview container">
         <ReviewStatus
           title="マイレビュー"
           statusList={reviewStatus}
@@ -113,7 +118,7 @@ export default function MyOrderReviewPage() {
         <hr className="container" style={{ margin: '1rem 0' }} />
         <MuiTable
           topSection={
-            <div className="order-history">
+            <div className="history-wrapper">
               <Title
                 title={`レビュー履歴 (${year}年${month}月)`}
               />

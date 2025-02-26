@@ -26,6 +26,8 @@ const USER_FAVORITE = `${USER_ROOT}/favorite`;
 const USER_SIGNOUT = `${USER_ROOT}/signout`;
 const USER_ORDER_STATUS = `${USER_ROOT}/order/status`;
 const USER_ORDER_LIST = `${USER_ROOT}/order/list`;
+const USER_REVIEW_STATUS = `${USER_ROOT}/review/status`;
+const USER_REVIEW_LIST = `${USER_ROOT}/review/list`;
 
 // order
 const ORDER_ROOT = `${ROOT}/order`;
@@ -59,6 +61,8 @@ const ApiRoutes = {
   USER_SIGNOUT,
   USER_ORDER_STATUS,
   USER_ORDER_LIST,
+  USER_REVIEW_STATUS,
+  USER_REVIEW_LIST,
   ORDER_INFO,
   ORDER_INFO_USER,
   ORDER_INFO_SHOP,

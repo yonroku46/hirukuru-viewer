@@ -3,7 +3,7 @@ import { config } from "@/config";
 // import { signOgImageUrl } from "@/common/lib/OgImage";
 
 type MetadataType = "home" | "login" | "signup" | "myshop" |
-                    "my" | "my/order" | "my/favorite" | "my/point" | "my/coupon" | "my/order/review" |
+                    "my" | "my/order" | "my/favorite" | "my/point" | "my/coupon" | "my/review" |
                     "service" | "service/contact" | "service/partner" | "service/notice" | "service/help" | "service/privacy" | "service/terms" |
                     "shop" | "search";
 
@@ -111,7 +111,7 @@ export async function generatePageMetadata(type: MetadataType, name?: string): P
       ...baseMetadata,
       title: `注文管理 - ${config.service.name}`,
     },
-    "my/order/review": {
+    "my/review": {
       ...baseMetadata,
       title: `レビュー - ${config.service.name}`,
     },
