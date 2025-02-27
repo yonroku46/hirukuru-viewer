@@ -25,7 +25,7 @@ const USER_ADMISSION_LOG = `${USER_ROOT}/admission/log`;
 const USER_FAVORITE = `${USER_ROOT}/favorite`;
 const USER_SIGNOUT = `${USER_ROOT}/signout`;
 const USER_ORDER_STATUS = `${USER_ROOT}/order/status`;
-const USER_ORDER_LIST = `${USER_ROOT}/order/list`;
+const USER_ORDER_HISTORY = `${USER_ROOT}/order/history`;
 const USER_REVIEW_STATUS = `${USER_ROOT}/review/status`;
 const USER_REVIEW_LIST = `${USER_ROOT}/review/list`;
 
@@ -42,6 +42,9 @@ const PARTNER_SUBMIT = `${PLATFORM_ROOT}/partner/submit`;
 
 // partner
 const PARTNER_ROOT = `${ROOT}/partner`;
+const PARTNER_ORDER = `${PARTNER_ROOT}/order`;
+const PARTNER_ORDER_HISTORY = `${PARTNER_ROOT}/order/history`;
+const PARTNER_ORDER_CANCEL = `${PARTNER_ROOT}/order/cancel`;
 const PARTNER_ORDER_LIST = `${PARTNER_ROOT}/order/list`;
 
 const ApiRoutes = {
@@ -60,7 +63,7 @@ const ApiRoutes = {
   USER_FAVORITE,
   USER_SIGNOUT,
   USER_ORDER_STATUS,
-  USER_ORDER_LIST,
+  USER_ORDER_HISTORY,
   USER_REVIEW_STATUS,
   USER_REVIEW_LIST,
   ORDER_INFO,
@@ -68,6 +71,9 @@ const ApiRoutes = {
   ORDER_INFO_SHOP,
   CONTACT_SUBMIT,
   PARTNER_SUBMIT,
+  PARTNER_ORDER,
+  PARTNER_ORDER_HISTORY,
+  PARTNER_ORDER_CANCEL,
   PARTNER_ORDER_LIST
 };
 

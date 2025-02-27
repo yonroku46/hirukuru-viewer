@@ -16,16 +16,18 @@ interface TimeInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   value: string;
   setValue: React.Dispatch<React.SetStateAction<string>>;
   placeholder?: string;
+  disabled?: boolean;
 }
 
-export default function TimeInput({ value, setValue, placeholder, ...props }: TimeInputProps) {
+export default function TimeInput({ value, setValue, placeholder, disabled = false, ...props }: TimeInputProps) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [currentInput, setCurrentInput] = useState<React.Dispatch<React.SetStateAction<string>> | null>(null);
 
   const handleInputClick = useCallback((setValue: React.Dispatch<React.SetStateAction<string>>) => {
+    if (disabled) return;
     setCurrentInput(() => setValue);
     setDialogOpen(true);
-  }, []);
+  }, [disabled]);
 
   return (
     <div className="time-input">
@@ -34,6 +36,7 @@ export default function TimeInput({ value, setValue, placeholder, ...props }: Ti
           type="text"
           placeholder={placeholder || "時間選択"}
           value={value}
+          disabled={disabled}
           readOnly
           {...props}
         />

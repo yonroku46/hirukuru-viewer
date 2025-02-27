@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { Suspense, useCallback, useEffect, useState } from 'react';
 import Loading from '@/app/loading';
 import ViewTitle from '@/components/layout/ViewTitle';
 import { dateNow } from '@/common/utils/DateUtils';
@@ -7,7 +7,7 @@ import dayjs from 'dayjs';
 import { orderStatusDict } from '@/common/utils/StringUtils';
 import SearchInput from '@/components/input/SearchInput';
 import MuiTable from "@/components/mui/MuiTable";
-// import PartnerService from '@/api/service/PartnerService';
+import PartnerService from '@/api/service/PartnerService';
 
 interface SettingProps {
   shop: Shop;
@@ -15,7 +15,7 @@ interface SettingProps {
 
 function History({ shop }: SettingProps)  {
 
-  // const partnerService = PartnerService();
+  const partnerService = PartnerService();
 
   const columns: Column<OrderState>[] = [
     { key: 'orderDetail', type: 'list', label: '詳細', minWidth: 64, maxWidth: 64, listColumns: [
@@ -32,6 +32,7 @@ function History({ shop }: SettingProps)  {
     { key: 'userId', type: 'text', label: 'ユーザーID', hide: true },
     { key: 'status', type: 'status', label: '状況', minWidth: 140, maxWidth: 140 },
     { key: 'shopId', type: 'text', label: '店舗ID', hide: true },
+    { key: 'remarks', type: 'text', label: '備考', minWidth: 100, maxWidth: 200 },
     { key: 'shopName', type: 'text', label: '店舗名', minWidth: 100, maxWidth: 200 },
     { key: 'payType', type: 'payType', label: '支払方法', minWidth: 100, maxWidth: 100, align: 'right' },
     { key: 'totalPrice', type: 'number', typeUnit: '円', label: '合計金額', minWidth: 100, align: 'right' },
@@ -46,9 +47,18 @@ function History({ shop }: SettingProps)  {
   const [rows, setRows] = useState<OrderState[]>([]);
   const [filteredRows, setFilteredRows] = useState<OrderState[]>([]);
 
+  const getOrderHistory = useCallback(() => {
+    partnerService.getOrderHistory().then((res) => {
+      if (res?.list) {
+        setRows(res.list);
+      }
+    });
+  }, [partnerService]);
+
   useEffect(() => {
     console.log(shop);
-    setRows([])
+    getOrderHistory();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shop]);
 
   useEffect(() => {

@@ -1241,6 +1241,9 @@ table {
       &:focus {
         background-color: var(--gray-alpha-100);
       }
+      &:disabled {
+        pointer-events: none;
+      }
     }
     .time-icon {
       position: absolute;
@@ -2380,14 +2383,21 @@ table {
                   border-radius: 0.5rem;
                   background-color: var(--gray-alpha-100);
                   margin-top: 1rem;
+                  height: auto;
+                  overflow: hidden;
+                  transition: all 0.3s;
                   &.hidden {
-                    display: none;
+                    margin-top: 0;
+                    padding-top: 0;
+                    padding-bottom: 0;
+                    height: 0;
+                    pointer-events: none;
                   }
                   .order-info {
                     display: grid;
                     grid-template-columns: repeat(2, 1fr);
                     gap: 0.5rem;
-                    .order-time, .order-content, .order-pay-type, .order-total-price {
+                    .order-time, .order-content, .order-pay-type, .order-total-price, .order-remarks {
                       display: flex;
                       flex-direction: column;
                       label {
@@ -2396,6 +2406,7 @@ table {
                       .value {
                         padding-top: 0.25rem;
                         padding-left: 0.25rem;
+                        white-space: pre-wrap;
                       }
                     }
                   }
@@ -2426,6 +2437,16 @@ table {
                     }
                   }
                 }
+              }
+              .no-order {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                background-color: var(--gray-alpha-200);
+                border-radius: 0.5rem;
+                padding: 5rem 1rem;
+                opacity: 0.8;
               }
             }
           }

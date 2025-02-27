@@ -87,7 +87,7 @@ export function extractDelimiter(target: string, delimiter = '/'): string {
   return result;
 }
 
-export function optionsToString(options: ItemOption | ItemOption[]): string {
+export function optionsToString(options: ItemOption | ItemOption[], simple = false): string {
   if (!options) return '';
 
   const formatOption = (option: ItemOption) => {
@@ -96,11 +96,11 @@ export function optionsToString(options: ItemOption | ItemOption[]): string {
       : option.optionPrice < 0
         ? `(-${currency(Math.abs(option.optionPrice))}円)`
         : `(無料)`;
-    return `${option.optionName} ${priceString}`;
+    return simple ? `${option.optionName}` : `${option.optionName} ${priceString}`;
   };
 
   return Array.isArray(options)
-    ? options.map(formatOption).join(' / ')
+    ? options.map(formatOption).join(', ')
     : formatOption(options);
 }
 

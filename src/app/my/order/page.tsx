@@ -35,6 +35,7 @@ export default function MyOrderPage() {
     { key: 'userId', type: 'text', label: 'ユーザーID', hide: true },
     { key: 'status', type: 'status', label: '状況', minWidth: 140, maxWidth: 140 },
     { key: 'shopId', type: 'text', label: '店舗ID', hide: true },
+    { key: 'remarks', type: 'text', label: '備考', minWidth: 100, maxWidth: 200 },
     { key: 'shopName', type: 'text', label: '店舗名', minWidth: 100, maxWidth: 200 },
     { key: 'payType', type: 'payType', label: '支払方法', minWidth: 100, maxWidth: 100, align: 'right' },
     { key: 'totalPrice', type: 'number', typeUnit: '円', label: '合計金額', minWidth: 100, align: 'right' },

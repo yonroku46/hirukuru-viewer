@@ -46,14 +46,8 @@ function ShopSetting({ isSp, shop, setShop }: SettingProps)  {
   ];
 
   const handleBusinessDayChange = (day: DayType['type'], isOpen: boolean) => {
-    const updatedHours = tempShop.businessHours?.map((hour) => {
-      if (hour.dayOfWeek === day) {
-        return { ...hour, businessDay: isOpen };
-      }
-      return hour;
-    }) || [];
-
-    if (!updatedHours.some(hour => hour.dayOfWeek === day)) {
+    const updatedHours = tempShop.businessHours?.filter(hour => hour.dayOfWeek !== day) || [];
+    if (isOpen) {
       updatedHours.push({
         dayOfWeek: day,
         businessDay: isOpen,
@@ -61,11 +55,11 @@ function ShopSetting({ isSp, shop, setShop }: SettingProps)  {
         closeTime: ''
       });
     }
-
     setTempShop({ ...tempShop, businessHours: updatedHours as BusinessHour[] });
   };
 
   const handleBusinessHoursChange = (dayIndex: number, isOpen: boolean, startTime?: string, endTime?: string) => {
+    if (!isOpen) return;
     const updatedHours = tempShop.businessHours?.map((hour, index) => {
       if (index === dayIndex) {
         return { ...hour, businessDay: isOpen, openTime: startTime || hour.openTime, closeTime: endTime || hour.closeTime };
@@ -208,7 +202,7 @@ function ShopSetting({ isSp, shop, setShop }: SettingProps)  {
                         return (
                           <div key={day} className="business-hours-item">
                             <Checkbox
-                              checked={dayHours.businessDay}
+                              checked={dayHours.businessDay || false}
                               onChange={(e) => handleBusinessDayChange(day, e.target.checked)}
                               sx={{ p: 0 }}
                             />
@@ -218,7 +212,7 @@ function ShopSetting({ isSp, shop, setShop }: SettingProps)  {
                             <TimeInput
                               className='business-hours-time-input'
                               value={dayHours.openTime || ''}
-                              setValue={(value) => handleBusinessHoursChange(index, true, value as string, dayHours.closeTime || '')}
+                              setValue={(value) => handleBusinessHoursChange(index, dayHours.businessDay, value as string, dayHours.closeTime || '')}
                               placeholder="開始時間"
                               disabled={!dayHours.businessDay}
                               style={{ maxWidth: '200px' }}
@@ -226,7 +220,7 @@ function ShopSetting({ isSp, shop, setShop }: SettingProps)  {
                             <TimeInput
                               className='business-hours-time-input'
                               value={dayHours.closeTime || ''}
-                              setValue={(value) => handleBusinessHoursChange(index, true, dayHours.openTime || '', value as string)}
+                              setValue={(value) => handleBusinessHoursChange(index, dayHours.businessDay, dayHours.openTime || '', value as string)}
                               placeholder="終了時間"
                               disabled={!dayHours.businessDay}
                               style={{ maxWidth: '200px' }}

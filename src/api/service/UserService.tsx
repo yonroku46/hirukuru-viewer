@@ -84,7 +84,7 @@ export default function UserService() {
 
   async function getOrderHistory(): Promise<ListRes<OrderState> | undefined> {
     try {
-      const response: ApiResponse = await ApiInstance.get(ApiRoutes.USER_ORDER_LIST, {});
+      const response: ApiResponse = await ApiInstance.get(ApiRoutes.USER_ORDER_HISTORY, {});
       if (response && !response.hasErrors) {
         return response.responseData as ListRes<OrderState>;
       }

@@ -84,6 +84,7 @@ declare global {
   interface OrderState extends Order {
     shopName: string;
     status: OrderStatusCount['status'];
+    remarks?: string;
     orderDetail: OrderDetail[];
   }
   interface ReviewState extends ShopReview {
