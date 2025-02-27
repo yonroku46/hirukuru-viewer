@@ -4,17 +4,12 @@ import ViewTitle from '@/components/layout/ViewTitle';
 import { currency } from '@/common/utils/StringUtils';
 // import PartnerService from '@/api/service/PartnerService';
 
-interface SettingProps {
-  shop: Shop;
-}
-
-function Settlement({ shop }: SettingProps)  {
+function Settlement()  {
 
   // const partnerService = PartnerService();
 
   useEffect(() => {
-    console.log(shop);
-  }, [shop]);
+  }, []);
 
   return (
     <Suspense fallback={<Loading circular />}>

@@ -179,11 +179,11 @@ export default function MyShopPage() {
     "shop": <ShopSetting isSp={isSp} shop={shop} setShop={setShop} />,
     "item": <ItemSetting isSp={isSp} shop={shop} />,
     "category": <CategorySetting isSp={isSp} shop={shop} />,
-    "operate": <Operate isSp={isSp} shop={shop} />,
+    "operate": <Operate isSp={isSp} />,
     "marketing": <Marketing isSp={isSp} shop={shop} />,
     "review": <Review shop={shop} />,
-    "history": <History shop={shop} />,
-    "settlement": <Settlement shop={shop} />,
+    "history": <History />,
+    "settlement": <Settlement />,
   };
 
   return (

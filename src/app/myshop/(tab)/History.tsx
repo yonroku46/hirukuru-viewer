@@ -9,11 +9,7 @@ import SearchInput from '@/components/input/SearchInput';
 import MuiTable from "@/components/mui/MuiTable";
 import PartnerService from '@/api/service/PartnerService';
 
-interface SettingProps {
-  shop: Shop;
-}
-
-function History({ shop }: SettingProps)  {
+function History()  {
 
   const partnerService = PartnerService();
 
@@ -56,10 +52,9 @@ function History({ shop }: SettingProps)  {
   }, [partnerService]);
 
   useEffect(() => {
-    console.log(shop);
     getOrderHistory();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [shop]);
+  }, []);
 
   useEffect(() => {
     const searchRegex = createKanaSearchRegex(searchValue);

@@ -156,18 +156,13 @@ function ItemSetting({ isSp, shop }: SettingProps)  {
   };
 
   useEffect(() => {
-    const dummyShopId = "d554fe3e-384c-49c3-ba65-d2858ae92ec1";
     const dummyCategories: ItemCategory[] = [
-      { categoryId: '2', shopId: dummyShopId, categoryName: '日替わり弁当', categoryOrder: 1 },
-      { categoryId: '1', shopId: dummyShopId, categoryName: '特製弁当', categoryOrder: 2 },
-      { categoryId: '3', shopId: dummyShopId, categoryName: '定番弁当', categoryOrder: 3 },
+      { categoryId: '2', shopId: shop.shopId, categoryName: '日替わり弁当', categoryOrder: 1 },
+      { categoryId: '1', shopId: shop.shopId, categoryName: '特製弁当', categoryOrder: 2 },
+      { categoryId: '3', shopId: shop.shopId, categoryName: '定番弁当', categoryOrder: 3 },
     ];
     setCategories(dummyCategories);
     setTempCategories(dummyCategories);
-  }, []);
-
-  useEffect(() => {
-    console.log(shop);
   }, [shop]);
 
   useEffect(() => {

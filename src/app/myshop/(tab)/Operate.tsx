@@ -21,10 +21,9 @@ import CrisisAlertIcon from '@mui/icons-material/CrisisAlert';
 
 interface SettingProps {
   isSp: boolean;
-  shop: Shop;
 }
 
-function Operate({ isSp, shop }: SettingProps)  {
+function Operate({ isSp }: SettingProps)  {
 
   const partnerService = PartnerService();
 
@@ -124,11 +123,10 @@ function Operate({ isSp, shop }: SettingProps)  {
   }, [openConfirm, cancelReasonList]);
 
   useEffect(() => {
-    console.log(shop);
     setShopOpen(true);
     getOrderList();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [shop]);
+  }, []);
 
   return (
     <Suspense fallback={<Loading circular />}>
