@@ -119,7 +119,7 @@ function Operate({ isSp, currentTime, notifications }: SettingProps)  {
         }
       });
     }
-  }, [notifications]);
+  }, [notifications, getOrderList]);
 
   return (
     <Suspense fallback={<Loading circular />}>

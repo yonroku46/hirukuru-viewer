@@ -175,7 +175,7 @@ export default function MyShopPage() {
     } catch (error) {
       console.error('EventSource Error:', error);
     }
-  }, [shop?.shopId]);
+  }, [shop?.shopId, authService]);
 
   useEffect(() => {
     const footerElement = document.querySelector('footer');
