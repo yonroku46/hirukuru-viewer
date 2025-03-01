@@ -157,7 +157,7 @@ function Marketing({ isSp, shop }: SettingProps)  {
             <MiniButton
               icon={editMode ? <LockOpenIcon /> : <LockIcon />}
               onClick={handleEditToggle}
-              label={isSp ? undefined : editMode ? 'ロック解除' : 'ロック'}
+              label={isSp ? undefined : editMode ? 'ロック' : 'ロック解除'}
             />
           </div>
         </div>

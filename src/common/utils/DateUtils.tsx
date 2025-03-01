@@ -72,6 +72,25 @@ export function getNextBusinessDay(businessHours: BusinessHour[]): dayjs.Dayjs {
   return dayjs().add(1, 'week').startOf('day');
 }
 
+export function formatRelativeTime(createTime: string, currentTime: string): string {
+  const createDate = dayjs(createTime);
+  const currentDate = dayjs(currentTime);
+
+  if (createDate.isSame(currentDate, 'day')) {
+    const minutesAgo = currentDate.diff(createDate, 'minute');
+    if (minutesAgo === 0) {
+      return "たった今";
+    } else if (minutesAgo < 60) {
+      return `${minutesAgo}分前`;
+    } else {
+      const hoursAgo = Math.floor(minutesAgo / 60);
+      return `${hoursAgo}時間前`;
+    }
+  }
+
+  return createDate.format('MM/DD HH:mm');
+}
+
 export function timeUntil(targetTime: dayjs.Dayjs): string {
   const now = dateNow();
 

@@ -49,7 +49,7 @@ export default function MuiTable<T extends Row>({ topSection, columns, rows }: M
       <Fragment>
         {/* Main data */}
         <TableRow hover tabIndex={-1} key={row.id}>
-          {visibleColumns.map((column) => {
+          {visibleColumns.map((column, index) => {
             const value = row[column.key as keyof typeof row];
             let dpValue;
 
@@ -131,7 +131,7 @@ export default function MuiTable<T extends Row>({ topSection, columns, rows }: M
 
             return (
               <TableCell
-                key={column.key as string}
+                key={index}
                 align={column.align}
                 sx={{
                   textOverflow: 'ellipsis',
@@ -159,11 +159,11 @@ export default function MuiTable<T extends Row>({ topSection, columns, rows }: M
                 <Table size="small" aria-label="purchases">
                   <TableHead>
                     <TableRow>
-                      {listColumns.map((listColumn) => {
+                      {listColumns.map((listColumn, index) => {
                         if (listColumn.hide) return null;
                         return (
                           <TableCell
-                            key={listColumn.key as string}
+                            key={index}
                             align={listColumn.align}
                             sx={{
                               backgroundColor: 'var(--gray-alpha-500)',
@@ -184,11 +184,11 @@ export default function MuiTable<T extends Row>({ topSection, columns, rows }: M
                     {Array.isArray(listRowChild) && listRowChild.length > 0 ?
                       listRowChild.map((listRow, index) => (
                         <TableRow key={index}>
-                          {listColumns.map((listColumn) => {
+                          {listColumns.map((listColumn, subIndex) => {
                             if (listColumn.hide) return null;
                             return (
                               <TableCell
-                                key={listColumn.key as string}
+                                key={subIndex}
                                 align={listColumn.align}
                                 sx={{
                                   textOverflow: 'ellipsis',
@@ -241,11 +241,11 @@ export default function MuiTable<T extends Row>({ topSection, columns, rows }: M
         <Table stickyHeader size={isSp ? 'small' : 'medium'} aria-label="sticky table">
           <TableHead>
             <TableRow>
-              {columns.map((column) => {
+              {columns.map((column, index) => {
                 if (column.hide) return null;
                 return (
                   <TableCell
-                    key={column.key as string}
+                    key={index}
                     align={column.align}
                     sx={{
                       borderTop: '1px solid var(--gray-alpha-300)',
@@ -267,8 +267,8 @@ export default function MuiTable<T extends Row>({ topSection, columns, rows }: M
             {rows.length > 0 ?
               rows
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row) => {
-                  return <Row key={row.id} row={row} />
+                .map((row, index) => {
+                  return <Row key={index} row={row} />
                 })
               :
               <TableRow>

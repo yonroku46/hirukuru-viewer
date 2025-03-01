@@ -2,7 +2,6 @@ import React, { Suspense, useCallback, useEffect, useMemo, useState } from 'reac
 import Loading from '@/app/loading';
 import ViewTitle from '@/components/layout/ViewTitle';
 import { currency, optionsToString, payTypeDict } from '@/common/utils/StringUtils';
-import { dateNow } from '@/common/utils/DateUtils';
 import PartnerService from '@/api/service/PartnerService';
 import dayjs from 'dayjs';
 import { enqueueSnackbar } from 'notistack';
@@ -17,13 +16,15 @@ import QrCodeScannerOutlinedIcon from '@mui/icons-material/QrCodeScannerOutlined
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import WarningIcon from '@mui/icons-material/Warning';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import CrisisAlertIcon from '@mui/icons-material/CrisisAlert';
+import HistoryToggleOffIcon from '@mui/icons-material/HistoryToggleOff';
 
 interface SettingProps {
   isSp: boolean;
+  currentTime: string;
+  notifications: NotificationInfo[];
 }
 
-function Operate({ isSp }: SettingProps)  {
+function Operate({ isSp, currentTime, notifications }: SettingProps)  {
 
   const partnerService = PartnerService();
 
@@ -40,7 +41,6 @@ function Operate({ isSp }: SettingProps)  {
   const [cancelReason, setCancelReason] = useState<string>(cancelReasonList[0].value);
   const [orderList, setOrderList] = useState<OrderState[]>([]);
   const [orderStatus, setOrderStatus] = useState<OrderStatusCount[]>([]);
-  const [currentTime, setCurrentTime] = useState<string>(dateNow().format('HH:mm'));
   const [expandedOrderIds, setExpandedOrderIds] = useState<Set<string>>(new Set());
 
   const toggleOrderDetail = (orderId: string) => {
@@ -100,23 +100,6 @@ function Operate({ isSp }: SettingProps)  {
   }, [partnerService]);
 
   useEffect(() => {
-    const updateCurrentTime = () => {
-      setCurrentTime(dateNow().format('HH:mm'));
-    };
-
-    const seconds = dayjs().second();
-    const initialTimeout = (60 - seconds) * 1000;
-
-    const timeoutId = setTimeout(() => {
-      updateCurrentTime();
-      const intervalId = setInterval(updateCurrentTime, 60000);
-
-      return () => clearInterval(intervalId);
-    }, initialTimeout);
-    return () => clearTimeout(timeoutId);
-  }, []);
-
-  useEffect(() => {
     if (openConfirm) {
       setCancelReason(cancelReasonList[0].value);
     }
@@ -127,6 +110,16 @@ function Operate({ isSp }: SettingProps)  {
     getOrderList();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (notifications.length > 0) {
+      notifications.forEach((notification) => {
+        if (notification.readFlg === false && notification.receiverType === 'ORDER') {
+          getOrderList();
+        }
+      });
+    }
+  }, [notifications]);
 
   return (
     <Suspense fallback={<Loading circular />}>
@@ -150,7 +143,7 @@ function Operate({ isSp }: SettingProps)  {
               label={isSp ? undefined : "営業設定"}
             />
             {/* 現在地公開（営業開始・終了）、自動予約承認、お渡し時間設定、受取済み表示・非表示、
-            予約注文受け取る・受け取らない */}
+            予約注文受け取る・受け取らない、本日分表示・前日分まで表示（夜間営業の場合） */}
           </div>
         </div>
         <div className="order-filter-wrapper">
@@ -158,7 +151,7 @@ function Operate({ isSp }: SettingProps)  {
             <label className="time-label">
               {parseInt(currentTime.split(':')[0]) < 12 ? "AM" : "PM"}
             </label>
-            {currentTime}
+            {currentTime.split(' ')[1]}
           </div>
           <OrderStatus
             statusList={orderStatus}
@@ -257,7 +250,7 @@ function Operate({ isSp }: SettingProps)  {
               ))
               : (
                 <div className="no-order">
-                  <CrisisAlertIcon fontSize="large" />
+                  <HistoryToggleOffIcon fontSize="large" />
                   まだ注文がありません
                 </div>
               )

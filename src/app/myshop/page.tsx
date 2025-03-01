@@ -1,11 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { tokenPrefix } from "@/api";
 import { useMediaQuery } from "react-responsive";
-import { useAppSelector } from "@/store";
+import { store, useAppSelector } from "@/store";
+import { EventSourcePolyfill } from "event-source-polyfill";
+import dayjs from "dayjs";
+import AuthService from "@/api/service/AuthService";
 import Image from "@/components/Image";
 import Notifications from "@/components/layout/Notifications";
+import { orderStatusDict } from "@/common/utils/StringUtils";
+import { dateNow } from "@/common/utils/DateUtils";
 import Dashboard from "./(tab)/Dashboard";
 import ShopSetting from "./(tab)/ShopSetting";
 import ItemSetting from "./(tab)/ItemSetting";
@@ -31,13 +37,15 @@ import ManageSearchIcon from '@mui/icons-material/ManageSearch';
 import FlatwareIcon from '@mui/icons-material/Flatware';
 import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
 import Backdrop from "@mui/material/Backdrop";
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 
 export default function MyShopPage() {
   const isSp = useMediaQuery({ query: "(max-width: 1179px)" });
   const router = useRouter();
   const searchParams = useSearchParams();
   const authState = useAppSelector((state) => state.auth);
+  const dispatch = store.dispatch;
+  const authService = AuthService(dispatch);
 
   const menuItems: GroupMenuItem[] = [
     { groupName: "店舗管理", groupHref: "shop", groupItems: [
@@ -60,28 +68,114 @@ export default function MyShopPage() {
   const tab = searchParams.get('tab');
   const tabBaseUrl = `/myshop?tab=`;
   const initialTab = menuItems[0].groupItems[0].href;
+  const [currentTime, setCurrentTime] = useState<string>(dateNow().format('YYYY-MM-DD HH:mm'));
   const [tabValue, setTabValue] = useState<string>(tab || initialTab);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(true);
   const [shop, setShop] = useState<Shop | null>(null);
   const [notifications, setNotifications] = useState<NotificationInfo[]>([]);
   const [notReadCount, setNotReadCount] = useState<number>(0);
+  const eventSourceRef = useRef<EventSource | null>(null);
+  const retryCountRef = useRef<number>(0);
 
-  // const getShopInfo = useCallback(() => {
-  //   userService.userInfo().then((shop) => {
-  //     if (shop) {
-  //       setShop(shop);
-  //     }
-  //   });
-  // }, [userService]);
+  useEffect(() => {
+    const updateCurrentTime = () => {
+      setCurrentTime(dateNow().format('YYYY-MM-DD HH:mm'));
+    };
 
-  // useEffect(() => {
-  //   if (!authState.hasLogin) {
-  //     router.replace('/login');
-  //     return;
-  //   } else if (!shop) {
-  //     getShopInfo();
-  //   }
-  // }, [shop, router, authState.hasLogin, getShopInfo]);
+    const seconds = dayjs().second();
+    const initialTimeout = (60 - seconds) * 1000;
+
+    const timeoutId = setTimeout(() => {
+      updateCurrentTime();
+      const intervalId = setInterval(updateCurrentTime, 60000);
+
+      return () => clearInterval(intervalId);
+    }, initialTimeout);
+    return () => clearTimeout(timeoutId);
+  }, []);
+
+  useEffect(() => {
+    // 既存のSSE終了
+    if (eventSourceRef.current) {
+      eventSourceRef.current.close();
+      eventSourceRef.current = null;
+    }
+
+    // ユーザー情報、店舗情報がない場合はSSE接続不可
+    const currentUser = authService.getCurrentUser();
+    if (!shop?.shopId || !currentUser) return;
+
+    // SSE接続
+    const sseUrl = `${process.env.NEXT_PUBLIC_BASE_URL}:${process.env.NEXT_PUBLIC_API_PORT}${process.env.NEXT_PUBLIC_API_ROOT}/SSE/stream`;
+    // const sseUrl = `/api/sse-proxy`;
+
+    try {
+      const eventSource: EventSource = new EventSourcePolyfill(sseUrl, {
+        headers: {
+          Authorization: `${tokenPrefix} ${currentUser.token}`,
+          RefreshToken: `${tokenPrefix} ${currentUser.refreshToken}`,
+        }
+      });
+      eventSourceRef.current = eventSource;
+
+      eventSource.onopen = () => {
+        console.log('SSE connection opened');
+        retryCountRef.current = 0;
+      };
+
+      eventSource.addEventListener('orderUpdate', (event: MessageEvent) => {
+        try {
+          const data = JSON.parse(event.data);
+          const orderState = data.source as OrderState;
+          if (orderState.shopId === shop?.shopId) {
+            setNotifications((prevNotifications) => [
+              ...prevNotifications,
+              {
+                notificationId: event.lastEventId,
+                receiverId: event.data.receiverId,
+                receiverType: "ORDER",
+                title: `注文番号 #${orderState.orderId}`,
+                message: `注文が「${orderStatusDict(orderState.status, 'label')}」になりました`,
+                readFlg: false,
+                createTime: new Date().toISOString()
+              }
+            ]);
+          }
+        } catch (error) {
+          console.error('Order update parsing error:', error);
+        }
+      });
+
+      eventSource.onerror = (error) => {
+        console.error('SSE Error:', {
+          timestamp: new Date().toISOString(),
+          readyState: eventSource.readyState,
+          error: error
+        });
+
+        if (eventSource.readyState === EventSource.CLOSED) {
+          if (retryCountRef.current < 5) {
+            setTimeout(() => {
+              if (eventSourceRef.current === eventSource) {
+                eventSource.close();
+                eventSourceRef.current = null;
+                retryCountRef.current += 1;
+              }
+            }, 5000);
+          } else {
+            console.error('SSE connection failed after 5 retries');
+          }
+        }
+      };
+
+      return () => {
+        eventSource.close();
+        eventSourceRef.current = null;
+      };
+    } catch (error) {
+      console.error('EventSource Error:', error);
+    }
+  }, [shop?.shopId]);
 
   useEffect(() => {
     const footerElement = document.querySelector('footer');
@@ -143,27 +237,6 @@ export default function MyShopPage() {
       }
     };
     setShop(shop);
-    const dummyNotifications: NotificationInfo[] = [
-      {
-        notificationId: '1',
-        receiverId: '1',
-        receiverType: 'SHOP',
-        title: '通知1',
-        message: '通知1のメッセージ',
-        readFlg: false,
-        createTime: '2024-01-01 10:00:00'
-      },
-      {
-        notificationId: '2',
-        receiverId: '1',
-        receiverType: 'SHOP',
-        title: '通知2',
-        message: '通知2のメッセージ',
-        readFlg: false,
-        createTime: '2024-01-01 10:40:00'
-      },
-    ];
-    setNotifications(dummyNotifications);
   }, []);
 
   useEffect(() => {
@@ -179,7 +252,7 @@ export default function MyShopPage() {
     "shop": <ShopSetting isSp={isSp} shop={shop} setShop={setShop} />,
     "item": <ItemSetting isSp={isSp} shop={shop} />,
     "category": <CategorySetting isSp={isSp} shop={shop} />,
-    "operate": <Operate isSp={isSp} />,
+    "operate": <Operate isSp={isSp} currentTime={currentTime} notifications={notifications} />,
     "marketing": <Marketing isSp={isSp} shop={shop} />,
     "review": <Review shop={shop} />,
     "history": <History />,
@@ -190,7 +263,7 @@ export default function MyShopPage() {
     <article>
       <div className="myshop-page">
         <div className="content-header">
-          <div className="shop-info">
+          <div className="shop-info" style={{ maxWidth: `calc(1600px + ${isMenuOpen ? "240px" : "4.5rem"} - 2rem)` }}>
             <div className="shop-profile-wrapper" onClick={() => setIsMenuOpen(!isMenuOpen)}>
               <Image
                 src={shop.profileImg}
@@ -209,15 +282,16 @@ export default function MyShopPage() {
               <button
                 className={`shop-menu-btn ${isMenuOpen ? "open" : ""}`}
               >
-                <KeyboardArrowDownIcon />
+                <KeyboardArrowLeftIcon />
               </button>
             </div>
             <Notifications
+              currentTime={currentTime}
               count={notReadCount}
               notifications={notifications}
               setNotifications={setNotifications}
-              onClick={(notificationId) => {
-                console.log(notificationId);
+              onClick={(notification) => {
+                console.log(notification);
               }}
             />
           </div>
