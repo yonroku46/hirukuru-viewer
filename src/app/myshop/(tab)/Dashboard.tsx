@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect } from 'react';
+import React, { Suspense } from 'react';
 import Loading from '@/app/loading';
 import ViewTitle from '@/components/layout/ViewTitle';
 
@@ -9,10 +9,6 @@ interface SettingProps {
 }
 
 function Dashboard({ shop }: SettingProps)  {
-
-  useEffect(() => {
-    console.log(shop);
-  }, [shop]);
 
   return (
     <Suspense fallback={<Loading circular />}>

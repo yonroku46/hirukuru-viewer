@@ -74,6 +74,7 @@ export default function MyShopPage() {
   const [shop, setShop] = useState<Shop | null>(null);
   const [notifications, setNotifications] = useState<NotificationInfo[]>([]);
   const [notReadCount, setNotReadCount] = useState<number>(0);
+  const currentUser = authService.getCurrentUser();
   const eventSourceRef = useRef<EventSource | null>(null);
   const retryCountRef = useRef<number>(0);
 
@@ -100,34 +101,22 @@ export default function MyShopPage() {
       eventSourceRef.current.close();
       eventSourceRef.current = null;
     }
-
     // ユーザー情報、店舗情報がない場合はSSE接続不可
-    const currentUser = authService.getCurrentUser();
     if (!shop?.shopId || !currentUser) return;
 
-    // SSE接続
-    const sseUrl = `${process.env.NEXT_PUBLIC_BASE_URL}:${process.env.NEXT_PUBLIC_API_PORT}${process.env.NEXT_PUBLIC_API_ROOT}/SSE/stream`;
-    // const sseUrl = `/api/sse-proxy`;
-
     try {
-      const eventSource: EventSource = new EventSourcePolyfill(sseUrl, {
+      const eventSource: EventSource = new EventSourcePolyfill("/api/sse", {
         headers: {
           Authorization: `${tokenPrefix} ${currentUser.token}`,
           RefreshToken: `${tokenPrefix} ${currentUser.refreshToken}`,
         }
       });
-      eventSourceRef.current = eventSource;
 
-      eventSource.onopen = () => {
-        console.log('SSE connection opened');
-        retryCountRef.current = 0;
-      };
-
-      eventSource.addEventListener('orderUpdate', (event: MessageEvent) => {
+      const orderUpdateHandler = (event: MessageEvent) => {
         try {
           const data = JSON.parse(event.data);
           const orderState = data.source as OrderState;
-          if (orderState.shopId === shop?.shopId) {
+          if (orderState.shopId === shop.shopId) {
             setNotifications((prevNotifications) => [
               ...prevNotifications,
               {
@@ -144,7 +133,15 @@ export default function MyShopPage() {
         } catch (error) {
           console.error('Order update parsing error:', error);
         }
-      });
+      };
+
+      eventSource.addEventListener('orderUpdate', orderUpdateHandler);
+      eventSourceRef.current = eventSource;
+
+      eventSource.onopen = () => {
+        console.log('SSE connection opened');
+        retryCountRef.current = 0;
+      };
 
       eventSource.onerror = (error) => {
         console.error('SSE Error:', {
@@ -175,7 +172,7 @@ export default function MyShopPage() {
     } catch (error) {
       console.error('EventSource Error:', error);
     }
-  }, [shop?.shopId, authService]);
+  }, [shop?.shopId, currentUser]);
 
   useEffect(() => {
     const footerElement = document.querySelector('footer');
