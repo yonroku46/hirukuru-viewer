@@ -80,6 +80,16 @@ async function handle401Error(error: AxiosError): Promise<any> {
     return Promise.reject(error);
   }
 
+  // baseURLがない場合はwindow.location.originを使用
+  console.log('baseURL:', `${process.env.NEXT_PUBLIC_BASE_URL}:${process.env.NEXT_PUBLIC_VIEW_PORT}`);
+  try {
+    const baseURL = originalRequest.baseURL || window.location.origin;
+    const fullUrl = new URL(originalRequest.url || '', baseURL);
+    console.log('Request URL:', fullUrl.toString());
+  } catch (e) {
+    console.error('URL Error:', e);
+  }
+
   if (!originalRequest.retry) {
     originalRequest.retry = true;
     if (!isRefreshing) {
