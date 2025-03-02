@@ -12,7 +12,7 @@ interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
 }
 
 const ApiInstance = axios.create()
-axios.defaults.baseURL = `${process.env.NEXT_PUBLIC_BASE_URL}:${process.env.NEXT_PUBLIC_VIEW_PORT}`;
+axios.defaults.baseURL = `${process.env.NEXT_PUBLIC_BASE_URL}${process.env.NEXT_PUBLIC_VIEW_PORT ? ':' + process.env.NEXT_PUBLIC_VIEW_PORT : ''}`;
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
 axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
 
@@ -78,16 +78,6 @@ async function handle401Error(error: AxiosError): Promise<any> {
   // 個別のリクエストでは繰り返し処理されないように防止
   if (!originalRequest) {
     return Promise.reject(error);
-  }
-
-  // baseURLがない場合はwindow.location.originを使用
-  console.log('baseURL:', `${process.env.NEXT_PUBLIC_BASE_URL}:${process.env.NEXT_PUBLIC_VIEW_PORT}`);
-  try {
-    const baseURL = originalRequest.baseURL || window.location.origin;
-    const fullUrl = new URL(originalRequest.url || '', baseURL);
-    console.log('Request URL:', fullUrl.toString());
-  } catch (e) {
-    console.error('URL Error:', e);
   }
 
   if (!originalRequest.retry) {
