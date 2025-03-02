@@ -80,6 +80,7 @@ export default function Header() {
   const [address, setAddress] = useState<string | null>(null);
   const [searchValue, setSearchValue] = useState<string>("");
   const [user, setUser] = useState<UserState | undefined>(undefined);
+  const [hasLocationPermission, setHasLocationPermission] = useState<boolean>(false);
 
   const router = useRouter();
 
@@ -134,8 +135,8 @@ export default function Header() {
   };
 
   useEffect(() => {
-    // サービスページは位置情報取得しない
-    if (currentPath.startsWith("/service/")) {
+    // 位置情報認証済み、サービスページの場合は位置情報取得しない
+    if (hasLocationPermission || currentPath.startsWith("/service/")) {
       return;
     }
     // 位置情報取得不可の場合はエラーを表示
@@ -145,37 +146,54 @@ export default function Header() {
       return;
     }
 
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const { latitude, longitude } = position.coords;
-
-        try {
-          const response = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&accept-language=ja`
-          );
-
-          if (!response.ok) {
-            throw new Error('住所を取得できませんでした。');
+    // 権限確認
+    if (navigator.permissions) {
+      navigator.permissions.query({ name: 'geolocation' })
+        .then((permissionStatus) => {
+          if (permissionStatus.state === 'granted') {
+            setHasLocationPermission(true);
+            getLocation();
           }
+        });
+    }
 
-          const data = await response.json();
-          const displayName = data.address.city;
-          const isJapan = data.address && data.address.country === 'Japan' || data.address.country === '日本';
-
-          setAddress(isJapan ? displayName : '国外');
-        } catch (err) {
-          console.error((err as Error).message);
+    const getLocation = () => {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          try {
+            const response = await fetch(
+              `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&accept-language=ja`
+            );
+            if (!response.ok) {
+              throw new Error('住所を取得できませんでした。');
+            }
+            const data = await response.json();
+            const displayName = data.address.city;
+            const isJapan = data.address && (data.address.country === 'Japan' || data.address.country === '日本');
+            setAddress(isJapan ? displayName : '国外');
+            setHasLocationPermission(true);
+          } catch (err) {
+            console.error((err as Error).message);
+          }
+        },
+        (err) => {
+          setAddress('取得失敗');
+          if (err.code === err.PERMISSION_DENIED) {
+            setNoticeOpen(true);
+          } else {
+            console.error(err.message);
+          }
+        },
+        {
+          // キャッシュされた位置情報を最大5分間使用
+          maximumAge: 300000,
+          // 新しい位置情報要求時の最大10秒待機
+          timeout: 10000
         }
-      },
-      (err) => {
-        setAddress('取得失敗');
-        if (err.code === err.PERMISSION_DENIED) {
-          setNoticeOpen(true);
-        } else {
-          console.error(err.message);
-        }
-      }
-    );
+      );
+    };
+    getLocation();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
