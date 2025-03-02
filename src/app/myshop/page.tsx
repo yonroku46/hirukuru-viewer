@@ -6,7 +6,6 @@ import { tokenPrefix } from "@/api";
 import { useMediaQuery } from "react-responsive";
 import { store, useAppSelector } from "@/store";
 import { EventSourcePolyfill } from "event-source-polyfill";
-import PartnerService from "@/api/service/PartnerService";
 import dayjs from "dayjs";
 import AuthService from "@/api/service/AuthService";
 import Image from "@/components/Image";
@@ -39,7 +38,6 @@ import FlatwareIcon from '@mui/icons-material/Flatware';
 import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
 import Backdrop from "@mui/material/Backdrop";
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import ApiRoutes from "@/api/module/ApiRoutes";
 
 export default function MyShopPage() {
   const isSp = useMediaQuery({ query: "(max-width: 1179px)" });
@@ -48,7 +46,6 @@ export default function MyShopPage() {
   const authState = useAppSelector((state) => state.auth);
   const dispatch = store.dispatch;
   const authService = AuthService(dispatch);
-  const partnerService = PartnerService();
 
   const menuItems: GroupMenuItem[] = [
     { groupName: "店舗管理", groupHref: "shop", groupItems: [
@@ -176,6 +173,7 @@ export default function MyShopPage() {
     } catch (error) {
       console.error('EventSource Error:', error);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shop?.shopId, currentUser?.token]);
 
   useEffect(() => {
