@@ -174,7 +174,7 @@ export default function MyShopPage() {
       console.error('EventSource Error:', error);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [shop?.shopId, currentUser?.token]);
+  }, [shop?.shopId]);
 
   useEffect(() => {
     const footerElement = document.querySelector('footer');

@@ -12,7 +12,7 @@ export async function GET() {
   }
 
   try {
-    const backendUrl = `${process.env.NEXT_PUBLIC_BASE_URL}:${process.env.NEXT_PUBLIC_API_PORT}${process.env.NEXT_PUBLIC_API_ROOT}/SSE/stream`;
+    const backendUrl = `http://localhost:${process.env.NEXT_PUBLIC_API_PORT}${process.env.NEXT_PUBLIC_API_ROOT}/SSE/stream`;
 
     const upstream = await fetch(backendUrl, {
       method: 'GET',
