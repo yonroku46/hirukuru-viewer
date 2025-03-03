@@ -36,6 +36,10 @@ export default function DateInput({ selectedDate, minDate, maxDate, onChange, fi
         placeholderText="日付を選択"
         minDate={minDate ? minDate.toDate() : undefined}
         maxDate={maxDate ? maxDate.toDate() : undefined}
+        onKeyDown={(e) => e.preventDefault()}
+        customInput={
+          <input readOnly disabled />
+        }
         filterDate={(date) => {
           if (filterDate) {
             return filterDate(dayjs(date));

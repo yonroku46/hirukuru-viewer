@@ -159,22 +159,24 @@ export default function CartDialog({ user, open, setOpen }: CartDialogProps) {
   }, []);
 
   useEffect(() => {
+    // 注文終了後ステップ初期化
+    if (paymentStep === 'DONE' && !open) {
+      setPaymentStep('READY');
+      setOrderId(undefined);
+    }
     // 初期化
     if (open) {
       const now = dateNow();
       const today = now.format('ddd').toUpperCase() as DayType['type'];
       const isOpenToday = shopInfo?.businessHours?.some((hour) => hour.dayOfWeek === today);
       const initialPickupDate = isOpenToday ? now.format('YYYY-MM-DD') : getNextBusinessDay(shopInfo?.businessHours || []).format('YYYY-MM-DD');
-
       setNow(now);
       setDeleteMode(false);
-      setPaymentStep('READY');
       setMinDate(dayjs(initialPickupDate));
       setPickupDate(initialPickupDate);
       setPayType('CARD');
       setUsedPoint(undefined);
       setCurrentPoint(user?.point || 0);
-      setOrderId(undefined);
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }
   }, [open, user, shopInfo]);
@@ -184,7 +186,10 @@ export default function CartDialog({ user, open, setOpen }: CartDialogProps) {
   }, [totalPrice, usedPoint]);
 
   useEffect(() => {
-    if (paymentStep !== 'DONE') {
+    if (paymentStep === 'DONE') {
+      setCartItems([]);
+      setShopInfo(null);
+    } else {
       setCartItems(cartState.cartItems || []);
       setShopInfo(cartState.shopInfo || null);
     }
@@ -373,10 +378,10 @@ export default function CartDialog({ user, open, setOpen }: CartDialogProps) {
     router.push('/login');
   };
 
-  const handlePayment = async () => {
-    if (cartItems.length > 0 && totalPrice > 0) {
+  const handleNextStep = async () => {
+    if ((cartItems.length > 0 && totalPrice > 0) || paymentStep === 'DONE') {
       if (!squarePayments) {
-        enqueueSnackbar('Squareがロードされていません', { variant: 'error' });
+        enqueueSnackbar('Squareがロードされていません', { variant: 'warning' });
         return;
       }
       // ポイント使用時の有効性検証
@@ -409,7 +414,7 @@ export default function CartDialog({ user, open, setOpen }: CartDialogProps) {
           setPaymentStep('FINAL');
         }
       } else if (paymentStep === 'FINAL') {
-        // 内容確認、実行
+        // 内容確認、決済
         try {
           // TODO: 決済実行
           // const card = await squarePayments.card();
@@ -436,11 +441,15 @@ export default function CartDialog({ user, open, setOpen }: CartDialogProps) {
             } as OrderState;
             await orderService.createOrder(order).then((res) => {
               if (res?.success) {
-                setOrderId(res.id);
-                setPaymentStep('DONE');
-                // カートを空にする
-                localStorage.setItem(CART_KEY, JSON.stringify([]));
-                dispatch(setCartState({ cartItems: [] }));
+                if (res.id) {
+                  setOrderId(res.id);
+                  setPaymentStep('DONE');
+                  // カートを空にする
+                  localStorage.setItem(CART_KEY, JSON.stringify([]));
+                  dispatch(setCartState({ cartItems: [] }));
+                } else {
+                  enqueueSnackbar('注文に失敗しました。', { variant: 'error' });
+                }
               } else {
                 enqueueSnackbar('注文に失敗しました。', { variant: 'error' });
               }
@@ -649,16 +658,15 @@ export default function CartDialog({ user, open, setOpen }: CartDialogProps) {
             <div className="detail-info">
               <label>受け取り予定</label>
               {now.day() === dayjs(pickupDate).day() ?
-                `${pickupTimeHour}:${pickupTimeMinutes}
-                (約${timeUntil(dayjs(`${pickupDate} ${pickupTimeHour}:${pickupTimeMinutes}`))})`
+                `${pickupPeriod} ${pickupTimeHour}:${pickupTimeMinutes}`
                 :
-                `${pickupDate} ${pickupTimeHour}:${pickupTimeMinutes}`
+                `${pickupDate} ${pickupPeriod} ${pickupTimeHour}:${pickupTimeMinutes}`
               }
             </div>
             <div className="detail-info description">
               <label />
               {now.day() === dayjs(pickupDate).day() ?
-                `現在時刻${now.format('HH:mm')}基準`
+                `(約${timeUntil(dayjs(`${pickupDate} ${pickupTimeHour}:${pickupTimeMinutes}`))})`
                 :
                 `明日以降の予約注文になります`
               }
@@ -816,8 +824,8 @@ export default function CartDialog({ user, open, setOpen }: CartDialogProps) {
         <DialogActions className="cart-actions">
           <Button
             variant="contained"
-            className={`order-btn ${!deleteMode && cartItems.length !== 0 ? "active" : ""}`}
-            onClick={user ? handlePayment : handleLogin}
+            className={`order-btn ${(!deleteMode && cartItems.length !== 0) || paymentStep === 'DONE' ? "active" : ""}`}
+            onClick={user ? handleNextStep : handleLogin}
           >
             {user ?
               paymentStep === 'READY' ?

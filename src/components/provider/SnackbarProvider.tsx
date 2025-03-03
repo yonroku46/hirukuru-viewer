@@ -1,29 +1,48 @@
 "use client";
 
-import { SnackbarProvider as NotistackSnackbarProvider, useSnackbar, SnackbarKey } from 'notistack';
-import IconButton from '@mui/material/IconButton'
-import CloseIcon from '@mui/icons-material/Close';
+import { forwardRef } from 'react';
+import { SnackbarProvider as NotistackSnackbarProvider, useSnackbar } from 'notistack';
 
-export default function SnackbarProvider({ children }: { children: React.ReactNode }) {
+import Alert from '@mui/material/Alert';
 
-  function SnackbarAction({ id }: { id: SnackbarKey }) {
+const ClickableSnackbar = forwardRef<HTMLDivElement, { id: string | number, message: string, variant: string }>(
+  ({ id, message, variant }, ref) => {
     const { closeSnackbar } = useSnackbar();
+
     return (
-      <IconButton onClick={() => closeSnackbar(id)}>
-        <CloseIcon fontSize="small" />
-      </IconButton>
+      <Alert
+        ref={ref}
+        variant='filled'
+        severity={variant === 'default' ? 'info' : variant as any}
+        onClick={() => closeSnackbar(id)}
+        sx={{ cursor: 'pointer', borderRadius: '2rem', boxShadow: 'var(--info-shadow)',
+          '& .MuiAlert-message': { alignSelf: 'center' }
+        }}
+      >
+        {message}
+      </Alert>
     );
   }
+);
 
+ClickableSnackbar.displayName = 'ClickableSnackbar';
+
+export default function SnackbarProvider({ children }: { children: React.ReactNode }) {
   return (
     <NotistackSnackbarProvider
       maxSnack={3}
       anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      autoHideDuration={4500}
+      autoHideDuration={13500}
       preventDuplicate={true}
-      action={(key) => <SnackbarAction id={key} />}
       classes={{
         root: "snackbar",
+      }}
+      Components={{
+        default: ClickableSnackbar,
+        error: ClickableSnackbar,
+        success: ClickableSnackbar,
+        warning: ClickableSnackbar,
+        info: ClickableSnackbar,
       }}
     >
       {children}

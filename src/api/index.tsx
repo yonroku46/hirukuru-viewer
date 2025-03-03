@@ -142,7 +142,7 @@ function handle409Error(): void {
 
 function handleDefaultError(error: AxiosError): void {
   const status = error.response?.status;
-  openAlert("予期しないエラーが発生しました。\n問題が解決しない場合は、サービス管理者にお問い合わせください。");
+  openAlert("予期しないエラーが発生しました。\n問題が続く場合はサービス管理者にお問い合わせください。");
   console.error(`${status} Error response`, error.response);
 }
 

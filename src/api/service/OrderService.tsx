@@ -5,7 +5,6 @@ export default function OrderService() {
 
   async function createOrder(data: OrderState): Promise<ActionRes | undefined> {
     try {
-      console.log(data);
       const response: ApiResponse = await ApiInstance.post(ApiRoutes.ORDER_INFO, data);
       if (response && !response.hasErrors) {
         return response.responseData;

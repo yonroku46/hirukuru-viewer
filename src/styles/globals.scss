@@ -1308,6 +1308,8 @@ table {
   .react-datepicker-wrapper {
     width: 100%;
     input {
+      cursor: pointer;
+      caret-color: transparent;
       border: 1px solid var(--gray-alpha-300);
       padding: 0.65rem 2rem 0.65rem 0.8rem;
       border-radius: 0.75rem;
@@ -1319,7 +1321,7 @@ table {
   .arrow-down {
     position: absolute;
     right: 0.4rem;
-    cursor: pointer;
+    pointer-events: none;
   }
 }
 
@@ -1339,7 +1341,6 @@ table {
   .arrow-down {
     position: absolute;
     right: 0.4rem;
-    cursor: pointer;
     pointer-events: none;
   }
 }
