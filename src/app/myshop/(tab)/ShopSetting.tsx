@@ -7,6 +7,7 @@ import Selector from '@/components/input/Selector';
 import ViewTitle from '@/components/layout/ViewTitle';
 import Image from '@/components/Image';
 import TimeInput from '@/components/input/TimeInput';
+import ImageCropDialog from '@/components/ImageCropDialog';
 
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
@@ -24,6 +25,9 @@ function ShopSetting({ isSp, shop, setShop }: SettingProps)  {
 
   const [editMode, setEditMode] = useState<boolean>(false);
   const [tempShop, setTempShop] = useState<Shop>(shop);
+  const [cropDialogOpen, setCropDialogOpen] = useState(false);
+  const [cropImageType, setCropImageType] = useState<'thumbnailImg' | 'profileImg'>('thumbnailImg');
+  const [cropImageSrc, setCropImageSrc] = useState('');
 
   const locationOptions = [
     { label: '福岡市博多区', value: '福岡市博多区' },
@@ -94,16 +98,26 @@ function ShopSetting({ isSp, shop, setShop }: SettingProps)  {
       }
       const reader = new FileReader();
       reader.onload = () => {
-        setTempShop((prevData: Shop) => ({
-          ...prevData,
-          [type]: reader.result,
-          imgFile: file
-        }));
+        setCropImageType(type);
+        setCropImageSrc(reader.result as string);
+        setCropDialogOpen(true);
       };
       reader.readAsDataURL(file);
       fileInput.value = '';
     }
   };
+
+  const handleImageCrop = (croppedBlob: Blob, type: "thumbnailImg" | "profileImg") => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      setTempShop(prevData => ({
+        ...prevData,
+        [type]: reader.result,
+        imgFile: croppedBlob
+      }));
+    };
+    reader.readAsDataURL(croppedBlob);
+  }
 
   return (
     <Suspense fallback={<Loading circular />}>
@@ -181,6 +195,13 @@ function ShopSetting({ isSp, shop, setShop }: SettingProps)  {
                 </>
               )}
             </div>
+            <ImageCropDialog
+              open={cropDialogOpen}
+              imageSrc={cropImageSrc}
+              imageType={cropImageType}
+              onClose={() => setCropDialogOpen(false)}
+              onCropComplete={handleImageCrop}
+            />
           </div>
           <div className="shop-info-wrapper">
             {shopInfoItems.map(({ label, key }) => (

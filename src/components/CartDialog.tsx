@@ -161,8 +161,11 @@ export default function CartDialog({ user, open, setOpen }: CartDialogProps) {
   useEffect(() => {
     // 注文終了後ステップ初期化
     if (paymentStep === 'DONE' && !open) {
-      setPaymentStep('READY');
-      setOrderId(undefined);
+      // アニメーション後に適用
+      setTimeout(() => {
+        setPaymentStep('READY');
+        setOrderId(undefined);
+      }, 500);
     }
     // 初期化
     if (open) {

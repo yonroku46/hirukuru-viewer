@@ -96,23 +96,39 @@ export default function MyShopPage() {
   }, []);
 
   useEffect(() => {
+    // ユーザー情報、店舗情報がない場合はSSE接続不可
+    if (!shop?.shopId || !currentUser) return;
     // 既存のSSE終了
     if (eventSourceRef.current) {
       eventSourceRef.current.close();
       eventSourceRef.current = null;
     }
-    // ユーザー情報、店舗情報がない場合はSSE接続不可
-    if (!shop?.shopId || !currentUser) return;
 
-    try {
-      const eventSource: EventSource = new EventSourcePolyfill("/api/sse", {
+    const createEventSource = () => {
+      return new EventSourcePolyfill("/api/sse", {
         headers: {
           Authorization: `${tokenPrefix} ${currentUser.token}`,
           RefreshToken: `${tokenPrefix} ${currentUser.refreshToken}`,
-        }
+        },
       });
+    };
 
-      const orderUpdateHandler = (event: MessageEvent) => {
+    const reconnect = () => {
+      if (retryCountRef.current < 5) {
+        retryCountRef.current += 1;
+        console.log(`Retrying SSE connection... Attempt ${retryCountRef.current}`);
+
+        setTimeout(() => {
+          eventSourceRef.current = createEventSource();
+          attachEventHandlers(eventSourceRef.current);
+        }, 5000);
+      } else {
+        console.error('SSE connection failed after 5 retries');
+      }
+    };
+
+    const attachEventHandlers = (eventSource: EventSource) => {
+      eventSource.addEventListener('orderUpdate', (event: MessageEvent) => {
         try {
           const data = JSON.parse(event.data);
           const orderState = data.source as OrderState;
@@ -126,16 +142,14 @@ export default function MyShopPage() {
                 title: `注文番号 #${orderState.orderId}`,
                 message: `${orderStatusDict(orderState.status, 'notify')}`,
                 readFlg: ['PICKUP', 'DONE'].includes(orderState.status) ? true : false,
-                createTime: new Date().toISOString()
-              }
+                createTime: new Date().toISOString(),
+              },
             ]);
           }
         } catch (error) {
           console.error('Order update parsing error:', error);
         }
-      };
-
-      eventSource.addEventListener('orderUpdate', orderUpdateHandler);
+      });
 
       eventSource.onopen = () => {
         console.log('SSE connection opened');
@@ -143,37 +157,22 @@ export default function MyShopPage() {
       };
 
       eventSource.onerror = (error) => {
-        console.error('SSE Error:', {
-          timestamp: new Date().toISOString(),
-          readyState: eventSource.readyState,
-          error: error
-        });
-
-        if (eventSource.readyState === EventSource.CLOSED) {
-          if (retryCountRef.current < 5) {
-            setTimeout(() => {
-              if (eventSourceRef.current === eventSource) {
-                eventSource.close();
-                eventSourceRef.current = null;
-                retryCountRef.current += 1;
-              }
-            }, 5000);
-          } else {
-            console.error('SSE connection failed after 5 retries');
-          }
-        }
-      };
-
-      eventSourceRef.current = eventSource;
-
-      return () => {
+        console.error('SSE Error:', error);
         eventSource.close();
         eventSourceRef.current = null;
+        reconnect();
       };
-    } catch (error) {
-      console.error('EventSource Error:', error);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    };
+
+    eventSourceRef.current = createEventSource();
+    attachEventHandlers(eventSourceRef.current);
+
+    return () => {
+      if (eventSourceRef.current) {
+        eventSourceRef.current.close();
+        eventSourceRef.current = null;
+      }
+    };
   }, [shop?.shopId]);
 
   useEffect(() => {

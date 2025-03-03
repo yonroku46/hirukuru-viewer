@@ -18,6 +18,8 @@ interface DateInputProps {
 
 export default function DateInput({ selectedDate, minDate, maxDate, onChange, filterDate }: DateInputProps) {
   const datePickerRef = useRef<DatePicker>(null);
+  const dateFormat = 'YYYY-MM-DD';
+  const placeholderText = '日付を選択';
 
   const handleIconClick = () => {
     if (datePickerRef.current) {
@@ -32,13 +34,15 @@ export default function DateInput({ selectedDate, minDate, maxDate, onChange, fi
         locale={ja}
         selected={selectedDate ? selectedDate.toDate() : null}
         onChange={(date) => onChange(date ? dayjs(date) : null)}
-        dateFormat="yyyy-MM-dd"
-        placeholderText="日付を選択"
+        dateFormat={dateFormat}
+        placeholderText={placeholderText}
         minDate={minDate ? minDate.toDate() : undefined}
         maxDate={maxDate ? maxDate.toDate() : undefined}
         onKeyDown={(e) => e.preventDefault()}
         customInput={
-          <input readOnly disabled />
+          <div className={`date-input-custom ${selectedDate ? '' : 'placeholder'}`}>
+            {selectedDate ? selectedDate.format(dateFormat) : placeholderText}
+          </div>
         }
         filterDate={(date) => {
           if (filterDate) {

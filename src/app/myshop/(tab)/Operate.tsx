@@ -31,6 +31,7 @@ function Operate({ isSp, currentTime, notifications }: SettingProps)  {
   const cancelReasonList = useMemo(() => [
     { value: '在庫切れ', label: '在庫切れ' },
     { value: '現在注文量が多いため', label: '現在注文量が多いため' },
+    { value: '営業時間の変更', label: '営業時間の変更' },
     { value: '自然災害/事故', label: '自然災害/事故' },
     { value: 'その他', label: 'その他' },
   ], []);
