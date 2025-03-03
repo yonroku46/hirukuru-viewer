@@ -122,10 +122,10 @@ export default function MyShopPage() {
               {
                 notificationId: event.lastEventId,
                 receiverId: event.data.receiverId,
-                receiverType: "ORDER",
+                receiverType: ['PICKUP', 'DONE'].includes(orderState.status) ? 'HIDE_ORDER' : 'ORDER',
                 title: `注文番号 #${orderState.orderId}`,
-                message: `注文が「${orderStatusDict(orderState.status, 'label')}」になりました`,
-                readFlg: false,
+                message: `${orderStatusDict(orderState.status, 'notify')}`,
+                readFlg: ['PICKUP', 'DONE'].includes(orderState.status) ? true : false,
                 createTime: new Date().toISOString()
               }
             ]);

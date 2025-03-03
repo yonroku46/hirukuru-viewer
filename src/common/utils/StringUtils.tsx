@@ -104,13 +104,13 @@ export function optionsToString(options: ItemOption | ItemOption[], simple = fal
     : formatOption(options);
 }
 
-export function orderStatusDict(orderStatusType: OrderStatusCount['status'], key: 'key' | 'label' | 'color' | 'icon'): string | React.ReactNode {
+export function orderStatusDict(orderStatusType: OrderStatusCount['status'], key: 'key' | 'label' | 'notify' | 'color' | 'icon'): string | React.ReactNode {
   const orderStatus = [
-    { key: "PENDING", label: "対応待ち", color: "var(--icon-color)", icon: <PendingIcon fontSize="inherit" /> },
-    { key: "BOOKED", label: "予約", color: "var(--booked-color)", icon: <WatchLaterIcon fontSize="inherit" /> },
-    { key: "PICKUP", label: "準備完了", color: "var(--pickup-color)", icon: <TakeoutDiningIcon fontSize="inherit" /> },
-    { key: "DONE", label: "受取済み", color: "var(--done-color)", icon: <CheckIcon fontSize="inherit" /> },
-    { key: "CANCEL", label: "キャンセル", color: "var(--icon-color)", icon: <CloseIcon fontSize="inherit" /> },
+    { key: "PENDING", label: "対応待ち", notify: "注文を受け付けますか？", color: "var(--icon-color)", icon: <PendingIcon fontSize="inherit" /> },
+    { key: "BOOKED", label: "予約", notify: "新規注文が入りました", color: "var(--booked-color)", icon: <WatchLaterIcon fontSize="inherit" /> },
+    { key: "PICKUP", label: "準備完了", notify: "", color: "var(--pickup-color)", icon: <TakeoutDiningIcon fontSize="inherit" /> },
+    { key: "DONE", label: "受取済み", notify: "", color: "var(--done-color)", icon: <CheckIcon fontSize="inherit" /> },
+    { key: "CANCEL", label: "キャンセル", notify: "注文がキャンセルされました", color: "var(--icon-color)", icon: <CloseIcon fontSize="inherit" /> },
   ];
   return orderStatus.find((s) => s.key === orderStatusType)?.[key] || '';
 }

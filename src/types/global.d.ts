@@ -120,7 +120,7 @@ declare global {
     type: 'BENTO' | 'FOOD_TRUCK';
   }
   interface ReceiverType {
-    type: 'SHOP' | 'USER' | 'ORDER';
+    type: 'SHOP' | 'USER' | 'ORDER' | 'HIDE_ORDER';
   }
   interface ServiceNoticeType {
     type: 'NOTICE' | 'EVENT';

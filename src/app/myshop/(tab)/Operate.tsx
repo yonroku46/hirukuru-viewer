@@ -112,14 +112,14 @@ function Operate({ isSp, currentTime, notifications }: SettingProps)  {
   }, []);
 
   useEffect(() => {
-    if (notifications.length > 0) {
-      notifications.forEach((notification) => {
-        if (notification.readFlg === false && notification.receiverType === 'ORDER') {
-          getOrderList();
-        }
-      });
+    const updateRequired = notifications.some(
+      notification => notification.receiverType.includes('ORDER')
+    );
+    if (updateRequired) {
+      getOrderList();
     }
-  }, [notifications, getOrderList]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [notifications]);
 
   return (
     <Suspense fallback={<Loading circular />}>

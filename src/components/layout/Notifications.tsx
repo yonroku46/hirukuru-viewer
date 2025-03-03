@@ -93,27 +93,29 @@ export default function Notifications({ currentTime, count, notifications, setNo
         }}
       >
         {sortedNotifications.length > 0 ?
-          sortedNotifications.map((notification, index) => (
-            <MenuItem
-              key={index}
-              className={`notification-item ${notification.readFlg ? "" : "unread"}`}
-              onClick={() => handleClick(notification)}
-              onTouchStart={() => handleRead(notification)}
-              onMouseOver={() => handleRead(notification)}
-            >
-              <div className="notification-title-wrapper">
-                <div className="notification-title">
-                  {notification.title}
+          sortedNotifications
+            .filter(notification => !notification.receiverType.startsWith('HIDE'))
+            .map((notification, index) => (
+              <MenuItem
+                key={index}
+                className={`notification-item ${notification.readFlg ? "" : "unread"}`}
+                onClick={() => handleClick(notification)}
+                onTouchStart={() => handleRead(notification)}
+                onMouseOver={() => handleRead(notification)}
+              >
+                <div className="notification-title-wrapper">
+                  <div className="notification-title">
+                    {notification.title}
+                  </div>
+                  <div className="notification-time">
+                    {formatRelativeTime(notification.createTime, currentTime)}
+                  </div>
                 </div>
-                <div className="notification-time">
-                  {formatRelativeTime(notification.createTime, currentTime)}
+                <div className="notification-message">
+                  {notification.message}
                 </div>
-              </div>
-              <div className="notification-message">
-                {notification.message}
-              </div>
-              <span className="notification-alert" />
-            </MenuItem>
+                <span className="notification-alert" />
+              </MenuItem>
           ))
           : (
             <MenuItem className="notification-item empty" disabled>
