@@ -173,6 +173,7 @@ export default function MyShopPage() {
         eventSourceRef.current = null;
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shop?.shopId]);
 
   useEffect(() => {

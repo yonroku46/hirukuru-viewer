@@ -38,7 +38,7 @@ export default function Footer() {
       <div className="container top-container">
         <div className="left-container">
           <div className="logo">
-            Hirukuru
+            ヒルクル
             <div className="description">
               ランチをスマートに
             </div>

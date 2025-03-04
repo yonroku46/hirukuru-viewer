@@ -89,7 +89,7 @@ export async function generatePageMetadata(type: MetadataType, name?: string): P
   const pageMetadata: Record<MetadataType, Metadata> = {
     "home": {
       ...baseMetadata,
-      title: `${config.service.name}`,
+      title: `${config.service.name} - ランチをスマートに持ち帰り専門サービス`,
     },
     "login": {
       ...baseMetadata,

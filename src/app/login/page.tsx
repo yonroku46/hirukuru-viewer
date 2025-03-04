@@ -143,7 +143,7 @@ export default function LoginPage() {
                 height={100}
               />
               <h1 className="service-title">
-                Hirukuru
+                ヒルクル
               </h1>
             </div>
           </div>

@@ -53,6 +53,7 @@ export default function Home() {
     { id: '5', name: '韓国風', imgIcon: '/assets/img/korean.png' },
     { id: '6', name: 'お魚', imgIcon: '/assets/img/fish.png' },
     { id: '7', name: 'お肉', imgIcon: '/assets/img/meat.png' },
+    { id: '8', name: '洋食', imgIcon: '/assets/img/western.png' },
   ];
 
   return (
@@ -69,9 +70,6 @@ export default function Home() {
       </section>
       <section className="container">
         <div className="quick-select">
-          <Title
-            title="今日の気分は？"
-          />
           <div className="quick-select-wrapper">
             {quickList.map((item, index) => (
               <button
@@ -82,8 +80,8 @@ export default function Home() {
                   className="quick-select-image"
                   src={item.imgIcon}
                   alt={item.name}
-                  width={86}
-                  height={86}
+                  width={84}
+                  height={84}
                 />
                 <div className="quick-select-name">
                   {item.name}

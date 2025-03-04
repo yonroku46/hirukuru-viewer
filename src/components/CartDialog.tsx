@@ -180,8 +180,8 @@ export default function CartDialog({ user, open, setOpen }: CartDialogProps) {
       setPayType('CARD');
       setUsedPoint(undefined);
       setCurrentPoint(user?.point || 0);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, user, shopInfo]);
 
   useEffect(() => {

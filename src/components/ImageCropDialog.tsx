@@ -1,11 +1,14 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Cropper from 'react-easy-crop';
+import { useMediaQuery } from "react-responsive";
 
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
+import CropFreeIcon from '@mui/icons-material/CropFree';
+import CloseIcon from "@mui/icons-material/Close";
 
 interface CropArea {
   x: number;
@@ -62,9 +65,20 @@ const getCroppedImg = async (imageSrc: string, pixelCrop: CropArea): Promise<Blo
 };
 
 export default function ImageCropDialog({ open, imageSrc, imageType, onClose, onCropComplete }: ImageCropDialogProps) {
-  const [crop, setCrop] = useState({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(1);
+  const isSp = useMediaQuery({ query: "(max-width: 1179px)" });
+
+  const [crop, setCrop] = useState<{x: number, y: number}>({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState<number>(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<CropArea | null>(null);
+  const [imageHeight, setImageHeight] = useState<number | null>(null);
+
+  useEffect(() => {
+    const img = new Image();
+    img.src = imageSrc;
+    img.onload = () => {
+      setImageHeight(img.height);
+    };
+  }, [imageSrc]);
 
   const handleCropComplete = (croppedArea: any, croppedAreaPixels: CropArea) => {
     setCroppedAreaPixels(croppedAreaPixels);
@@ -83,18 +97,28 @@ export default function ImageCropDialog({ open, imageSrc, imageType, onClose, on
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-      <DialogTitle>
-        {imageType === 'thumbnailImg' ? 'サムネイル' : 'プロフィール'}画像編集
+    <Dialog
+      className="crop-dialog"
+      fullScreen={isSp}
+      open={open}
+      onClose={onClose}
+    >
+      <DialogTitle className="title-wrapper">
+        <div className="title">
+          <CropFreeIcon />
+          画像編集
+        </div>
+        <CloseIcon className="close-icon" onClick={onClose} />
       </DialogTitle>
-      <DialogContent>
-        <div style={{ position: 'relative', height: '400px' }}>
+      <DialogContent className="content">
+        <div style={{ position: 'relative', height: imageHeight ? `${imageHeight}px` : '400px' }}>
           {imageSrc && (
             <Cropper
               image={imageSrc}
               crop={crop}
               zoom={zoom}
-              aspect={imageType === 'thumbnailImg' ? 16 / 10 : 1} // サムネイルは16:10、プロフィールは1:1
+              aspect={imageType === 'thumbnailImg' ? 16 / 10 : 1}
+              cropShape={imageType === 'profileImg' ? 'round' : 'rect'}
               onCropChange={setCrop}
               onZoomChange={setZoom}
               onCropComplete={handleCropComplete}
@@ -102,9 +126,11 @@ export default function ImageCropDialog({ open, imageSrc, imageType, onClose, on
           )}
         </div>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose}>キャンセル</Button>
-        <Button onClick={handleConfirm} variant="contained" color="primary">
+      <DialogActions className="crop-actions">
+        <Button className="cancel-btn" onClick={onClose}>
+          キャンセル
+        </Button>
+        <Button className="save-btn" onClick={handleConfirm} variant="contained" color="primary">
           確認
         </Button>
       </DialogActions>

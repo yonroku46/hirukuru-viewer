@@ -12,7 +12,6 @@ import AuthService from "@/api/service/AuthService";
 import CartDialog from "@/components/CartDialog";
 import { enqueueSnackbar } from "notistack";
 import { useAppDispatch, useAppSelector } from "@/store";
-import { config } from "@/config";
 
 import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined';
 import IconButton from "@mui/material/IconButton";
@@ -363,7 +362,7 @@ export default function Header() {
             ) : null
           ) : (
             <Link href="/" className="logo">
-              {config.service.name}
+              Hirukuru
             </Link>
           )}
         </div>

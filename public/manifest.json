@@ -1,7 +1,7 @@
 {
-  "name": "Hirukuru",
-  "short_name": "Hirukuru",
-  "description": "ランチをスマートに",
+  "name": "ヒルクル",
+  "short_name": "ヒルクル",
+  "description": "ランチをスマートに、おいしい街づくり",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

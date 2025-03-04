@@ -1222,6 +1222,46 @@ table {
     }
   }
 }
+.crop-dialog {
+  .title-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 1rem;
+    background-color: var(--dialog-color);
+    color: var(--background);
+    font-size: 1rem;
+    position: sticky;
+    top: 0;
+    .title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .close-icon {
+      cursor: pointer;
+    }
+  }
+  .content {
+    display: flex;
+    flex-direction: column;
+    overflow-y: overlay;
+    padding: 0;
+  }
+  .crop-actions {
+    display: flex;
+    padding: 1.5rem 1rem;
+    gap: 0.75rem;
+    background: var(--background);
+    .save-btn, .cancel-btn {
+      font-size: 1.1rem;
+      width: 100%;
+      padding: 0.75rem 1rem;
+      margin: 0;
+    }
+  }
+}
 
 .time-input {
   display: flex;
@@ -2753,7 +2793,7 @@ table {
     width: 100%;
     .quick-select-wrapper {
       display: grid;
-      grid-template-columns: repeat(7, 1fr);
+      grid-template-columns: repeat(8, 1fr);
       gap: 0.5rem;
       .quick-select-btn {
         display: flex;
@@ -2761,13 +2801,14 @@ table {
         padding: 0.5rem 1.5rem;
         overflow: hidden;
         position: relative;
-        min-width: 100px;
         height: fit-content;
         background-color: transparent;
-        transition: background-color 0.2s;
         .quick-select-image {
           object-fit: contain;
-          padding: 1rem;
+          padding: 1.25rem;
+          background-color: var(--gray-alpha-200);
+          border-radius: 2rem;
+          transition: background-color 0.2s;
         }
         .quick-select-name {
           font-size: 1rem;
@@ -4871,6 +4912,11 @@ table {
       min-width: 500px;
     }
   }
+  .crop-dialog {
+    .title {
+      min-width: 500px;
+    }
+  }
 }
 
 
@@ -4990,7 +5036,7 @@ table {
     }
     .quick-select {
       .quick-select-wrapper {
-        overflow-x: auto;
+        grid-template-columns: repeat(4, 1fr);
       }
     }
   }
@@ -5290,8 +5336,10 @@ table {
     .quick-select {
       .quick-select-wrapper {
         .quick-select-btn {
-          &:hover {
-            background-color: var(--gray-alpha-200);
+          .quick-select-image {
+            &:hover {
+              background-color: var(--gray-alpha-400);
+            }
           }
         }
       }

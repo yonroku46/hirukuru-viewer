@@ -1,9 +1,9 @@
 const buildConfig = () => {
-  const name = process.env.NEXT_PUBLIC_APP_NAME || "Hirukuru";
+  const name = process.env.NEXT_PUBLIC_APP_NAME || "ヒルクル";
   const copyright = process.env.NEXT_PUBLIC_COPYRIGHT || "Univus Inc.";
-  const defaultTitle = process.env.NEXT_DEFAULT_METADATA_TITLE || "Hirukuru";
-  const defaultDescription = process.env.NEXT_DEFAULT_METADATA_DESCRIPTION || "ランチをスマートに";
-  const defaultKeywords = process.env.NEXT_DEFAULT_METADATA_KEYWORDS || "Hirukuru,ヒルクル";
+  const defaultTitle = process.env.NEXT_DEFAULT_METADATA_TITLE || "ヒルクル";
+  const defaultDescription = process.env.NEXT_DEFAULT_METADATA_DESCRIPTION || "ランチをスマートに、おいしい街づくり";
+  const defaultKeywords = process.env.NEXT_DEFAULT_METADATA_KEYWORDS || "NEXT_DEFAULT_METADATA_KEYWORDS=Hirukuru,ヒルクル,お弁当,ランチ,テイクアウト,福岡,ランチ屋,ランチ屋さん";
   const s3Prefix = process.env.NEXT_PUBLIC_S3_PREFIX || '';
   const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '';
   const squareSandboxId = process.env.NEXT_PUBLIC_SQUARE_SANDBOX_ID || '';
