@@ -23,7 +23,8 @@ export default function SearchPage() {
   useEffect(() => {
     const history = localStorage.getItem("search-history");
     if (history) {
-      setSearchHistory(JSON.parse(history));
+      const historyArray = JSON.parse(history);
+      setSearchHistory([...historyArray].reverse());
     }
     setHotKeywords([
       { label: "おすすめ1", status: "up" },{ label: "おすすめ2", status: "down" },

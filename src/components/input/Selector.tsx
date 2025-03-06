@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import ArrowDropDownRoundedIcon from '@mui/icons-material/ArrowDropDownRounded';
 
 interface SelectorProps {
@@ -12,7 +11,7 @@ interface SelectorProps {
 export default function Selector({ options, value, onChange }: SelectorProps) {
   return (
     <div className="selector">
-      <select onChange={onChange} value={value}>
+      <select className="custom-select" value={value} onChange={onChange}>
         {options.map(option => (
           <option key={option.value} value={option.value}>
             {option.label}

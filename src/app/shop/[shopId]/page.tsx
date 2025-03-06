@@ -338,7 +338,7 @@ export default function ShopPage(
   };
 
   const scrollToReviewSection = () => {
-    const reviewSection = document.querySelector('.shop-review-content');
+    const reviewSection = document.querySelector('.review-contents');
     if (reviewSection) {
       const sectionPadding = 1;
       const headerHeight = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-height')) + sectionPadding;

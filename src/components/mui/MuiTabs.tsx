@@ -74,6 +74,9 @@ export default function MuiTabs({ tabs }: MuiTabsProps) {
           '& .MuiTabs-scroller': {
             height: 'fit-content',
           },
+          '& .MuiTabs-indicator': {
+            height: '3px',
+          },
         }}
       >
         {tabs.map((tab, index) => (
@@ -83,7 +86,7 @@ export default function MuiTabs({ tabs }: MuiTabsProps) {
             sx={{
               alignItems: 'center',
               minHeight: 'unset',
-              padding: '1rem 1.75rem',
+              padding: '1.25rem 1.75rem',
               color: tab.active ? 'inherit' : 'var(--gray-alpha-400)',
               pointerEvents: tab.active ? 'auto' : 'none',
               '&.Mui-selected': {

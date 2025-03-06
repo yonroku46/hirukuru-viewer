@@ -107,20 +107,44 @@ export default function Header() {
       const history = localStorage.getItem("search-history");
       const searchHistory: string[] = history ? JSON.parse(history) : [];
 
-      // 検索履歴に同じ値がある場合は処理しない
-      if (searchHistory.includes(searchValue)) return;
-      // 履歴が10個を超える場合は最も古い項目を削除
-      if (searchHistory.length >= 10) {
-        searchHistory.shift();
+      // 検索履歴に同じ値がある場合は履歴処理しない
+      if (!searchHistory.includes(searchValue)) {
+        // 履歴が10個を超える場合は最も古い項目を削除
+        if (searchHistory.length >= 10) {
+          searchHistory.shift();
+        }
+        // 検索履歴に新しい値を追加
+        searchHistory.push(searchValue);
+        localStorage.setItem("search-history", JSON.stringify(searchHistory));
       }
-      // 検索履歴に新しい値を追加
-      searchHistory.push(searchValue);
-      localStorage.setItem("search-history", JSON.stringify(searchHistory));
       // 検索ページに移動、検索パラメータを更新(検索ページでは戻るボタン対応のためreplaceを使用)
       if (currentPath.startsWith("/search/map")) {
-        router.replace(`/search/map?q=${searchValue}`);
+        const t = searchParams.get('t');
+        const c = searchParams.get('c');
+        const b = searchParams.get('b');
+        const s = searchParams.get('s');
+
+        const queryParams: Record<string, string> = {};
+
+        if (searchValue) {
+          queryParams.q = searchValue;
+        }
+        if (t) queryParams.t = t;
+        if (c) queryParams.c = c;
+        if (b) queryParams.b = b;
+        if (s) queryParams.s = s;
+
+        const queryString = Object.entries(queryParams)
+          .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+          .join('&');
+
+        const url = `/search/map${queryString ? `?${queryString}` : ''}`;
+        router.replace(url);
       } else {
-        router.push(`/search/map?q=${searchValue}`);
+        const url = searchValue
+          ? `/search/map?q=${encodeURIComponent(searchValue)}`
+          : '/search/map';
+        router.push(url);
       }
     }
   };

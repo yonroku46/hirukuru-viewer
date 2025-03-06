@@ -4,6 +4,7 @@ import EventSlider from "@/components/EventSlider";
 import ItemCardSlider from "@/components/ItemCardSlider";
 import NewShopSlider from "@/components/NewShopSlider";
 import Title from "@/components/layout/Title";
+import { categoryList } from "@/common/utils/StringUtils";
 
 import KeyboardArrowRightTwoToneIcon from '@mui/icons-material/KeyboardArrowRightTwoTone';
 
@@ -45,16 +46,6 @@ export default function Home() {
     { noticeId: '4', noticeType: 'EVENT', noticeTitle: 'パートナー募集', noticeHref: '/service/partner', noticeDetail: 'パートナーを募集しています', thumbnailImg: 'https://i.pinimg.com/736x/75/d7/5b/75d75b4a87ea4a45b3dc78e8a30de06d.jpg', createTime: '2025-01-01' },
     { noticeId: '5', noticeType: 'EVENT', noticeTitle: 'ランキング', noticeDetail: '今週のランキングは？', thumbnailImg: 'https://i.pinimg.com/736x/c1/90/a8/c190a833901cfa35fd456012cb9c0f6d.jpg', createTime: '2025-01-01' },
   ];
-  const quickList = [
-    { id: '1', name: '揚物', imgIcon: '/assets/img/agemono.png' },
-    { id: '2', name: '麺類', imgIcon: '/assets/img/men.png' },
-    { id: '3', name: 'カレー', imgIcon: '/assets/img/curry.png' },
-    { id: '4', name: '野菜', imgIcon: '/assets/img/vegetable.png' },
-    { id: '5', name: '韓国風', imgIcon: '/assets/img/korean.png' },
-    { id: '6', name: 'お魚', imgIcon: '/assets/img/fish.png' },
-    { id: '7', name: 'お肉', imgIcon: '/assets/img/meat.png' },
-    { id: '8', name: '洋食', imgIcon: '/assets/img/western.png' },
-  ];
 
   return (
     <article className="home">
@@ -71,10 +62,11 @@ export default function Home() {
       <section className="container">
         <div className="quick-select">
           <div className="quick-select-wrapper">
-            {quickList.map((item, index) => (
-              <button
+            {categoryList.map((item, index) => (
+              <Link
                 key={index}
-                className="quick-select-btn"
+                className="quick-select-item"
+                href={`/search/map?c=${item.name}`}
               >
                 <Image
                   className="quick-select-image"
@@ -86,7 +78,7 @@ export default function Home() {
                 <div className="quick-select-name">
                   {item.name}
                 </div>
-              </button>
+              </Link>
             ))}
           </div>
         </div>

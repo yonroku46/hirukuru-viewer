@@ -4,16 +4,16 @@ import { useState, useEffect, useCallback } from "react";
 import { GoogleMap, LoadScript, MarkerClusterer, Marker, InfoWindow } from "@react-google-maps/api";
 import { config } from "@/config";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useMediaQuery } from "react-responsive";
 import { enqueueSnackbar } from "notistack";
 import Loading from "@/app/loading";
 import Image from "@/components/Image";
-import { isBusinessOpen } from "@/common/utils/DateUtils";
-import { formatRating } from "@/common/utils/StringUtils";
+import { categoryList, formatRating } from "@/common/utils/StringUtils";
 import ShopCard from "@/components/ShopCard";
-import Selector from "@/components/input/Selector";
-import SwitchButton from "@/components/button/SwitchButton";
 import MiniButton from "@/components/button/MiniButton";
+import LocationDialog from "@/components/LocationDialog";
+import FilterButton from "@/components/button/FilterButton";
 
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import StarRoundedIcon from '@mui/icons-material/StarRounded';
@@ -23,51 +23,27 @@ import ListOutlinedIcon from '@mui/icons-material/ListOutlined';
 import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-
-const defaultPosition = {
-  lat: 33.5902,
-  lng: 130.4017
-};
-const MAX_ZOOM = 20;
-const MIN_ZOOM = 5;
-const GOOGLE_MAP_OPTIONS = {
-  maxZoom: MAX_ZOOM,
-  minZoom: MIN_ZOOM,
-  scrollwheel: true,
-  mapTypeControl: false,
-  fullscreenControl: false,
-  streetViewControl: false,
-  zoomControl: false,
-  keyboardShortcuts: false,
-  gestureHandling: "greedy",
-  styles: [
-    {
-      "elementType": "labels",
-      "stylers": [{ "saturation": -15 }, { "lightness": 20 }]
-    },
-    {
-      "featureType": "administrative.land_parcel",
-      "elementType": "labels",
-      "stylers": [{ "visibility": "off" }]
-    },
-    {
-      "featureType": "poi.business",
-      "stylers": [{ "visibility": "simplified" }]
-    },
-    {
-      "featureType": "road.local",
-      "elementType": "labels",
-      "stylers": [{ "visibility": "off" }]
-    }
-  ]
-};
+import SellOutlinedIcon from '@mui/icons-material/SellOutlined';
+import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
+import LocalDiningOutlinedIcon from '@mui/icons-material/LocalDiningOutlined';
+import CurrencyYenOutlinedIcon from '@mui/icons-material/CurrencyYenOutlined';
+import SortOutlinedIcon from '@mui/icons-material/SortOutlined';
 
 export default function SearchMapPage() {
   const isSp = useMediaQuery({ query: "(max-width: 1179px)" });
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const t = searchParams.get('t');
+  const c = searchParams.get('c');
+  const b = searchParams.get('b');
+  const s = searchParams.get('s');
 
   const [favoriteShops, setFavoriteShops] = useState<string[]>([]);
-  const [openOnly, setOpenOnly] = useState<boolean>(false);
-  const [shopType, setShopType] = useState<"ALL" | ShopType["type"]>("ALL");
+  const [isSale, setIsSale] = useState<boolean>(false);
+  const [shopType, setShopType] = useState<"ALL" | ShopType["type"]>(t?.toUpperCase() as ShopType["type"] || "ALL");
+  const [category, setCategory] = useState<string>(c || "ALL");
+  const [budget, setBudget] = useState<string>(b || "ALL");
+  const [sortOrder, setSortOrder] = useState<string>(s?.toUpperCase() || "RECOMMEND");
   const [shops, setShops] = useState<Shop[]>([]);
   const [filteredShops, setFilteredShops] = useState<Shop[]>([]);
   const [markPlaces, setMarkPlaces] = useState<Place[]>([]);
@@ -78,6 +54,8 @@ export default function SearchMapPage() {
   const [isResultsVisible, setIsResultsVisible] = useState<boolean>(true);
   const [isMapVisible, setIsMapVisible] = useState<boolean>(false);
   const [zoomLevel, setZoomLevel] = useState<number>(15);
+  const [locationDialogOpen, setLocationDialogOpen] = useState<boolean>(false);
+  const [userSpot, setUserSpot] = useState<UserSpot | null>(null);
 
   const handleFavorite = useCallback((e: React.MouseEvent<HTMLButtonElement>, id: string) => {
     e.preventDefault();
@@ -102,7 +80,7 @@ export default function SearchMapPage() {
 
   const zoomIn = () => {
     if (map) {
-      const newZoom = Math.min((map.getZoom() ?? 0) + 1, MAX_ZOOM);
+      const newZoom = Math.min((map.getZoom() ?? 0) + 1, config.googleMaps.maxZoom);
       map.setZoom(newZoom);
       setZoomLevel(newZoom);
     }
@@ -110,7 +88,7 @@ export default function SearchMapPage() {
 
   const zoomOut = () => {
     if (map) {
-      const newZoom = Math.max((map.getZoom() ?? 0) - 1, MIN_ZOOM);
+      const newZoom = Math.max((map.getZoom() ?? 0) - 1, config.googleMaps.minZoom);
       map.setZoom(newZoom);
       setZoomLevel(newZoom);
     }
@@ -174,13 +152,31 @@ export default function SearchMapPage() {
         console.error(err.message);
         const defaultPlace: Place = {
           placeId: "default",
-          position: defaultPosition
+          position: config.googleMaps.defaultPosition
         };
         setCurrentPlace(defaultPlace);
         enqueueSnackbar('位置情報を取得に失敗しました。', { variant: 'error' });
       }
     );
   }, [map]);
+
+  useEffect(() => {
+    const q = searchParams.get('q');
+    const queryParams: Record<string, string> = {};
+
+    if (q) queryParams.q = q;
+    if (shopType && shopType !== "ALL") queryParams.t = shopType.toLowerCase();
+    if (category && category !== "ALL") queryParams.c = category;
+    if (budget && budget !== "ALL") queryParams.b = budget;
+    if (sortOrder && sortOrder !== "RECOMMEND") queryParams.s = sortOrder.toLowerCase();
+
+    const queryString = Object.entries(queryParams)
+      .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+      .join('&');
+
+    const url = `/search/map${queryString ? `?${queryString}` : ''}`;
+    router.replace(url);
+  }, [shopType, category, budget, sortOrder, router, searchParams]);
 
   useEffect(() => {
     const dummyShops: Shop[] = [
@@ -240,20 +236,28 @@ export default function SearchMapPage() {
       { placeId: "P5", shopId: "5", position: { lat: 33.5842, lng: 130.4102 } },
       { placeId: "P6", shopId: "6", position: { lat: 33.5847, lng: 130.4105 } },
     ];
+    const dummyUserSpot: UserSpot = {
+      spotId: "1",
+      userId: "1",
+      spotName: "マイスポット",
+      latitude: 33.5902,
+      longitude: 130.4017,
+      accuracy: 0,
+    };
     setShops(dummyShops);
     setFilteredShops(dummyShops);
     setMarkPlaces(dummyPlaces);
+    setUserSpot(dummyUserSpot);
     getCurrentLocation();
   }, [getCurrentLocation]);
 
   useEffect(() => {
     setFilteredShops(
       shops.filter(item => {
-        const isOpen = isBusinessOpen(item.businessHours || []);
-        return (!openOnly || isOpen) && (shopType === "ALL" || item.shopType === shopType);
+        return (shopType === "ALL" || item.shopType === shopType);
       })
     );
-  }, [shops, openOnly, shopType]);
+  }, [shops, shopType, budget, sortOrder]);
 
   useEffect(() => {
     if (isSp && isMapVisible) {
@@ -274,24 +278,86 @@ export default function SearchMapPage() {
       <div className="search-map-page">
         <div className="content-header">
           <div className="filter-container container">
+            <LocationDialog
+              spot={userSpot}
+              open={locationDialogOpen}
+              onClose={() => {
+                setLocationDialogOpen(false);
+              }}
+            />
             <div className="btn-wrapper">
-              <SwitchButton
-                labels={[{ label: "全て", value: "all" }, { label: "営業中", value: "open" }]}
-                onChange={(value: string) => {
-                  setOpenOnly(value === "open");
-                }}
+              <FilterButton
+                icon={<SellOutlinedIcon />}
+                label="割引中"
+                active={isSale}
+                onClick={() => setIsSale(!isSale)}
               />
             </div>
             <div className="filter-wrapper">
-              <Selector
+              <FilterButton
+                icon={<PlaceOutlinedIcon />}
+                label="店舗タイプ"
+                active={shopType !== "ALL"}
                 options={[
-                  { label: "全て", value: "ALL" },
-                  { label: "お弁当屋のみ", value: "BENTO" },
-                  { label: "フードトラックのみ", value: "FOOD_TRUCK" }
+                  { label: "お弁当屋のみ", value: "BENTO", selected: shopType === "BENTO" },
+                  { label: "フードトラックのみ", value: "FOOD_TRUCK", selected: shopType === "FOOD_TRUCK" }
                 ]}
-                value={shopType}
-                onChange={(event) => {
-                  setShopType(event.target.value as "ALL" | ShopType["type"]);
+                onApply={(value) => {
+                  setShopType(value as ShopType["type"]);
+                }}
+                onReset={() => {
+                  setShopType("ALL");
+                }}
+              />
+              <FilterButton
+                icon={<LocalDiningOutlinedIcon />}
+                label="カテゴリー"
+                options={categoryList.map((item) => ({
+                  label: item.name,
+                  value: item.name,
+                  selected: category.includes(item.name)
+                }))}
+                optionMultiple
+                active={category !== "ALL"}
+                onApply={(value) => {
+                  setCategory(value);
+                }}
+                onReset={() => {
+                  setCategory("ALL");
+                }}
+              />
+              <FilterButton
+                icon={<CurrencyYenOutlinedIcon />}
+                label="予算"
+                options={[
+                  { label: "~500円", value: "500", selected: budget === "500" },
+                  { label: "~1000円", value: "1000", selected: budget === "1000" },
+                  { label: "~1500円", value: "1500", selected: budget === "1500" },
+                  { label: "~2000円", value: "2000", selected: budget === "2000" },
+                  { label: "3000円~", value: "3000", selected: budget === "3000" }
+                ]}
+                active={budget !== "ALL"}
+                onApply={(value) => {
+                  setBudget(value as "ALL" | "500" | "1000" | "1500" | "2000" | "3000");
+                }}
+                onReset={() => {
+                  setBudget("ALL");
+                }}
+              />
+              <FilterButton
+                icon={<SortOutlinedIcon />}
+                label="並び替え"
+                options={[
+                  { label: "おすすめ順", value: "RECOMMEND", selected: sortOrder === "RECOMMEND" },
+                  { label: "いい評価順", value: "RATING", selected: sortOrder === "RATING" },
+                  { label: "新着順", value: "LATEST", selected: sortOrder === "LATEST" }
+                ]}
+                active={sortOrder !== "RECOMMEND"}
+                onApply={(value) => {
+                  setSortOrder(value as "RECOMMEND" | "RATING" | "LATEST");
+                }}
+                onReset={() => {
+                  setSortOrder("RECOMMEND");
                 }}
               />
             </div>
@@ -360,10 +426,10 @@ export default function SearchMapPage() {
               </>
             )}
             <div className="zoom-btn-group">
-              <button className={`zoom-btn zoom-in ${zoomLevel >= MAX_ZOOM ? 'over' : ''}`} onClick={zoomIn}>
+              <button className={`zoom-btn zoom-in ${zoomLevel >= config.googleMaps.maxZoom ? 'over' : ''}`} onClick={zoomIn}>
                 <AddIcon />
               </button>
-              <button className={`zoom-btn zoom-out ${zoomLevel <= MIN_ZOOM ? 'over' : ''}`} onClick={zoomOut}>
+              <button className={`zoom-btn zoom-out ${zoomLevel <= config.googleMaps.minZoom ? 'over' : ''}`} onClick={zoomOut}>
                 <RemoveIcon />
               </button>
               <MiniButton
@@ -380,7 +446,7 @@ export default function SearchMapPage() {
                 mapContainerStyle={{ width: "100%", height: "100%" }}
                 onLoad={(mapInstance) => {
                   setMap(mapInstance);
-                  // クリック時のデフォルトの情報ウィンドウを非表示にする
+                  // クリック時のデフォルトの情報ウィンドウを非表示
                   mapInstance.addListener("click", (e: google.maps.MapMouseEvent) => {
                     e.stop();
                   });
@@ -394,7 +460,7 @@ export default function SearchMapPage() {
                 onClick={() => setActiveMarker(null)}
                 center={lastSelectedPosition || currentPlace?.position}
                 zoom={zoomLevel}
-                options={GOOGLE_MAP_OPTIONS}
+                options={config.googleMaps.options}
               >
                 {currentPlace?.position && (
                   <Marker

@@ -127,7 +127,7 @@ export default function ImageCropDialog({ open, imageSrc, imageType, onClose, on
         </div>
       </DialogContent>
       <DialogActions className="crop-actions">
-        <Button className="cancel-btn" onClick={onClose}>
+        <Button className="cancel-btn" onClick={onClose} variant="outlined">
           キャンセル
         </Button>
         <Button className="save-btn" onClick={handleConfirm} variant="contained" color="primary">

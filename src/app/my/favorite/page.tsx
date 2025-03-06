@@ -3,11 +3,9 @@
 import { useState, useEffect } from "react";
 import UserService from "@/api/service/UserService";
 import { createKanaSearchRegex } from "@/common/utils/SearchUtils";
-import { isBusinessOpen } from "@/common/utils/DateUtils";
 import SearchInput from "@/components/input/SearchInput";
 import MuiBreadcrumbs from "@/components/mui/MuiBreadcrumbs";
 import ShopCard from "@/components/ShopCard";
-import SwitchButton from "@/components/button/SwitchButton";
 import Title from "@/components/layout/Title";
 
 import SearchOffIcon from '@mui/icons-material/SearchOff';
@@ -21,7 +19,6 @@ export default function FavoritePage() {
   const userService = UserService();
 
   const [searchValue, setSearchValue] = useState<string>("");
-  const [openOnly, setOpenOnly] = useState<boolean>(false);
   const [favoriteShops, setFavoriteShops] = useState<Shop[]>([]);
   const [filteredShops, setFilteredShops] = useState<(Shop)[]>([]);
 
@@ -67,11 +64,10 @@ export default function FavoritePage() {
     setFilteredShops(
       favoriteShops.filter(item => {
         const matchesSearch = searchRegex.test(item.shopName) || searchRegex.test((item as Shop).location);
-        const isOpen = isBusinessOpen(item.businessHours || []);
-        return matchesSearch && (!openOnly || isOpen);
+        return matchesSearch;
       })
     );
-  }, [searchValue, favoriteShops, openOnly]);
+  }, [searchValue, favoriteShops]);
 
   return (
     <article>
@@ -84,13 +80,6 @@ export default function FavoritePage() {
             countUnit="件"
           />
           <div className="search-wrapper">
-            <SwitchButton
-              labels={[{ label: "全て", value: "all" }, { label: "営業中", value: "open" }]}
-              onChange={(value: string) => {
-                setOpenOnly(value === "open");
-                setSearchValue('');
-              }}
-            />
             <SearchInput
               searchMode
               placeholder={`エリア・店舗名で検索`}

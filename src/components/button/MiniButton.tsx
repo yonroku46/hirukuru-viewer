@@ -39,7 +39,14 @@ export default function MiniButton({ className, icon, label, onClick, gray, sx }
     >
       {icon}
       {label && (
-        <label style={{ fontSize: "0.875rem", marginRight: "0.25rem", cursor: "pointer" }}>
+        <label style={{
+          fontSize: "0.875rem",
+          marginRight: "0.25rem",
+          cursor: "pointer",
+          overflow: "hidden",
+          whiteSpace: "nowrap",
+          textOverflow: "ellipsis"
+        }}>
           {label}
         </label>
       )}

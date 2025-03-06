@@ -6,6 +6,17 @@ import TakeoutDiningIcon from '@mui/icons-material/TakeoutDining';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 
+export const categoryList: { name: string, imgIcon: string }[] = [
+  { name: '揚げ物', imgIcon: '/assets/img/agemono.png' },
+  { name: '麺類', imgIcon: '/assets/img/men.png' },
+  { name: 'カレー', imgIcon: '/assets/img/curry.png' },
+  { name: '野菜', imgIcon: '/assets/img/vegetable.png' },
+  { name: '韓国風', imgIcon: '/assets/img/korean.png' },
+  { name: 'お魚', imgIcon: '/assets/img/fish.png' },
+  { name: 'お肉', imgIcon: '/assets/img/meat.png' },
+  { name: '洋食', imgIcon: '/assets/img/western.png' },
+];
+
 export const allergensList: { allergen: string, name: string, img: string }[] = [
   { allergen: '1', name: '卵', img: '/assets/icon/allergen/egg.svg' },
   { allergen: '2', name: '乳', img: '/assets/icon/allergen/milk.svg' },

@@ -32,6 +32,44 @@ const buildConfig = () => {
     },
     googleMaps: {
       apiKey: googleMapsApiKey,
+      defaultPosition: {
+        lat: 33.5902,
+        lng: 130.4017
+      },
+      maxZoom: 20,
+      minZoom: 5,
+      options: {
+        disableDefaultUI: true,
+        maxZoom: 20,
+        minZoom: 5,
+        scrollwheel: true,
+        mapTypeControl: false,
+        fullscreenControl: false,
+        streetViewControl: false,
+        zoomControl: false,
+        keyboardShortcuts: false,
+        gestureHandling: "greedy",
+        styles: [
+          {
+            "elementType": "labels",
+            "stylers": [{ "saturation": -15 }, { "lightness": 20 }]
+          },
+          {
+            "featureType": "administrative.land_parcel",
+            "elementType": "labels",
+            "stylers": [{ "visibility": "off" }]
+          },
+          {
+            "featureType": "poi.business",
+            "stylers": [{ "visibility": "simplified" }]
+          },
+          {
+            "featureType": "road.local",
+            "elementType": "labels",
+            "stylers": [{ "visibility": "off" }]
+          }
+        ]
+      },
     },
     square: {
       sandboxId: squareSandboxId,
