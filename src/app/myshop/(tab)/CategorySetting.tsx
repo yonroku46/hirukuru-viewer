@@ -1,4 +1,4 @@
-import React, { Suspense, useState, useEffect, SetStateAction, Dispatch, useRef } from 'react';
+import React, { Suspense, useState, useEffect, SetStateAction, Dispatch, useRef, useCallback } from 'react';
 import Loading from '@/app/loading';
 import { createKanaSearchRegex } from '@/common/utils/SearchUtils';
 import MiniButton from '@/components/button/MiniButton';
@@ -8,6 +8,9 @@ import ConfirmDialog from '@/components/ConfirmDialog';
 import { DndContext, DragEndEvent, closestCenter } from '@dnd-kit/core';
 import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { enqueueSnackbar } from 'notistack';
+import PartnerService from '@/api/service/PartnerService';
+import { config } from '@/config';
 
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
@@ -27,8 +30,8 @@ interface SettingProps {
 interface SortableCategoryProps {
   isSp: boolean;
   editMode: boolean;
-  category: ItemCategory;
-  setCategory: Dispatch<SetStateAction<ItemCategory[]>>;
+  category: ShopCategory;
+  setCategory: Dispatch<SetStateAction<ShopCategory[]>>;
 }
 
 function SortableCategory({ isSp, editMode, category, setCategory }: SortableCategoryProps) {
@@ -106,11 +109,13 @@ function SortableCategory({ isSp, editMode, category, setCategory }: SortableCat
   );
 }
 
-function ItemSetting({ isSp, shop }: SettingProps)  {
+function CategorySetting({ isSp, shop }: SettingProps)  {
+  const partnerService = PartnerService();
+
   const [searchValue, setSearchValue] = useState<string>("");
-  const [categories, setCategories] = useState<ItemCategory[]>([]);
+  const [categories, setCategories] = useState<ShopCategory[]>([]);
   const [editMode, setEditMode] = useState<boolean>(false);
-  const [tempCategories, setTempCategories] = useState<ItemCategory[]>([]);
+  const [tempCategories, setTempCategories] = useState<ShopCategory[]>([]);
   const endOfListRef = useRef<HTMLDivElement | null>(null);
 
   const handleEditToggle = () => {
@@ -118,8 +123,25 @@ function ItemSetting({ isSp, shop }: SettingProps)  {
   };
 
   const handleSave = () => {
-    setCategories(tempCategories);
-    setEditMode(false);
+    // カテゴリ名が0文字以上100文字以内かチェック
+    if (!tempCategories.every(category => category.categoryName.length > 0 &&
+      category.categoryName.length <= MAX_CATEGORY_NAME_LENGTH
+    )) {
+      enqueueSnackbar("カテゴリ名を1文字以上100文字以内で入力してください", { variant: 'error' });
+      return;
+    }
+    const deletedCategoryIds = categories.filter(originalCategory =>
+      !tempCategories.some(tempCategory =>
+        tempCategory.categoryId === originalCategory.categoryId
+      )
+    ).map(category => category.categoryId);
+
+    // 削除されたカテゴリーがあれば削除後に更新実行
+    if (deletedCategoryIds.length > 0) {
+      deleteShopCategories(deletedCategoryIds);
+    } else {
+      upsertCategories();
+    }
   };
 
   const handleCancel = () => {
@@ -130,8 +152,8 @@ function ItemSetting({ isSp, shop }: SettingProps)  {
   const handleAddCategory = () => {
     const categoryNumber = tempCategories.length + 1;
     setTempCategories([...tempCategories, {
-      categoryId: `new-${categoryNumber}`, shopId: shop.shopId, categoryName: `新規カテゴリー${categoryNumber}`, categoryOrder: categoryNumber
-    } as ItemCategory]);
+      categoryId: `${config.api.newPrefix}${categoryNumber}`, shopId: shop.shopId, categoryName: `新規カテゴリー${categoryNumber}`, categoryOrder: categoryNumber
+    } as ShopCategory]);
     setTimeout(() => {
       endOfListRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, 0);
@@ -155,15 +177,41 @@ function ItemSetting({ isSp, shop }: SettingProps)  {
     }
   };
 
+  const getShopCategories = useCallback(() => {
+    partnerService.getShopCategories().then((res) => {
+      if (res?.list) {
+        setCategories(res.list);
+        setTempCategories(res.list);
+      }
+    });
+  }, [partnerService]);
+
+  const upsertCategories = useCallback(() => {
+    partnerService.upsertShopCategories(tempCategories).then((res) => {
+      if (res?.success) {
+        getShopCategories();
+        setEditMode(false);
+        enqueueSnackbar("保存しました", { variant: 'success' });
+      } else {
+        enqueueSnackbar("保存に失敗しました", { variant: 'error' });
+      }
+    });
+  }, [partnerService, getShopCategories]);
+
+  const deleteShopCategories = useCallback((ids: string[]) => {
+    partnerService.deleteShopCategories(ids).then((res) => {
+      if (res?.success) {
+        upsertCategories();
+      } else {
+        enqueueSnackbar("削除に失敗しました", { variant: 'error' });
+      }
+    });
+  }, [partnerService, upsertCategories]);
+
   useEffect(() => {
-    const dummyCategories: ItemCategory[] = [
-      { categoryId: '2', shopId: shop.shopId, categoryName: '日替わり弁当', categoryOrder: 1 },
-      { categoryId: '1', shopId: shop.shopId, categoryName: '特製弁当', categoryOrder: 2 },
-      { categoryId: '3', shopId: shop.shopId, categoryName: '定番弁当', categoryOrder: 3 },
-    ];
-    setCategories(dummyCategories);
-    setTempCategories(dummyCategories);
-  }, [shop]);
+    getShopCategories();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (editMode) return;
@@ -255,4 +303,4 @@ function ItemSetting({ isSp, shop }: SettingProps)  {
   );
 };
 
-export default React.memo(ItemSetting);
+export default React.memo(CategorySetting);

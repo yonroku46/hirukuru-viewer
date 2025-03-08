@@ -119,9 +119,9 @@ export default function Header() {
       }
       // 検索ページに移動、検索パラメータを更新(検索ページでは戻るボタン対応のためreplaceを使用)
       if (currentPath.startsWith("/search/map")) {
-        const t = searchParams.get('t');
         const c = searchParams.get('c');
         const b = searchParams.get('b');
+        const t = searchParams.get('t');
         const s = searchParams.get('s');
 
         const queryParams: Record<string, string> = {};
@@ -129,9 +129,9 @@ export default function Header() {
         if (searchValue) {
           queryParams.q = searchValue;
         }
-        if (t) queryParams.t = t;
         if (c) queryParams.c = c;
         if (b) queryParams.b = b;
+        if (t) queryParams.t = t;
         if (s) queryParams.s = s;
 
         const queryString = Object.entries(queryParams)

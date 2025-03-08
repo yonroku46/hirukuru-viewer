@@ -75,6 +75,11 @@ const buildConfig = () => {
       sandboxId: squareSandboxId,
       sandboxLocationId: squareSandboxLocationId,
     },
+    api: {
+      newPrefix: "new_",
+      delPrefix: "del_",
+      imgPrefix: "imgFile_"
+    }
   };
 };
 

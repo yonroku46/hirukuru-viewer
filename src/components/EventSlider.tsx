@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { useMediaQuery } from "react-responsive";
-import Image from "next/image";
+import Image from "@/components/Image";
 import Slider, { Settings } from "react-slick";
 import Link from "next/link";
 import "slick-carousel/slick/slick.css";

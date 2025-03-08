@@ -1,12 +1,18 @@
 "use client";
 
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState, useCallback } from 'react';
 import { useMediaQuery } from "react-responsive";
 import { allergensList, currency, optionsToString } from '@/common/utils/StringUtils';
 import { enqueueSnackbar } from 'notistack';
 import Image from "@/components/Image";
 import MiniButton from '@/components/button/MiniButton';
 import MuiSwitch from '@/components/mui/MuiSwitch';
+import Selector from '@/components/input/Selector';
+import { DndContext, DragEndEvent, closestCenter } from '@dnd-kit/core';
+import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { config } from '@/config';
+import ImageCropDialog from '@/components/ImageCropDialog';
 
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
@@ -22,20 +28,24 @@ import Checkbox from '@mui/material/Checkbox';
 import FormGroup from '@mui/material/FormGroup';
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 
 interface ItemEditDialogProps {
   editMode: boolean;
   data: Item;
+  categories: ShopCategory[];
   open: boolean;
   setOpen: (open: boolean) => void;
   saveData: (data: Item) => void;
 }
 
-export default function ItemEditDialog({ editMode, data, open, setOpen, saveData }: ItemEditDialogProps) {
+export default function ItemEditDialog({ editMode, data, categories, open, setOpen, saveData }: ItemEditDialogProps) {
   const isSp = useMediaQuery({ query: "(max-width: 1179px)" });
 
   const [item, setItem] = useState<Item>();
-  const [options, setOptions] = useState<ItemOption[]>([]);
+  const [forTestOptions, setForTestOptions] = useState<ItemOption[]>([]);
+  const [cropDialogOpen, setCropDialogOpen] = useState<boolean>(false);
+  const [cropImageSrc, setCropImageSrc] = useState<string>('');
 
   useEffect(() => {
     if (open) {
@@ -45,12 +55,35 @@ export default function ItemEditDialog({ editMode, data, open, setOpen, saveData
 
   const handleClick = () => {
     if (item) {
-      saveData(item);
-      setOpen(false);
+      // 商品空き項目(カテゴリ名,商品名,商品説明,価格)チェック
+      const missingFields = [];
+      if (!item.categoryId) {
+        missingFields.push('カテゴリー');
+      }
+      if (item.itemName.length === 0) {
+        missingFields.push('商品名');
+      }
+      if (!item.itemDescription || item.itemDescription.length === 0) {
+        missingFields.push('商品説明');
+      }
+      if (item.itemPrice <= 0) {
+        missingFields.push('価格');
+      }
+      if (!item.options || !item.options.every(opt => opt.optionName.length > 0)) {
+        missingFields.push('オプション');
+      }
+
+      if (missingFields.length > 0) {
+        enqueueSnackbar(`以下の項目を入力してください\n${missingFields.join('、')}`, { variant: 'error' });
+        return;
+      } else {
+        saveData(item);
+        setOpen(false);
+      }
     }
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, type: "thumbnailImg") => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const fileInput = e.target;
     const file = fileInput.files?.[0];
     if (file) {
@@ -64,49 +97,132 @@ export default function ItemEditDialog({ editMode, data, open, setOpen, saveData
       }
       const reader = new FileReader();
       reader.onload = () => {
-        setItem((prevData: Item | undefined) => prevData ? ({
-          ...prevData,
-          [type]: reader.result as string,
-          imgFile: file
-        }) : undefined);
+        setCropImageSrc(reader.result as string);
+        setCropDialogOpen(true);
       };
       reader.readAsDataURL(file);
       fileInput.value = '';
     }
   };
 
-  function renderOptionInputs(item: Item, option: ItemOption, index: number) {
+  const handleImageCrop = (croppedBlob: Blob) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (!item) return;
+      setItem({
+        ...item,
+        thumbnailImg: reader.result as string,
+        imgFile: new File([croppedBlob], `${config.api.imgPrefix}${item.itemId}`, { type: croppedBlob.type, lastModified: Date.now() })
+      });
+    };
+    reader.readAsDataURL(croppedBlob);
+  }
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      const oldIndex = item?.options?.findIndex((opt) =>
+        opt.optionId === active.id
+      );
+      const newIndex = item?.options?.findIndex((opt) =>
+        opt.optionId === over.id
+      );
+      if (oldIndex !== -1 && newIndex !== -1) {
+        const newOptions = [...item?.options || []];
+        const [movedOption] = newOptions.splice(oldIndex as number, 1);
+        newOptions.splice(newIndex as number, 0, movedOption);
+        const updatedOptions = newOptions.map((opt, idx) => ({
+          ...opt,
+          optionOrder: idx + 1
+        }));
+        if (item) {
+          setItem({ ...item as Item, options: updatedOptions });
+        }
+      }
+    }
+  };
+
+  function SortableOption({ item, option, index, setItem }: {
+    item: Item,
+    option: ItemOption,
+    index: number,
+    setItem: React.Dispatch<React.SetStateAction<Item | undefined>>
+  }) {
+    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: option.optionId });
+    const [optionName, setOptionName] = useState<string>(option.optionName);
+    const [optionPrice, setOptionPrice] = useState<number>(option.optionPrice);
+
+    useEffect(() => {
+      setOptionName(option.optionName);
+      setOptionPrice(option.optionPrice);
+    }, [option]);
+
+    useEffect(() => {
+      if (item && item.options && item.options.length > 0) {
+        const currentMultipleFlg = item.optionMultiple || false;
+        // オプションがあり、1つでも multipleFlgがcurrentMultipleFlgと異なれば更新
+        const needsUpdate = item.options.some(opt => opt.multipleFlg !== currentMultipleFlg);
+        if (needsUpdate) {
+          setItem(prevItem => {
+            if (!prevItem) return prevItem;
+            const updatedOptions = prevItem.options ? prevItem.options.map(opt => ({
+              ...opt,
+              multipleFlg: prevItem.optionMultiple || false
+            })) : [];
+            return { ...prevItem, options: updatedOptions as ItemOption[] };
+          });
+        }
+      }
+    }, [item, setItem]);
+
+    const style = {
+      transform: CSS.Transform.toString(transform),
+      transition,
+    };
+
+    const handleChange = useCallback((field: 'optionName' | 'optionPrice', value: string | number) => {
+      setItem((prevItem) => {
+        if (!prevItem) return prevItem;
+        const updatedOptions = prevItem.options ? [...prevItem.options] : [];
+        updatedOptions[index] = { ...updatedOptions[index], [field]: value };
+        return { ...prevItem, options: updatedOptions };
+      });
+    }, [index, setItem]);
+
     return (
-      <div key={index} className="option-item">
-        <label className="input-label">項目名/価格</label>
+      <div ref={setNodeRef} style={style} className="option-item">
+        <div {...attributes} {...listeners} style={{ display: 'flex', cursor: 'grab' }}>
+          <DragIndicatorIcon />
+        </div>
+        <label className="input-label required">項目名/価格</label>
         <input
           className="option-name"
           type="text"
-          value={option.optionName}
+          value={optionName}
           placeholder="オプション項目名"
-          onChange={(e) => {
-            const updatedOptions = item.options ? [...item.options] : [];
-            updatedOptions[index] = { ...option, optionName: e.target.value };
-            setItem({ ...item, options: updatedOptions });
-          }}
+          onChange={(e) => setOptionName(e.target.value)}
+          onBlur={() => handleChange('optionName', optionName)}
         />
         <input
           className="option-price"
           type="number"
-          value={option.optionPrice}
+          value={optionPrice}
           placeholder="0"
-          onChange={(e) => {
-            const updatedOptions = item.options ? [...item.options] : [];
-            updatedOptions[index] = { ...option, optionPrice: parseFloat(e.target.value) };
-            setItem({ ...item, options: updatedOptions });
-          }}
+          onChange={(e) => setOptionPrice(parseInt(e.target.value) || 0)}
+          onBlur={() => handleChange('optionPrice', optionPrice)}
         />
         <MiniButton
           icon={<DeleteOutlineOutlinedIcon />}
           onClick={() => {
             const updatedOptions = item.options ? [...item.options] : [];
-            updatedOptions.splice(index, 1);
-            setItem({ ...item, options: updatedOptions });
+            const currentOptionId = option.optionId;
+            const newOptions = updatedOptions.map(opt =>
+              opt.optionId === currentOptionId
+                ? { ...opt, optionId: `${config.api.delPrefix}${opt.optionId}` }
+                : opt
+            );
+            setItem({ ...item, options: newOptions });
           }}
         />
       </div>
@@ -152,16 +268,42 @@ export default function ItemEditDialog({ editMode, data, open, setOpen, saveData
                   id="thumbnail-upload"
                   style={{ display: 'none' }}
                   accept="image/*"
-                  onChange={(e) => handleFileChange(e, 'thumbnailImg')}
+                  onChange={(e) => handleFileChange(e)}
+                />
+                <ImageCropDialog
+                  open={cropDialogOpen}
+                  imageSrc={cropImageSrc}
+                  imageType="thumbnailImg"
+                  onClose={() => setCropDialogOpen(false)}
+                  onCropComplete={handleImageCrop}
                 />
               </>
             )}
           </div>
           <div className="item-detail-wrapper">
+            {editMode &&
+              <div className="required-info">
+                (*は必須項目です)
+              </div>
+            }
+            {editMode &&
+              <div className="item-category">
+                <label className="input-label required">カテゴリー</label>
+                <Selector
+                  options={categories.map((category) => ({
+                    label: category.categoryName,
+                    value: category.categoryId
+                  }))}
+                  placeholder={categories.length === 0 ? "選択できるカテゴリーがありません" : undefined}
+                  value={item.categoryId || categories[0]?.categoryId}
+                  onChange={(e) => setItem({ ...item, categoryId: e.target.value })}
+                />
+              </div>
+            }
             <div className="item-name-rating">
               {editMode ?
                 <>
-                  <label className="input-label">商品名</label>
+                  <label className="input-label required">商品名</label>
                   <input
                     className="item-name"
                     value={item.itemName}
@@ -178,10 +320,10 @@ export default function ItemEditDialog({ editMode, data, open, setOpen, saveData
             <div className="price-wrapper">
               {editMode ?
                 <>
-                  <label className="input-label">価格</label>
+                  <label className="input-label required">価格</label>
                   <input
                     type="number"
-                  className="current-price"
+                    className="current-price"
                     value={item.itemPrice}
                     placeholder="0"
                     onChange={(e) => setItem({ ...item, itemPrice: parseInt(e.target.value) })}
@@ -198,7 +340,7 @@ export default function ItemEditDialog({ editMode, data, open, setOpen, saveData
               {(editMode || item.itemDescription) &&
                 editMode ?
                 <>
-                  <label className="input-label">商品説明</label>
+                  <label className="input-label required">商品説明</label>
                   <textarea
                     className="description"
                     value={item.itemDescription}
@@ -251,6 +393,7 @@ export default function ItemEditDialog({ editMode, data, open, setOpen, saveData
                   {editMode ? (
                       <MuiSwitch
                         label={item.optionMultiple ? "複数選択可" : "1つ選択可"}
+                        checked={item.optionMultiple || false}
                         onChange={(_, checked) => setItem({ ...item, optionMultiple: checked })}
                       />
                     )
@@ -263,12 +406,27 @@ export default function ItemEditDialog({ editMode, data, open, setOpen, saveData
                   }
                 </p>
                 <div className="option-list">
-                  {item.optionMultiple ? (
-                    editMode ? (
-                      <>
-                        {item.options?.map((option, index) => renderOptionInputs(item, option, index))}
-                      </>
-                    ) : (
+                  {editMode ? (
+                    <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                      <SortableContext
+                        items={item?.options?.map((opt, idx) => opt.optionId || `option-${idx}`) || []}
+                        strategy={verticalListSortingStrategy}
+                      >
+                        {item?.options?.filter((opt) => !opt.optionId.startsWith('del'))
+                          .map((option, index) => (
+                            <SortableOption
+                              key={index}
+                              item={item}
+                              option={option}
+                              index={index}
+                              setItem={setItem}
+                            />
+                          ))
+                        }
+                      </SortableContext>
+                    </DndContext>
+                  ) : (
+                    item.optionMultiple ? (
                       <FormGroup>
                         {item.options?.map((option, index) => (
                           <FormControlLabel
@@ -277,9 +435,9 @@ export default function ItemEditDialog({ editMode, data, open, setOpen, saveData
                             control={
                               <Checkbox
                                 onChange={(e) => {
-                                  setOptions(e.target.checked
-                                    ? [...options, option]
-                                    : options.filter(o => o.optionId !== option.optionId)
+                                  setForTestOptions(e.target.checked
+                                    ? [...forTestOptions, option]
+                                    : forTestOptions.filter(o => o.optionId !== option.optionId)
                                   );
                                 }}
                               />
@@ -288,18 +446,12 @@ export default function ItemEditDialog({ editMode, data, open, setOpen, saveData
                           />
                         ))}
                       </FormGroup>
-                    )
-                  ) : (
-                    editMode ? (
-                      <>
-                        {item.options?.map((option, index) => renderOptionInputs(item, option, index))}
-                      </>
                     ) : (
                       <RadioGroup
                         onChange={(e) => {
                           const selectedOption = item.options?.find(option => option.optionId === e.target.value);
                           if (selectedOption) {
-                            setOptions([selectedOption]);
+                            setForTestOptions([selectedOption]);
                           }
                         }}
                       >
@@ -318,11 +470,13 @@ export default function ItemEditDialog({ editMode, data, open, setOpen, saveData
                     <button className="add-option-btn" onClick={() => {
                       setItem({
                         ...item, options: [ ...(item.options || []), {
-                          optionId: `new-${(item.options?.length || 0) + 1}`,
+                          optionId: `${config.api.newPrefix}${(item.options?.length || 0) + 1}`,
+                          itemId: item.itemId,
                           optionName: "",
                           optionPrice: 0,
-                          optionOrder: (item.options?.length || 0) + 1
-                        } as ItemOption]
+                          optionOrder: (item.options?.length || 0) + 1,
+                          multipleFlg: item.optionMultiple || false
+                        }]
                       });
                     }}>
                       + オプション項目追加

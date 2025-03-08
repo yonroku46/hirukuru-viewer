@@ -252,7 +252,7 @@ export default function MyShopPage() {
     "item": <ItemSetting isSp={isSp} shop={shop} />,
     "category": <CategorySetting isSp={isSp} shop={shop} />,
     "operate": <Operate isSp={isSp} currentTime={currentTime} notifications={notifications} />,
-    "marketing": <Marketing isSp={isSp} shop={shop} />,
+    "marketing": <Marketing isSp={isSp} />,
     "review": <Review shop={shop} />,
     "history": <History />,
     "settlement": <Settlement />,

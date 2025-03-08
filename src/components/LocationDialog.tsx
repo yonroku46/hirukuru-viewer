@@ -3,7 +3,7 @@ import { useMediaQuery } from "react-responsive";
 import { config } from "@/config";
 import { Circle, GoogleMap, Marker } from '@react-google-maps/api';
 import { enqueueSnackbar } from 'notistack';
-import Image from 'next/image';
+import Image from "@/components/Image";
 import MiniButton from '@/components/button/MiniButton';
 import ConfirmDialog from '@/components/ConfirmDialog';
 

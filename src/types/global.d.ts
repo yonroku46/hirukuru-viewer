@@ -255,14 +255,17 @@ declare global {
     stock?: number;
     optionMultiple?: boolean;
     options?: ItemOption[];
+    imgFile?: File;
   }
   interface ItemOption {
     optionId: string;
+    itemId: string;
     optionName: string;
     optionPrice: number;
     optionOrder: number;
+    multipleFlg: boolean;
   }
-  interface ItemCategory {
+  interface ShopCategory {
     categoryId: string;
     shopId: string;
     categoryName: string;

@@ -111,7 +111,7 @@ export default function ImageCropDialog({ open, imageSrc, imageType, onClose, on
         <CloseIcon className="close-icon" onClick={onClose} />
       </DialogTitle>
       <DialogContent className="content">
-        <div style={{ position: 'relative', height: imageHeight ? `${imageHeight}px` : '400px' }}>
+        <div style={{ position: 'relative', height: imageHeight ? `${imageHeight > 300 ? imageHeight : 300}px` : '400px' }}>
           {imageSrc && (
             <Cropper
               image={imageSrc}
@@ -119,6 +119,7 @@ export default function ImageCropDialog({ open, imageSrc, imageType, onClose, on
               zoom={zoom}
               aspect={imageType === 'thumbnailImg' ? 16 / 10 : 1}
               cropShape={imageType === 'profileImg' ? 'round' : 'rect'}
+              zoomSpeed={0.25}
               onCropChange={setCrop}
               onZoomChange={setZoom}
               onCropComplete={handleCropComplete}

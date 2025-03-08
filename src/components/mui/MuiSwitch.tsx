@@ -55,14 +55,15 @@ const IOSSwitch = styled((props: SwitchProps) => (
 interface MuiSwitchProps {
   labelPlacement?: 'start' | 'end';
   label: string;
+  checked: boolean;
   onChange: (e: React.SyntheticEvent, checked: boolean) => void;
 }
 
-export default function MuiSwitch({ label, onChange, labelPlacement = 'start' }: MuiSwitchProps) {
+export default function MuiSwitch({ label, checked, onChange, labelPlacement = 'start' }: MuiSwitchProps) {
   return (
     <FormControlLabel
       sx={{ m: 0 }}
-      control={<IOSSwitch sx={{ m: 1 }} defaultChecked />}
+      control={<IOSSwitch sx={{ m: 1 }} checked={checked} />}
       label={label}
       labelPlacement={labelPlacement}
       onChange={onChange}

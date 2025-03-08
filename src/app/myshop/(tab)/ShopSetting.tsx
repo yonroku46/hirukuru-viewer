@@ -25,9 +25,9 @@ function ShopSetting({ isSp, shop, setShop }: SettingProps)  {
 
   const [editMode, setEditMode] = useState<boolean>(false);
   const [tempShop, setTempShop] = useState<Shop>(shop);
-  const [cropDialogOpen, setCropDialogOpen] = useState(false);
+  const [cropDialogOpen, setCropDialogOpen] = useState<boolean>(false);
+  const [cropImageSrc, setCropImageSrc] = useState<string>('');
   const [cropImageType, setCropImageType] = useState<'thumbnailImg' | 'profileImg'>('thumbnailImg');
-  const [cropImageSrc, setCropImageSrc] = useState('');
 
   const locationOptions = [
     { label: '福岡市博多区', value: '福岡市博多区' },

@@ -1,4 +1,4 @@
-import React, { Suspense, useState, useEffect, SetStateAction, Dispatch, useRef } from 'react';
+import React, { Suspense, useState, useEffect, SetStateAction, Dispatch, useRef, useCallback } from 'react';
 import Loading from '@/app/loading';
 import { createKanaSearchRegex } from '@/common/utils/SearchUtils';
 import MiniButton from '@/components/button/MiniButton';
@@ -10,6 +10,9 @@ import ConfirmDialog from '@/components/ConfirmDialog';
 import { DndContext, DragEndEvent, closestCenter } from '@dnd-kit/core';
 import { SortableContext, useSortable, rectSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { enqueueSnackbar } from 'notistack';
+import PartnerService from '@/api/service/PartnerService';
+import { config } from '@/config';
 
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
@@ -30,9 +33,10 @@ interface SortableItemProps {
   shop: Shop;
   item: Item;
   setItems: Dispatch<SetStateAction<ItemState[]>>;
+  categories: ShopCategory[];
 }
 
-function SortableItem({ isSp, editMode, item, setItems }: SortableItemProps) {
+function SortableItem({ isSp, editMode, item, setItems, categories }: SortableItemProps) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: item.itemId });
 
   const style = {
@@ -73,6 +77,7 @@ function SortableItem({ isSp, editMode, item, setItems }: SortableItemProps) {
       <ItemEditDialog
         editMode={editMode}
         data={item}
+        categories={categories}
         open={openInfo}
         setOpen={setOpenInfo}
         saveData={(data) => {
@@ -95,10 +100,13 @@ function SortableItem({ isSp, editMode, item, setItems }: SortableItemProps) {
 }
 
 function ItemSetting({ isSp, shop }: SettingProps)  {
+  const partnerService = PartnerService();
+
   const [searchValue, setSearchValue] = useState<string>("");
   const [editMode, setEditMode] = useState<boolean>(false);
   const [items, setItems] = useState<ItemState[]>([]);
   const [tempItems, setTempItems] = useState<ItemState[]>([]);
+  const [categories, setCategories] = useState<ShopCategory[]>([]);
   const endOfListRef = useRef<HTMLDivElement | null>(null);
 
   const handleEditToggle = (isCancel: boolean = false) => {
@@ -111,10 +119,47 @@ function ItemSetting({ isSp, shop }: SettingProps)  {
     setEditMode(!editMode);
   };
 
+  const handleSave = () => {
+    // 商品空き項目(カテゴリ名,商品名,商品説明,価格)チェック
+    const invalidItems = tempItems.filter(item => !(
+      item.categoryId &&
+      item.itemName.length > 0 &&
+      item.itemDescription && item.itemDescription.length > 0 &&
+      item.itemPrice > 0
+    ));
+    if (invalidItems.length > 0) {
+      const targetItems = invalidItems.map(item => item.itemOrder).join('、');
+      enqueueSnackbar(`以下の商品に入力の誤りがあります\n${targetItems}番`, { variant: 'error' });
+      return;
+    }
+
+    const deletedItemIds = items.filter(originalItem =>
+      !tempItems.some(tempItem =>
+        tempItem.itemId === originalItem.itemId
+      )
+    ).map(item => item.itemId);
+
+    // 削除されたアイテムがあれば削除後に更新実行
+    if (deletedItemIds.length > 0) {
+      deleteShopItem(deletedItemIds);
+    } else {
+      upsertShopItem();
+    }
+  };
+
   const handleAddItem = () => {
     const itemNumber = tempItems.length + 1;
     const newItem = {
-      itemId: `new-${itemNumber}`, shopId: shop.shopId, itemName: `新規商品${itemNumber}`, itemOrder: itemNumber, itemPrice: 0
+      itemId: `${config.api.newPrefix}${itemNumber}`,
+      shopId: shop.shopId,
+      itemName: `新規商品${itemNumber}`,
+      itemOrder: itemNumber,
+      itemPrice: 0,
+      allergens: "00000000",
+      categoryId: categories && categories.length > 0 ? categories[0].categoryId : undefined,
+      thumbnailImg: "",
+      options: [],
+      optionMultiple: false,
     } as ItemState;
     setTempItems((prevItems) => [...prevItems, newItem]);
     setTimeout(() => {
@@ -142,30 +187,49 @@ function ItemSetting({ isSp, shop }: SettingProps)  {
     }
   };
 
+  const getShopCategories = useCallback(() => {
+    partnerService.getShopCategories().then((res) => {
+      if (res?.list) {
+        setCategories(res.list);
+      }
+    });
+  }, [partnerService]);
+
+  const getShopItem = useCallback(() => {
+    partnerService.getShopItem().then((res) => {
+      if (res?.list) {
+        setItems(res.list);
+      }
+    });
+  }, [partnerService]);
+
+  const upsertShopItem = useCallback(() => {
+    partnerService.upsertShopItem(tempItems).then((res) => {
+      if (res?.success) {
+        getShopItem();
+        setEditMode(false);
+        enqueueSnackbar("保存しました", { variant: 'success' });
+      } else {
+        enqueueSnackbar("保存に失敗しました", { variant: 'error' });
+      }
+    });
+  }, [partnerService, getShopItem]);
+
+  const deleteShopItem = useCallback((ids: string[]) => {
+    partnerService.deleteShopItem(ids).then((res) => {
+      if (res?.success) {
+        upsertShopItem();
+      } else {
+        enqueueSnackbar("削除に失敗しました", { variant: 'error' });
+      }
+    });
+  }, [partnerService, upsertShopItem]);
+
   useEffect(() => {
-    const dummyItems: ItemState[] = [
-      { itemId: '1', shopId: shop.shopId, categoryName: '日替わり弁当', itemName: '唐揚げ弁当', itemOrder: 1, itemDescription: "国内産の鶏肉を使用した唐揚げ弁当です。", allergens: "11000000", itemPrice: 2000, discountPrice: 500, ratingAvg: 4.3, stock: 9, thumbnailImg: 'https://i.pinimg.com/736x/f2/67/df/f267dfdd2b0cb8eac4b5e9674aa49e97.jpg', optionMultiple: true, options: [
-        { optionId: '1', optionName: 'お茶', optionPrice: 150, optionOrder: 1 },
-        { optionId: '2', optionName: 'コーラ', optionPrice: 200, optionOrder: 2 },
-        { optionId: '3', optionName: 'メガ盛り', optionPrice: 300, optionOrder: 3 },
-      ]},
-      { itemId: '2', shopId: shop.shopId, categoryName: '特製弁当', itemName: '他店舗弁当', itemOrder: 2, itemDescription: "特製のり弁です。", allergens: "01010101", itemPrice: 500, discountPrice: 450, ratingAvg: 4.5, thumbnailImg: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', optionMultiple: false, options: [
-        { optionId: '1', optionName: '特盛', optionPrice: 1000, optionOrder: 1 },
-        { optionId: '2', optionName: '大盛', optionPrice: 200, optionOrder: 2 },
-        { optionId: '3', optionName: '中盛', optionPrice: 0, optionOrder: 3 },
-        { optionId: '4', optionName: '小盛', optionPrice: -100, optionOrder: 4 },
-      ]},
-      { itemId: '3', shopId: shop.shopId, categoryName: '特製弁当', itemName: 'チキン南蛮弁当', itemOrder: 3, itemPrice: 750, ratingAvg: 3.9, stock: 2, thumbnailImg: 'https://i.pinimg.com/236x/42/d7/59/42d7590255cfd29e56db2b3d968419d4.jpg' },
-      { itemId: '4', shopId: shop.shopId, categoryName: '特製弁当', itemName: 'カレー弁当', itemOrder: 4, itemPrice: 550, ratingAvg: undefined, stock: 0,thumbnailImg: 'https://i.pinimg.com/236x/3b/4f/0a/3b4f0a758df2243b72d1d4985cda5437.jpg' },
-      { itemId: '5', shopId: shop.shopId, categoryName: '定番弁当', itemName: '塩鮭弁当', itemOrder: 5, itemPrice: 550, ratingAvg: undefined, thumbnailImg: 'https://i.pinimg.com/736x/53/c1/4c/53c14c49208435da8fca89f4dae85cb4.jpg' },
-      { itemId: '6', shopId: shop.shopId, categoryName: '定番弁当', itemName: 'ナポリタン', itemOrder: 6, itemPrice: 750, ratingAvg: 3.9, thumbnailImg: 'https://i.pinimg.com/736x/a0/44/3e/a0443eb63b9e4e56d4bdad82079d11be.jpg' },
-      { itemId: '7', shopId: shop.shopId, categoryName: '定番弁当', itemName: 'ビビンバ', itemOrder: 7, itemPrice: 500, ratingAvg: 4.5, thumbnailImg: 'https://i.pinimg.com/736x/15/fc/18/15fc1800352f40dc57aba529365dd6dd.jpg' },
-      { itemId: '8', shopId: shop.shopId, categoryName: '定番弁当', itemName: '鶏そぼろ丼', itemOrder: 8, itemPrice: 1000, ratingAvg: 4.3, thumbnailImg: 'https://i.pinimg.com/736x/a3/c0/44/a3c0445cb7ce8a623f9420a2aaa8332c.jpg' },
-      { itemId: '9', shopId: shop.shopId, itemName: 'ソースカツ弁当', itemOrder: 9, itemPrice: 1000, ratingAvg: 4.3, thumbnailImg: 'https://i.pinimg.com/736x/09/cc/18/09cc18f3ab7aeb70638f33170251bceb.jpg' },
-      { itemId: '10', shopId: shop.shopId, itemName: 'カツカレー', itemOrder: 10, itemPrice: 1000, ratingAvg: 4.3, thumbnailImg: 'https://i.pinimg.com/736x/7f/6f/55/7f6f5560ca41e1870c59b18f6f1f2360.jpg' },
-    ];
-    setItems(dummyItems as Item[]);
-  }, [shop]);
+    getShopCategories();
+    getShopItem();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (items.length > 0) {
@@ -216,7 +280,7 @@ function ItemSetting({ isSp, shop }: SettingProps)  {
             )}
             <MiniButton
               icon={editMode ? <SaveIcon /> : <EditIcon />}
-              onClick={() => handleEditToggle()}
+              onClick={editMode ? handleSave : handleEditToggle}
               label={isSp ? undefined : editMode ? '保存' : '編集'}
             />
           </div>
@@ -248,6 +312,7 @@ function ItemSetting({ isSp, shop }: SettingProps)  {
                         shop={shop}
                         item={item}
                         setItems={setTempItems}
+                        categories={categories}
                       />
                   ))}
                   <div ref={endOfListRef} />

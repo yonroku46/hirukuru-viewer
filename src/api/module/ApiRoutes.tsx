@@ -43,6 +43,8 @@ const PARTNER_SUBMIT = `${PLATFORM_ROOT}/partner/submit`;
 // partner
 const PARTNER_ROOT = `${ROOT}/partner`;
 const PARTNER_SSE_STREAM = `${PARTNER_ROOT}/SSE/stream`;
+const PARTNER_ITEM = `${PARTNER_ROOT}/item`;
+const PARTNER_CATEGORY = `${PARTNER_ROOT}/category`;
 const PARTNER_ORDER = `${PARTNER_ROOT}/order`;
 const PARTNER_ORDER_HISTORY = `${PARTNER_ROOT}/order/history`;
 const PARTNER_ORDER_CANCEL = `${PARTNER_ROOT}/order/cancel`;
@@ -72,6 +74,8 @@ const ApiRoutes = {
   ORDER_INFO_SHOP,
   CONTACT_SUBMIT,
   PARTNER_SSE_STREAM,
+  PARTNER_ITEM,
+  PARTNER_CATEGORY,
   PARTNER_SUBMIT,
   PARTNER_ORDER,
   PARTNER_ORDER_HISTORY,

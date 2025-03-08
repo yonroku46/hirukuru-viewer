@@ -10,7 +10,7 @@ export function imgRender(src: string): string {
   }
   return src.startsWith('/assets') || src.startsWith('data') || src.startsWith('https')
     ? src
-    : `${config.aws.s3Prefix}/${src}`;
+    : `https://${config.aws.s3Prefix}/${src}`;
 }
 
 interface ImgProps extends Omit<ImageProps, 'src' | 'alt'> {

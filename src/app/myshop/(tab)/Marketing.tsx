@@ -1,8 +1,8 @@
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { Suspense, useCallback, useEffect, useState } from 'react';
 import Loading from '@/app/loading';
 import ViewTitle from '@/components/layout/ViewTitle';
 import { currency } from '@/common/utils/StringUtils';
-// import PartnerService from '@/api/service/PartnerService';
+import PartnerService from '@/api/service/PartnerService';
 import MiniButton from '@/components/button/MiniButton';
 import Image from "@/components/Image";
 import SearchInput from '@/components/input/SearchInput';
@@ -22,12 +22,10 @@ interface ActionsStatus {
 
 interface SettingProps {
   isSp: boolean;
-  shop: Shop;
 }
 
-function Marketing({ isSp, shop }: SettingProps)  {
-
-  // const partnerService = PartnerService();
+function Marketing({ isSp }: SettingProps)  {
+  const partnerService = PartnerService();
 
   const [searchValue, setSearchValue] = useState("");
   const [editMode, setEditMode] = useState(false);
@@ -116,34 +114,18 @@ function Marketing({ isSp, shop }: SettingProps)  {
     return activeFlg ? "active" : "";
   }
 
-  useEffect(() => {
-    console.log(shop);
-  }, [shop]);
+  const getShopItem = useCallback(() => {
+    partnerService.getShopItem().then((res) => {
+      if (res?.list) {
+        setItems(res.list);
+      }
+    });
+  }, [partnerService]);
 
   useEffect(() => {
-    const dummyItems: ItemState[] = [
-      { itemId: '1', shopId: shop.shopId, categoryName: '日替わり弁当', itemName: '唐揚げ弁当', itemOrder: 1, itemDescription: "国内産の鶏肉を使用した唐揚げ弁当です。", allergens: "11000000", itemPrice: 2000, discountPrice: 500, ratingAvg: 4.3, stock: 9, thumbnailImg: 'https://i.pinimg.com/736x/f2/67/df/f267dfdd2b0cb8eac4b5e9674aa49e97.jpg', optionMultiple: true, options: [
-        { optionId: '1', optionName: 'お茶', optionPrice: 150, optionOrder: 1 },
-        { optionId: '2', optionName: 'コーラ', optionPrice: 200, optionOrder: 2 },
-        { optionId: '3', optionName: 'メガ盛り', optionPrice: 300, optionOrder: 3 },
-      ]},
-      { itemId: '2', shopId: shop.shopId, categoryName: '特製弁当', itemName: '他店舗弁当', itemOrder: 2, itemDescription: "特製のり弁です。", allergens: "01010101", itemPrice: 500, discountPrice: 450, ratingAvg: 4.5, thumbnailImg: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', optionMultiple: false, options: [
-        { optionId: '1', optionName: '特盛', optionPrice: 1000, optionOrder: 1 },
-        { optionId: '2', optionName: '大盛', optionPrice: 200, optionOrder: 2 },
-        { optionId: '3', optionName: '中盛', optionPrice: 0, optionOrder: 3 },
-        { optionId: '4', optionName: '小盛', optionPrice: -100, optionOrder: 4 },
-      ]},
-      { itemId: '3', shopId: shop.shopId, categoryName: '特製弁当', itemName: 'チキン南蛮弁当', itemOrder: 3, itemPrice: 750, ratingAvg: 3.9, stock: 2, thumbnailImg: 'https://i.pinimg.com/236x/42/d7/59/42d7590255cfd29e56db2b3d968419d4.jpg' },
-      { itemId: '4', shopId: shop.shopId, categoryName: '特製弁当', itemName: 'カレー弁当', itemOrder: 4, itemPrice: 550, ratingAvg: undefined, stock: 0,thumbnailImg: 'https://i.pinimg.com/236x/3b/4f/0a/3b4f0a758df2243b72d1d4985cda5437.jpg' },
-      { itemId: '5', shopId: shop.shopId, categoryName: '定番弁当', itemName: '塩鮭弁当', itemOrder: 5, itemPrice: 550, ratingAvg: undefined, thumbnailImg: 'https://i.pinimg.com/736x/53/c1/4c/53c14c49208435da8fca89f4dae85cb4.jpg' },
-      { itemId: '6', shopId: shop.shopId, categoryName: '定番弁当', itemName: 'ナポリタン', itemOrder: 6, itemPrice: 750, ratingAvg: 3.9, thumbnailImg: 'https://i.pinimg.com/736x/a0/44/3e/a0443eb63b9e4e56d4bdad82079d11be.jpg' },
-      { itemId: '7', shopId: shop.shopId, categoryName: '定番弁当', itemName: 'ビビンバ', itemOrder: 7, itemPrice: 500, ratingAvg: 4.5, thumbnailImg: 'https://i.pinimg.com/736x/15/fc/18/15fc1800352f40dc57aba529365dd6dd.jpg' },
-      { itemId: '8', shopId: shop.shopId, categoryName: '定番弁当', itemName: '鶏そぼろ丼', itemOrder: 8, itemPrice: 1000, ratingAvg: 4.3, thumbnailImg: 'https://i.pinimg.com/736x/a3/c0/44/a3c0445cb7ce8a623f9420a2aaa8332c.jpg' },
-      { itemId: '9', shopId: shop.shopId, itemName: 'ソースカツ弁当', itemOrder: 9, itemPrice: 1000, ratingAvg: 4.3, thumbnailImg: 'https://i.pinimg.com/736x/09/cc/18/09cc18f3ab7aeb70638f33170251bceb.jpg' },
-      { itemId: '10', shopId: shop.shopId, itemName: 'カツカレー', itemOrder: 10, itemPrice: 1000, ratingAvg: 4.3, thumbnailImg: 'https://i.pinimg.com/736x/7f/6f/55/7f6f5560ca41e1870c59b18f6f1f2360.jpg' },
-    ];
-    setItems(dummyItems as Item[]);
-  }, [shop]);
+    getShopItem();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Suspense fallback={<Loading circular />}>

@@ -145,15 +145,15 @@ export default function ShopPage(
     const dummyShopId = "d554fe3e-384c-49c3-ba65-d2858ae92ec1";
     const dummyItems: ItemState[] = [
       { itemId: '1', shopId: dummyShopId, categoryName: '日替わり弁当', itemName: '唐揚げ弁当', itemOrder: 1, itemDescription: "国内産の鶏肉を使用した唐揚げ弁当です。", allergens: "11000000", itemPrice: 2000, discountPrice: 500, ratingAvg: 4.3, stock: 9, thumbnailImg: 'https://i.pinimg.com/736x/f2/67/df/f267dfdd2b0cb8eac4b5e9674aa49e97.jpg', optionMultiple: true, options: [
-        { optionId: '1', optionName: 'お茶', optionPrice: 150, optionOrder: 1 },
-        { optionId: '2', optionName: 'コーラ', optionPrice: 200, optionOrder: 2 },
-        { optionId: '3', optionName: 'メガ盛り', optionPrice: 300, optionOrder: 3 },
+        { optionId: '1', itemId: '1', optionName: 'お茶', optionPrice: 150, optionOrder: 1, multipleFlg: true },
+        { optionId: '2', itemId: '1', optionName: 'コーラ', optionPrice: 200, optionOrder: 2, multipleFlg: true },
+        { optionId: '3', itemId: '1', optionName: 'メガ盛り', optionPrice: 300, optionOrder: 3, multipleFlg: true },
       ]},
       { itemId: '2', shopId: dummyShopId, categoryName: '特製弁当', itemName: '他店舗弁当', itemOrder: 2, itemDescription: "特製のり弁です。", allergens: "01010101", itemPrice: 500, discountPrice: 450, ratingAvg: 4.5, thumbnailImg: 'https://i.pinimg.com/736x/d2/bb/52/d2bb52d3639b77f024c8b5a584949644.jpg', optionMultiple: false, options: [
-        { optionId: '1', optionName: '特盛', optionPrice: 1000, optionOrder: 1 },
-        { optionId: '2', optionName: '大盛', optionPrice: 200, optionOrder: 2 },
-        { optionId: '3', optionName: '中盛', optionPrice: 0, optionOrder: 3 },
-        { optionId: '4', optionName: '小盛', optionPrice: -100, optionOrder: 4 },
+        { optionId: '1', itemId: '2', optionName: '特盛', optionPrice: 1000, optionOrder: 1, multipleFlg: false },
+        { optionId: '2', itemId: '2', optionName: '大盛', optionPrice: 200, optionOrder: 2, multipleFlg: false },
+        { optionId: '3', itemId: '2', optionName: '中盛', optionPrice: 0, optionOrder: 3, multipleFlg: false },
+        { optionId: '4', itemId: '2', optionName: '小盛', optionPrice: -100, optionOrder: 4, multipleFlg: false },
       ]},
       { itemId: '3', shopId: 'fuk002', categoryName: '特製弁当', itemName: 'チキン南蛮弁当', itemOrder: 3, itemPrice: 750, ratingAvg: 3.9, stock: 2, thumbnailImg: 'https://i.pinimg.com/236x/42/d7/59/42d7590255cfd29e56db2b3d968419d4.jpg' },
       { itemId: '4', shopId: dummyShopId, categoryName: '特製弁当', itemName: 'カレー弁当', itemOrder: 4, itemPrice: 550, ratingAvg: undefined, stock: 0,thumbnailImg: 'https://i.pinimg.com/236x/3b/4f/0a/3b4f0a758df2243b72d1d4985cda5437.jpg' },

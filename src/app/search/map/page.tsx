@@ -24,7 +24,7 @@ import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import SellOutlinedIcon from '@mui/icons-material/SellOutlined';
-import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
+import TimerOutlinedIcon from '@mui/icons-material/TimerOutlined';
 import LocalDiningOutlinedIcon from '@mui/icons-material/LocalDiningOutlined';
 import CurrencyYenOutlinedIcon from '@mui/icons-material/CurrencyYenOutlined';
 import SortOutlinedIcon from '@mui/icons-material/SortOutlined';
@@ -33,16 +33,16 @@ export default function SearchMapPage() {
   const isSp = useMediaQuery({ query: "(max-width: 1179px)" });
   const router = useRouter();
   const searchParams = useSearchParams();
-  const t = searchParams.get('t');
   const c = searchParams.get('c');
   const b = searchParams.get('b');
+  const t = searchParams.get('t');
   const s = searchParams.get('s');
 
   const [favoriteShops, setFavoriteShops] = useState<string[]>([]);
   const [isSale, setIsSale] = useState<boolean>(false);
-  const [shopType, setShopType] = useState<"ALL" | ShopType["type"]>(t?.toUpperCase() as ShopType["type"] || "ALL");
   const [category, setCategory] = useState<string>(c || "ALL");
   const [budget, setBudget] = useState<string>(b || "ALL");
+  const [servingTime, setServingTime] = useState<number | undefined>(t ? Number(t) : undefined);
   const [sortOrder, setSortOrder] = useState<string>(s?.toUpperCase() || "RECOMMEND");
   const [shops, setShops] = useState<Shop[]>([]);
   const [filteredShops, setFilteredShops] = useState<Shop[]>([]);
@@ -165,9 +165,9 @@ export default function SearchMapPage() {
     const queryParams: Record<string, string> = {};
 
     if (q) queryParams.q = q;
-    if (shopType && shopType !== "ALL") queryParams.t = shopType.toLowerCase();
     if (category && category !== "ALL") queryParams.c = category;
     if (budget && budget !== "ALL") queryParams.b = budget;
+    if (servingTime) queryParams.t = servingTime.toString();
     if (sortOrder && sortOrder !== "RECOMMEND") queryParams.s = sortOrder.toLowerCase();
 
     const queryString = Object.entries(queryParams)
@@ -176,7 +176,7 @@ export default function SearchMapPage() {
 
     const url = `/search/map${queryString ? `?${queryString}` : ''}`;
     router.replace(url);
-  }, [shopType, category, budget, sortOrder, router, searchParams]);
+  }, [category, budget, servingTime, sortOrder, router, searchParams]);
 
   useEffect(() => {
     const dummyShops: Shop[] = [
@@ -252,12 +252,17 @@ export default function SearchMapPage() {
   }, [getCurrentLocation]);
 
   useEffect(() => {
-    setFilteredShops(
-      shops.filter(item => {
-        return (shopType === "ALL" || item.shopType === shopType);
-      })
-    );
-  }, [shops, shopType, budget, sortOrder]);
+    if (servingTime) {
+      setFilteredShops(
+        shops.filter(shop => {
+          if (shop.servingMinutes) {
+            return (shop.servingMinutes <= servingTime);
+          }
+          return true;
+        })
+      );
+    }
+  }, [shops, servingTime]);
 
   useEffect(() => {
     if (isSp && isMapVisible) {
@@ -295,21 +300,6 @@ export default function SearchMapPage() {
             </div>
             <div className="filter-wrapper">
               <FilterButton
-                icon={<PlaceOutlinedIcon />}
-                label="店舗タイプ"
-                active={shopType !== "ALL"}
-                options={[
-                  { label: "お弁当屋のみ", value: "BENTO", selected: shopType === "BENTO" },
-                  { label: "フードトラックのみ", value: "FOOD_TRUCK", selected: shopType === "FOOD_TRUCK" }
-                ]}
-                onApply={(value) => {
-                  setShopType(value as ShopType["type"]);
-                }}
-                onReset={() => {
-                  setShopType("ALL");
-                }}
-              />
-              <FilterButton
                 icon={<LocalDiningOutlinedIcon />}
                 label="カテゴリー"
                 options={categoryList.map((item) => ({
@@ -342,6 +332,22 @@ export default function SearchMapPage() {
                 }}
                 onReset={() => {
                   setBudget("ALL");
+                }}
+              />
+              <FilterButton
+                icon={<TimerOutlinedIcon />}
+                label="受取時間"
+                active={servingTime !== undefined}
+                options={[
+                  { label: "10分以内に受け取り", value: "10", selected: servingTime === 10 },
+                  { label: "20分以内に受け取り", value: "20", selected: servingTime === 20 },
+                  { label: "30分以内に受け取り", value: "30", selected: servingTime === 30 }
+                ]}
+                onApply={(value) => {
+                  setServingTime(Number(value));
+                }}
+                onReset={() => {
+                  setServingTime(undefined);
                 }}
               />
               <FilterButton
