@@ -174,7 +174,7 @@ export default function MyShopPage() {
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [shop?.shopId]);
+  }, [shop?.shopId, currentUser]);
 
   useEffect(() => {
     const footerElement = document.querySelector('footer');
@@ -210,7 +210,7 @@ export default function MyShopPage() {
 
   useEffect(() => {
     const shop: Shop = {
-      shopId: 'd554fe3e-384c-49c3-ba65-d2858ae92ec1',
+      shopId: 'fuk001',
       shopName: '唐揚げ壱番屋',
       shopIntro: '揚げ物専門店',
       location: '福岡市博多区',
